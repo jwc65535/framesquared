@@ -1,13 +1,13 @@
 # Class System
 
-The ext-ts class system is built on native ES2022 classes enhanced with a config system, Observable events, and utility mixins.
+The framesquared class system is built on native ES2022 classes enhanced with a config system, Observable events, and utility mixins.
 
 ## Base Class
 
-Every ext-ts class extends `Base`, which provides config processing, identity, and destruction:
+Every framesquared class extends `Base`, which provides config processing, identity, and destruction:
 
 ```typescript
-import { Base } from '@ext-ts/core';
+import { Base } from '@framesquared/core';
 
 class MyClass extends Base {
   static $className = 'MyApp.MyClass';
@@ -41,7 +41,7 @@ Key features of `Base`:
 `Observable` adds event support to any class. It's automatically mixed into `Base`:
 
 ```typescript
-import { Base } from '@ext-ts/core';
+import { Base } from '@framesquared/core';
 
 const obj = new Base();
 
@@ -85,7 +85,7 @@ obj.resumeEvents();
 Provides before/after hooks for method interception:
 
 ```typescript
-import { Hookable } from '@ext-ts/core';
+import { Hookable } from '@framesquared/core';
 
 class Processor extends Hookable(Base) {
   process(data: string): string {
@@ -104,7 +104,7 @@ p.addHook('before', 'process', (data: string) => {
 Enables a plugin architecture:
 
 ```typescript
-import { Plugin } from '@ext-ts/core';
+import { Plugin } from '@framesquared/core';
 
 class LoggerPlugin extends Plugin {
   init(host: Base): void {
@@ -120,7 +120,7 @@ const component = new Component({ plugins: [new LoggerPlugin()] });
 Use `TypedObservable` for compile-time event safety:
 
 ```typescript
-import type { EventMap, TypedObservable } from '@ext-ts/core';
+import type { EventMap, TypedObservable } from '@framesquared/core';
 
 interface MyEvents extends EventMap {
   save: [data: Record<string, unknown>];
@@ -137,7 +137,7 @@ class MyForm extends Base implements TypedObservable<MyEvents> {
 Declarative keyboard shortcuts:
 
 ```typescript
-import { KeyMap } from '@ext-ts/core';
+import { KeyMap } from '@framesquared/core';
 
 const km = new KeyMap({
   target: document.body,

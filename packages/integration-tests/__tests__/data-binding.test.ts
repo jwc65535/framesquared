@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { ViewModel, Binding } from '@ext-ts/app';
+import { ViewModel, Binding } from '@framesquared/app';
 
 afterEach(() => { document.body.innerHTML = ''; });
 

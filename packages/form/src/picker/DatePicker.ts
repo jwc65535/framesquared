@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – DatePicker
+ * @framesquared/form – DatePicker
  *
  * Full calendar widget.  Shows a month grid with day cells,
  * prev/next navigation, today button, and disabled date support.
@@ -8,8 +8,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component } from '@ext-ts/component';
-import type { ComponentConfig } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
+import type { ComponentConfig } from '@framesquared/component';
 import { getMonthName, getDaysInMonth } from '../util/DateUtil.js';
 
 export interface DatePickerConfig extends ComponentConfig {

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – Grid
+ * @framesquared/grid – Grid
  *
  * The main grid panel.  Extends Panel to display tabular data from
  * a Store with configurable columns, sorting, column visibility,
@@ -8,8 +8,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Panel } from '@ext-ts/ui';
-import type { PanelConfig } from '@ext-ts/ui';
+import { Panel } from '@framesquared/ui';
+import type { PanelConfig } from '@framesquared/ui';
 import { Column, createColumn } from './column/Column.js';
 import type { ColumnConfig } from './column/Column.js';
 import { GridView } from './GridView.js';

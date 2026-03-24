@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – WebSocketProxy
+ * @framesquared/data – WebSocketProxy
  *
  * Maintains a WebSocket connection for real-time data.  Sends
  * CRUD operations as JSON messages.  Auto-reconnects on disconnect.

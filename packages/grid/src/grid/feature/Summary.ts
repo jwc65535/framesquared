@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – Summary feature
+ * @framesquared/grid – Summary feature
  *
  * Adds a summary row at the bottom of the grid with aggregate
  * calculations per column (sum, count, average, min, max, custom).

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { Application, ViewController, ViewModel, Router } from '@ext-ts/app';
-import { Model, Store } from '@ext-ts/data';
+import { Application, ViewController, ViewModel, Router } from '@framesquared/app';
+import { Model, Store } from '@framesquared/data';
 
 class UserModel extends Model {
   static override fields = [

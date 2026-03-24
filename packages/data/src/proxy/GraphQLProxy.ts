@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – GraphQLProxy
+ * @framesquared/data – GraphQLProxy
  *
  * Sends GraphQL queries for read and mutations for CUD operations.
  * Parses response using a rootProperty path into the GraphQL data.

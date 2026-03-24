@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – SpreadsheetSelectionModel
+ * @framesquared/grid – SpreadsheetSelectionModel
  *
  * Spreadsheet-like selection: click selects a cell, Shift+click
  * extends to a range.  Selected cells get x-grid-cell-selected class.

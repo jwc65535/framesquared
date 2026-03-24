@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – Inheritable mixin
+ * @framesquared/core – Inheritable mixin
  *
  * Provides hierarchical parent → child config inheritance.  Each instance
  * can have an "inherited parent" whose inherited state is merged with the

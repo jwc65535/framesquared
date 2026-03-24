@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – DateUtil
+ * @framesquared/form – DateUtil
  *
  * Date utility functions: format, parse, add, diff, isLeapYear, getDaysInMonth.
  * Format tokens: Y (4-digit year), m (01-12), d (01-31),

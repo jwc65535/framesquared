@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – ResponsiveColumnLayout
+ * @framesquared/layout – ResponsiveColumnLayout
  *
  * Columns that automatically reflow based on container width.
  * Uses CSS Grid with auto-fill and minmax() for responsive columns
@@ -17,7 +17,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Component } from '@ext-ts/component';
+import type { Component } from '@framesquared/component';
 import { Layout } from './Layout.js';
 import type { LayoutConfig } from './Layout.js';
 

@@ -1,5 +1,5 @@
 /**
- * ext-ts Basic CRUD Application
+ * framesquared Basic CRUD Application
  *
  * Demonstrates: Model, Store, Grid, FormPanel, ViewController,
  * ViewModel, Panel layout, Button handlers.
@@ -7,12 +7,12 @@
  * Run: npx vite (with appropriate vite config)
  */
 
-import { Model, Store } from '@ext-ts/data';
-import { Grid, RowSelectionModel } from '@ext-ts/grid';
-import { FormPanel, TextField, NumberField } from '@ext-ts/form';
-import { Panel, Button } from '@ext-ts/ui';
-import { Application, ViewModel } from '@ext-ts/app';
-import { ThemeManager, ModernTheme } from '@ext-ts/theme';
+import { Model, Store } from '@framesquared/data';
+import { Grid, RowSelectionModel } from '@framesquared/grid';
+import { FormPanel, TextField, NumberField } from '@framesquared/form';
+import { Panel, Button } from '@framesquared/ui';
+import { Application, ViewModel } from '@framesquared/app';
+import { ThemeManager, ModernTheme } from '@framesquared/theme';
 
 // ─── Model ───────────────────────────────────────────────────────────────
 

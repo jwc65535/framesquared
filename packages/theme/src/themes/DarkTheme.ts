@@ -1,5 +1,5 @@
 /**
- * @ext-ts/theme – DarkTheme
+ * @framesquared/theme – DarkTheme
  * Dark mode — inherits from ModernTheme, inverts backgrounds
  * and text colors for dark environments.
  */

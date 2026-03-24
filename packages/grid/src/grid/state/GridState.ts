@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – GridState
+ * @framesquared/grid – GridState
  *
  * Saves and restores grid column state (widths, hidden, order)
  * and sort state to localStorage.

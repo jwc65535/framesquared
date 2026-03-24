@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – DisplayField
+ * @framesquared/form – DisplayField
  * Read-only display of a value.  No input element, no form submission.
  */
 

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – DataView
+ * @framesquared/ui – DataView
  *
  * Renders store records using a template function.  Supports item
  * events (click, dblclick, mouseenter, mouseleave), single/multi
@@ -8,8 +8,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component } from '@ext-ts/component';
-import type { ComponentConfig } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
+import type { ComponentConfig } from '@framesquared/component';
 
 // ---------------------------------------------------------------------------
 // Config

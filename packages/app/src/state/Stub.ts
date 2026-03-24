@@ -1,5 +1,5 @@
 /**
- * @ext-ts/app – Stub
+ * @framesquared/app – Stub
  *
  * Internal representation of data nodes in the ViewModel.
  * ValueStub holds plain values with dirty tracking.

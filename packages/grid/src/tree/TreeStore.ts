@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – TreeStore
+ * @framesquared/grid – TreeStore
  *
  * Manages hierarchical data.  Each node has text, children, id,
  * leaf/expanded state, and optional checked state.  Provides

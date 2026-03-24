@@ -1,5 +1,5 @@
 /**
- * @ext-ts/component – Component
+ * @framesquared/component – Component
  *
  * The base for all UI widgets.  Provides a complete lifecycle,
  * DOM element management, CSS operations, sizing with ResizeObserver,
@@ -8,7 +8,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Base, Observable, generateId } from '@ext-ts/core';
+import { Base, Observable, generateId } from '@framesquared/core';
 import { Template } from './Template.js';
 
 // ---------------------------------------------------------------------------

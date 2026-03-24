@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – TabPanel
+ * @framesquared/ui – TabPanel
  *
  * A Panel that uses a card layout internally.  Each child panel
  * becomes a tab in the TabBar.  Clicking a tab switches the
@@ -9,7 +9,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
 import { Panel } from '../panel/Panel.js';
 import type { PanelConfig } from '../panel/Panel.js';
 import { TabBar } from './TabBar.js';

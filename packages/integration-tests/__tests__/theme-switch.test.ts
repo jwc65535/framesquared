@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { Theme, ThemeManager, ClassicTheme, ModernTheme, DarkTheme, StyleSheet } from '@ext-ts/theme';
+import { Theme, ThemeManager, ClassicTheme, ModernTheme, DarkTheme, StyleSheet } from '@framesquared/theme';
 
 afterEach(() => {
   ThemeManager.reset();

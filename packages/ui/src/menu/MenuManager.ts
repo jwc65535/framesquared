@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – MenuManager
+ * @framesquared/ui – MenuManager
  *
  * Singleton that tracks all open menus and closes them when the
  * user clicks outside of any menu.

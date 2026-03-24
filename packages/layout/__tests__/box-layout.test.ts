@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { Component, Container } from '@ext-ts/component';
+import { Component, Container } from '@framesquared/component';
 import { HBoxLayout } from '../src/box/HBoxLayout.js';
 import { VBoxLayout } from '../src/box/VBoxLayout.js';
 import { LayoutContext } from '../src/LayoutContext.js';

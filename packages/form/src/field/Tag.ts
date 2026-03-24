@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – TagField
+ * @framesquared/form – TagField
  *
  * A ComboBox variant that shows selected values as removable tag
  * chips in the input area.  Always multi-select.

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – AriaManager
+ * @framesquared/core – AriaManager
  *
  * Manages ARIA attributes across the framework.  Provides helpers
  * for setting roles, labels, descriptions, live regions, and

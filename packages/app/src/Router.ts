@@ -1,5 +1,5 @@
 /**
- * @ext-ts/app – Router
+ * @framesquared/app – Router
  *
  * Hash-based routing using the hashchange event.  Routes are
  * patterns like 'user/:id' that extract named parameters.

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – Tab
+ * @framesquared/ui – Tab
  *
  * A tab component that renders as a clickable element with text,
  * optional icon, optional close button, and active state styling.
@@ -7,8 +7,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component } from '@ext-ts/component';
-import type { ComponentConfig } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
+import type { ComponentConfig } from '@framesquared/component';
 
 export interface TabConfig extends ComponentConfig {
   text?: string;

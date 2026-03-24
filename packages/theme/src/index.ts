@@ -1,5 +1,5 @@
 /**
- * @ext-ts/theme
+ * @framesquared/theme
  * Theming and CSS-in-JS token system
  */
 

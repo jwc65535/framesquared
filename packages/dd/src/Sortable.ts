@@ -1,5 +1,5 @@
 /**
- * @ext-ts/dd – Sortable
+ * @framesquared/dd – Sortable
  *
  * Makes items within a container sortable by drag.
  * Provides moveItem() for programmatic reordering

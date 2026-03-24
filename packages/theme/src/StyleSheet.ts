@@ -1,5 +1,5 @@
 /**
- * @ext-ts/theme – StyleSheet
+ * @framesquared/theme – StyleSheet
  *
  * Manages CSS rule injection via a <style> element.  Supports
  * addRule/removeRule with camelCase→kebab-case conversion.

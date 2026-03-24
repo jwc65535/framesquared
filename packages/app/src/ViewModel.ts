@@ -1,5 +1,5 @@
 /**
- * @ext-ts/app – ViewModel
+ * @framesquared/app – ViewModel
  *
  * Provides data binding for views.  Supports nested path access,
  * computed formulas with automatic dependency tracking via get(),

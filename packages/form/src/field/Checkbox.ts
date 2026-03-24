@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – Checkbox
+ * @framesquared/form – Checkbox
  *
  * A checkbox field using native <input type="checkbox">.
  * Returns inputValue when checked, uncheckedValue when unchecked.

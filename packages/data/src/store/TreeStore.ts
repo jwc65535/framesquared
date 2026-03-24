@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – TreeStore
+ * @framesquared/data – TreeStore
  *
  * Manages hierarchical (tree) data.  Records are enhanced with
  * NodeInterface for parent/child navigation, expand/collapse,
@@ -8,7 +8,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Base, Observable } from '@ext-ts/core';
+import { Base, Observable } from '@framesquared/core';
 import type { Model } from '../Model.js';
 import { applyNodeInterface } from '../mixin/NodeInterface.js';
 import type { NodeInterface } from '../mixin/NodeInterface.js';

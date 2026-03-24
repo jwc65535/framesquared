@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { AriaManager, FocusManager } from '@ext-ts/core';
-import { Button, Panel, Window as ExtWindow, TabPanel, Toolbar, Menu, MenuItem } from '@ext-ts/ui';
+import { AriaManager, FocusManager } from '@framesquared/core';
+import { Button, Panel, Window as ExtWindow, TabPanel, Toolbar, Menu, MenuItem } from '@framesquared/ui';
 
 class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
 beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });

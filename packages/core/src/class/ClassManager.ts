@@ -1,7 +1,7 @@
 /**
- * @ext-ts/core – ClassManager + define()
+ * @framesquared/core – ClassManager + define()
  *
- * Central registry for ext-ts classes and the `define()` factory that
+ * Central registry for framesquared classes and the `define()` factory that
  * creates, configures, and registers new classes in a single call.
  */
 

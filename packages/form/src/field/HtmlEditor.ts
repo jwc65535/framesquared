@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – HtmlEditor
+ * @framesquared/form – HtmlEditor
  *
  * Rich text editor using contentEditable.  Provides a toolbar with
  * formatting buttons, source edit mode, and XSS sanitization.

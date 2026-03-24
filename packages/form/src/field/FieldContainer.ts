@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – FieldContainer
+ * @framesquared/form – FieldContainer
  *
  * A Container that groups multiple Field children under a single
  * label.  Optionally combines child validation errors.
@@ -7,8 +7,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Container } from '@ext-ts/component';
-import type { ContainerConfig } from '@ext-ts/component';
+import { Container } from '@framesquared/component';
+import type { ContainerConfig } from '@framesquared/component';
 import { Field } from './Field.js';
 
 export interface FieldContainerConfig extends ContainerConfig {

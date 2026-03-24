@@ -1,14 +1,14 @@
 {
-  "name": "@ext-ts/example-tree-explorer",
+  "name": "@framesquared/example-tree-explorer",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": { "dev": "vite", "build": "vite build" },
   "dependencies": {
-    "@ext-ts/core": "workspace:*", "@ext-ts/data": "workspace:*",
-    "@ext-ts/component": "workspace:*", "@ext-ts/layout": "workspace:*",
-    "@ext-ts/ui": "workspace:*", "@ext-ts/form": "workspace:*",
-    "@ext-ts/grid": "workspace:*", "@ext-ts/theme": "workspace:*"
+    "@framesquared/core": "workspace:*", "@framesquared/data": "workspace:*",
+    "@framesquared/component": "workspace:*", "@framesquared/layout": "workspace:*",
+    "@framesquared/ui": "workspace:*", "@framesquared/form": "workspace:*",
+    "@framesquared/grid": "workspace:*", "@framesquared/theme": "workspace:*"
   },
   "devDependencies": { "vite": "^5.0.0", "typescript": "^5.5.0" }
 }

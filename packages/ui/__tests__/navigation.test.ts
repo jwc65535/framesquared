@@ -4,7 +4,7 @@ import { Accordion } from '../src/container/Accordion.js';
 import { CardContainer } from '../src/container/CardContainer.js';
 import { Breadcrumb } from '../src/navigation/Breadcrumb.js';
 import { Panel } from '../src/panel/Panel.js';
-import { Component } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
 
 class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
 beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });

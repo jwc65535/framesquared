@@ -4,10 +4,10 @@
     "rootDir": "src",
     "outDir": "dist",
     "paths": {
-      "@ext-ts/core": [
+      "@framesquared/core": [
         "../core/src/index.ts"
       ],
-      "@ext-ts/component": [
+      "@framesquared/component": [
         "../component/src/index.ts"
       ]
     },

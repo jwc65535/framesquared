@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – Breadcrumb
+ * @framesquared/ui – Breadcrumb
  *
  * Displays a tree store as a breadcrumb path.  Each segment is a
  * clickable item.  Non-leaf items have a dropdown arrow that shows
@@ -8,8 +8,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component } from '@ext-ts/component';
-import type { ComponentConfig } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
+import type { ComponentConfig } from '@framesquared/component';
 
 // ---------------------------------------------------------------------------
 // Minimal tree node interface (duck-typed, no grid import)

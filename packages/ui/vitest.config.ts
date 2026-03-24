@@ -24,9 +24,9 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@ext-ts/ui': path.resolve(__dirname, 'src/index.ts'),
-      '@ext-ts/core': path.resolve(__dirname, '../core/src/index.ts'),
-      '@ext-ts/component': path.resolve(__dirname, '../component/src/index.ts'),
+      '@framesquared/ui': path.resolve(__dirname, 'src/index.ts'),
+      '@framesquared/core': path.resolve(__dirname, '../core/src/index.ts'),
+      '@framesquared/component': path.resolve(__dirname, '../component/src/index.ts'),
     },
   },
 });

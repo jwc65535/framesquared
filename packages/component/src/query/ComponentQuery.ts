@@ -1,5 +1,5 @@
 /**
- * @ext-ts/component – CQ (Component Query static API)
+ * @framesquared/component – CQ (Component Query static API)
  *
  * Static convenience API for querying component trees.
  */

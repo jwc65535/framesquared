@@ -1,7 +1,7 @@
 /**
- * @ext-ts/core – Base class
+ * @framesquared/core – Base class
  *
- * Foundation for the ext-ts class system.  Provides:
+ * Foundation for the framesquared class system.  Provides:
  *  - Config auto-generation (getX / setX / applyX / updateX lifecycle)
  *  - callParent() for wrapped methods (set up by define())
  *  - destroy() + Symbol.dispose

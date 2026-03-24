@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Grid, RowSelectionModel, CellSelectionModel, TreePanel, TreeStore } from '@ext-ts/grid';
-import { Model, Store } from '@ext-ts/data';
+import { Grid, RowSelectionModel, CellSelectionModel, TreePanel, TreeStore } from '@framesquared/grid';
+import { Model, Store } from '@framesquared/data';
 
 class Employee extends Model {
   static override fields = [

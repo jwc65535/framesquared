@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – Viewport
+ * @framesquared/ui – Viewport
  *
  * A Container that fills the entire browser viewport.
  * Renders into document.body, sets overflow: hidden,
@@ -8,8 +8,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Container } from '@ext-ts/component';
-import type { ContainerConfig } from '@ext-ts/component';
+import { Container } from '@framesquared/component';
+import type { ContainerConfig } from '@framesquared/component';
 
 export interface ViewportConfig extends ContainerConfig {}
 

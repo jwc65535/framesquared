@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – ar-SA locale bundle
+ * @framesquared/core – ar-SA locale bundle
  */
 
 import { Locale } from '../Locale.js';

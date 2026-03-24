@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – HeaderContainer
+ * @framesquared/grid – HeaderContainer
  *
  * Renders and manages the <thead> <tr> of column headers.
  * Applies width, hidden state, and sort indicator classes.

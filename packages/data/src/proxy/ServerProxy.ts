@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – Server Proxies
+ * @framesquared/data – Server Proxies
  *
  * AjaxProxy (fetch-based) and RestProxy (RESTful URL patterns).
  */

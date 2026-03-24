@@ -1,5 +1,5 @@
 /**
- * @ext-ts/app – Binding
+ * @framesquared/app – Binding
  *
  * Parses and evaluates binding expressions that connect ViewModel
  * data to component configs.  Supports simple paths, negation,

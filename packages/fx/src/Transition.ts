@@ -1,5 +1,5 @@
 /**
- * @ext-ts/fx – Transition
+ * @framesquared/fx – Transition
  *
  * CSS transition management: set/clear transitions on elements,
  * and register transitionend callbacks with cleanup.

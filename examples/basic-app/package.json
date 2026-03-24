@@ -1,5 +1,5 @@
 {
-  "name": "@ext-ts/example-basic-app",
+  "name": "@framesquared/example-basic-app",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -8,15 +8,15 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@ext-ts/core": "workspace:*",
-    "@ext-ts/data": "workspace:*",
-    "@ext-ts/component": "workspace:*",
-    "@ext-ts/layout": "workspace:*",
-    "@ext-ts/ui": "workspace:*",
-    "@ext-ts/form": "workspace:*",
-    "@ext-ts/grid": "workspace:*",
-    "@ext-ts/app": "workspace:*",
-    "@ext-ts/theme": "workspace:*"
+    "@framesquared/core": "workspace:*",
+    "@framesquared/data": "workspace:*",
+    "@framesquared/component": "workspace:*",
+    "@framesquared/layout": "workspace:*",
+    "@framesquared/ui": "workspace:*",
+    "@framesquared/form": "workspace:*",
+    "@framesquared/grid": "workspace:*",
+    "@framesquared/app": "workspace:*",
+    "@framesquared/theme": "workspace:*"
   },
   "devDependencies": {
     "vite": "^5.0.0",

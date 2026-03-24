@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – CellSelectionModel
+ * @framesquared/grid – CellSelectionModel
  *
  * Selects individual cells.  Supports navigation via arrow keys
  * and Tab/Shift+Tab.  Selected cell gets x-grid-cell-selected class.

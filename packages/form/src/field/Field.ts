@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – Field (base class)
+ * @framesquared/form – Field (base class)
  *
  * Abstract base for all form fields.  Provides label rendering,
  * value management, dirty tracking, validation framework, and
@@ -8,8 +8,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component } from '@ext-ts/component';
-import type { ComponentConfig } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
+import type { ComponentConfig } from '@framesquared/component';
 
 // ---------------------------------------------------------------------------
 // Config

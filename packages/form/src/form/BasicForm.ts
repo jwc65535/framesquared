@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – BasicForm
+ * @framesquared/form – BasicForm
  *
  * Core form logic separated from UI.  Manages a collection of
  * Field instances, collects/distributes values, validates,

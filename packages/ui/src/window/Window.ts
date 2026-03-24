@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – Window
+ * @framesquared/ui – Window
  *
  * A floating Panel rendered into document.body.  Supports dragging
  * (by header), modal mask, maximize/minimize/restore, constrain to

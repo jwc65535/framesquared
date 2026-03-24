@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – Accordion
+ * @framesquared/ui – Accordion
  *
  * A Container that displays child panels as collapsible sections.
  * By default only one panel is expanded at a time (single mode).
@@ -8,8 +8,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Container } from '@ext-ts/component';
-import type { ContainerConfig } from '@ext-ts/component';
+import { Container } from '@framesquared/component';
+import type { ContainerConfig } from '@framesquared/component';
 
 export interface AccordionConfig extends ContainerConfig {
   multi?: boolean;

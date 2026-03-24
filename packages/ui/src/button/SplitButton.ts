@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – SplitButton
+ * @framesquared/ui – SplitButton
  *
  * A button with two click zones: the main button area and a
  * dropdown arrow area.  Clicking the arrow fires `arrowHandler`

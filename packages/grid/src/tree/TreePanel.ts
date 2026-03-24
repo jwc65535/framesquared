@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – TreePanel
+ * @framesquared/grid – TreePanel
  *
  * Displays hierarchical data from a TreeStore.  Each node is
  * rendered with depth-based indentation, expand/collapse icons,
@@ -8,8 +8,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Panel } from '@ext-ts/ui';
-import type { PanelConfig } from '@ext-ts/ui';
+import { Panel } from '@framesquared/ui';
+import type { PanelConfig } from '@framesquared/ui';
 import type { TreeStore, TreeNode } from './TreeStore.js';
 
 // ---------------------------------------------------------------------------

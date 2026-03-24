@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – MenuItem
+ * @framesquared/ui – MenuItem
  *
  * A clickable item within a Menu.  Supports text, icon, handler,
  * sub-menu indicator, href (link), and disabled state.
@@ -7,8 +7,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component } from '@ext-ts/component';
-import type { ComponentConfig } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
+import type { ComponentConfig } from '@framesquared/component';
 
 export interface MenuItemConfig extends ComponentConfig {
   text?: string;

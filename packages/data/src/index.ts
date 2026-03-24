@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data
+ * @framesquared/data
  * Models, stores, and proxies
  */
 

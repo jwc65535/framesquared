@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – AccordionLayout
+ * @framesquared/layout – AccordionLayout
  *
  * Vertical stack where only one item is expanded at a time
  * (or multiple with multi:true).  Expanded items get flex:1
@@ -10,7 +10,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Component } from '@ext-ts/component';
+import type { Component } from '@framesquared/component';
 import { Layout } from './Layout.js';
 import type { LayoutConfig } from './Layout.js';
 

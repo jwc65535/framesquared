@@ -1,5 +1,5 @@
 {
-  "name": "@ext-ts/layout",
+  "name": "@framesquared/layout",
   "version": "0.1.0",
   "description": "Layout managers",
   "type": "module",
@@ -19,7 +19,7 @@
     "typecheck": "tsc --noEmit --project tsconfig.build.json"
   },
   "dependencies": {
-    "@ext-ts/core": "workspace:*",
-    "@ext-ts/component": "workspace:*"
+    "@framesquared/core": "workspace:*",
+    "@framesquared/component": "workspace:*"
   }
 }

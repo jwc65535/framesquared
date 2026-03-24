@@ -788,7 +788,7 @@ describe('now', () => {
 describe('generateId', () => {
   it('returns a string starting with the default prefix', () => {
     const id = generateId();
-    expect(id).toMatch(/^ext-ts-\d+$/);
+    expect(id).toMatch(/^framesquared-\d+$/);
   });
 
   it('uses a custom prefix', () => {

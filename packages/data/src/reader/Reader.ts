@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – Readers
+ * @framesquared/data – Readers
  *
  * Parse raw server response data into ResultSet instances.
  */

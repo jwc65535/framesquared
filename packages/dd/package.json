@@ -1,5 +1,5 @@
 {
-  "name": "@ext-ts/dd",
+  "name": "@framesquared/dd",
   "version": "0.1.0",
   "description": "Drag and drop",
   "type": "module",
@@ -19,6 +19,6 @@
     "typecheck": "tsc --noEmit --project tsconfig.build.json"
   },
   "dependencies": {
-    "@ext-ts/core": "workspace:*"
+    "@framesquared/core": "workspace:*"
   }
 }

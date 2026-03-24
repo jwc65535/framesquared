@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – ResultSet
+ * @framesquared/data – ResultSet
  */
 
 import type { Model } from './Model.js';

@@ -53,31 +53,31 @@ importers:
 
   examples/admin-dashboard:
     dependencies:
-      '@ext-ts/app':
+      '@framesquared/app':
         specifier: workspace:*
         version: link:../../packages/app
-      '@ext-ts/component':
+      '@framesquared/component':
         specifier: workspace:*
         version: link:../../packages/component
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@ext-ts/data':
+      '@framesquared/data':
         specifier: workspace:*
         version: link:../../packages/data
-      '@ext-ts/form':
+      '@framesquared/form':
         specifier: workspace:*
         version: link:../../packages/form
-      '@ext-ts/grid':
+      '@framesquared/grid':
         specifier: workspace:*
         version: link:../../packages/grid
-      '@ext-ts/layout':
+      '@framesquared/layout':
         specifier: workspace:*
         version: link:../../packages/layout
-      '@ext-ts/theme':
+      '@framesquared/theme':
         specifier: workspace:*
         version: link:../../packages/theme
-      '@ext-ts/ui':
+      '@framesquared/ui':
         specifier: workspace:*
         version: link:../../packages/ui
     devDependencies:
@@ -90,31 +90,31 @@ importers:
 
   examples/basic-app:
     dependencies:
-      '@ext-ts/app':
+      '@framesquared/app':
         specifier: workspace:*
         version: link:../../packages/app
-      '@ext-ts/component':
+      '@framesquared/component':
         specifier: workspace:*
         version: link:../../packages/component
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@ext-ts/data':
+      '@framesquared/data':
         specifier: workspace:*
         version: link:../../packages/data
-      '@ext-ts/form':
+      '@framesquared/form':
         specifier: workspace:*
         version: link:../../packages/form
-      '@ext-ts/grid':
+      '@framesquared/grid':
         specifier: workspace:*
         version: link:../../packages/grid
-      '@ext-ts/layout':
+      '@framesquared/layout':
         specifier: workspace:*
         version: link:../../packages/layout
-      '@ext-ts/theme':
+      '@framesquared/theme':
         specifier: workspace:*
         version: link:../../packages/theme
-      '@ext-ts/ui':
+      '@framesquared/ui':
         specifier: workspace:*
         version: link:../../packages/ui
     devDependencies:
@@ -127,37 +127,37 @@ importers:
 
   examples/kitchen-sink:
     dependencies:
-      '@ext-ts/app':
+      '@framesquared/app':
         specifier: workspace:*
         version: link:../../packages/app
-      '@ext-ts/component':
+      '@framesquared/component':
         specifier: workspace:*
         version: link:../../packages/component
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@ext-ts/data':
+      '@framesquared/data':
         specifier: workspace:*
         version: link:../../packages/data
-      '@ext-ts/dd':
+      '@framesquared/dd':
         specifier: workspace:*
         version: link:../../packages/dd
-      '@ext-ts/form':
+      '@framesquared/form':
         specifier: workspace:*
         version: link:../../packages/form
-      '@ext-ts/fx':
+      '@framesquared/fx':
         specifier: workspace:*
         version: link:../../packages/fx
-      '@ext-ts/grid':
+      '@framesquared/grid':
         specifier: workspace:*
         version: link:../../packages/grid
-      '@ext-ts/layout':
+      '@framesquared/layout':
         specifier: workspace:*
         version: link:../../packages/layout
-      '@ext-ts/theme':
+      '@framesquared/theme':
         specifier: workspace:*
         version: link:../../packages/theme
-      '@ext-ts/ui':
+      '@framesquared/ui':
         specifier: workspace:*
         version: link:../../packages/ui
     devDependencies:
@@ -170,28 +170,28 @@ importers:
 
   examples/tree-explorer:
     dependencies:
-      '@ext-ts/component':
+      '@framesquared/component':
         specifier: workspace:*
         version: link:../../packages/component
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@ext-ts/data':
+      '@framesquared/data':
         specifier: workspace:*
         version: link:../../packages/data
-      '@ext-ts/form':
+      '@framesquared/form':
         specifier: workspace:*
         version: link:../../packages/form
-      '@ext-ts/grid':
+      '@framesquared/grid':
         specifier: workspace:*
         version: link:../../packages/grid
-      '@ext-ts/layout':
+      '@framesquared/layout':
         specifier: workspace:*
         version: link:../../packages/layout
-      '@ext-ts/theme':
+      '@framesquared/theme':
         specifier: workspace:*
         version: link:../../packages/theme
-      '@ext-ts/ui':
+      '@framesquared/ui':
         specifier: workspace:*
         version: link:../../packages/ui
     devDependencies:
@@ -204,52 +204,52 @@ importers:
 
   packages/app:
     dependencies:
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../core
 
   packages/build-tests:
     devDependencies:
-      '@ext-ts/app':
+      '@framesquared/app':
         specifier: workspace:*
         version: link:../app
-      '@ext-ts/component':
+      '@framesquared/component':
         specifier: workspace:*
         version: link:../component
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../core
-      '@ext-ts/data':
+      '@framesquared/data':
         specifier: workspace:*
         version: link:../data
-      '@ext-ts/dd':
+      '@framesquared/dd':
         specifier: workspace:*
         version: link:../dd
-      '@ext-ts/form':
+      '@framesquared/form':
         specifier: workspace:*
         version: link:../form
-      '@ext-ts/fx':
+      '@framesquared/fx':
         specifier: workspace:*
         version: link:../fx
-      '@ext-ts/grid':
+      '@framesquared/grid':
         specifier: workspace:*
         version: link:../grid
-      '@ext-ts/layout':
+      '@framesquared/layout':
         specifier: workspace:*
         version: link:../layout
-      '@ext-ts/theme':
+      '@framesquared/theme':
         specifier: workspace:*
         version: link:../theme
-      '@ext-ts/ui':
+      '@framesquared/ui':
         specifier: workspace:*
         version: link:../ui
-      ext-ts:
+      framesquared:
         specifier: workspace:*
-        version: link:../ext-ts
+        version: link:../framesquared
 
   packages/component:
     dependencies:
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../core
 
@@ -257,139 +257,139 @@ importers:
 
   packages/data:
     dependencies:
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../core
 
   packages/dd:
     dependencies:
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../core
 
-  packages/ext-ts:
+  packages/framesquared:
     dependencies:
-      '@ext-ts/app':
+      '@framesquared/app':
         specifier: workspace:*
         version: link:../app
-      '@ext-ts/component':
+      '@framesquared/component':
         specifier: workspace:*
         version: link:../component
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../core
-      '@ext-ts/data':
+      '@framesquared/data':
         specifier: workspace:*
         version: link:../data
-      '@ext-ts/dd':
+      '@framesquared/dd':
         specifier: workspace:*
         version: link:../dd
-      '@ext-ts/form':
+      '@framesquared/form':
         specifier: workspace:*
         version: link:../form
-      '@ext-ts/fx':
+      '@framesquared/fx':
         specifier: workspace:*
         version: link:../fx
-      '@ext-ts/grid':
+      '@framesquared/grid':
         specifier: workspace:*
         version: link:../grid
-      '@ext-ts/layout':
+      '@framesquared/layout':
         specifier: workspace:*
         version: link:../layout
-      '@ext-ts/theme':
+      '@framesquared/theme':
         specifier: workspace:*
         version: link:../theme
-      '@ext-ts/ui':
+      '@framesquared/ui':
         specifier: workspace:*
         version: link:../ui
 
   packages/form:
     dependencies:
-      '@ext-ts/component':
+      '@framesquared/component':
         specifier: workspace:*
         version: link:../component
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../core
-      '@ext-ts/ui':
+      '@framesquared/ui':
         specifier: workspace:*
         version: link:../ui
 
   packages/fx:
     dependencies:
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../core
 
   packages/grid:
     dependencies:
-      '@ext-ts/component':
+      '@framesquared/component':
         specifier: workspace:*
         version: link:../component
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../core
-      '@ext-ts/ui':
+      '@framesquared/ui':
         specifier: workspace:*
         version: link:../ui
 
   packages/integration-tests:
     devDependencies:
-      '@ext-ts/app':
+      '@framesquared/app':
         specifier: workspace:*
         version: link:../app
-      '@ext-ts/component':
+      '@framesquared/component':
         specifier: workspace:*
         version: link:../component
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../core
-      '@ext-ts/data':
+      '@framesquared/data':
         specifier: workspace:*
         version: link:../data
-      '@ext-ts/dd':
+      '@framesquared/dd':
         specifier: workspace:*
         version: link:../dd
-      '@ext-ts/form':
+      '@framesquared/form':
         specifier: workspace:*
         version: link:../form
-      '@ext-ts/fx':
+      '@framesquared/fx':
         specifier: workspace:*
         version: link:../fx
-      '@ext-ts/grid':
+      '@framesquared/grid':
         specifier: workspace:*
         version: link:../grid
-      '@ext-ts/layout':
+      '@framesquared/layout':
         specifier: workspace:*
         version: link:../layout
-      '@ext-ts/theme':
+      '@framesquared/theme':
         specifier: workspace:*
         version: link:../theme
-      '@ext-ts/ui':
+      '@framesquared/ui':
         specifier: workspace:*
         version: link:../ui
 
   packages/layout:
     dependencies:
-      '@ext-ts/component':
+      '@framesquared/component':
         specifier: workspace:*
         version: link:../component
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../core
 
   packages/theme:
     dependencies:
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../core
 
   packages/ui:
     dependencies:
-      '@ext-ts/component':
+      '@framesquared/component':
         specifier: workspace:*
         version: link:../component
-      '@ext-ts/core':
+      '@framesquared/core':
         specifier: workspace:*
         version: link:../core
 

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – Locale
+ * @framesquared/core – Locale
  *
  * Manages translations, number/date formatting (via Intl APIs),
  * plural rules, RTL direction, and locale-aware collation.

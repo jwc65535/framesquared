@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – NodeInterface
+ * @framesquared/data – NodeInterface
  *
  * Mixin applied to Model instances to give them tree-node capabilities:
  * parent/child/sibling navigation, depth, expand/collapse state,

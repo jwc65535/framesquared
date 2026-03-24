@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form
+ * @framesquared/form
  * Form fields and validation
  */
 

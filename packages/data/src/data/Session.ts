@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – Session
+ * @framesquared/data – Session
  *
  * Manages a set of related model instances.  Tracks all CRUD
  * operations as a unit.  save() sends all changes via a BatchProxy.

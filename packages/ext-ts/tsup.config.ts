@@ -24,8 +24,8 @@ export default defineConfig({
   splitting: true,
   treeshake: true,
   external: [
-    '@ext-ts/core', '@ext-ts/data', '@ext-ts/component', '@ext-ts/layout',
-    '@ext-ts/ui', '@ext-ts/form', '@ext-ts/grid', '@ext-ts/dd',
-    '@ext-ts/fx', '@ext-ts/app', '@ext-ts/theme',
+    '@framesquared/core', '@framesquared/data', '@framesquared/component', '@framesquared/layout',
+    '@framesquared/ui', '@framesquared/form', '@framesquared/grid', '@framesquared/dd',
+    '@framesquared/fx', '@framesquared/app', '@framesquared/theme',
   ],
 });

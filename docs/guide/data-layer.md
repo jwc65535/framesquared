@@ -7,7 +7,7 @@ The data layer manages application state through Models (records), Stores (colle
 Models define the shape of your data with typed fields and validation:
 
 ```typescript
-import { Model } from '@ext-ts/data';
+import { Model } from '@framesquared/data';
 
 class Product extends Model {
   static fields = [
@@ -47,7 +47,7 @@ product.isValid();          // true
 Stores are observable collections of Model records:
 
 ```typescript
-import { Store } from '@ext-ts/data';
+import { Store } from '@framesquared/data';
 
 const store = new Store({
   model: Product,
@@ -116,7 +116,7 @@ Proxies handle server communication:
 ### AjaxProxy (fetch-based)
 
 ```typescript
-import { AjaxProxy } from '@ext-ts/data';
+import { AjaxProxy } from '@framesquared/data';
 
 const proxy = new AjaxProxy({
   model: Product,
@@ -128,7 +128,7 @@ const proxy = new AjaxProxy({
 ### RestProxy
 
 ```typescript
-import { RestProxy } from '@ext-ts/data';
+import { RestProxy } from '@framesquared/data';
 
 const proxy = new RestProxy({
   model: Product,
@@ -143,7 +143,7 @@ const proxy = new RestProxy({
 ### GraphQLProxy
 
 ```typescript
-import { GraphQLProxy } from '@ext-ts/data';
+import { GraphQLProxy } from '@framesquared/data';
 
 const proxy = new GraphQLProxy({
   model: Product,
@@ -157,7 +157,7 @@ const proxy = new GraphQLProxy({
 ### WebSocketProxy
 
 ```typescript
-import { WebSocketProxy } from '@ext-ts/data';
+import { WebSocketProxy } from '@framesquared/data';
 
 const proxy = new WebSocketProxy({
   model: Product,
@@ -175,7 +175,7 @@ proxy.connect();
 ## Associations
 
 ```typescript
-import { HasMany, BelongsTo } from '@ext-ts/data';
+import { HasMany, BelongsTo } from '@framesquared/data';
 
 class Author extends Model {
   static fields = [{ name: 'id', type: 'int' }, { name: 'name', type: 'string' }];
@@ -199,7 +199,7 @@ class Book extends Model {
 ## Connection (Centralized Fetch)
 
 ```typescript
-import { Connection } from '@ext-ts/data';
+import { Connection } from '@framesquared/data';
 
 Connection.setDefaultHeaders({ Authorization: 'Bearer token' });
 Connection.addRequestInterceptor((url, init) => {
@@ -212,7 +212,7 @@ Connection.setErrorHandler((err) => showNotification(err.message));
 ## Session (Batch Changes)
 
 ```typescript
-import { Session, BatchProxy } from '@ext-ts/data';
+import { Session, BatchProxy } from '@framesquared/data';
 
 const session = new Session();
 session.trackCreate(newProduct);

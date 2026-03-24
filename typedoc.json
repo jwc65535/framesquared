@@ -15,7 +15,7 @@
     "packages/theme"
   ],
   "out": "docs/api",
-  "name": "ext-ts API Documentation",
+  "name": "framesquared API Documentation",
   "readme": "README.md",
   "includeVersion": true,
   "categorizeByGroup": true,

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/dd – Draggable
+ * @framesquared/dd – Draggable
  *
  * Makes an element draggable.  Supports drag handles, axis lock,
  * snap-to-grid, constraint, and proxy modes.  Integrates with

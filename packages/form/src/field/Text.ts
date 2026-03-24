@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – TextField
+ * @framesquared/form – TextField
  *
  * A text input field with validation (allowBlank, minLength, maxLength,
  * regex, vtype), character masking, triggers, and keyboard events.

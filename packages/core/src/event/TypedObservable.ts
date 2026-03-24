@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – TypedObservable
+ * @framesquared/core – TypedObservable
  *
  * A generic interface that overlays type-safe event signatures on top
  * of the runtime Observable mixin.

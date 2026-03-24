@@ -1,5 +1,5 @@
 /**
- * @ext-ts/dd – DragProxy
+ * @framesquared/dd – DragProxy
  * Visual feedback during drag — a ghost element that follows the cursor.
  */
 

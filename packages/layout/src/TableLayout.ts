@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – TableLayout
+ * @framesquared/layout – TableLayout
  *
  * Renders children in a grid structure using CSS Grid.
  * Supports `columns`, `colspan`, and `rowspan` on items.
@@ -9,7 +9,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Component } from '@ext-ts/component';
+import type { Component } from '@framesquared/component';
 import { Layout } from './Layout.js';
 import type { LayoutConfig } from './Layout.js';
 

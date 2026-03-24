@@ -1,5 +1,5 @@
 {
-  "name": "@ext-ts/fx",
+  "name": "@framesquared/fx",
   "version": "0.1.0",
   "description": "Animations and effects",
   "type": "module",
@@ -19,6 +19,6 @@
     "typecheck": "tsc --noEmit --project tsconfig.build.json"
   },
   "dependencies": {
-    "@ext-ts/core": "workspace:*"
+    "@framesquared/core": "workspace:*"
   }
 }

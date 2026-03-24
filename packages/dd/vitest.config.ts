@@ -24,8 +24,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@ext-ts/dd': path.resolve(__dirname, 'src/index.ts'),
-      '@ext-ts/core': path.resolve(__dirname, '../core/src/index.ts'),
+      '@framesquared/dd': path.resolve(__dirname, 'src/index.ts'),
+      '@framesquared/core': path.resolve(__dirname, '../core/src/index.ts'),
     },
   },
 });

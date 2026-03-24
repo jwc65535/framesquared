@@ -1,1 +1,1 @@
-export * from '@ext-ts/core';
+export * from '@framesquared/core';

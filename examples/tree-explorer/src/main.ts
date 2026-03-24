@@ -1,14 +1,14 @@
 /**
- * ext-ts Tree Explorer Example
+ * framesquared Tree Explorer Example
  *
  * Demonstrates: TreePanel, TreeStore, checkable nodes, expand/collapse,
  * detail panel, Panel layout, search filtering.
  */
 
-import { TreePanel, TreeStore } from '@ext-ts/grid';
-import { Panel, Button, Toolbar } from '@ext-ts/ui';
-import { TextField } from '@ext-ts/form';
-import { ThemeManager, ModernTheme } from '@ext-ts/theme';
+import { TreePanel, TreeStore } from '@framesquared/grid';
+import { Panel, Button, Toolbar } from '@framesquared/ui';
+import { TextField } from '@framesquared/form';
+import { ThemeManager, ModernTheme } from '@framesquared/theme';
 
 // ─── File System Tree ────────────────────────────────────────────────────
 

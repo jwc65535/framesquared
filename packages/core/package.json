@@ -1,5 +1,5 @@
 {
-  "name": "@ext-ts/core",
+  "name": "@framesquared/core",
   "version": "0.1.0",
   "description": "Class system, events, and utilities",
   "type": "module",

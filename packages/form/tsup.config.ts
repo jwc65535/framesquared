@@ -9,5 +9,5 @@ export default defineConfig({
   target: 'es2022',
   outDir: 'dist',
   tsconfig: 'tsconfig.build.json',
-  external: ['@ext-ts/core', '@ext-ts/component', '@ext-ts/ui'],
+  external: ['@framesquared/core', '@framesquared/component', '@framesquared/ui'],
 });

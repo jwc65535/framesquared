@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid
+ * @framesquared/grid
  * Grid/table component
  */
 

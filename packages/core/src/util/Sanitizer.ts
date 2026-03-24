@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – Sanitizer
+ * @framesquared/core – Sanitizer
  *
  * HTML sanitization utility for safe innerHTML usage.
  * Uses a whitelist approach — only known-safe tags and attributes pass through.
@@ -7,7 +7,7 @@
  *
  * @example
  * ```typescript
- * import { Sanitizer } from '@ext-ts/core';
+ * import { Sanitizer } from '@framesquared/core';
  *
  * const clean = Sanitizer.sanitize('<p onclick="alert(1)">Hello <b>world</b></p>');
  * // Returns: '<p>Hello <b>world</b></p>'

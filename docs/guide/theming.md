@@ -1,11 +1,11 @@
 # Theming
 
-ext-ts uses a token-based theming system with CSS custom properties for runtime theme switching.
+framesquared uses a token-based theming system with CSS custom properties for runtime theme switching.
 
 ## Quick Start
 
 ```typescript
-import { ThemeManager, ModernTheme } from '@ext-ts/theme';
+import { ThemeManager, ModernTheme } from '@framesquared/theme';
 
 ThemeManager.register(ModernTheme);
 ThemeManager.setTheme('modern');
@@ -25,7 +25,7 @@ ThemeManager.setTheme('modern');
 Themes are defined as nested token objects:
 
 ```typescript
-import { Theme } from '@ext-ts/theme';
+import { Theme } from '@framesquared/theme';
 
 const myTheme = new Theme({
   name: 'brand',
@@ -120,7 +120,7 @@ ThemeManager.on('themechange', (theme, name) => {
 Programmatic CSS rule management:
 
 ```typescript
-import { StyleSheet } from '@ext-ts/theme';
+import { StyleSheet } from '@framesquared/theme';
 
 const ss = new StyleSheet('my-component');
 ss.addRule('.x-panel-header', {

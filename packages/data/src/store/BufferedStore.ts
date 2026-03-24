@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – BufferedStore
+ * @framesquared/data – BufferedStore
  *
  * For large datasets — loads pages of data on demand via a proxy.
  * Uses a sparse page map instead of loading all records.
@@ -8,7 +8,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Base, Observable } from '@ext-ts/core';
+import { Base, Observable } from '@framesquared/core';
 import type { Model } from '../Model.js';
 import { Operation } from '../Operation.js';
 

@@ -1,6 +1,6 @@
 # Components
 
-Components are the building blocks of ext-ts applications. Every visible element — panels, buttons, grids, form fields — is a Component.
+Components are the building blocks of framesquared applications. Every visible element — panels, buttons, grids, form fields — is a Component.
 
 ## Lifecycle
 
@@ -13,7 +13,7 @@ constructor → initialize → render → afterRender → [use] → onDestroy
 ### Constructor & Initialize
 
 ```typescript
-import { Component } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
 
 class StatusBar extends Component {
   declare private _statusText: string;
@@ -63,8 +63,8 @@ component.destroy(); // Removes from DOM, clears listeners, sets isDestroyed
 `Container` extends `Component` to hold child components:
 
 ```typescript
-import { Container } from '@ext-ts/component';
-import { Button } from '@ext-ts/ui';
+import { Container } from '@framesquared/component';
+import { Button } from '@framesquared/ui';
 
 const toolbar = new Container({
   renderTo: document.body,

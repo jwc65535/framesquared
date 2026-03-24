@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – EventManager (DomEvent)
+ * @framesquared/core – EventManager (DomEvent)
  *
  * Thin layer over native DOM events providing:
  *  - Tracked listener registration with bulk cleanup

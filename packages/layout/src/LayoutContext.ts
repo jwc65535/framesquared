@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – LayoutContext
+ * @framesquared/layout – LayoutContext
  *
  * Holds layout state during a layout run.  Caches element measurements
  * to avoid layout thrashing (repeated reads/writes to the DOM).

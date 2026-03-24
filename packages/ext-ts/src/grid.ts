@@ -1,1 +1,1 @@
-export * from '@ext-ts/grid';
+export * from '@framesquared/grid';

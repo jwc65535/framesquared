@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – BatchProxy
+ * @framesquared/data – BatchProxy
  *
  * Combines multiple operations into a single HTTP request.
  * Unwraps the batch response into individual ResultSets.

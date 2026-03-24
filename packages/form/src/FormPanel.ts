@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – FormPanel
+ * @framesquared/form – FormPanel
  *
  * A Panel that manages form fields.  Extends Panel to provide
  * automatic field collection, validation, value management,
@@ -8,9 +8,9 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Panel } from '@ext-ts/ui';
-import type { PanelConfig } from '@ext-ts/ui';
-import { Component } from '@ext-ts/component';
+import { Panel } from '@framesquared/ui';
+import type { PanelConfig } from '@framesquared/ui';
+import { Component } from '@framesquared/component';
 import { BasicForm } from './form/BasicForm.js';
 import type { SubmitOptions, SubmitResult } from './form/BasicForm.js';
 import { Field } from './field/Field.js';

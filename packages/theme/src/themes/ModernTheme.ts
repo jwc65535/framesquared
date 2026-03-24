@@ -1,5 +1,5 @@
 /**
- * @ext-ts/theme – ModernTheme
+ * @framesquared/theme – ModernTheme
  * Clean, flat design — Material-inspired colors, generous spacing.
  */
 

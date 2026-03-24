@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – Schema
+ * @framesquared/data – Schema
  *
  * Singleton registry for Model classes and their associations.
  * Handles forward references: if Model A declares an association to

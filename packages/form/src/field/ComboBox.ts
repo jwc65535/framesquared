@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – ComboBox
+ * @framesquared/form – ComboBox
  *
  * A text field with a dropdown list of options.  Supports local
  * and remote query modes, multi-select, forceSelection, typeAhead,

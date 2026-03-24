@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Component, Container } from '@ext-ts/component';
+import { Component, Container } from '@framesquared/component';
 import { FitLayout } from '../src/FitLayout.js';
 import { CardLayout } from '../src/CardLayout.js';
 import { AnchorLayout } from '../src/AnchorLayout.js';

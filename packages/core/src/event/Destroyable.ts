@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – Destroyable
+ * @framesquared/core – Destroyable
  *
  * Interface for objects that support deterministic cleanup, plus a
  * utility to combine multiple destroyables into one.

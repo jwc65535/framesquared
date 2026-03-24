@@ -1,5 +1,5 @@
 /**
- * @ext-ts/component – CQMatcher
+ * @framesquared/component – CQMatcher
  *
  * Evaluates parsed CQ AST nodes against Component instances.
  * Handles simple selectors, compound selectors, all four combinators,

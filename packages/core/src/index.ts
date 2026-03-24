@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core
+ * @framesquared/core
  * Class system, events, and utilities
  */
 

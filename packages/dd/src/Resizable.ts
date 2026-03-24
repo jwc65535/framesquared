@@ -1,5 +1,5 @@
 /**
- * @ext-ts/dd – Resizable
+ * @framesquared/dd – Resizable
  *
  * Makes an element resizable by adding drag handles on specified
  * edges/corners.  Supports min/max constraints and aspect ratio

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – RowEditing plugin
+ * @framesquared/grid – RowEditing plugin
  *
  * Row-level editing: shows input fields for all editable columns
  * in the selected row.  Update saves all; Cancel reverts.

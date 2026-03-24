@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – Spinner
+ * @framesquared/form – Spinner
  *
  * Abstract base for fields with up/down spin behavior.
  * Extends TextField with spinner triggers and ArrowUp/ArrowDown keyboard.

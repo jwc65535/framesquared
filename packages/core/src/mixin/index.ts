@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – mixin barrel
+ * @framesquared/core – mixin barrel
  */
 
 export { Identifiable, IdentityMap } from './Identifiable.js';

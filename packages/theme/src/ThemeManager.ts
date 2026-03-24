@@ -1,5 +1,5 @@
 /**
- * @ext-ts/theme – ThemeManager
+ * @framesquared/theme – ThemeManager
  *
  * Singleton that manages registered themes.  setTheme() unapplies
  * the current theme, applies the new one, and fires 'themechange'.

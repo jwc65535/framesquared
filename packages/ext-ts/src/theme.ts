@@ -1,1 +1,1 @@
-export * from '@ext-ts/theme';
+export * from '@framesquared/theme';

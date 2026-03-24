@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – Field system
+ * @framesquared/data – Field system
  *
  * Defines field types with type coercion, serialization, and defaults.
  */

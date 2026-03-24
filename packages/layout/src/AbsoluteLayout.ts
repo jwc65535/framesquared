@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – AbsoluteLayout
+ * @framesquared/layout – AbsoluteLayout
  *
  * Positions children absolutely within the container using x/y configs.
  *
@@ -8,7 +8,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Component } from '@ext-ts/component';
+import type { Component } from '@framesquared/component';
 import { Layout } from './Layout.js';
 import type { LayoutConfig } from './Layout.js';
 

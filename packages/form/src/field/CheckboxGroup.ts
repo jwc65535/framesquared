@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – CheckboxGroup
+ * @framesquared/form – CheckboxGroup
  *
  * A container for Checkbox fields arranged in columns.
  * getValue returns array of checked values.
@@ -7,8 +7,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Container } from '@ext-ts/component';
-import type { ContainerConfig } from '@ext-ts/component';
+import { Container } from '@framesquared/component';
+import type { ContainerConfig } from '@framesquared/component';
 import { Checkbox } from './Checkbox.js';
 
 export interface CheckboxGroupConfig extends ContainerConfig {

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – KeyMap
+ * @framesquared/core – KeyMap
  *
  * Maps key combinations to handlers.  Supports modifier keys
  * (Ctrl, Alt, Shift, Meta) with exact matching.

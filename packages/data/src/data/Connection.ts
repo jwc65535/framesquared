@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – Connection
+ * @framesquared/data – Connection
  *
  * Centralized fetch() wrapper.  Supports request and response
  * interceptors, default headers, and global error handling.

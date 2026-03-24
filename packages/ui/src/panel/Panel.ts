@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – Panel
+ * @framesquared/ui – Panel
  *
  * The primary container with header, body, tools, and docking.
  * Panel extends Container to provide:
@@ -13,8 +13,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component, Container } from '@ext-ts/component';
-import type { ContainerConfig } from '@ext-ts/component';
+import { Component, Container } from '@framesquared/component';
+import type { ContainerConfig } from '@framesquared/component';
 
 // ---------------------------------------------------------------------------
 // Types

@@ -18,15 +18,15 @@ describe('Build artifacts', () => {
   for (const pkg of PACKAGES) {
     const distDir = join(ROOT, 'packages', pkg, 'dist');
 
-    it(`@ext-ts/${pkg}: dist/index.js exists`, () => {
+    it(`@framesquared/${pkg}: dist/index.js exists`, () => {
       expect(existsSync(join(distDir, 'index.js'))).toBe(true);
     });
 
-    it(`@ext-ts/${pkg}: dist/index.d.ts exists`, () => {
+    it(`@framesquared/${pkg}: dist/index.d.ts exists`, () => {
       expect(existsSync(join(distDir, 'index.d.ts'))).toBe(true);
     });
 
-    it(`@ext-ts/${pkg}: dist/index.js is non-empty`, () => {
+    it(`@framesquared/${pkg}: dist/index.js is non-empty`, () => {
       const stat = statSync(join(distDir, 'index.js'));
       expect(stat.size).toBeGreaterThan(0);
     });
@@ -39,7 +39,7 @@ describe('Build artifacts', () => {
 
 describe('Type declarations', () => {
   for (const pkg of PACKAGES) {
-    it(`@ext-ts/${pkg}: .d.ts contains export declarations`, () => {
+    it(`@framesquared/${pkg}: .d.ts contains export declarations`, () => {
       const dtsPath = join(ROOT, 'packages', pkg, 'dist', 'index.d.ts');
       const content = readFileSync(dtsPath, 'utf-8');
       expect(content).toContain('export');
@@ -73,14 +73,14 @@ describe('Type declarations', () => {
 
 describe('ESM output format', () => {
   for (const pkg of PACKAGES) {
-    it(`@ext-ts/${pkg}: output is ESM (contains export/import)`, () => {
+    it(`@framesquared/${pkg}: output is ESM (contains export/import)`, () => {
       const jsPath = join(ROOT, 'packages', pkg, 'dist', 'index.js');
       const content = readFileSync(jsPath, 'utf-8');
       // ESM files use export statements
       expect(content).toMatch(/export\s/);
     });
 
-    it(`@ext-ts/${pkg}: output does NOT use CommonJS require()`, () => {
+    it(`@framesquared/${pkg}: output does NOT use CommonJS require()`, () => {
       const jsPath = join(ROOT, 'packages', pkg, 'dist', 'index.js');
       const content = readFileSync(jsPath, 'utf-8');
       // Should not contain require() calls
@@ -95,7 +95,7 @@ describe('ESM output format', () => {
 
 describe('Source maps', () => {
   for (const pkg of PACKAGES) {
-    it(`@ext-ts/${pkg}: source map exists`, () => {
+    it(`@framesquared/${pkg}: source map exists`, () => {
       const mapPath = join(ROOT, 'packages', pkg, 'dist', 'index.js.map');
       expect(existsSync(mapPath)).toBe(true);
     });
@@ -122,7 +122,7 @@ describe('Size budgets (uncompressed)', () => {
   };
 
   for (const pkg of PACKAGES) {
-    it(`@ext-ts/${pkg}: under ${BUDGETS[pkg]! / 1000}KB budget`, () => {
+    it(`@framesquared/${pkg}: under ${BUDGETS[pkg]! / 1000}KB budget`, () => {
       const jsPath = join(ROOT, 'packages', pkg, 'dist', 'index.js');
       const stat = statSync(jsPath);
       expect(stat.size).toBeLessThan(BUDGETS[pkg]!);
@@ -145,14 +145,14 @@ describe('Size budgets (uncompressed)', () => {
 
 describe('Tree shaking compatibility', () => {
   for (const pkg of PACKAGES) {
-    it(`@ext-ts/${pkg}: uses named exports (tree-shakeable)`, () => {
+    it(`@framesquared/${pkg}: uses named exports (tree-shakeable)`, () => {
       const jsPath = join(ROOT, 'packages', pkg, 'dist', 'index.js');
       const content = readFileSync(jsPath, 'utf-8');
       // Named exports: "export { X, Y, Z }" or "export class/function/const"
       expect(content).toMatch(/export\s*\{/);
     });
 
-    it(`@ext-ts/${pkg}: no side effects in barrel (re-exports only)`, () => {
+    it(`@framesquared/${pkg}: no side effects in barrel (re-exports only)`, () => {
       const jsPath = join(ROOT, 'packages', pkg, 'dist', 'index.js');
       const content = readFileSync(jsPath, 'utf-8');
       // The barrel should primarily be re-exports, not executable code
@@ -190,7 +190,7 @@ describe('No circular dependencies', () => {
     try {
       const content = readFileSync(filePath, 'utf-8');
       const imports: string[] = [];
-      const re = /from\s+['"](@ext-ts\/[^'"]+)['"]/g;
+      const re = /from\s+['"](@framesquared\/[^'"]+)['"]/g;
       let match;
       while ((match = re.exec(content)) !== null) {
         imports.push(match[1]);
@@ -201,22 +201,22 @@ describe('No circular dependencies', () => {
 
   // Dependency graph: each package should only import from packages lower in the stack
   const DEPENDENCY_ORDER = [
-    '@ext-ts/core',
-    '@ext-ts/data',
-    '@ext-ts/component',
-    '@ext-ts/layout',
-    '@ext-ts/ui',
-    '@ext-ts/form',
-    '@ext-ts/grid',
-    '@ext-ts/dd',
-    '@ext-ts/fx',
-    '@ext-ts/app',
-    '@ext-ts/theme',
+    '@framesquared/core',
+    '@framesquared/data',
+    '@framesquared/component',
+    '@framesquared/layout',
+    '@framesquared/ui',
+    '@framesquared/form',
+    '@framesquared/grid',
+    '@framesquared/dd',
+    '@framesquared/fx',
+    '@framesquared/app',
+    '@framesquared/theme',
   ];
 
   for (const pkg of PACKAGES) {
-    it(`@ext-ts/${pkg}: no upward dependency`, () => {
-      const pkgName = `@ext-ts/${pkg}`;
+    it(`@framesquared/${pkg}: no upward dependency`, () => {
+      const pkgName = `@framesquared/${pkg}`;
       const pkgIdx = DEPENDENCY_ORDER.indexOf(pkgName);
       const indexPath = join(ROOT, 'packages', pkg, 'dist', 'index.js');
       const imports = getImports(indexPath);
@@ -231,10 +231,10 @@ describe('No circular dependencies', () => {
     });
   }
 
-  it('core has no @ext-ts/* dependencies', () => {
+  it('core has no @framesquared/* dependencies', () => {
     const indexPath = join(ROOT, 'packages/core/dist/index.js');
     const imports = getImports(indexPath);
-    const extImports = imports.filter(i => i.startsWith('@ext-ts/'));
+    const extImports = imports.filter(i => i.startsWith('@framesquared/'));
     expect(extImports).toEqual([]);
   });
 });
@@ -243,22 +243,22 @@ describe('No circular dependencies', () => {
 // Umbrella package
 // ═══════════════════════════════════════════════════════════════════════════
 
-describe('Umbrella package (ext-ts)', () => {
-  const umbrellaDir = join(ROOT, 'packages/ext-ts/dist');
+describe('Umbrella package (framesquared)', () => {
+  const umbrellaDir = join(ROOT, 'packages/framesquared/dist');
 
-  it('ext-ts dist/index.js exists', () => {
+  it('framesquared dist/index.js exists', () => {
     expect(existsSync(join(umbrellaDir, 'index.js'))).toBe(true);
   });
 
-  it('ext-ts has sub-path entry points', () => {
+  it('framesquared has sub-path entry points', () => {
     for (const pkg of PACKAGES) {
       expect(existsSync(join(umbrellaDir, `${pkg}.js`))).toBe(true);
     }
   });
 
-  it('ext-ts package.json has exports map', () => {
+  it('framesquared package.json has exports map', () => {
     const pkgJson = JSON.parse(
-      readFileSync(join(ROOT, 'packages/ext-ts/package.json'), 'utf-8'),
+      readFileSync(join(ROOT, 'packages/framesquared/package.json'), 'utf-8'),
     );
     expect(pkgJson.exports['.']).toBeDefined();
     expect(pkgJson.exports['./core']).toBeDefined();
@@ -273,7 +273,7 @@ describe('Umbrella package (ext-ts)', () => {
 
 describe('Dynamic imports resolve', () => {
   for (const pkg of PACKAGES) {
-    it(`@ext-ts/${pkg}: dynamic import succeeds`, async () => {
+    it(`@framesquared/${pkg}: dynamic import succeeds`, async () => {
       const mod = await import(join(ROOT, 'packages', pkg, 'dist', 'index.js'));
       expect(Object.keys(mod).length).toBeGreaterThan(0);
     });

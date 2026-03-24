@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – VTypes
+ * @framesquared/form – VTypes
  * Predefined validation types for text fields.
  */
 

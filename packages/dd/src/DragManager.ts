@@ -1,5 +1,5 @@
 /**
- * @ext-ts/dd – DragManager
+ * @framesquared/dd – DragManager
  *
  * Singleton that manages all drag operations globally.
  * Tracks registered Droppables and coordinates hit-testing

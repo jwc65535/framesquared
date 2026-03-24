@@ -1,8 +1,8 @@
 /**
- * @ext-ts/component – Layout (placeholder)
+ * @framesquared/component – Layout (placeholder)
  *
  * Base layout class.  Actual layout managers (HBox, VBox, Border, etc.)
- * will be implemented in @ext-ts/layout.
+ * will be implemented in @framesquared/layout.
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

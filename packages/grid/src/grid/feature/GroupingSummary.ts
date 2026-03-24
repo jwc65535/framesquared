@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – GroupingSummary feature
+ * @framesquared/grid – GroupingSummary feature
  *
  * Combines grouping with per-group summary rows.  Each group gets
  * a header and a summary row at the bottom.

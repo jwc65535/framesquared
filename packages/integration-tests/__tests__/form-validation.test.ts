@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { FormPanel, TextField, NumberField, Checkbox } from '@ext-ts/form';
+import { FormPanel, TextField, NumberField, Checkbox } from '@framesquared/form';
 
 class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
 beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });

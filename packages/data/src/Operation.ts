@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – Operation
+ * @framesquared/data – Operation
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

@@ -1,9 +1,9 @@
 /**
- * @ext-ts/ui – MenuSeparator
+ * @framesquared/ui – MenuSeparator
  * A visual separator line within a Menu.
  */
 
-import { Component } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
 
 export class MenuSeparator extends Component {
   static override $className = 'Ext.menu.Separator';

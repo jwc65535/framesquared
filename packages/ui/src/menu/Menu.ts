@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – Menu
+ * @framesquared/ui – Menu
  *
  * A floating container that holds MenuItems.  Shows at a specific
  * position or aligned to a component.  Registers with MenuManager
@@ -8,8 +8,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Container } from '@ext-ts/component';
-import type { ContainerConfig, Component } from '@ext-ts/component';
+import { Container } from '@framesquared/component';
+import type { ContainerConfig, Component } from '@framesquared/component';
 import { MenuManager } from './MenuManager.js';
 
 export interface MenuConfig extends ContainerConfig {

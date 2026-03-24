@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – GestureRecognizer
+ * @framesquared/core – GestureRecognizer
  *
  * Detects touch/pointer gestures and dispatches synthetic CustomEvents
  * on the target element.  Uses PointerEvent exclusively (no IE).

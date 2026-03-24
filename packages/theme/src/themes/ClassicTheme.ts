@@ -1,5 +1,5 @@
 /**
- * @ext-ts/theme – ClassicTheme
+ * @framesquared/theme – ClassicTheme
  * ExtJS classic look — blue tones, subtle gradients, traditional feel.
  */
 

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – Radio
+ * @framesquared/form – Radio
  *
  * A radio button field.  Uses native <input type="radio"> with
  * group tracking to ensure single selection per name group.

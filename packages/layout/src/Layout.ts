@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – Layout (base class)
+ * @framesquared/layout – Layout (base class)
  *
  * Abstract base for all layout managers.  Manages the lifecycle
  * (beginLayout → calculate → completeLayout → afterLayout), size
@@ -8,7 +8,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Component } from '@ext-ts/component';
+import type { Component } from '@framesquared/component';
 import type { LayoutContext } from './LayoutContext.js';
 
 // ---------------------------------------------------------------------------

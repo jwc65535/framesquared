@@ -1,5 +1,5 @@
 /**
- * @ext-ts/component – XTemplate
+ * @framesquared/component – XTemplate
  *
  * A powerful template engine inspired by ExtJS's XTemplate.
  *

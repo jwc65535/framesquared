@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – ModelCollection
+ * @framesquared/data – ModelCollection
  *
  * A lightweight collection of Model instances, used by HasMany and
  * ManyToMany associations.  Provides add/remove/filter/getById.

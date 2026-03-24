@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – event system barrel
+ * @framesquared/core – event system barrel
  */
 
 export { ExtEvent } from './Event.js';

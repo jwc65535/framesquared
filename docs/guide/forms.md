@@ -1,11 +1,11 @@
 # Forms
 
-ext-ts provides a comprehensive form system with typed fields, real-time validation, and server submission.
+framesquared provides a comprehensive form system with typed fields, real-time validation, and server submission.
 
 ## FormPanel
 
 ```typescript
-import { FormPanel, TextField, NumberField, ComboBox, Checkbox } from '@ext-ts/form';
+import { FormPanel, TextField, NumberField, ComboBox, Checkbox } from '@framesquared/form';
 
 const form = new FormPanel({
   title: 'User Registration',
@@ -28,20 +28,20 @@ const form = new FormPanel({
 
 | Field | Import | Key configs |
 |-------|--------|-------------|
-| `TextField` | `@ext-ts/form` | `allowBlank`, `minLength`, `maxLength`, `vtype`, `regex` |
-| `TextArea` | `@ext-ts/form` | `rows`, `grow`, `growMax` |
-| `NumberField` | `@ext-ts/form` | `minValue`, `maxValue`, `step`, `decimalPrecision` |
-| `DateField` | `@ext-ts/form` | `format`, `minValue`, `maxValue` |
-| `ComboBox` | `@ext-ts/form` | `store`, `displayField`, `valueField`, `editable`, `multiSelect` |
-| `TagField` | `@ext-ts/form` | `store`, `displayField`, `valueField` |
-| `Checkbox` | `@ext-ts/form` | `checked`, `inputValue` |
-| `Radio` | `@ext-ts/form` | `name` (group), `inputValue` |
-| `Slider` | `@ext-ts/form` | `minValue`, `maxValue`, `step` |
-| `FileUploadField` | `@ext-ts/form` | `accept`, `multiple` |
-| `HtmlEditor` | `@ext-ts/form` | `enableColors`, `enableFont`, `enableLinks` |
-| `Spinner` | `@ext-ts/form` | `minValue`, `maxValue`, `step` |
-| `HiddenField` | `@ext-ts/form` | `name`, `value` |
-| `DisplayField` | `@ext-ts/form` | `value` (read-only display) |
+| `TextField` | `@framesquared/form` | `allowBlank`, `minLength`, `maxLength`, `vtype`, `regex` |
+| `TextArea` | `@framesquared/form` | `rows`, `grow`, `growMax` |
+| `NumberField` | `@framesquared/form` | `minValue`, `maxValue`, `step`, `decimalPrecision` |
+| `DateField` | `@framesquared/form` | `format`, `minValue`, `maxValue` |
+| `ComboBox` | `@framesquared/form` | `store`, `displayField`, `valueField`, `editable`, `multiSelect` |
+| `TagField` | `@framesquared/form` | `store`, `displayField`, `valueField` |
+| `Checkbox` | `@framesquared/form` | `checked`, `inputValue` |
+| `Radio` | `@framesquared/form` | `name` (group), `inputValue` |
+| `Slider` | `@framesquared/form` | `minValue`, `maxValue`, `step` |
+| `FileUploadField` | `@framesquared/form` | `accept`, `multiple` |
+| `HtmlEditor` | `@framesquared/form` | `enableColors`, `enableFont`, `enableLinks` |
+| `Spinner` | `@framesquared/form` | `minValue`, `maxValue`, `step` |
+| `HiddenField` | `@framesquared/form` | `name`, `value` |
+| `DisplayField` | `@framesquared/form` | `value` (read-only display) |
 
 ## Validation
 
@@ -57,7 +57,7 @@ new TextField({ vtype: 'alphanum' }); // Letters + numbers
 ### Custom Validators
 
 ```typescript
-import { presence, length, email, rangeValidator } from '@ext-ts/data';
+import { presence, length, email, rangeValidator } from '@framesquared/data';
 
 // On the Model
 class User extends Model {
@@ -103,7 +103,7 @@ form.reset();
 ## Date and Color Pickers
 
 ```typescript
-import { DatePicker, ColorPicker } from '@ext-ts/form';
+import { DatePicker, ColorPicker } from '@framesquared/form';
 
 const datePicker = new DatePicker({
   value: new Date(),
@@ -121,7 +121,7 @@ const colorPicker = new ColorPicker({
 ## CheckboxGroup and RadioGroup
 
 ```typescript
-import { CheckboxGroup, RadioGroup, Checkbox, Radio } from '@ext-ts/form';
+import { CheckboxGroup, RadioGroup, Checkbox, Radio } from '@framesquared/form';
 
 const sizes = new CheckboxGroup({
   fieldLabel: 'Sizes',

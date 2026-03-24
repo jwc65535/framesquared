@@ -1,5 +1,5 @@
 /**
- * @ext-ts/component – Template
+ * @framesquared/component – Template
  *
  * A simple template engine that supports `{token}` replacement.
  * Used by Component to render content from data.

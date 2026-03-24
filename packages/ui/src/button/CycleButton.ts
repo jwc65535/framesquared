@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – CycleButton
+ * @framesquared/ui – CycleButton
  *
  * Cycles through a set of items on each click.  Extends SplitButton
  * to show the current item's text and advance on click.

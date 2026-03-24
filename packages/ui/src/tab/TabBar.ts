@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – TabBar
+ * @framesquared/ui – TabBar
  *
  * A container for Tab components.  Renders as a horizontal (or vertical)
  * strip of tabs.  Supports adding, removing, and overflow.
@@ -7,8 +7,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component } from '@ext-ts/component';
-import type { ComponentConfig } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
+import type { ComponentConfig } from '@framesquared/component';
 import { Tab } from './Tab.js';
 
 export interface TabBarConfig extends ComponentConfig {

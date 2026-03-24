@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – Column types
+ * @framesquared/grid – Column types
  *
  * Column (base), NumberColumn, DateColumn, BooleanColumn,
  * CheckColumn, ActionColumn, RowNumbererColumn.

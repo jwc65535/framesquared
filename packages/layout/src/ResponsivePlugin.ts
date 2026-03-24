@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – ResponsivePlugin
+ * @framesquared/layout – ResponsivePlugin
  *
  * Monitors viewport size using window.matchMedia() and applies
  * different component configs at different breakpoints.
@@ -13,7 +13,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Component } from '@ext-ts/component';
+import type { Component } from '@framesquared/component';
 
 // ---------------------------------------------------------------------------
 // Types

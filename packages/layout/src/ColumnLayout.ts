@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – ColumnLayout
+ * @framesquared/layout – ColumnLayout
  *
  * Arranges children in columns.  Items with `columnWidth` (0–1)
  * get a percentage of the container width.  Fixed-width items
@@ -10,7 +10,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Component } from '@ext-ts/component';
+import type { Component } from '@framesquared/component';
 import { Layout } from './Layout.js';
 import type { LayoutConfig } from './Layout.js';
 

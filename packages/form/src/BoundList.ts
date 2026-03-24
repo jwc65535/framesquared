@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – BoundList
+ * @framesquared/form – BoundList
  *
  * The dropdown list used by ComboBox.  Renders items from a Store,
  * supports hover highlighting, keyboard navigation (up/down/enter/esc),
@@ -8,8 +8,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component } from '@ext-ts/component';
-import type { ComponentConfig } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
+import type { ComponentConfig } from '@framesquared/component';
 
 export interface BoundListConfig extends ComponentConfig {
   store?: any;

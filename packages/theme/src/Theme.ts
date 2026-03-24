@@ -1,5 +1,5 @@
 /**
- * @ext-ts/theme – Theme
+ * @framesquared/theme – Theme
  *
  * A design token container.  Tokens are a nested object of values
  * (colors, spacing, typography, etc.).  Themes can inherit from

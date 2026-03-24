@@ -1,5 +1,5 @@
 /**
- * @ext-ts/app
+ * @framesquared/app
  * Application architecture (MVC/MVVM)
  */
 

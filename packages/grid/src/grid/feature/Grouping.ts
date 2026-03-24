@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – Grouping feature
+ * @framesquared/grid – Grouping feature
  *
  * Groups rows by a field value.  Renders group header rows with
  * expand/collapse behavior.

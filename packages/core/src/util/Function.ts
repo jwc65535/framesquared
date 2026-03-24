@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – Function utilities
+ * @framesquared/core – Function utilities
  */
 
 /* eslint-disable @typescript-eslint/no-unsafe-function-type */

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/app – ViewController
+ * @framesquared/app – ViewController
  *
  * Tied to a specific view (Component).  Provides `control` config
  * for auto-wiring DOM event handlers via CSS selectors, view reference

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – TextArea
+ * @framesquared/form – TextArea
  * Multi-line text field using <textarea>.  Supports rows, cols,
  * and auto-grow (grow, growMin, growMax).
  */

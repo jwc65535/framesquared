@@ -1,5 +1,5 @@
 /**
- * @ext-ts/component
+ * @framesquared/component
  * Component model, lifecycle, and rendering
  */
 

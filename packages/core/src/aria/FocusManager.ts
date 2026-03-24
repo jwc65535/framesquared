@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – FocusManager
+ * @framesquared/core – FocusManager
  *
  * Manages focus trapping for modal dialogs, focus save/restore,
  * and roving tabindex patterns.

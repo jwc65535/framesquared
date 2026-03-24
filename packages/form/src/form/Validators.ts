@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – Validators
+ * @framesquared/form – Validators
  *
  * Built-in validator functions and chain runner.
  * Each validator returns `true` on success or an error string on failure.

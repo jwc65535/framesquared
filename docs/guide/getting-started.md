@@ -1,4 +1,4 @@
-# Getting Started with ext-ts
+# Getting Started with framesquared
 
 A modern, clean-room reimplementation of the Sencha ExtJS framework in TypeScript with native ESM modules.
 
@@ -6,10 +6,10 @@ A modern, clean-room reimplementation of the Sencha ExtJS framework in TypeScrip
 
 ```bash
 # Install the umbrella package (includes everything)
-npm install ext-ts
+npm install framesquared
 
 # Or install individual packages
-npm install @ext-ts/core @ext-ts/component @ext-ts/ui @ext-ts/data
+npm install @framesquared/core @framesquared/component @framesquared/ui @framesquared/data
 ```
 
 ## Requirements
@@ -24,11 +24,11 @@ npm install @ext-ts/core @ext-ts/component @ext-ts/ui @ext-ts/data
 ### 1. Create a Panel
 
 ```typescript
-import { Panel } from '@ext-ts/ui';
+import { Panel } from '@framesquared/ui';
 
 const panel = new Panel({
-  title: 'Hello ext-ts',
-  html: '<p>Welcome to ext-ts!</p>',
+  title: 'Hello framesquared',
+  html: '<p>Welcome to framesquared!</p>',
   width: 400,
   height: 300,
   renderTo: document.body,
@@ -38,8 +38,8 @@ const panel = new Panel({
 ### 2. Add a Grid with Data
 
 ```typescript
-import { Model, Store } from '@ext-ts/data';
-import { Grid } from '@ext-ts/grid';
+import { Model, Store } from '@framesquared/data';
+import { Grid } from '@framesquared/grid';
 
 // Define a model
 class User extends Model {
@@ -75,7 +75,7 @@ const grid = new Grid({
 ### 3. Create a Form
 
 ```typescript
-import { FormPanel, TextField, NumberField } from '@ext-ts/form';
+import { FormPanel, TextField, NumberField } from '@framesquared/form';
 
 const form = new FormPanel({
   title: 'Edit User',
@@ -100,7 +100,7 @@ if (form.isValid()) {
 ### 4. Full Application with MVC
 
 ```typescript
-import { Application, ViewController, ViewModel, Router } from '@ext-ts/app';
+import { Application, ViewController, ViewModel, Router } from '@framesquared/app';
 
 const vm = new ViewModel({
   data: { userName: 'Guest', loggedIn: false },
@@ -125,28 +125,28 @@ app.start();
 
 | Package | Import | Purpose |
 |---------|--------|---------|
-| `@ext-ts/core` | `import { Base, Observable } from '@ext-ts/core'` | Class system, events, utilities, i18n |
-| `@ext-ts/data` | `import { Model, Store } from '@ext-ts/data'` | Models, stores, proxies |
-| `@ext-ts/component` | `import { Component, Container } from '@ext-ts/component'` | Component lifecycle, rendering |
-| `@ext-ts/layout` | `import { HBoxLayout, BorderLayout } from '@ext-ts/layout'` | Layout managers |
-| `@ext-ts/ui` | `import { Panel, Button, TabPanel } from '@ext-ts/ui'` | UI widgets |
-| `@ext-ts/form` | `import { FormPanel, TextField } from '@ext-ts/form'` | Form fields, validation |
-| `@ext-ts/grid` | `import { Grid, TreePanel } from '@ext-ts/grid'` | Grid, tree components |
-| `@ext-ts/dd` | `import { Draggable, Droppable } from '@ext-ts/dd'` | Drag and drop |
-| `@ext-ts/fx` | `import { Anim, Animation } from '@ext-ts/fx'` | Animations (WAAPI) |
-| `@ext-ts/app` | `import { Application, ViewModel } from '@ext-ts/app'` | MVC/MVVM architecture |
-| `@ext-ts/theme` | `import { ThemeManager, ModernTheme } from '@ext-ts/theme'` | Theming, CSS tokens |
+| `@framesquared/core` | `import { Base, Observable } from '@framesquared/core'` | Class system, events, utilities, i18n |
+| `@framesquared/data` | `import { Model, Store } from '@framesquared/data'` | Models, stores, proxies |
+| `@framesquared/component` | `import { Component, Container } from '@framesquared/component'` | Component lifecycle, rendering |
+| `@framesquared/layout` | `import { HBoxLayout, BorderLayout } from '@framesquared/layout'` | Layout managers |
+| `@framesquared/ui` | `import { Panel, Button, TabPanel } from '@framesquared/ui'` | UI widgets |
+| `@framesquared/form` | `import { FormPanel, TextField } from '@framesquared/form'` | Form fields, validation |
+| `@framesquared/grid` | `import { Grid, TreePanel } from '@framesquared/grid'` | Grid, tree components |
+| `@framesquared/dd` | `import { Draggable, Droppable } from '@framesquared/dd'` | Drag and drop |
+| `@framesquared/fx` | `import { Anim, Animation } from '@framesquared/fx'` | Animations (WAAPI) |
+| `@framesquared/app` | `import { Application, ViewModel } from '@framesquared/app'` | MVC/MVVM architecture |
+| `@framesquared/theme` | `import { ThemeManager, ModernTheme } from '@framesquared/theme'` | Theming, CSS tokens |
 
 ## Tree Shaking
 
-ext-ts is fully tree-shakeable. Import only what you need:
+framesquared is fully tree-shakeable. Import only what you need:
 
 ```typescript
 // Only Button code is included in your bundle
-import { Button } from '@ext-ts/ui';
+import { Button } from '@framesquared/ui';
 
 // Deep imports for maximum control
-import { Button } from 'ext-ts/ui';
+import { Button } from 'framesquared/ui';
 ```
 
 ## TypeScript Support

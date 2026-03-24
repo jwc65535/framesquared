@@ -1,17 +1,17 @@
 /**
- * ext-ts Admin Dashboard Example
+ * framesquared Admin Dashboard Example
  *
  * Demonstrates: Viewport, TabPanel, Grid, FormPanel, ViewModel with
  * formulas, theme switching, TreePanel navigation, store operations.
  */
 
-import { Model, Store } from '@ext-ts/data';
-import { Grid, TreePanel, TreeStore } from '@ext-ts/grid';
-import { FormPanel, TextField, NumberField, ComboBox } from '@ext-ts/form';
-import { Panel, Button, TabPanel, Toolbar, Viewport } from '@ext-ts/ui';
-import { Application, ViewModel } from '@ext-ts/app';
-import { ThemeManager, ModernTheme, DarkTheme } from '@ext-ts/theme';
-import { LocaleManager, enUS, esES } from '@ext-ts/core';
+import { Model, Store } from '@framesquared/data';
+import { Grid, TreePanel, TreeStore } from '@framesquared/grid';
+import { FormPanel, TextField, NumberField, ComboBox } from '@framesquared/form';
+import { Panel, Button, TabPanel, Toolbar, Viewport } from '@framesquared/ui';
+import { Application, ViewModel } from '@framesquared/app';
+import { ThemeManager, ModernTheme, DarkTheme } from '@framesquared/theme';
+import { LocaleManager, enUS, esES } from '@framesquared/core';
 
 // ─── Models ──────────────────────────────────────────────────────────────
 

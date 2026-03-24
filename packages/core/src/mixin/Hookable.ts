@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – Hookable mixin
+ * @framesquared/core – Hookable mixin
  *
  * Provides per-instance before/after hook points for any method.
  * Hooks fire in registration order.  Adding a hook wraps the method

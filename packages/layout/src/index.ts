@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout
+ * @framesquared/layout
  * Layout managers
  */
 

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – BoxLayout (abstract base)
+ * @framesquared/layout – BoxLayout (abstract base)
  *
  * Abstract base for HBox and VBox layouts.  Uses CSS Flexbox under
  * the hood: sets display:flex on the container and translates
@@ -9,7 +9,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Component } from '@ext-ts/component';
+import type { Component } from '@framesquared/component';
 import { Layout } from '../Layout.js';
 import type { SizePolicy, LayoutConfig } from '../Layout.js';
 import type { LayoutContext } from '../LayoutContext.js';

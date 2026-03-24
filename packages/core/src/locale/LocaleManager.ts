@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – LocaleManager
+ * @framesquared/core – LocaleManager
  *
  * Singleton that manages registered locales.  setLocale() applies
  * dir and lang attributes to document.documentElement and fires

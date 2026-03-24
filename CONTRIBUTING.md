@@ -1,4 +1,4 @@
-# Contributing to ext-ts
+# Contributing to framesquared
 
 Thank you for your interest in contributing! This guide covers everything you need to get started.
 
@@ -6,8 +6,8 @@ Thank you for your interest in contributing! This guide covers everything you ne
 
 ```bash
 # Clone the repository
-git clone https://github.com/ext-ts/ext-ts.git
-cd ext-ts
+git clone https://github.com/framesquared/framesquared.git
+cd framesquared
 
 # Install dependencies (pnpm required)
 pnpm install
@@ -34,7 +34,7 @@ pnpm run docs
 ## Project Structure
 
 ```
-ext-ts/
+framesquared/
 ├── packages/
 │   ├── core/           # Class system, events, utilities, ARIA, i18n
 │   ├── data/           # Models, stores, proxies
@@ -47,7 +47,7 @@ ext-ts/
 │   ├── fx/             # Animations (Web Animations API)
 │   ├── app/            # Application architecture (MVC/MVVM)
 │   ├── theme/          # Theming and CSS tokens
-│   ├── ext-ts/         # Umbrella package (re-exports)
+│   ├── framesquared/         # Umbrella package (re-exports)
 │   ├── integration-tests/
 │   └── build-tests/
 ├── docs/
@@ -83,8 +83,8 @@ Every feature follows TDD:
 
 1. **Write failing tests** in `packages/<pkg>/__tests__/`
 2. **Implement** the feature in `packages/<pkg>/src/`
-3. **Verify** all tests pass: `pnpm --filter @ext-ts/<pkg> test`
-4. **Build** to check types: `pnpm --filter @ext-ts/<pkg> build`
+3. **Verify** all tests pass: `pnpm --filter @framesquared/<pkg> test`
+4. **Build** to check types: `pnpm --filter @framesquared/<pkg> build`
 
 ### Running Tests
 
@@ -93,13 +93,13 @@ Every feature follows TDD:
 pnpm test
 
 # Single package
-pnpm --filter @ext-ts/core test
+pnpm --filter @framesquared/core test
 
 # Watch mode for a package
-pnpm --filter @ext-ts/ui test -- --watch
+pnpm --filter @framesquared/ui test -- --watch
 
 # With coverage
-pnpm --filter @ext-ts/core test -- --coverage
+pnpm --filter @framesquared/core test -- --coverage
 ```
 
 ### Building
@@ -109,7 +109,7 @@ pnpm --filter @ext-ts/core test -- --coverage
 pnpm build
 
 # Build single package
-pnpm --filter @ext-ts/core build
+pnpm --filter @framesquared/core build
 
 # Build must be done in dependency order for first build
 ```
@@ -144,7 +144,7 @@ pnpm --filter @ext-ts/core build
 ### Security
 
 - **Never use raw `innerHTML`** with user-provided content
-- Use `Sanitizer.sanitize()` from `@ext-ts/core` for any HTML from untrusted sources
+- Use `Sanitizer.sanitize()` from `@framesquared/core` for any HTML from untrusted sources
 - **No `eval()`** except in XTemplate (which sanitizes inputs)
 - **No prototype pollution** — guard against `__proto__`, `constructor`, `prototype` keys
 - All URLs in `href`/`src` must pass URL safety checks

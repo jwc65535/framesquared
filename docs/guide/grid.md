@@ -1,12 +1,12 @@
 # Grid
 
-The Grid is ext-ts's most powerful data visualization component, supporting sorting, filtering, grouping, editing, selection models, and virtual scrolling.
+The Grid is framesquared's most powerful data visualization component, supporting sorting, filtering, grouping, editing, selection models, and virtual scrolling.
 
 ## Basic Grid
 
 ```typescript
-import { Grid } from '@ext-ts/grid';
-import { Model, Store } from '@ext-ts/data';
+import { Grid } from '@framesquared/grid';
+import { Model, Store } from '@framesquared/data';
 
 class Employee extends Model {
   static fields = [
@@ -70,7 +70,7 @@ columns: [
 ### Row Selection
 
 ```typescript
-import { RowSelectionModel } from '@ext-ts/grid';
+import { RowSelectionModel } from '@framesquared/grid';
 
 const sm = new RowSelectionModel({ mode: 'MULTI' });
 sm.init(grid);
@@ -88,7 +88,7 @@ sm.deselectAll();
 ### Cell Selection
 
 ```typescript
-import { CellSelectionModel } from '@ext-ts/grid';
+import { CellSelectionModel } from '@framesquared/grid';
 
 const sm = new CellSelectionModel();
 sm.init(grid);
@@ -101,7 +101,7 @@ sm.getCurrentPosition(); // { row: 0, column: 1 }
 ### Grouping
 
 ```typescript
-import { Grouping } from '@ext-ts/grid';
+import { Grouping } from '@framesquared/grid';
 
 const grid = new Grid({
   features: [new Grouping({ groupField: 'department' })],
@@ -112,7 +112,7 @@ const grid = new Grid({
 ### Summary
 
 ```typescript
-import { Summary } from '@ext-ts/grid';
+import { Summary } from '@framesquared/grid';
 
 const grid = new Grid({
   features: [new Summary()],
@@ -126,7 +126,7 @@ const grid = new Grid({
 ### Editing
 
 ```typescript
-import { CellEditing, RowEditing } from '@ext-ts/grid';
+import { CellEditing, RowEditing } from '@framesquared/grid';
 
 // Inline cell editing
 const grid = new Grid({
@@ -147,7 +147,7 @@ const grid2 = new Grid({
 ## TreePanel
 
 ```typescript
-import { TreePanel, TreeStore } from '@ext-ts/grid';
+import { TreePanel, TreeStore } from '@framesquared/grid';
 
 const tree = new TreePanel({
   title: 'File Browser',
@@ -176,7 +176,7 @@ tree.getChecked(); // Checked nodes
 ## Lockable Grid
 
 ```typescript
-import { Lockable } from '@ext-ts/grid';
+import { Lockable } from '@framesquared/grid';
 
 const lockable = new Lockable({
   store,
@@ -194,7 +194,7 @@ const lockable = new Lockable({
 ## Grid State
 
 ```typescript
-import { GridState } from '@ext-ts/grid';
+import { GridState } from '@framesquared/grid';
 
 const state = new GridState({ stateId: 'employees-grid' });
 state.save(grid);    // Persists column order, widths, sort to localStorage

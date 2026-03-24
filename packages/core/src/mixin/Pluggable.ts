@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – Pluggable mixin
+ * @framesquared/core – Pluggable mixin
  *
  * Adds plugin management to any class.  Plugins are instantiated from
  * config objects (using Factoryable semantics) or accepted as instances.

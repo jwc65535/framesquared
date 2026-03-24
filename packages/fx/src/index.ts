@@ -1,5 +1,5 @@
 /**
- * @ext-ts/fx
+ * @framesquared/fx
  * Animations and effects
  */
 

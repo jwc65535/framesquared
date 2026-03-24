@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – Tooltip
+ * @framesquared/ui – Tooltip
  *
  * A floating tip that appears near a target element on mouseenter.
  * Supports show/hide delays, mouse tracking, anchor positioning,
@@ -8,8 +8,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component } from '@ext-ts/component';
-import type { ComponentConfig } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
+import type { ComponentConfig } from '@framesquared/component';
 
 // ---------------------------------------------------------------------------
 // Config

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { DragManager, Draggable, Droppable, Sortable, Resizable } from '@ext-ts/dd';
+import { DragManager, Draggable, Droppable, Sortable, Resizable } from '@framesquared/dd';
 
 beforeEach(() => {
   if (typeof PointerEvent === 'undefined') {

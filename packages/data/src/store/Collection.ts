@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – Collection
+ * @framesquared/data – Collection
  *
  * An ordered, optionally keyed collection used internally by Store.
  * Provides add, insert, remove, sort, find, and iteration.

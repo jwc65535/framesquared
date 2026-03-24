@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – Observable mixin
+ * @framesquared/core – Observable mixin
  *
  * The event system backbone.  Mix into any Base subclass to gain full
  * event management: `on`, `un`, `fireEvent`, suspend/resume, relay,

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – DateField
+ * @framesquared/form – DateField
  *
  * A text field for date input.  Formats/parses dates using a
  * configurable format string.  Has an expand trigger for opening

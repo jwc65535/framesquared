@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – Identifiable mixin
+ * @framesquared/core – Identifiable mixin
  *
  * Adds an `id` config to any class.  If no id is provided, one is
  * auto-generated via `generateId()`.  Instances are registered in a
@@ -61,7 +61,7 @@ export const Identifiable: typeof Base = define('Ext.mixin.Identifiable', {
 
     // Auto-generate if empty
     if (!id) {
-      id = generateId('ext-ts');
+      id = generateId('framesquared');
     }
 
     // Register

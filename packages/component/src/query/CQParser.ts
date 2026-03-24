@@ -1,5 +1,5 @@
 /**
- * @ext-ts/component – CQParser
+ * @framesquared/component – CQParser
  *
  * Parses Component Query selector strings into an AST.
  *

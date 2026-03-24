@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – Button
+ * @framesquared/ui – Button
  *
  * A clickable button component with text, icon, toggle, menu arrow,
  * keyboard support, and accessibility.  Renders as native &lt;button&gt;
@@ -8,8 +8,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component } from '@ext-ts/component';
-import type { ComponentConfig } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
+import type { ComponentConfig } from '@framesquared/component';
 
 // ---------------------------------------------------------------------------
 // Toggle group registry (module-level singleton)

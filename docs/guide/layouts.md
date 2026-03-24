@@ -186,7 +186,7 @@ Collapsible vertical panels, one expanded at a time:
 Adapt layout based on viewport width:
 
 ```typescript
-import { ResponsivePlugin } from '@ext-ts/layout';
+import { ResponsivePlugin } from '@framesquared/layout';
 
 const container = new Container({
   plugins: [new ResponsivePlugin({

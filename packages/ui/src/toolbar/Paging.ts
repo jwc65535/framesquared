@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – PagingToolbar
+ * @framesquared/ui – PagingToolbar
  *
  * A Toolbar bound to a data Store that provides page navigation:
  * first, prev, page input, "of N", next, last, refresh.

@@ -1,8 +1,8 @@
 /**
- * @ext-ts/grid – GridStore
+ * @framesquared/grid – GridStore
  *
  * Interface that defines the store contract Grid components require.
- * The real `@ext-ts/data` Store satisfies this interface natively.
+ * The real `@framesquared/data` Store satisfies this interface natively.
  * Custom stores can implement this interface for compatibility.
  *
  * @since 0.1.0

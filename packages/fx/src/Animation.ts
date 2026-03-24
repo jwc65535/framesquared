@@ -1,5 +1,5 @@
 /**
- * @ext-ts/fx – Animation
+ * @framesquared/fx – Animation
  *
  * Wraps the Web Animations API (Element.animate()).  Provides a
  * config-driven interface with play/pause/cancel/finish/reverse

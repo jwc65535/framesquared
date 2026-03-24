@@ -1,7 +1,7 @@
 /**
- * @ext-ts/app – Application
+ * @framesquared/app – Application
  *
- * The entry point for an ext-ts application.  Manages lifecycle
+ * The entry point for an framesquared application.  Manages lifecycle
  * (init → beforeLaunch → launch → onLaunch), controller and
  * store registries, and provides a singleton accessor.
  */

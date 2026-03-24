@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – CardContainer
+ * @framesquared/ui – CardContainer
  *
  * A Container with card layout behavior: only one child is visible
  * at a time.  Provides next(), prev(), and setActiveItem() for
@@ -8,8 +8,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Container } from '@ext-ts/component';
-import type { ContainerConfig } from '@ext-ts/component';
+import { Container } from '@framesquared/component';
+import type { ContainerConfig } from '@framesquared/component';
 
 export interface CardContainerConfig extends ContainerConfig {
   activeItem?: number;

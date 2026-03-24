@@ -1,5 +1,5 @@
 /**
- * @ext-ts/dd – Droppable
+ * @framesquared/dd – Droppable
  *
  * Makes an element a drop target.  Registers with DragManager
  * for hit testing during active drags.

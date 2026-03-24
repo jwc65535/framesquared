@@ -1,5 +1,5 @@
 /**
- * @ext-ts/app – Scheduler
+ * @framesquared/app – Scheduler
  *
  * Batches multiple state changes into a single notification cycle.
  * Uses microtask (queueMicrotask) for async batching.  Provides

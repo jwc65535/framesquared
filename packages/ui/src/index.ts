@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui
+ * @framesquared/ui
  * UI widgets (panels, buttons, toolbars, etc.)
  */
 

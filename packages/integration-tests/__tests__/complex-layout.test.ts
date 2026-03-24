@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
-import { Panel, TabPanel, Accordion, CardContainer, Viewport } from '@ext-ts/ui';
-import { TreePanel, TreeStore } from '@ext-ts/grid';
+import { Panel, TabPanel, Accordion, CardContainer, Viewport } from '@framesquared/ui';
+import { TreePanel, TreeStore } from '@framesquared/grid';
 
 class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
 beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });

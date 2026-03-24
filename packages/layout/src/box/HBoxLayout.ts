@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – HBoxLayout
+ * @framesquared/layout – HBoxLayout
  *
  * Horizontal box layout.  Children are arranged left-to-right
  * (or right-to-left when reverse=true).  Uses CSS Flexbox with

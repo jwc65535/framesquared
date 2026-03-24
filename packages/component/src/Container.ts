@@ -1,5 +1,5 @@
 /**
- * @ext-ts/component – Container
+ * @framesquared/component – Container
  *
  * A Component that manages an ordered collection of child Components.
  * Provides add/insert/remove, Component Query (CQ) selectors,
@@ -13,7 +13,7 @@ import type { ComponentConfig } from './Component.js';
 import { ComponentQuery, matchesCQ } from './ComponentQuery.js';
 import { Layout, resolveLayout } from './Layout.js';
 import type { LayoutConfig } from './Layout.js';
-import { ClassManager } from '@ext-ts/core';
+import { ClassManager } from '@framesquared/core';
 
 // ---------------------------------------------------------------------------
 // Config

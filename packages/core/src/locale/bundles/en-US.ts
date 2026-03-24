@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – en-US locale bundle
+ * @framesquared/core – en-US locale bundle
  */
 
 import { Locale } from '../Locale.js';

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – Client Proxies
+ * @framesquared/data – Client Proxies
  *
  * MemoryProxy, LocalStorageProxy, SessionStorageProxy
  */

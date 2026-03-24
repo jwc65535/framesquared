@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – NumberField
+ * @framesquared/form – NumberField
  *
  * Numeric input with spinner triggers for increment/decrement,
  * min/max validation, and decimal precision formatting.

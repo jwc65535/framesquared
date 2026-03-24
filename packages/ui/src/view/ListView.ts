@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – ListView
+ * @framesquared/ui – ListView
  *
  * A lightweight column-based list view using <table> for alignment.
  * Simpler than a full Grid — no features, plugins, or editing.
@@ -8,8 +8,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component } from '@ext-ts/component';
-import type { ComponentConfig } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
+import type { ComponentConfig } from '@framesquared/component';
 
 // ---------------------------------------------------------------------------
 // Config

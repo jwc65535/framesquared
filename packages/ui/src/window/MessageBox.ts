@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – MessageBox
+ * @framesquared/ui – MessageBox
  *
  * Static utility class for common dialog patterns:
  *   MessageBox.alert(title, message, callback?)

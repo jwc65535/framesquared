@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – Factoryable
+ * @framesquared/core – Factoryable
  *
  * Static factory that creates `Base` instances from flexible input:
  *

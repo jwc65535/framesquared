@@ -1,11 +1,11 @@
 # Application Architecture
 
-ext-ts supports MVC and MVVM patterns through Application, ViewController, ViewModel, and Router.
+framesquared supports MVC and MVVM patterns through Application, ViewController, ViewModel, and Router.
 
 ## Application
 
 ```typescript
-import { Application } from '@ext-ts/app';
+import { Application } from '@framesquared/app';
 
 const app = new Application({
   name: 'MyApp',
@@ -34,7 +34,7 @@ app.getStore('products');
 ViewModels manage data and derived formulas:
 
 ```typescript
-import { ViewModel } from '@ext-ts/app';
+import { ViewModel } from '@framesquared/app';
 
 const vm = new ViewModel({
   data: {
@@ -95,7 +95,7 @@ vm.on('datachange', (vm, data) => {
 ## Data Binding
 
 ```typescript
-import { Binding } from '@ext-ts/app';
+import { Binding } from '@framesquared/app';
 
 // One-way: ViewModel → callback
 const cleanup = Binding.twoWay(vm, 'fullName', (value) => {
@@ -121,7 +121,7 @@ Binding.evaluate(neg, vm); // true when isLoading is false
 Controllers wire UI events to business logic:
 
 ```typescript
-import { ViewController } from '@ext-ts/app';
+import { ViewController } from '@framesquared/app';
 
 class UsersController extends ViewController {
   constructor() {
@@ -144,7 +144,7 @@ class UsersController extends ViewController {
 Hash-based routing:
 
 ```typescript
-import { Router } from '@ext-ts/app';
+import { Router } from '@framesquared/app';
 
 Router.addRoute('users', () => showUserList());
 Router.addRoute('users/:id', (params) => showUser(params.id));
@@ -161,7 +161,7 @@ Router.getCurrentPath();        // 'users/42'
 The Scheduler batches ViewModel updates via microtasks:
 
 ```typescript
-import { Scheduler } from '@ext-ts/app';
+import { Scheduler } from '@framesquared/app';
 
 // Multiple rapid changes batch into one notification cycle
 vm.set('a', 1);

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – Toolbar
+ * @framesquared/ui – Toolbar
  *
  * A Container that arranges items horizontally (or vertically) with
  * special shorthand items: '->' (fill), '-' (separator), ' ' (spacer),
@@ -8,8 +8,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component, Container } from '@ext-ts/component';
-import type { ContainerConfig } from '@ext-ts/component';
+import { Component, Container } from '@framesquared/component';
+import type { ContainerConfig } from '@framesquared/component';
 
 // ---------------------------------------------------------------------------
 // Config

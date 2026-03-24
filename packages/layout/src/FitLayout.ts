@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – FitLayout
+ * @framesquared/layout – FitLayout
  *
  * Single child fills the entire container.  If multiple children
  * are present, only the first is visible.
@@ -9,7 +9,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Component } from '@ext-ts/component';
+import type { Component } from '@framesquared/component';
 import { Layout } from './Layout.js';
 import type { LayoutConfig } from './Layout.js';
 

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – RowExpander plugin
+ * @framesquared/grid – RowExpander plugin
  *
  * Adds an expand button to each row.  Clicking toggles a body
  * row below with custom content.

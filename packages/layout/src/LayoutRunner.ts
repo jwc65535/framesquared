@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – LayoutRunner
+ * @framesquared/layout – LayoutRunner
  *
  * Singleton that orchestrates layout runs.  Collects invalidation
  * requests and processes them in batch.  Detects and breaks layout
@@ -11,7 +11,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Component } from '@ext-ts/component';
+import type { Component } from '@framesquared/component';
 import { Layout } from './Layout.js';
 import { LayoutContext } from './LayoutContext.js';
 

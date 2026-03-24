@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – ZIndexManager
+ * @framesquared/ui – ZIndexManager
  *
  * Manages z-index stack for floating components (Windows, menus, etc.).
  * Tracks registration order; bringToFront/sendToBack reorder and
@@ -8,7 +8,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Component } from '@ext-ts/component';
+import type { Component } from '@framesquared/component';
 
 const BASE_Z = 9000;
 

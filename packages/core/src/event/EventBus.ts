@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – EventBus
+ * @framesquared/core – EventBus
  *
  * Global singleton event bus with publish / subscribe semantics.
  * Supports dot-separated namespaced channels and wildcards:

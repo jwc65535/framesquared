@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – AutoLayout
+ * @framesquared/layout – AutoLayout
  *
  * The default layout.  Renders items in DOM order with no special
  * positioning — items use their natural or configured sizes and
@@ -10,7 +10,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Component } from '@ext-ts/component';
+import type { Component } from '@framesquared/component';
 import { Layout } from './Layout.js';
 import type { SizePolicy, LayoutConfig } from './Layout.js';
 import type { LayoutContext } from './LayoutContext.js';

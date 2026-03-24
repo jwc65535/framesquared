@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – Plugin base class
+ * @framesquared/core – Plugin base class
  *
  * Base class for plugins used with the Pluggable mixin.
  * Each plugin has an `id`, an `init(owner)` lifecycle hook, and

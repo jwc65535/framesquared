@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Component } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
 import { Tooltip } from '../src/tip/Tooltip.js';
 import { QuickTip } from '../src/tip/QuickTip.js';
 

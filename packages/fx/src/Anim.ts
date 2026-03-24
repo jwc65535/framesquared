@@ -1,5 +1,5 @@
 /**
- * @ext-ts/fx – Anim
+ * @framesquared/fx – Anim
  *
  * Convenience factory for predefined animations.  Each method
  * returns an Animation instance.  Also provides queue() for

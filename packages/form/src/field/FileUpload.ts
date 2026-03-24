@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – FileField
+ * @framesquared/form – FileField
  *
  * A file upload field with a hidden <input type="file">,
  * a browse button, and a text display showing selected filename(s).

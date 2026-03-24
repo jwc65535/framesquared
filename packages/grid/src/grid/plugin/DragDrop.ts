@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – DragDrop plugin
+ * @framesquared/grid – DragDrop plugin
  *
  * Enables row reordering via drag and drop.  Adds draggable
  * attributes to rows and provides a moveRow method.

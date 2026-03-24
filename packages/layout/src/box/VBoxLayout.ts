@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – VBoxLayout
+ * @framesquared/layout – VBoxLayout
  *
  * Vertical box layout.  Children are arranged top-to-bottom
  * (or bottom-to-top when reverse=true).  Uses CSS Flexbox with

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – Object utilities
+ * @framesquared/core – Object utilities
  */
 
 // ---------------------------------------------------------------------------

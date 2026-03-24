@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – EventDomain
+ * @framesquared/core – EventDomain
  *
  * A domain groups events by category (e.g. 'component', 'store').
  * Controllers can use `domain.listen({ '#myButton': { click: handler } })`

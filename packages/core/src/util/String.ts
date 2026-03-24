@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – String utilities
+ * @framesquared/core – String utilities
  */
 
 // ---------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 {
-  "name": "@ext-ts/form",
+  "name": "@framesquared/form",
   "version": "0.1.0",
   "description": "Form fields and validation",
   "type": "module",
@@ -19,8 +19,8 @@
     "typecheck": "tsc --noEmit --project tsconfig.build.json"
   },
   "dependencies": {
-    "@ext-ts/core": "workspace:*",
-    "@ext-ts/component": "workspace:*",
-    "@ext-ts/ui": "workspace:*"
+    "@framesquared/core": "workspace:*",
+    "@framesquared/component": "workspace:*",
+    "@framesquared/ui": "workspace:*"
   }
 }

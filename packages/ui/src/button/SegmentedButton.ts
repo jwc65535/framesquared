@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – SegmentedButton
+ * @framesquared/ui – SegmentedButton
  *
  * A Container that holds buttons in a group with single or multiple
  * selection behavior.  Manages toggle state across child buttons.
@@ -7,8 +7,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Container } from '@ext-ts/component';
-import type { ContainerConfig } from '@ext-ts/component';
+import { Container } from '@framesquared/component';
+import type { ContainerConfig } from '@framesquared/component';
 import { Button } from './Button.js';
 
 // ---------------------------------------------------------------------------

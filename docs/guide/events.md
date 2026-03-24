@@ -1,6 +1,6 @@
 # Event System
 
-ext-ts provides a rich event system built on the Observable mixin, with support for listener options, event domains, bubbling, and keyboard maps.
+framesquared provides a rich event system built on the Observable mixin, with support for listener options, event domains, bubbling, and keyboard maps.
 
 ## Basic Usage
 
@@ -76,7 +76,7 @@ obj.fireEvent('change'); // Fires normally
 Application-wide event bus for decoupled communication:
 
 ```typescript
-import { EventBus } from '@ext-ts/core';
+import { EventBus } from '@framesquared/core';
 
 EventBus.on('user:login', (user) => updateUI(user));
 EventBus.fire('user:login', { name: 'Alice' });
@@ -87,7 +87,7 @@ EventBus.fire('user:login', { name: 'Alice' });
 Group related listeners with automatic cleanup:
 
 ```typescript
-import { EventDomain } from '@ext-ts/core';
+import { EventDomain } from '@framesquared/core';
 
 const domain = new EventDomain();
 domain.listen(button, 'click', handler);
@@ -102,7 +102,7 @@ domain.destroy();
 Declarative keyboard shortcuts:
 
 ```typescript
-import { KeyMap } from '@ext-ts/core';
+import { KeyMap } from '@framesquared/core';
 
 const km = new KeyMap({
   target: gridEl,
@@ -125,7 +125,7 @@ km.destroy();
 Recognize touch/pointer gestures:
 
 ```typescript
-import { GestureRecognizer } from '@ext-ts/core';
+import { GestureRecognizer } from '@framesquared/core';
 
 const gr = new GestureRecognizer({
   target: element,

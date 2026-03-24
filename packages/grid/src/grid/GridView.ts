@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – GridView
+ * @framesquared/grid – GridView
  *
  * Renders the grid body using a <table> with <thead> and <tbody>.
  * Manages row rendering, striping, cell content, and item events.

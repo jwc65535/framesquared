@@ -1,5 +1,5 @@
 /**
- * @ext-ts/ui – QuickTip
+ * @framesquared/ui – QuickTip
  *
  * Singleton that auto-creates tooltips from DOM data attributes.
  * Uses event delegation on document.body to monitor mouseenter on

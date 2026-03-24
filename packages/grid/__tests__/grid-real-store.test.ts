@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Grid } from '../src/grid/Grid.js';
 import { RowSelectionModel } from '../src/grid/selection/RowSelectionModel.js';
 import { CellSelectionModel } from '../src/grid/selection/CellSelectionModel.js';
-import { Model, Store } from '@ext-ts/data';
+import { Model, Store } from '@framesquared/data';
 
 class Person extends Model {
   static override fields = [

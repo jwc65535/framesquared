@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – Writers
+ * @framesquared/data – Writers
  *
  * Serialize Model records for transport to the server.
  */

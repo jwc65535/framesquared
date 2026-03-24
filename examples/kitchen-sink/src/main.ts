@@ -1,36 +1,36 @@
 /**
- * ext-ts Kitchen Sink — Showcase of All Components
+ * framesquared Kitchen Sink — Showcase of All Components
  *
  * Each tab demonstrates a different component category.
  * Demonstrates: Every major component, layout, theme, accessibility.
  */
 
-import { Model, Store } from '@ext-ts/data';
-import { Grid, RowSelectionModel, TreePanel, TreeStore, Grouping } from '@ext-ts/grid';
+import { Model, Store } from '@framesquared/data';
+import { Grid, RowSelectionModel, TreePanel, TreeStore, Grouping } from '@framesquared/grid';
 import {
   FormPanel, TextField, TextArea, NumberField, DateField,
   ComboBox, TagField, Checkbox, Radio, CheckboxGroup, RadioGroup,
   Slider, FileUploadField, HtmlEditor, Spinner,
   DatePicker, ColorPicker,
-} from '@ext-ts/form';
+} from '@framesquared/form';
 import {
   Panel, Button, SplitButton, CycleButton, SegmentedButton,
   Toolbar, Menu, MenuItem, CheckItem, MenuSeparator,
   Window as ExtWindow, MessageBox,
   TabPanel, Tooltip,
   Viewport, Accordion, CardContainer, Breadcrumb,
-} from '@ext-ts/ui';
-import { Draggable, Droppable, Sortable, Resizable } from '@ext-ts/dd';
-import { Anim, Animation, Easing, Transition } from '@ext-ts/fx';
-import { Application, ViewModel, ViewController, Router } from '@ext-ts/app';
+} from '@framesquared/ui';
+import { Draggable, Droppable, Sortable, Resizable } from '@framesquared/dd';
+import { Anim, Animation, Easing, Transition } from '@framesquared/fx';
+import { Application, ViewModel, ViewController, Router } from '@framesquared/app';
 import {
   ThemeManager, ModernTheme, DarkTheme, ClassicTheme, StyleSheet,
-} from '@ext-ts/theme';
+} from '@framesquared/theme';
 import {
   AriaManager, FocusManager,
   LocaleManager, enUS, esES, arSA,
   Locale,
-} from '@ext-ts/core';
+} from '@framesquared/core';
 
 // ─── Setup ───────────────────────────────────────────────────────────────
 

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/fx – Easing
+ * @framesquared/fx – Easing
  *
  * Named CSS easing strings.  Standard names map to CSS keywords;
  * extended names map to cubic-bezier() values.  Bounce easings

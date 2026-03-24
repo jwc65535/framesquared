@@ -4,7 +4,7 @@
     "rootDir": "src",
     "outDir": "dist",
     "paths": {
-      "@ext-ts/core": ["../core/src/index.ts"]
+      "@framesquared/core": ["../core/src/index.ts"]
     },
     "composite": true
   },

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – Configurator
+ * @framesquared/core – Configurator
  *
  * Central metadata registry for the `@config` decorator family.
  * Uses TC39 `context.metadata` (Symbol.metadata) so metadata is
@@ -34,7 +34,7 @@ export interface ConfigMeta {
 /**
  * Key inside `context.metadata` that holds the per-class config Map.
  */
-export const CONFIG_META_KEY = Symbol('ext-ts:configMeta');
+export const CONFIG_META_KEY = Symbol('framesquared:configMeta');
 
 /**
  * Runtime Symbol.metadata (or its esbuild polyfill).

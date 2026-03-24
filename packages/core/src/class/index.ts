@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – class system barrel
+ * @framesquared/core – class system barrel
  */
 
 export { Base } from './Base.js';

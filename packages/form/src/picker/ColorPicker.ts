@@ -1,13 +1,13 @@
 /**
- * @ext-ts/form – ColorPicker
+ * @framesquared/form – ColorPicker
  *
  * A grid of color swatches.  Fires 'select' with the hex color string.
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component } from '@ext-ts/component';
-import type { ComponentConfig } from '@ext-ts/component';
+import { Component } from '@framesquared/component';
+import type { ComponentConfig } from '@framesquared/component';
 
 const DEFAULT_COLORS = [
   '000000', '993300', '333300', '003300', '003366', '000080', '333399', '333333',

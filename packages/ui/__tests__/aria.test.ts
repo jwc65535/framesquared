@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { AriaManager } from '@ext-ts/core';
-import { FocusManager } from '@ext-ts/core';
+import { AriaManager } from '@framesquared/core';
+import { FocusManager } from '@framesquared/core';
 
 // UI components
 import { Button } from '../src/button/Button.js';

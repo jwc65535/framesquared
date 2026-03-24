@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – Array utilities
+ * @framesquared/core – Array utilities
  */
 
 // ---------------------------------------------------------------------------

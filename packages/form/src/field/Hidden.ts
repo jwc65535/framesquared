@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – HiddenField
+ * @framesquared/form – HiddenField
  * Renders as <input type="hidden">.  No label, no visible UI.
  */
 

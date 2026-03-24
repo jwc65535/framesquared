@@ -1,5 +1,5 @@
 /**
- * @ext-ts/dd
+ * @framesquared/dd
  * Drag and drop system
  */
 

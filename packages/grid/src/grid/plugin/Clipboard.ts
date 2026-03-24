@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – Clipboard plugin
+ * @framesquared/grid – Clipboard plugin
  *
  * Copies grid data to the clipboard in TSV (tab-separated) format
  * for spreadsheet compatibility.

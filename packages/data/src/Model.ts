@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – Model
+ * @framesquared/data – Model
  *
  * The foundation of the data layer.  A Model represents a record with
  * typed fields, dirty tracking, validation, and event notification.
@@ -10,7 +10,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Base, Observable } from '@ext-ts/core';
+import { Base, Observable } from '@framesquared/core';
 import { Field, createField } from './field/Field.js';
 import type { FieldDefinition } from './field/Field.js';
 import { Schema } from './Schema.js';

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – BorderLayout
+ * @framesquared/layout – BorderLayout
  *
  * Classic border layout with 5 regions: north, south, east, west, center.
  * Uses CSS Grid under the hood.  Center is required and fills remaining space.
@@ -9,7 +9,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Component } from '@ext-ts/component';
+import type { Component } from '@framesquared/component';
 import { Layout } from './Layout.js';
 import type { LayoutConfig } from './Layout.js';
 

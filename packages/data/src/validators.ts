@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – Built-in validators
+ * @framesquared/data – Built-in validators
  *
  * Each factory returns a Validator function: (value) => errorMsg | null
  */

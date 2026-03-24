@@ -28,37 +28,37 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "paths": {
-      "@ext-ts/core": [
+      "@framesquared/core": [
         "./packages/core/src/index.ts"
       ],
-      "@ext-ts/data": [
+      "@framesquared/data": [
         "./packages/data/src/index.ts"
       ],
-      "@ext-ts/component": [
+      "@framesquared/component": [
         "./packages/component/src/index.ts"
       ],
-      "@ext-ts/layout": [
+      "@framesquared/layout": [
         "./packages/layout/src/index.ts"
       ],
-      "@ext-ts/ui": [
+      "@framesquared/ui": [
         "./packages/ui/src/index.ts"
       ],
-      "@ext-ts/form": [
+      "@framesquared/form": [
         "./packages/form/src/index.ts"
       ],
-      "@ext-ts/grid": [
+      "@framesquared/grid": [
         "./packages/grid/src/index.ts"
       ],
-      "@ext-ts/dd": [
+      "@framesquared/dd": [
         "./packages/dd/src/index.ts"
       ],
-      "@ext-ts/app": [
+      "@framesquared/app": [
         "./packages/app/src/index.ts"
       ],
-      "@ext-ts/fx": [
+      "@framesquared/fx": [
         "./packages/fx/src/index.ts"
       ],
-      "@ext-ts/theme": [
+      "@framesquared/theme": [
         "./packages/theme/src/index.ts"
       ]
     }

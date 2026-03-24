@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – CellEditing plugin
+ * @framesquared/grid – CellEditing plugin
  *
  * Double-click a cell to start inline editing.  The cell content
  * is replaced with an input field.  Enter completes; Escape cancels.

@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – Lockable
+ * @framesquared/grid – Lockable
  *
  * Splits a grid into locked (frozen left) and normal (scrollable right)
  * panels.  Columns with config.locked=true go into the locked panel.

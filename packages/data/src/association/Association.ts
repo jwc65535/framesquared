@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – Association (base class)
+ * @framesquared/data – Association (base class)
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

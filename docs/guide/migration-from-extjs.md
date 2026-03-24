@@ -1,10 +1,10 @@
-# Migration from ExtJS to ext-ts
+# Migration from ExtJS to framesquared
 
-This guide maps every major ExtJS API to its ext-ts equivalent, helping you migrate existing ExtJS applications to the modern TypeScript implementation.
+This guide maps every major ExtJS API to its framesquared equivalent, helping you migrate existing ExtJS applications to the modern TypeScript implementation.
 
 ## Key Differences
 
-| Aspect | ExtJS | ext-ts |
+| Aspect | ExtJS | framesquared |
 |--------|-------|--------|
 | Language | JavaScript | TypeScript (ES2022) |
 | Modules | AMD (`Ext.define`) | ESM (`import`/`export`) |
@@ -32,8 +32,8 @@ Ext.define('MyApp.model.User', {
 ```
 
 ```typescript
-// ext-ts
-import { Model } from '@ext-ts/data';
+// framesquared
+import { Model } from '@framesquared/data';
 
 class User extends Model {
   static fields = [
@@ -62,8 +62,8 @@ Ext.define('MyApp.view.Report', {
 ```
 
 ```typescript
-// ext-ts — use TypeScript mixins or composition
-import { Panel } from '@ext-ts/ui';
+// framesquared — use TypeScript mixins or composition
+import { Panel } from '@framesquared/ui';
 
 // Composition approach (preferred)
 class Report extends Panel {
@@ -73,9 +73,9 @@ class Report extends Panel {
 
 ## Core API Mapping
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
-| `Ext.Base` | `Base` from `@ext-ts/core` | Native ES class |
+| `Ext.Base` | `Base` from `@framesquared/core` | Native ES class |
 | `Ext.define()` | `class X extends Y {}` | Standard ES class syntax |
 | `Ext.create()` | `new Component({...})` | Standard constructor |
 | `Ext.apply()` | `Object.assign()` | Native JS |
@@ -94,7 +94,7 @@ class Report extends Panel {
 
 ## Event System
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
 | `obj.on('click', fn)` | `obj.on('click', fn)` | Same API via Observable mixin |
 | `obj.un('click', fn)` | `obj.un('click', fn)` | Same API |
@@ -111,10 +111,10 @@ class Report extends Panel {
 
 ## Component
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
-| `Ext.Component` | `Component` from `@ext-ts/component` | |
-| `Ext.container.Container` | `Container` from `@ext-ts/component` | |
+| `Ext.Component` | `Component` from `@framesquared/component` | |
+| `Ext.container.Container` | `Container` from `@framesquared/component` | |
 | `renderTo` config | `renderTo` config | Same |
 | `xtype` | `xtype` config | Same pattern |
 | `items` config | `items` config | Same, but use `new Component()` not xtype strings |
@@ -136,9 +136,9 @@ class Report extends Panel {
 
 ### Model
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
-| `Ext.data.Model` | `Model` from `@ext-ts/data` | |
+| `Ext.data.Model` | `Model` from `@framesquared/data` | |
 | `fields` config array | `static fields` class property | Static, not config |
 | `model.get('name')` | `model.get('name')` | Same |
 | `model.set('name', v)` | `model.set('name', v)` | Same |
@@ -152,9 +152,9 @@ class Report extends Panel {
 
 ### Store
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
-| `Ext.data.Store` | `Store` from `@ext-ts/data` | |
+| `Ext.data.Store` | `Store` from `@framesquared/data` | |
 | `store.load()` | `store.load()` | Same |
 | `store.add(record)` | `store.add(record)` | Same |
 | `store.remove(record)` | `store.remove(record)` | Same |
@@ -176,11 +176,11 @@ class Report extends Panel {
 
 ### Proxy
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
-| `Ext.data.proxy.Ajax` | `AjaxProxy` from `@ext-ts/data` | Uses `fetch()` not XHR |
-| `Ext.data.proxy.Rest` | `RestProxy` from `@ext-ts/data` | Same REST patterns |
-| `Ext.data.proxy.Memory` | `MemoryProxy` from `@ext-ts/data` | Same |
+| `Ext.data.proxy.Ajax` | `AjaxProxy` from `@framesquared/data` | Uses `fetch()` not XHR |
+| `Ext.data.proxy.Rest` | `RestProxy` from `@framesquared/data` | Same REST patterns |
+| `Ext.data.proxy.Memory` | `MemoryProxy` from `@framesquared/data` | Same |
 | `Ext.data.proxy.LocalStorage` | `LocalStorageProxy` | Same |
 | `Ext.data.proxy.SessionStorage` | `SessionStorageProxy` | Same |
 | — | `GraphQLProxy` | New: GraphQL support |
@@ -193,9 +193,9 @@ class Report extends Panel {
 
 ### Panel
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
-| `Ext.panel.Panel` | `Panel` from `@ext-ts/ui` | |
+| `Ext.panel.Panel` | `Panel` from `@framesquared/ui` | |
 | `title` | `title` | Same |
 | `header` | Auto-generated from title | Same |
 | `tools` | `tools` config | Same |
@@ -209,9 +209,9 @@ class Report extends Panel {
 
 ### Button
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
-| `Ext.button.Button` | `Button` from `@ext-ts/ui` | |
+| `Ext.button.Button` | `Button` from `@framesquared/ui` | |
 | `text` | `text` | Same |
 | `iconCls` | `iconCls` | Same |
 | `handler` | `handler` | Same |
@@ -225,9 +225,9 @@ class Report extends Panel {
 
 ### Window
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
-| `Ext.window.Window` | `Window` from `@ext-ts/ui` | |
+| `Ext.window.Window` | `Window` from `@framesquared/ui` | |
 | `modal` | `modal` | Same |
 | `draggable` | `draggable` | Same |
 | `resizable` | `resizable` | Same |
@@ -238,9 +238,9 @@ class Report extends Panel {
 
 ### Grid
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
-| `Ext.grid.Panel` | `Grid` from `@ext-ts/grid` | |
+| `Ext.grid.Panel` | `Grid` from `@framesquared/grid` | |
 | `store` config | `store` config | Same |
 | `columns` config | `columns` config | Same |
 | Column `text` | Column `text` | Same |
@@ -266,10 +266,10 @@ class Report extends Panel {
 
 ### Tree
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
-| `Ext.tree.Panel` | `TreePanel` from `@ext-ts/grid` | |
-| `Ext.data.TreeStore` | `TreeStore` from `@ext-ts/grid` | |
+| `Ext.tree.Panel` | `TreePanel` from `@framesquared/grid` | |
+| `Ext.data.TreeStore` | `TreeStore` from `@framesquared/grid` | |
 | `rootVisible` | `rootVisible` | Same |
 | `singleExpand` | `singleExpand` | Same |
 | `checkable` | `checkable` | Same |
@@ -280,9 +280,9 @@ class Report extends Panel {
 
 ### TabPanel
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
-| `Ext.tab.Panel` | `TabPanel` from `@ext-ts/ui` | |
+| `Ext.tab.Panel` | `TabPanel` from `@framesquared/ui` | |
 | `activeTab` | `activeTab` | Same |
 | `tabPosition` | `tabPosition` | Same |
 | `deferredRender` | `deferredRender` | Same |
@@ -293,9 +293,9 @@ class Report extends Panel {
 
 ### Form Fields
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
-| `Ext.form.Panel` | `FormPanel` from `@ext-ts/form` | |
+| `Ext.form.Panel` | `FormPanel` from `@framesquared/form` | |
 | `Ext.form.field.Text` | `TextField` | Same |
 | `Ext.form.field.Number` | `NumberField` | Same |
 | `Ext.form.field.Date` | `DateField` | Same |
@@ -319,7 +319,7 @@ class Report extends Panel {
 
 ## Layout
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
 | `Ext.layout.container.Auto` | `AutoLayout` | Same |
 | `Ext.layout.container.HBox` | `HBoxLayout` | Same |
@@ -336,10 +336,10 @@ class Report extends Panel {
 
 ## Application Architecture
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
 | `Ext.application()` | `new Application({...})` | Constructor, not factory |
-| `Ext.app.Application` | `Application` from `@ext-ts/app` | Same concept |
+| `Ext.app.Application` | `Application` from `@framesquared/app` | Same concept |
 | `Ext.app.ViewController` | `ViewController` | Same |
 | `Ext.app.ViewModel` | `ViewModel` | Same |
 | `Ext.util.History` | `Router` | Hash-based routing |
@@ -353,9 +353,9 @@ class Report extends Panel {
 
 ## Drag & Drop
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
-| `Ext.dd.DragSource` | `Draggable` from `@ext-ts/dd` | PointerEvents instead of mouse |
+| `Ext.dd.DragSource` | `Draggable` from `@framesquared/dd` | PointerEvents instead of mouse |
 | `Ext.dd.DropTarget` | `Droppable` | Same |
 | `Ext.dd.DragDrop` | `DragManager` (singleton) | Global coordinator |
 | `Ext.dd.StatusProxy` | `DragProxy` | Same concept |
@@ -364,9 +364,9 @@ class Report extends Panel {
 
 ## Animation
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
-| `Ext.fx.Anim` | `Animation` from `@ext-ts/fx` | Uses Web Animations API |
+| `Ext.fx.Anim` | `Animation` from `@framesquared/fx` | Uses Web Animations API |
 | `Ext.fx.Manager` | `Anim` (factory) | Predefined animations |
 | `Ext.Element.animate()` | `Anim.fadeIn(el)` | Factory methods |
 | Custom easing | `Easing` constants | CSS cubic-bezier strings |
@@ -374,34 +374,34 @@ class Report extends Panel {
 
 ## Theming
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
 | SASS variables | CSS custom properties | `--ext-color-primary` |
-| `Ext.theme.*` | `Theme` from `@ext-ts/theme` | Token-based |
+| `Ext.theme.*` | `Theme` from `@framesquared/theme` | Token-based |
 | Theme packages | `ClassicTheme`, `ModernTheme`, `DarkTheme` | Built-in |
 | `Ext.util.CSS` | `StyleSheet` | Rule injection |
 | Theme switching | `ThemeManager.setTheme()` | Runtime switching |
 
 ## Accessibility
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
-| `Ext.util.Aria` | `AriaManager` from `@ext-ts/core` | Same concept |
+| `Ext.util.Aria` | `AriaManager` from `@framesquared/core` | Same concept |
 | `Ext.util.FocusManager` | `FocusManager` | Focus trapping |
 | `ariaRole` config | Auto-applied per component | Automatic |
 | `ariaLabel` config | Auto-applied from `title`/`text` | Automatic |
 
 ## i18n
 
-| ExtJS | ext-ts | Notes |
+| ExtJS | framesquared | Notes |
 |-------|--------|-------|
-| `Ext.util.Format` | `Locale` from `@ext-ts/core` | Uses `Intl` API |
+| `Ext.util.Format` | `Locale` from `@framesquared/core` | Uses `Intl` API |
 | Locale overrides | `LocaleManager.setLocale()` | Runtime switching |
 | RTL support | `dir="rtl"` on `<html>` | Automatic via locale |
 | `Ext.Date.format()` | `locale.formatDate()` | Uses `Intl.DateTimeFormat` |
 | `Ext.util.Format.number()` | `locale.formatNumber()` | Uses `Intl.NumberFormat` |
 
-## What's New in ext-ts (Not in ExtJS)
+## What's New in framesquared (Not in ExtJS)
 
 | Feature | Description |
 |---------|-------------|

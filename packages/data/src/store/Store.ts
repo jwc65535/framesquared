@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – Store
+ * @framesquared/data – Store
  *
  * A client-side collection of Model records with sorting, filtering,
  * grouping, events, and sync/change tracking.
@@ -7,7 +7,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Base, Observable } from '@ext-ts/core';
+import { Base, Observable } from '@framesquared/core';
 import type { Model } from '../Model.js';
 import { Collection } from './Collection.js';
 

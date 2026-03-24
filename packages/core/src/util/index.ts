@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – utility functions
+ * @framesquared/core – utility functions
  *
  * Pure, side-effect-free helpers (except timer wrappers and generateId).
  * Every function is individually exported so tree-shaking works out of the box.
@@ -230,11 +230,11 @@ let idCounter = 0;
  * increasing across all prefixes.
  *
  * ```ts
- * generateId();          // "ext-ts-1"
- * generateId();          // "ext-ts-2"
+ * generateId();          // "framesquared-1"
+ * generateId();          // "framesquared-2"
  * generateId('widget');  // "widget-3"
  * ```
  */
-export function generateId(prefix = 'ext-ts'): string {
+export function generateId(prefix = 'framesquared'): string {
   return `${prefix}-${++idCounter}`;
 }

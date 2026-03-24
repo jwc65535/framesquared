@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – ManyToMany association
+ * @framesquared/data – ManyToMany association
  */
 import { Association } from './Association.js';
 import type { AssociationConfig } from './Association.js';

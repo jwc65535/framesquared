@@ -1,5 +1,5 @@
 /**
- * @ext-ts/data – Proxy (abstract base)
+ * @framesquared/data – Proxy (abstract base)
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

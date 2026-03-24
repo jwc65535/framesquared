@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – CardLayout
+ * @framesquared/layout – CardLayout
  *
  * Like FitLayout but supports multiple children — only one is visible
  * at a time.  Provides next/prev navigation and fires activate/deactivate.
@@ -9,7 +9,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Component } from '@ext-ts/component';
+import type { Component } from '@framesquared/component';
 import { Layout } from './Layout.js';
 import type { LayoutConfig } from './Layout.js';
 

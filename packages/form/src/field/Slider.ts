@@ -1,5 +1,5 @@
 /**
- * @ext-ts/form – Slider
+ * @framesquared/form – Slider
  *
  * A slider field with draggable thumb(s) on a track.  Supports
  * min/max, increment snapping, multi-thumb, vertical mode,

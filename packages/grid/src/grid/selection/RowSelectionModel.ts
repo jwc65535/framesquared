@@ -1,5 +1,5 @@
 /**
- * @ext-ts/grid – RowSelectionModel
+ * @framesquared/grid – RowSelectionModel
  *
  * Row-level selection model supporting SINGLE, SIMPLE, and MULTI modes.
  * Optional checkbox column for visual selection.

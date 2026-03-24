@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { Locale, LocaleManager, enUS, esES, arSA } from '@ext-ts/core';
+import { Locale, LocaleManager, enUS, esES, arSA } from '@framesquared/core';
 
 afterEach(() => {
   LocaleManager.reset();

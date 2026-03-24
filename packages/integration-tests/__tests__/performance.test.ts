@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { Model, Store } from '@ext-ts/data';
-import { Component, Container } from '@ext-ts/component';
+import { Model, Store } from '@framesquared/data';
+import { Component, Container } from '@framesquared/component';
 
 class PerfModel extends Model {
   static override fields = [

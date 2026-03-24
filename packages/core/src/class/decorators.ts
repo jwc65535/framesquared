@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – TC39 Stage 3 decorators
+ * @framesquared/core – TC39 Stage 3 decorators
  *
  * Usage:
  * ```ts

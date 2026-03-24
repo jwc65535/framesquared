@@ -1,16 +1,16 @@
 /**
- * ext-ts — Umbrella package
- * Re-exports everything from all @ext-ts/* packages.
+ * framesquared — Umbrella package
+ * Re-exports everything from all @framesquared/* packages.
  */
 
-export * from '@ext-ts/core';
-export * from '@ext-ts/data';
-export * from '@ext-ts/component';
-export * from '@ext-ts/layout';
-export * from '@ext-ts/ui';
-export * from '@ext-ts/form';
-export * from '@ext-ts/grid';
-export * from '@ext-ts/dd';
-export * from '@ext-ts/fx';
-export * from '@ext-ts/app';
-export * from '@ext-ts/theme';
+export * from '@framesquared/core';
+export * from '@framesquared/data';
+export * from '@framesquared/component';
+export * from '@framesquared/layout';
+export * from '@framesquared/ui';
+export * from '@framesquared/form';
+export * from '@framesquared/grid';
+export * from '@framesquared/dd';
+export * from '@framesquared/fx';
+export * from '@framesquared/app';
+export * from '@framesquared/theme';

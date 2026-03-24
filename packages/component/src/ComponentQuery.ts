@@ -1,5 +1,5 @@
 /**
- * @ext-ts/component – ComponentQuery
+ * @framesquared/component – ComponentQuery
  *
  * Backward-compatible wrapper that delegates to the new AST-based CQ engine.
  */

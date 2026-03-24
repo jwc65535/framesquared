@@ -1,5 +1,5 @@
 /**
- * @ext-ts/core – ExtEvent
+ * @framesquared/core – ExtEvent
  *
  * Represents a fired event.  Provides `preventDefault()`,
  * `stopPropagation()`, and `stopEvent()` controls.

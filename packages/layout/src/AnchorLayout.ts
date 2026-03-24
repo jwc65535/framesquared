@@ -1,5 +1,5 @@
 /**
- * @ext-ts/layout – AnchorLayout
+ * @framesquared/layout – AnchorLayout
  *
  * Children sized relative to container using anchor strings:
  *   '100% 50%' → 100% width, 50% height
@@ -11,7 +11,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Component } from '@ext-ts/component';
+import type { Component } from '@framesquared/component';
 import { Layout } from './Layout.js';
 import type { LayoutConfig } from './Layout.js';
 

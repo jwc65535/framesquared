@@ -1,5 +1,5 @@
 /**
- * @ext-ts/dd – DragData
+ * @framesquared/dd – DragData
  * Payload carried during a drag operation.
  */
 

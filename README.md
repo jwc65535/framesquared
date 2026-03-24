@@ -1,4 +1,4 @@
-# ext-ts
+# framesquared
 
 A modern, clean-room reimplementation of the Sencha ExtJS framework in TypeScript with native ESM modules.
 
@@ -13,17 +13,17 @@ A modern, clean-room reimplementation of the Sencha ExtJS framework in TypeScrip
 
 | Package | Scope | Description |
 |---------|-------|-------------|
-| `@ext-ts/core` | `packages/core` | Class system, events, utilities |
-| `@ext-ts/data` | `packages/data` | Models, stores, proxies |
-| `@ext-ts/component` | `packages/component` | Component model, lifecycle, rendering |
-| `@ext-ts/layout` | `packages/layout` | Layout managers |
-| `@ext-ts/ui` | `packages/ui` | Panels, buttons, toolbars, and other widgets |
-| `@ext-ts/form` | `packages/form` | Form fields and validation |
-| `@ext-ts/grid` | `packages/grid` | Grid/table component |
-| `@ext-ts/dd` | `packages/dd` | Drag and drop |
-| `@ext-ts/app` | `packages/app` | Application architecture (MVC/MVVM) |
-| `@ext-ts/fx` | `packages/fx` | Animations and effects |
-| `@ext-ts/theme` | `packages/theme` | Theming and CSS-in-JS token system |
+| `@framesquared/core` | `packages/core` | Class system, events, utilities |
+| `@framesquared/data` | `packages/data` | Models, stores, proxies |
+| `@framesquared/component` | `packages/component` | Component model, lifecycle, rendering |
+| `@framesquared/layout` | `packages/layout` | Layout managers |
+| `@framesquared/ui` | `packages/ui` | Panels, buttons, toolbars, and other widgets |
+| `@framesquared/form` | `packages/form` | Form fields and validation |
+| `@framesquared/grid` | `packages/grid` | Grid/table component |
+| `@framesquared/dd` | `packages/dd` | Drag and drop |
+| `@framesquared/app` | `packages/app` | Application architecture (MVC/MVVM) |
+| `@framesquared/fx` | `packages/fx` | Animations and effects |
+| `@framesquared/theme` | `packages/theme` | Theming and CSS-in-JS token system |
 
 ## Getting Started
 

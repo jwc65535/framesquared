@@ -1,6 +1,6 @@
 # Accessibility
 
-ext-ts components include ARIA attributes, keyboard navigation, and focus management out of the box.
+framesquared components include ARIA attributes, keyboard navigation, and focus management out of the box.
 
 ## Automatic ARIA Roles
 
@@ -24,7 +24,7 @@ Every component renders appropriate ARIA attributes:
 Programmatic ARIA attribute management:
 
 ```typescript
-import { AriaManager } from '@ext-ts/core';
+import { AriaManager } from '@framesquared/core';
 
 AriaManager.setRole(element, 'button');
 AriaManager.setLabel(element, 'Save document');
@@ -49,7 +49,7 @@ Live regions are created lazily as visually hidden elements in `document.body`.
 ### Focus Trapping (for Modals)
 
 ```typescript
-import { FocusManager } from '@ext-ts/core';
+import { FocusManager } from '@framesquared/core';
 
 // When opening a dialog
 FocusManager.saveFocus();        // Remember current focus
@@ -117,7 +117,7 @@ Focusable elements: `a[href]`, `button`, `input`, `select`, `textarea`, `[tabind
 ## i18n and RTL
 
 ```typescript
-import { LocaleManager, arSA } from '@ext-ts/core';
+import { LocaleManager, arSA } from '@framesquared/core';
 
 LocaleManager.register(arSA);
 LocaleManager.setLocale('ar-SA');
