@@ -1,0 +1,25 @@
+{
+  "name": "@ext-ts/example-basic-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@ext-ts/core": "workspace:*",
+    "@ext-ts/data": "workspace:*",
+    "@ext-ts/component": "workspace:*",
+    "@ext-ts/layout": "workspace:*",
+    "@ext-ts/ui": "workspace:*",
+    "@ext-ts/form": "workspace:*",
+    "@ext-ts/grid": "workspace:*",
+    "@ext-ts/app": "workspace:*",
+    "@ext-ts/theme": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "typescript": "^5.5.0"
+  }
+}

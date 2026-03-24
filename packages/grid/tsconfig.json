@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "paths": {
+      "@ext-ts/core": ["../core/src/index.ts"],
+      "@ext-ts/component": ["../component/src/index.ts"],
+      "@ext-ts/ui": ["../ui/src/index.ts"]
+    },
+    "composite": true
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../core" },
+    { "path": "../component" },
+    { "path": "../ui" }
+  ]
+}

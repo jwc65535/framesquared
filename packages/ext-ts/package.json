@@ -1,0 +1,76 @@
+{
+  "name": "ext-ts",
+  "version": "0.1.0",
+  "description": "Modern TypeScript reimplementation of ExtJS — umbrella package",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./core": {
+      "import": "./dist/core.js",
+      "types": "./dist/core.d.ts"
+    },
+    "./data": {
+      "import": "./dist/data.js",
+      "types": "./dist/data.d.ts"
+    },
+    "./component": {
+      "import": "./dist/component.js",
+      "types": "./dist/component.d.ts"
+    },
+    "./layout": {
+      "import": "./dist/layout.js",
+      "types": "./dist/layout.d.ts"
+    },
+    "./ui": {
+      "import": "./dist/ui.js",
+      "types": "./dist/ui.d.ts"
+    },
+    "./form": {
+      "import": "./dist/form.js",
+      "types": "./dist/form.d.ts"
+    },
+    "./grid": {
+      "import": "./dist/grid.js",
+      "types": "./dist/grid.d.ts"
+    },
+    "./dd": {
+      "import": "./dist/dd.js",
+      "types": "./dist/dd.d.ts"
+    },
+    "./fx": {
+      "import": "./dist/fx.js",
+      "types": "./dist/fx.d.ts"
+    },
+    "./app": {
+      "import": "./dist/app.js",
+      "types": "./dist/app.d.ts"
+    },
+    "./theme": {
+      "import": "./dist/theme.js",
+      "types": "./dist/theme.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@ext-ts/core": "workspace:*",
+    "@ext-ts/data": "workspace:*",
+    "@ext-ts/component": "workspace:*",
+    "@ext-ts/layout": "workspace:*",
+    "@ext-ts/ui": "workspace:*",
+    "@ext-ts/form": "workspace:*",
+    "@ext-ts/grid": "workspace:*",
+    "@ext-ts/dd": "workspace:*",
+    "@ext-ts/fx": "workspace:*",
+    "@ext-ts/app": "workspace:*",
+    "@ext-ts/theme": "workspace:*"
+  }
+}

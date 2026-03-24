@@ -1,0 +1,21 @@
+{
+  "name": "@ext-ts/core",
+  "version": "0.1.0",
+  "description": "Class system, events, and utilities",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit --project tsconfig.build.json"
+  }
+}

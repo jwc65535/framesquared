@@ -1,0 +1,25 @@
+{
+  "name": "@ext-ts/ui",
+  "version": "0.1.0",
+  "description": "UI widgets (panels, buttons, toolbars, etc.)",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit --project tsconfig.build.json"
+  },
+  "dependencies": {
+    "@ext-ts/core": "workspace:*",
+    "@ext-ts/component": "workspace:*"
+  }
+}

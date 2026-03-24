@@ -1,0 +1,56 @@
+/**
+ * @ext-ts/ui – Viewport
+ *
+ * A Container that fills the entire browser viewport.
+ * Renders into document.body, sets overflow: hidden,
+ * and fires 'resize' on window resize.
+ */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { Container } from '@ext-ts/component';
+import type { ContainerConfig } from '@ext-ts/component';
+
+export interface ViewportConfig extends ContainerConfig {}
+
+export class Viewport extends Container {
+  static override $className = 'Ext.container.Viewport';
+
+  declare private _resizeHandler: (() => void) | null;
+
+  constructor(config: ViewportConfig = {}) {
+    super({ xtype: 'viewport', renderTo: document.body, ...config });
+  }
+
+  protected override initialize(): void {
+    super.initialize();
+    this._resizeHandler = null;
+  }
+
+  protected override afterRender(): void {
+    super.afterRender();
+    const el = this.el!;
+    el.classList.add('x-viewport');
+    el.style.width = '100vw';
+    el.style.height = '100vh';
+    el.style.overflow = 'hidden';
+    el.style.position = 'relative';
+
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.body.style.overflow = 'hidden';
+
+    this._resizeHandler = () => {
+      this.fire('resize', this, window.innerWidth, window.innerHeight);
+    };
+    window.addEventListener('resize', this._resizeHandler);
+  }
+
+  protected override onDestroy(): void {
+    if (this._resizeHandler) {
+      window.removeEventListener('resize', this._resizeHandler);
+      this._resizeHandler = null;
+    }
+    super.onDestroy();
+  }
+}

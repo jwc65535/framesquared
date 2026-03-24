@@ -1,0 +1,23 @@
+{
+  "name": "@ext-ts/build-tests",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@ext-ts/core": "workspace:*",
+    "@ext-ts/data": "workspace:*",
+    "@ext-ts/component": "workspace:*",
+    "@ext-ts/layout": "workspace:*",
+    "@ext-ts/ui": "workspace:*",
+    "@ext-ts/form": "workspace:*",
+    "@ext-ts/grid": "workspace:*",
+    "@ext-ts/dd": "workspace:*",
+    "@ext-ts/fx": "workspace:*",
+    "@ext-ts/app": "workspace:*",
+    "@ext-ts/theme": "workspace:*",
+    "ext-ts": "workspace:*"
+  }
+}

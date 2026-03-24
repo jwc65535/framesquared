@@ -1,0 +1,34 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPointStrategy": "packages",
+  "entryPoints": [
+    "packages/core",
+    "packages/data",
+    "packages/component",
+    "packages/layout",
+    "packages/ui",
+    "packages/form",
+    "packages/grid",
+    "packages/dd",
+    "packages/fx",
+    "packages/app",
+    "packages/theme"
+  ],
+  "out": "docs/api",
+  "name": "ext-ts API Documentation",
+  "readme": "README.md",
+  "includeVersion": true,
+  "categorizeByGroup": true,
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true
+  },
+  "visibilityFilters": {
+    "protected": true,
+    "private": false
+  },
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeInternal": true,
+  "excludeExternals": true
+}

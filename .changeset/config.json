@@ -1,0 +1,18 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [],
+  "linked": [
+    ["@ext-ts/core", "@ext-ts/data", "@ext-ts/component", "@ext-ts/layout",
+     "@ext-ts/ui", "@ext-ts/form", "@ext-ts/grid", "@ext-ts/dd",
+     "@ext-ts/fx", "@ext-ts/app", "@ext-ts/theme", "ext-ts"]
+  ],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": [
+    "@ext-ts/integration-tests",
+    "@ext-ts/build-tests"
+  ]
+}

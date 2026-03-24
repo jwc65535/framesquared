@@ -1,0 +1,22 @@
+/**
+ * @ext-ts/component
+ * Component model, lifecycle, and rendering
+ */
+
+export { Component } from './Component.js';
+export type { ComponentConfig } from './Component.js';
+export { Template } from './Template.js';
+export { Container } from './Container.js';
+export type { ContainerConfig } from './Container.js';
+export { ComponentQuery, matchesCQ } from './ComponentQuery.js';
+export { Layout, resolveLayout } from './Layout.js';
+export type { LayoutConfig } from './Layout.js';
+
+// New CQ engine
+export { CQParser } from './query/CQParser.js';
+export type { SelectorNode, CompoundSelectorNode, CombinatorNode, SelectorListNode } from './query/CQParser.js';
+export { CQMatcher } from './query/CQMatcher.js';
+export { CQ } from './query/ComponentQuery.js';
+
+// XTemplate
+export { XTemplate } from './template/XTemplate.js';
