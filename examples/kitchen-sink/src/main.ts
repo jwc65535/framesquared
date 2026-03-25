@@ -6,31 +6,22 @@
  */
 
 import { Model, Store } from '@framesquared/data';
-import { Grid, RowSelectionModel, TreePanel, TreeStore, Grouping } from '@framesquared/grid';
+import { Grid } from '@framesquared/grid';
 import {
-  FormPanel, TextField, TextArea, NumberField, DateField,
-  ComboBox, TagField, Checkbox, Radio, CheckboxGroup, RadioGroup,
-  Slider, FileUploadField, HtmlEditor, Spinner,
-  DatePicker, ColorPicker,
+  FormPanel, TextField, TextArea, NumberField,
+  ComboBox, Checkbox, Slider,
 } from '@framesquared/form';
 import {
-  Panel, Button, SplitButton, CycleButton, SegmentedButton,
+  Panel, Button, SegmentedButton,
   Toolbar, Menu, MenuItem, CheckItem, MenuSeparator,
   Window as ExtWindow, MessageBox,
-  TabPanel, Tooltip,
-  Viewport, Accordion, CardContainer, Breadcrumb,
+  TabPanel,
 } from '@framesquared/ui';
-import { Draggable, Droppable, Sortable, Resizable } from '@framesquared/dd';
-import { Anim, Animation, Easing, Transition } from '@framesquared/fx';
-import { Application, ViewModel, ViewController, Router } from '@framesquared/app';
+import { Application } from '@framesquared/app';
 import {
-  ThemeManager, ModernTheme, DarkTheme, ClassicTheme, StyleSheet,
+  ThemeManager, ModernTheme, DarkTheme, ClassicTheme,
 } from '@framesquared/theme';
-import {
-  AriaManager, FocusManager,
-  LocaleManager, enUS, esES, arSA,
-  Locale,
-} from '@framesquared/core';
+import { LocaleManager, enUS, esES, arSA } from '@framesquared/core';
 
 // ─── Setup ───────────────────────────────────────────────────────────────
 
@@ -91,9 +82,9 @@ const buttonsTab = new Panel({
     }),
     new SegmentedButton({
       items: [
-        new Button({ text: 'Day' }),
-        new Button({ text: 'Week' }),
-        new Button({ text: 'Month' }),
+        new Button({ text: 'Day', value: 'day' }),
+        new Button({ text: 'Week', value: 'week' }),
+        new Button({ text: 'Month', value: 'month' }),
       ],
     }),
   ],
@@ -108,12 +99,15 @@ const panelsTab = new Panel({
     new Panel({ title: 'Framed Panel', frame: true, html: '<p>With frame styling.</p>' }),
     new Button({
       text: 'Open Window',
-      handler: () => new ExtWindow({
-        title: 'Sample Window',
-        modal: true,
-        renderTo: document.body,
-        html: '<p>This is a modal window.</p>',
-      }),
+      handler: () => {
+        const win = new ExtWindow({
+          title: 'Sample Window',
+          modal: true,
+          renderTo: document.body,
+          html: '<p>This is a modal window.</p>',
+        });
+        win.show();
+      },
     }),
     new Button({
       text: 'Show MessageBox',
@@ -162,7 +156,7 @@ const gridTab = new Panel({
         getAt: (i: number) => demoStore.getAt(i),
         sort: (f: string) => demoStore.sort(f),
         on: (e: string, fn: Function) => demoStore.on(e as any, fn as any),
-        fireEvent: () => {},
+        fireEvent: (e: string, ...a: unknown[]) => (demoStore as any).fireEvent(e, ...a),
         each: (fn: Function) => demoStore.each(fn as any),
         getTotalCount: () => demoStore.getTotalCount(),
         isLoading: () => false,

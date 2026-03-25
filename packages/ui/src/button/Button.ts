@@ -253,6 +253,18 @@ export class Button extends Component {
       }
     }
 
+    // Menu
+    if (cfg.menu) {
+      const menu = cfg.menu;
+      if (menu.isVisible?.()) {
+        menu.hide();
+        this.el?.setAttribute('aria-expanded', 'false');
+      } else {
+        menu.showBy(this);
+        this.el?.setAttribute('aria-expanded', 'true');
+      }
+    }
+
     // Handler
     if (cfg.handler) {
       const scope = cfg.scope ?? this;
