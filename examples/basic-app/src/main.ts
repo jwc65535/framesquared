@@ -86,6 +86,7 @@ const grid = new Grid({
 selModel.on('selectionchange', (_sm: unknown, selected: Model[]) => {
   const record = selected[0] ?? null;
   vm.set('selectedContact', record);
+  vm.set('isEditing', record !== null);
   if (record) {
     form.setValues(record.getData() as Record<string, unknown>);
   } else {
@@ -111,13 +112,13 @@ const saveBtn = new Button({
   text: 'Save',
   handler() {
     if (!form.isValid()) return;
-    const values = form.getValues() as Record<string, unknown>;
     const selected = vm.get('selectedContact') as Model | null;
-    if (selected) {
-      for (const [key, val] of Object.entries(values)) {
-        selected.set(key, val);
-      }
+    if (!selected) return;
+    const values = form.getValues() as Record<string, unknown>;
+    for (const [key, val] of Object.entries(values)) {
+      selected.set(key, val);
     }
+    store.fireEvent('datachanged', store);
     vm.set('isEditing', false);
   },
 });
