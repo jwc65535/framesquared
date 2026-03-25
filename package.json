@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "description": "Modern TypeScript reimplementation of ExtJS with ESM",
   "license": "MIT",
+  "author": "John Carbone",
   "type": "module",
   "engines": {
     "node": ">=18.0.0",
