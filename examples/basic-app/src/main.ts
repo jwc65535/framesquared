@@ -83,9 +83,14 @@ const grid = new Grid({
   ],
 });
 
-selModel.init(grid);
-selModel.on('selectionchange', (selected: Model[]) => {
-  vm.set('selectedContact', selected[0] ?? null);
+selModel.on('selectionchange', (_sm: unknown, selected: Model[]) => {
+  const record = selected[0] ?? null;
+  vm.set('selectedContact', record);
+  if (record) {
+    form.setValues(record.getData() as Record<string, unknown>);
+  } else {
+    form.reset();
+  }
 });
 
 // ─── Form ────────────────────────────────────────────────────────────────
@@ -153,6 +158,8 @@ const app = new Application({
       renderTo: document.body,
       items: [grid, form, addBtn, saveBtn, deleteBtn],
     });
+    // Grid must be rendered before init so getView() returns the live table
+    selModel.init(grid);
   },
 });
 
