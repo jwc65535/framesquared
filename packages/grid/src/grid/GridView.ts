@@ -31,6 +31,9 @@ export class GridView {
   onItemClick?: (record: GridRecord, rowIndex: number, event: Event) => void;
   onItemDblClick?: (record: GridRecord, rowIndex: number, event: Event) => void;
 
+  /** Set by RowSelectionModel so selection classes survive refresh() */
+  isSelected?: (record: GridRecord) => boolean;
+
   constructor(config: GridViewConfig) {
     this.store = config.store;
     this.columns = config.columns;
@@ -90,6 +93,7 @@ export class GridView {
     const tr = document.createElement('tr');
     tr.classList.add('x-grid-row');
     if (rowIndex % 2 === 1) tr.classList.add('x-grid-row-alt');
+    if (this.isSelected?.(record)) tr.classList.add('x-grid-row-selected');
     tr.setAttribute('data-rowindex', String(rowIndex));
 
     for (let colIdx = 0; colIdx < this.columns.length; colIdx++) {

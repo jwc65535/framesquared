@@ -44,6 +44,8 @@ export class RowSelectionModel {
   init(grid: SelectableGrid): void {
     this.grid = grid;
     this.attachRowListeners();
+    const view = grid.getView();
+    if (view) view.isSelected = (record) => this.selected.has(record);
     if (this.checkboxSelect) this.addCheckboxColumn();
   }
 
