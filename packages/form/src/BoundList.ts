@@ -57,14 +57,16 @@ export class BoundList extends Component {
     this.el.innerHTML = '';
     this._highlightIndex = -1;
 
-    const records = this._store?.getRange?.() ?? [];
+    const records = Array.isArray(this._store) ? this._store : (this._store?.getRange?.() ?? []);
     for (let i = 0; i < records.length; i++) {
       const rec = records[i];
       const item = document.createElement('div');
       item.classList.add('x-boundlist-item');
       item.setAttribute('role', 'option');
       item.setAttribute('data-index', String(i));
-      item.textContent = rec.get ? rec.get(this._displayField) : String(rec.data?.[this._displayField] ?? '');
+      item.textContent = rec.get
+        ? rec.get(this._displayField)
+        : String(rec.data?.[this._displayField] ?? rec[this._displayField] ?? '');
 
       item.addEventListener('click', () => {
         this.fire('itemclick', this, rec, item, i);
@@ -100,7 +102,7 @@ export class BoundList extends Component {
       this.highlightItem(Math.max(this._highlightIndex - 1, 0));
     } else if (e.key === 'Enter' && this._highlightIndex >= 0) {
       e.preventDefault();
-      const records = this._store?.getRange?.() ?? [];
+      const records = Array.isArray(this._store) ? this._store : (this._store?.getRange?.() ?? []);
       const rec = records[this._highlightIndex];
       if (rec) {
         this.fire('select', this, rec);

@@ -99,7 +99,17 @@ export class ComboBox extends TextField {
         displayField: this._displayField,
         renderTo: document.body,
       });
-      this._boundList.el!.classList.add('x-combobox-list');
+      const listEl = this._boundList.el!;
+      listEl.classList.add('x-combobox-list');
+      listEl.style.display = 'none';
+      listEl.style.position = 'fixed';
+      listEl.style.zIndex = '1000';
+      listEl.style.backgroundColor = '#fff';
+      listEl.style.border = '1px solid #ccc';
+      listEl.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+      listEl.style.minWidth = '100px';
+      listEl.style.maxHeight = '200px';
+      listEl.style.overflowY = 'auto';
 
       // Listen for selection
       (this._boundList as any).on?.('select', (_bl: any, rec: any) => {
@@ -110,7 +120,15 @@ export class ComboBox extends TextField {
       this._boundList.refresh();
     }
 
-    if (this._boundList.el) this._boundList.el.style.display = '';
+    // Position below the field element
+    const anchor = this.el ?? this.getInputEl();
+    const rect = anchor.getBoundingClientRect();
+    const listEl = this._boundList.el!;
+    listEl.style.top = `${rect.bottom}px`;
+    listEl.style.left = `${rect.left}px`;
+    listEl.style.width = `${rect.width}px`;
+    listEl.style.display = '';
+
     this.fire('expand', this);
   }
 
@@ -140,8 +158,8 @@ export class ComboBox extends TextField {
       this.updateMultiDisplay();
     } else {
       this._selection = [record];
-      const display = record.get ? record.get(this._displayField) : '';
-      const value = record.get ? record.get(this._valueField) : '';
+      const display = record.get ? record.get(this._displayField) : (record[this._displayField] ?? '');
+      const value = record.get ? record.get(this._valueField) : (record[this._valueField] ?? '');
       this.getInputEl().value = display;
       this._selectedValue = value;
       this._value = value;
@@ -165,10 +183,10 @@ export class ComboBox extends TextField {
 
   private updateMultiDisplay(): void {
     const display = this._selection
-      .map(r => r.get ? r.get(this._displayField) : '')
+      .map(r => r.get ? r.get(this._displayField) : (r[this._displayField] ?? ''))
       .join(this._delimiter);
     this.getInputEl().value = display;
-    this._value = this._selection.map(r => r.get ? r.get(this._valueField) : null);
+    this._value = this._selection.map(r => r.get ? r.get(this._valueField) : (r[this._valueField] ?? null));
   }
 
   // -----------------------------------------------------------------------
@@ -199,7 +217,7 @@ export class ComboBox extends TextField {
 
   override getValue(): any {
     if (this._multiSelect) {
-      return this._selection.map(r => r.get ? r.get(this._valueField) : null);
+      return this._selection.map(r => r.get ? r.get(this._valueField) : (r[this._valueField] ?? null));
     }
     return this._selectedValue ?? super.getValue();
   }
