@@ -174,6 +174,23 @@ const gridTab = new Panel({
 
 // ─── Tab: Themes ─────────────────────────────────────────────────────────
 
+function themeInfoHtml(): string {
+  const primary = ThemeManager.getToken('color.primary') as string;
+  return `<p>Current theme: <strong>${ThemeManager.getActiveThemeName()}</strong></p>
+          <p>Primary color: <strong style="color:${primary}">${primary}</strong></p>
+          <p>Locale: <strong>${document.documentElement.lang || '—'}</strong></p>`;
+}
+
+const themeInfoPanel = new Panel({ title: 'Theme Info', html: themeInfoHtml() });
+
+ThemeManager.on('themechange', () => {
+  themeInfoPanel.getBodyEl().innerHTML = themeInfoHtml();
+});
+
+LocaleManager.on('localechange', () => {
+  themeInfoPanel.getBodyEl().innerHTML = themeInfoHtml();
+});
+
 const themesTab = new Panel({
   title: 'Themes & i18n',
   items: [
@@ -191,11 +208,7 @@ const themesTab = new Panel({
         new Button({ text: 'العربية', handler: () => LocaleManager.setLocale('ar-SA') }),
       ],
     }),
-    new Panel({
-      title: 'Theme Info',
-      html: `<p>Current: ${ThemeManager.getActiveThemeName()}</p>
-             <p>Primary: ${ThemeManager.getToken('color.primary')}</p>`,
-    }),
+    themeInfoPanel,
   ],
 });
 
@@ -212,3 +225,4 @@ const app = new Application({
 });
 
 app.start();
+
