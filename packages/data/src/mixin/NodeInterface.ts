@@ -44,6 +44,18 @@ export interface NodeInterface extends Model {
   findChild(field: string, value: unknown, deep?: boolean): NodeInterface | undefined;
   sort(sorters: Sorter[]): void;
   serialize(): any;
+
+  // Extended methods
+  eachChild(fn: (child: NodeInterface, index: number) => boolean | void, scope?: object): void;
+  indexOf(child: NodeInterface): number;
+  getChildAt(index: number): NodeInterface | undefined;
+  childCount(): number;
+  hasChildNodes(): boolean;
+  getChildren(deep?: boolean): NodeInterface[];
+  findChildBy(predicate: (node: NodeInterface) => boolean | void, deep?: boolean): NodeInterface | undefined;
+  removeAll(): NodeInterface[];
+  copy(deep?: boolean): NodeInterface;
+  getDepth(): number;
 }
 
 // ---------------------------------------------------------------------------
@@ -237,6 +249,82 @@ export function applyNodeInterface(model: Model, depth = 0): void {
     }
     return data;
   };
+
+  node.eachChild = function (
+    fn: (child: NodeInterface, index: number) => boolean | void,
+  ): void {
+    for (let i = 0; i < this.childNodes.length; i++) {
+      if (fn(this.childNodes[i], i) === false) return;
+    }
+  };
+
+  node.indexOf = function (child: NodeInterface): number {
+    return this.childNodes.indexOf(child);
+  };
+
+  node.getChildAt = function (index: number): NodeInterface | undefined {
+    return this.childNodes[index];
+  };
+
+  node.childCount = function (): number {
+    return this.childNodes.length;
+  };
+
+  node.hasChildNodes = function (): boolean {
+    return this.childNodes.length > 0;
+  };
+
+  node.getChildren = function (deep = false): NodeInterface[] {
+    if (!deep) {
+      return [...this.childNodes];
+    }
+    const result: NodeInterface[] = [];
+    const collect = (n: NodeInterface): void => {
+      for (const child of n.childNodes) {
+        result.push(child);
+        collect(child);
+      }
+    };
+    collect(this);
+    return result;
+  };
+
+  node.findChildBy = function (
+    predicate: (n: NodeInterface) => boolean | void,
+    deep = false,
+  ): NodeInterface | undefined {
+    for (const child of this.childNodes) {
+      const matched = predicate(child);
+      if (matched !== false && matched !== undefined && matched !== null) return child;
+      if (deep) {
+        const found = child.findChildBy(predicate, true);
+        if (found) return found;
+      }
+    }
+    return undefined;
+  };
+
+  node.removeAll = function (): NodeInterface[] {
+    const removed = [...this.childNodes];
+    for (const child of removed) {
+      child.parentNode = null;
+      child.previousSibling = null;
+      child.nextSibling = null;
+    }
+    this.childNodes = [];
+    this.firstChild = null;
+    this.lastChild = null;
+    return removed;
+  };
+
+  node.copy = function (deep = true): NodeInterface {
+    const copyCounter = { i: 0 };
+    return copyNodeImpl(this, deep, copyCounter);
+  };
+
+  node.getDepth = function (): number {
+    return this.depth;
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -255,6 +343,32 @@ function updateDepthRecursive(node: NodeInterface, depth: number): void {
   for (const child of node.childNodes) {
     updateDepthRecursive(child, depth + 1);
   }
+}
+
+/**
+ * Recursively copies a node (and optionally its children) with new IDs.
+ */
+function copyNodeImpl(
+  node: NodeInterface,
+  deep: boolean,
+  counter: { i: number },
+): NodeInterface {
+  counter.i += 1;
+  const newId = 'copy-' + Date.now() + '-' + counter.i;
+  const data = (node as any).getData() as Record<string, unknown>;
+  const Ctor = (node as any).constructor as { create(data: Record<string, unknown>): any };
+  const copyModel = Ctor.create({ ...data, id: newId });
+  applyNodeInterface(copyModel, 0);
+  const copyNode = copyModel as any as NodeInterface;
+
+  if (deep) {
+    for (const child of node.childNodes) {
+      const childCopy = copyNodeImpl(child, true, counter);
+      copyNode.appendChild(childCopy);
+    }
+  }
+
+  return copyNode;
 }
 
 /**

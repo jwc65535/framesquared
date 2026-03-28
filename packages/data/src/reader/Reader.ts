@@ -36,7 +36,7 @@ export interface JsonReaderConfig {
 }
 
 export class JsonReader {
-  private config: JsonReaderConfig;
+  protected config: JsonReaderConfig;
 
   constructor(config: JsonReaderConfig) {
     this.config = config;

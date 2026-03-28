@@ -71,6 +71,11 @@ export { TreeStore } from './store/TreeStore.js';
 export type { TreeStoreConfig } from './store/TreeStore.js';
 export { applyNodeInterface } from './mixin/NodeInterface.js';
 export type { NodeInterface } from './mixin/NodeInterface.js';
+export { TreeModel } from './model/TreeModel.js';
+export { TreeReader } from './reader/TreeReader.js';
+export type { TreeReaderConfig } from './reader/TreeReader.js';
+export { TreeWriter } from './writer/TreeWriter.js';
+export type { TreeWriterConfig } from './writer/TreeWriter.js';
 
 // Buffered
 export { BufferedStore } from './store/BufferedStore.js';

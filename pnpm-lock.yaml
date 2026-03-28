@@ -245,7 +245,7 @@ importers:
         version: link:../ui
       framesquared:
         specifier: workspace:*
-        version: link:../framesquared
+        version: link:../ext-ts
 
   packages/component:
     dependencies:
@@ -267,7 +267,7 @@ importers:
         specifier: workspace:*
         version: link:../core
 
-  packages/framesquared:
+  packages/ext-ts:
     dependencies:
       '@framesquared/app':
         specifier: workspace:*

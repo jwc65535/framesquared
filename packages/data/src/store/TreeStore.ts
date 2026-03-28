@@ -61,12 +61,12 @@ export class TreeStore extends Base {
     this.ModelClass = config.model;
 
     if (config.root) {
-      this.setRoot(this.buildNode(config.root, 0));
+      this.replaceRoot(this.buildNode(config.root, 0));
     } else {
       // Create an empty root
       const empty = this.ModelClass.create({ id: '__root__', text: 'Root' });
       applyNodeInterface(empty, 0);
-      this.setRoot(empty as any as NodeInterface);
+      this.replaceRoot(empty as any as NodeInterface);
     }
   }
 
@@ -78,7 +78,36 @@ export class TreeStore extends Base {
     return this.rootNode;
   }
 
-  private setRoot(node: NodeInterface): void {
+  getRootNode(): NodeInterface {
+    return this.rootNode;
+  }
+
+  /**
+   * Replaces the root with new data (or a pre-built node).
+   * Fires 'rootchange'.
+   */
+  setRoot(nodeOrData: NodeInterface | Record<string, unknown>): NodeInterface {
+    let node: NodeInterface;
+    if (this.isNodeInterface(nodeOrData)) {
+      node = nodeOrData;
+    } else {
+      node = this.buildNode(nodeOrData as Record<string, unknown>, 0);
+    }
+    this.replaceRoot(node);
+    return node;
+  }
+
+  private isNodeInterface(value: unknown): value is NodeInterface {
+    return (
+      typeof value === 'object' &&
+      value !== null &&
+      'childNodes' in value &&
+      'parentNode' in value &&
+      typeof (value as NodeInterface).isRoot === 'function'
+    );
+  }
+
+  private replaceRoot(node: NodeInterface): void {
     this.rootNode = node;
     this.nodeMap.clear();
     this.registerRecursive(node);
@@ -133,6 +162,57 @@ export class TreeStore extends Base {
   collapseNode(node: NodeInterface): void {
     node.expanded = false;
     this.fire('nodecollapse', this, node);
+  }
+
+  // -----------------------------------------------------------------------
+  // Deep search
+  // -----------------------------------------------------------------------
+
+  findNode(field: string, value: unknown): NodeInterface | undefined {
+    return this.findNodeImpl(this.rootNode, field, value);
+  }
+
+  private findNodeImpl(
+    node: NodeInterface,
+    field: string,
+    value: unknown,
+  ): NodeInterface | undefined {
+    const model = node as any as { get(f: string): unknown; getId(): unknown };
+    const nodeValue = field === 'id' ? model.getId() : model.get(field);
+    if (nodeValue === value) return node;
+    for (const child of node.childNodes) {
+      const found = this.findNodeImpl(child, field, value);
+      if (found) return found;
+    }
+    return undefined;
+  }
+
+  // -----------------------------------------------------------------------
+  // Collapse / Expand all
+  // -----------------------------------------------------------------------
+
+  collapseAll(): void {
+    this.rootNode.cascadeBy((node) => {
+      node.expanded = false;
+    });
+  }
+
+  expandAll(): void {
+    this.rootNode.cascadeBy((node) => {
+      node.expanded = true;
+    });
+  }
+
+  // -----------------------------------------------------------------------
+  // Count helpers
+  // -----------------------------------------------------------------------
+
+  getCount(): number {
+    return this.flattenNodes().length;
+  }
+
+  getTotalCount(): number {
+    return this.nodeMap.size;
   }
 
   // -----------------------------------------------------------------------

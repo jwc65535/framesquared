@@ -70,3 +70,22 @@ export type { CardContainerConfig } from './container/CardContainer.js';
 // Navigation
 export { Breadcrumb } from './navigation/Breadcrumb.js';
 export type { BreadcrumbConfig, BreadcrumbNode, BreadcrumbStore } from './navigation/Breadcrumb.js';
+
+// Tree
+export { TreePanel } from './tree/TreePanel.js';
+export type { TreePanelConfig } from './tree/TreePanel.js';
+export { TreeView } from './tree/TreeView.js';
+export type { TreeViewConfig } from './tree/TreeView.js';
+export { TreeColumn } from './tree/TreeColumn.js';
+export type { TreeColumnConfig } from './tree/TreeColumn.js';
+export { TreeSelectionModel } from './selection/TreeSelectionModel.js';
+export type { TreeSelectionModelConfig } from './selection/TreeSelectionModel.js';
+export { CheckboxModel } from './tree/CheckboxModel.js';
+export type { CheckboxModelConfig } from './tree/CheckboxModel.js';
+export { TreeViewDragDrop } from './tree/TreeViewDragDrop.js';
+export type { TreeViewDragDropConfig } from './tree/TreeViewDragDrop.js';
+export { TreeDragZone } from './tree/TreeDragZone.js';
+export type { DragData, TreePanelLike } from './tree/TreeDragZone.js';
+export { TreeDropZone } from './tree/TreeDropZone.js';
+export { CellEditingPlugin } from './tree/CellEditingPlugin.js';
+export type { CellEditingConfig } from './tree/CellEditingPlugin.js';

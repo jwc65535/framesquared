@@ -27,6 +27,7 @@ export default defineConfig({
       '@framesquared/ui': path.resolve(__dirname, 'src/index.ts'),
       '@framesquared/core': path.resolve(__dirname, '../core/src/index.ts'),
       '@framesquared/component': path.resolve(__dirname, '../component/src/index.ts'),
+      '@framesquared/data': path.resolve(__dirname, '../data/src/index.ts'),
     },
   },
 });
