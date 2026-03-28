@@ -177,6 +177,13 @@ export class Model extends Base {
 
   /** @internal Loads initial data without marking as dirty. */
   $loadData(rawData: Record<string, unknown>): void {
+    // Store non-schema fields as-is (pass-through for custom data)
+    for (const [key, value] of Object.entries(rawData)) {
+      if (!this.$fieldMap.has(key)) {
+        this.$data[key] = value;
+      }
+    }
+
     for (const [name, field] of this.$fieldMap) {
       let value: unknown;
 
@@ -219,7 +226,16 @@ export class Model extends Base {
 
     for (const [name, newValue] of Object.entries(changes)) {
       const field = this.$fieldMap.get(name);
-      if (!field) continue;
+      if (!field) {
+        // Pass-through for non-schema fields
+        const oldValue = this.$data[name];
+        if (newValue !== oldValue) {
+          if (!(name in this.modified)) this.modified[name] = oldValue;
+          this.$data[name] = newValue;
+          modifiedFields.push(name);
+        }
+        continue;
+      }
 
       const converted = field.convert(newValue, this);
       const oldValue = this.$data[name];
