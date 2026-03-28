@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared TreeGrid Examples</title>
+  <link rel="stylesheet" href="./shared/styles.css">
+</head>
+<body>
+  <div id="showcase-root">
+    <header class="showcase-header">
+      <div class="showcase-logo">
+        <span class="showcase-logo-icon">▦</span>
+        <span class="showcase-logo-text">framesquared</span>
+        <span class="showcase-logo-sub">TreeGrid Examples</span>
+      </div>
+      <nav class="showcase-header-nav">
+        <select id="theme-switcher" class="showcase-theme-select" aria-label="Switch theme">
+          <option value="modern">Modern Theme</option>
+          <option value="classic">Classic Theme</option>
+          <option value="dark">Dark Theme</option>
+        </select>
+      </nav>
+    </header>
+    <div class="showcase-body">
+      <nav class="showcase-sidebar" id="sidebar" aria-label="Example navigation">
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+        <div class="sidebar-inner">
+          <div class="sidebar-group">
+            <div class="sidebar-group-title">Basics</div>
+            <a href="#basic" class="sidebar-item" data-example="basic">01 · Basic TreeGrid</a>
+            <a href="#columns" class="sidebar-item" data-example="columns">02 · Multi-Column Tree</a>
+            <a href="#async-loading" class="sidebar-item" data-example="async-loading">03 · Async Loading</a>
+            <a href="#checkbox" class="sidebar-item" data-example="checkbox">04 · Checkbox Tree</a>
+          </div>
+          <div class="sidebar-group">
+            <div class="sidebar-group-title">Features</div>
+            <a href="#editing" class="sidebar-item" data-example="editing">05 · Editing</a>
+            <a href="#drag-drop" class="sidebar-item" data-example="drag-drop">06 · Drag &amp; Drop</a>
+            <a href="#sorting-filtering" class="sidebar-item" data-example="sorting-filtering">07 · Sorting &amp; Filtering</a>
+            <a href="#selection" class="sidebar-item" data-example="selection">08 · Selection Modes</a>
+            <a href="#locked-columns" class="sidebar-item" data-example="locked-columns">09 · Locked Columns</a>
+          </div>
+          <div class="sidebar-group">
+            <div class="sidebar-group-title">Plugins</div>
+            <a href="#summary" class="sidebar-item" data-example="summary">10 · Summary Rows</a>
+            <a href="#row-expander" class="sidebar-item" data-example="row-expander">11 · Row Expander</a>
+            <a href="#clipboard" class="sidebar-item" data-example="clipboard">12 · Clipboard</a>
+            <a href="#state" class="sidebar-item" data-example="state">13 · State Persistence</a>
+            <a href="#export" class="sidebar-item" data-example="export">14 · Export</a>
+            <a href="#theming" class="sidebar-item" data-example="theming">15 · Theming</a>
+          </div>
+          <div class="sidebar-group">
+            <div class="sidebar-group-title">Advanced</div>
+            <a href="#large-dataset" class="sidebar-item" data-example="large-dataset">16 · Large Dataset</a>
+            <a href="#accessibility" class="sidebar-item" data-example="accessibility">20 · Accessibility</a>
+            <a href="#kitchen-sink" class="sidebar-item" data-example="kitchen-sink">21 · Kitchen Sink</a>
+          </div>
+          <div class="sidebar-group">
+            <div class="sidebar-group-title">Real-World Apps</div>
+            <a href="#file-explorer" class="sidebar-item" data-example="file-explorer">17 · File Explorer</a>
+            <a href="#project-planner" class="sidebar-item" data-example="project-planner">18 · Project Planner</a>
+            <a href="#org-chart" class="sidebar-item" data-example="org-chart">19 · Org Chart</a>
+          </div>
+        </div>
+      </nav>
+      <main class="showcase-content" id="example-host">
+        <div class="showcase-welcome" id="welcome-screen">
+          <h1>TreeGrid Example Suite</h1>
+          <p>Select an example from the sidebar to begin.</p>
+          <p class="welcome-hint">21 examples demonstrating every TreeGrid feature from basic usage to full applications.</p>
+        </div>
+        <div id="example-container" class="example-container" hidden></div>
+        <div class="example-info-panel" id="info-panel" hidden>
+          <div class="info-tabs">
+            <button class="info-tab active" data-tab="description">Description</button>
+            <button class="info-tab" data-tab="source">Source</button>
+            <button class="info-tab" data-tab="controls">Controls</button>
+            <button class="info-tab" data-tab="events">Events</button>
+          </div>
+          <div class="info-tab-content" id="tab-description"></div>
+          <div class="info-tab-content hidden" id="tab-source"></div>
+          <div class="info-tab-content hidden" id="tab-controls"></div>
+          <div class="info-tab-content hidden" id="tab-events">
+            <div class="event-log-toolbar">
+              <input type="text" id="event-filter" placeholder="Filter events..." class="event-filter-input">
+              <button id="clear-events" class="btn-small">Clear</button>
+            </div>
+            <div id="event-log" class="event-log"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script type="module" src="./index.ts"></script>
+</body>
+</html>

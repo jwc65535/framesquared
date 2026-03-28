@@ -1,0 +1,27 @@
+{
+  "name": "@framesquared/examples-tree-grid",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@framesquared/core": "workspace:*",
+    "@framesquared/data": "workspace:*",
+    "@framesquared/component": "workspace:*",
+    "@framesquared/layout": "workspace:*",
+    "@framesquared/ui": "workspace:*",
+    "@framesquared/form": "workspace:*",
+    "@framesquared/grid": "workspace:*",
+    "@framesquared/dd": "workspace:*",
+    "@framesquared/fx": "workspace:*",
+    "@framesquared/theme": "workspace:*",
+    "@framesquared/app": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0",
+    "typescript": "^5.0.0"
+  }
+}

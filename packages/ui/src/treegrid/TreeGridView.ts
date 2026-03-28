@@ -165,7 +165,7 @@ export class TreeGridView {
         td.classList.add('x-treegrid-cell');
         inner.innerHTML = col.renderCell(node, this.checkable, this.lines);
       } else {
-        inner.textContent = col.renderValue(node);
+        inner.innerHTML = col.renderValue(node);
       }
 
       td.appendChild(inner);

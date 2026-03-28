@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "paths": {
+      "@framesquared/core": ["../../packages/core/src/index.ts"],
+      "@framesquared/data": ["../../packages/data/src/index.ts"],
+      "@framesquared/component": ["../../packages/component/src/index.ts"],
+      "@framesquared/layout": ["../../packages/layout/src/index.ts"],
+      "@framesquared/ui": ["../../packages/ui/src/index.ts"],
+      "@framesquared/form": ["../../packages/form/src/index.ts"],
+      "@framesquared/grid": ["../../packages/grid/src/index.ts"],
+      "@framesquared/dd": ["../../packages/dd/src/index.ts"],
+      "@framesquared/fx": ["../../packages/fx/src/index.ts"],
+      "@framesquared/app": ["../../packages/app/src/index.ts"],
+      "@framesquared/theme": ["../../packages/theme/src/index.ts"]
+    }
+  },
+  "include": ["./**/*.ts"]
+}

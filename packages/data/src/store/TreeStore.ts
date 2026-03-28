@@ -10,6 +10,7 @@
 
 import { Base, Observable } from '@framesquared/core';
 import type { Model } from '../Model.js';
+import { TreeModel } from '../model/TreeModel.js';
 import { applyNodeInterface } from '../mixin/NodeInterface.js';
 import type { NodeInterface } from '../mixin/NodeInterface.js';
 
@@ -36,7 +37,7 @@ function ensureObservable(instance: any): void {
 // ---------------------------------------------------------------------------
 
 export interface TreeStoreConfig {
-  model: typeof Model;
+  model?: typeof Model;
   root?: Record<string, unknown>;
   proxy?: any;
 }
@@ -58,7 +59,7 @@ export class TreeStore extends Base {
     super();
     ensureObservable(this);
 
-    this.ModelClass = config.model;
+    this.ModelClass = config.model ?? TreeModel;
 
     if (config.root) {
       this.replaceRoot(this.buildNode(config.root, 0));
