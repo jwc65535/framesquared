@@ -203,6 +203,16 @@ export class TreeGrid extends Panel {
     (this._store as any).on('rootchange', () => {
       this._view?.refresh();
     });
+
+    // Initialize plugins — must happen after view is rendered
+    const plugins = (this._config as any).plugins as any[] | undefined;
+    if (plugins) {
+      for (const plugin of plugins) {
+        if (typeof plugin.init === 'function') {
+          plugin.init(this);
+        }
+      }
+    }
   }
 
   // -------------------------------------------------------------------------

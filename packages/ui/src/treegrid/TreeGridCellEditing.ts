@@ -101,7 +101,8 @@ export class TreeGridCellEditing {
     editor.className = 'x-treegrid-cell-editor';
     editor.value = String(value);
     editor.style.cssText =
-      'position:absolute;z-index:100;width:100%;box-sizing:border-box;';
+      'position:absolute;top:0;left:0;z-index:100;width:100%;height:100%;' +
+      'box-sizing:border-box;padding:0 6px;border:2px solid #3b82f6;outline:none;background:#fff;font:inherit;';
 
     cell.style.position = 'relative';
     cell.appendChild(editor);

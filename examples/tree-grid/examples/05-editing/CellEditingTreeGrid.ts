@@ -9,7 +9,8 @@
  */
 
 import { TreeGrid, TreeGridColumn, Column, TreeGridCellEditing } from '@framesquared/ui';
-import { TreeStore } from '@framesquared/data';
+import { TreeStore, TreeModel, applyNodeInterface } from '@framesquared/data';
+import type { NodeInterface } from '@framesquared/data';
 import { smallProjectPlan } from '../../shared/SampleData.js';
 import { ControlBar } from '../../shared/ControlBar.js';
 
@@ -165,16 +166,15 @@ export function createExample(container: HTMLElement): { destroy: () => void } {
 
   document.getElementById('btn-add-task')?.addEventListener('click', () => {
     const root = store.getRootNode();
-    const newNode = root.createNode?.({
+    const model = TreeModel.create({
       text: 'New Task', leaf: true, status: 'Not Started', priority: 'Medium',
       estimatedHours: 0, actualHours: 0, percentComplete: 0,
       assignee: ASSIGNEES[0],
     });
-    if (newNode) {
-      root.appendChild(newNode);
-      (grid as any)._view?.refresh();
-      window.__logEvent?.('nodeappend', 'New task added to root');
-    }
+    applyNodeInterface(model, 0);
+    const newNode = model as unknown as NodeInterface;
+    store.appendChild(root, newNode);
+    window.__logEvent?.('nodeappend', 'New task added to root');
   });
 
   document.getElementById('btn-delete')?.addEventListener('click', () => {

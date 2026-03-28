@@ -780,7 +780,8 @@ body {
   border-bottom: 1px solid #f0f0f0;
   vertical-align: middle;
   height: 32px;
-  overflow: hidden;
+  overflow: visible;
+  position: relative;
 }
 
 .x-grid-cell-inner {
