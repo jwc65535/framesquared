@@ -65,6 +65,11 @@ export class TreeGridDragDrop {
   private expandTimer: ReturnType<typeof setTimeout> | null = null;
   private scrollTimer: ReturnType<typeof setTimeout> | null = null;
 
+  // Captured at pointerdown so movement/scroll can't change which node is dragged
+  private _pendingRecord: NodeInterface | null = null;
+  private _captureTarget: Element | null = null;
+  private _pointerId: number | null = null;
+
   private _downX = 0;
   private _downY = 0;
   private readonly _threshold = 5;
@@ -128,8 +133,22 @@ export class TreeGridDragDrop {
     if (record.isRoot()) return;
     if ((record as any).get?.('allowDrag') === false) return;
 
+    // Prevent native text-selection and browser drag-image from interfering
+    e.preventDefault();
+
     this._downX = e.clientX;
     this._downY = e.clientY;
+
+    // Capture record now while we're certain which node the pointer is over
+    this._pendingRecord = record;
+
+    // setPointerCapture ensures pointermove/pointerup reach us even if the
+    // pointer leaves the browser window before the user releases
+    try {
+      (e.target as Element).setPointerCapture(e.pointerId);
+      this._captureTarget = e.target as Element;
+      this._pointerId = e.pointerId;
+    } catch (_) { /* ignore — older browsers */ }
 
     document.addEventListener('pointermove', this._onPointerMove);
     document.addEventListener('pointerup', this._onPointerUp);
@@ -141,8 +160,9 @@ export class TreeGridDragDrop {
       const dy = Math.abs(e.clientY - this._downY);
       if (dx < this._threshold && dy < this._threshold) return;
 
-      // Start drag
-      const record = this._getRecordAtPoint(this._downX, this._downY);
+      // Start drag — use the record captured at pointerdown, not a new hit-test
+      // (the view may have scrolled since the press, making re-hit-test unreliable)
+      const record = this._pendingRecord;
       if (!record) return;
 
       const selection = this.treeGrid?.getSelection() ?? [];
@@ -270,6 +290,11 @@ export class TreeGridDragDrop {
       }
     }
 
+    // If dropped into a collapsed folder, expand it so the node is visible
+    if (position === 'append' && !target.isExpanded()) {
+      target.expanded = true;
+    }
+
     this.treeGrid?.getView().refresh();
     this.treeGrid?.fire?.('drop', target, this.dragData, target, position);
   }
@@ -363,12 +388,18 @@ export class TreeGridDragDrop {
       row.classList.add(this.config.dropHighlightCls);
       this.highlightedRow = row;
     } else {
+      // Use position:fixed anchored to getBoundingClientRect so the indicator
+      // is always visible regardless of table/tr positioning context differences
+      // across browsers (Firefox does not honour position:relative on <tr>).
+      const rect = row.getBoundingClientRect();
+      const y = position === 'before' ? rect.top : rect.bottom;
+
       this.dropIndicatorEl = document.createElement('div');
       this.dropIndicatorEl.className = this.config.dropIndicatorCls;
       this.dropIndicatorEl.style.cssText =
-        `position:absolute;left:0;right:0;height:2px;background:#0070C0;pointer-events:none;z-index:999;`;
-      row.style.position = 'relative';
-      row.appendChild(this.dropIndicatorEl);
+        `position:fixed;left:${rect.left}px;width:${rect.width}px;` +
+        `top:${y - 1}px;height:2px;background:#0070C0;pointer-events:none;z-index:9999;`;
+      document.body.appendChild(this.dropIndicatorEl);
     }
   }
 
@@ -390,6 +421,16 @@ export class TreeGridDragDrop {
   private _cleanup(): void {
     this.dragging = false;
     this.dragData = null;
+    this._pendingRecord = null;
+
+    if (this._captureTarget !== null && this._pointerId !== null) {
+      try {
+        this._captureTarget.releasePointerCapture(this._pointerId);
+      } catch (_) { /* ignore */ }
+      this._captureTarget = null;
+      this._pointerId = null;
+    }
+
     this.ghostEl?.remove();
     this.ghostEl = null;
     this._clearDropIndicators();
