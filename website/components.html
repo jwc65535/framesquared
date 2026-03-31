@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Components — Framesquared</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="logo-mark">&#9632;</span>
+      <span class="logo-text">framesquared</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="components.html">Components</a></li>
+      <li><a href="getting-started.html">Docs</a></li>
+      <li><a href="examples.html">Examples</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-theme" id="themeToggle" aria-label="Toggle theme">
+        <span class="icon-sun">☀</span>
+        <span class="icon-moon">◑</span>
+      </button>
+      <a href="getting-started.html" class="btn btn-primary">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="container">
+    <div class="page-hero-inner">
+      <span class="section-eyebrow">80+ Components</span>
+      <h1 class="page-title">Component Library</h1>
+      <p class="page-desc">
+        A comprehensive set of UI components organized into focused packages.
+        Every component is written in TypeScript with full type safety,
+        accessible keyboard navigation, and a consistent theming API.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Core -->
+<section class="comp-section" id="core">
+  <div class="container">
+    <div class="comp-header">
+      <h2>Foundation</h2>
+      <span class="comp-pkg-badge">@framesquared/core</span>
+    </div>
+    <div class="comp-grid">
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Class System</div>
+        <div class="comp-card-desc">Modern TypeScript inheritance with mixins and decorators</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">EventBus</div>
+        <div class="comp-card-desc">Global event bus with namespacing and wildcard listeners</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Observable</div>
+        <div class="comp-card-desc">Two-way data binding and change detection</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">AriaManager</div>
+        <div class="comp-card-desc">WCAG 2.1 AA accessibility support</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">FocusManager</div>
+        <div class="comp-card-desc">Keyboard focus trapping and routing</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">GestureManager</div>
+        <div class="comp-card-desc">Touch gesture recognition (tap, swipe, pinch)</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">KeyMap</div>
+        <div class="comp-card-desc">Configurable keyboard shortcut bindings</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">i18n / Locale</div>
+        <div class="comp-card-desc">en-US, es-ES, ar-SA bundles with RTL support</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Data -->
+<section class="comp-section" id="data">
+  <div class="container">
+    <div class="comp-header">
+      <h2>Data Layer</h2>
+      <span class="comp-pkg-badge">@framesquared/data</span>
+    </div>
+    <div class="comp-grid">
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Model</div>
+        <div class="comp-card-desc">Typed data records with field definitions</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Store</div>
+        <div class="comp-card-desc">In-memory collection with sort, filter, group</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">TreeStore</div>
+        <div class="comp-card-desc">Hierarchical data structure for trees and grids</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">AjaxProxy</div>
+        <div class="comp-card-desc">XHR-based data loading with CRUD operations</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">RestProxy</div>
+        <div class="comp-card-desc">RESTful API integration with JSON/XML readers</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">WebSocketProxy</div>
+        <div class="comp-card-desc">Real-time live data via WebSocket connections</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">GraphQL Proxy</div>
+        <div class="comp-card-desc">Native GraphQL query &amp; mutation support</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">BatchProxy</div>
+        <div class="comp-card-desc">Batched request coalescing for performance</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">HasOne / HasMany</div>
+        <div class="comp-card-desc">Model associations and relational data</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">ManyToMany</div>
+        <div class="comp-card-desc">Junction table associations with metadata</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Session</div>
+        <div class="comp-card-desc">Change tracking and batch save management</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Layout -->
+<section class="comp-section" id="layout">
+  <div class="container">
+    <div class="comp-header">
+      <h2>Layout Managers</h2>
+      <span class="comp-pkg-badge">@framesquared/layout</span>
+    </div>
+    <div class="comp-grid">
+      <div class="comp-card reveal">
+        <div class="comp-card-name">BorderLayout</div>
+        <div class="comp-card-desc">Classic north/south/east/west/center layout</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">HBoxLayout</div>
+        <div class="comp-card-desc">Horizontal flex-based box layout with align/pack</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">VBoxLayout</div>
+        <div class="comp-card-desc">Vertical flex-based box layout with stretchMax</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">CardLayout</div>
+        <div class="comp-card-desc">Tabbed / wizard-style single active item</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">FitLayout</div>
+        <div class="comp-card-desc">Single child fills the entire container</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">AnchorLayout</div>
+        <div class="comp-card-desc">Percentage-anchored positioning</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">TableLayout</div>
+        <div class="comp-card-desc">CSS-grid style table with colspan/rowspan</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">ColumnLayout</div>
+        <div class="comp-card-desc">Percentage-based multi-column layout</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">AccordionLayout</div>
+        <div class="comp-card-desc">Collapsible panel accordion</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">AbsoluteLayout</div>
+        <div class="comp-card-desc">Manual pixel-positioned children</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">ResponsivePlugin</div>
+        <div class="comp-card-desc">Breakpoint-driven adaptive layouts</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UI Widgets -->
+<section class="comp-section" id="ui">
+  <div class="container">
+    <div class="comp-header">
+      <h2>UI Widgets</h2>
+      <span class="comp-pkg-badge">@framesquared/ui</span>
+    </div>
+    <div class="comp-grid">
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Panel</div>
+        <div class="comp-card-desc">Collapsible panel with header, toolbar, footer</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Window</div>
+        <div class="comp-card-desc">Draggable, resizable modal/non-modal dialogs</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">MessageBox</div>
+        <div class="comp-card-desc">Alert, confirm, prompt dialogs</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Button</div>
+        <div class="comp-card-desc">Standard, toggle, icon, text button variants</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">SplitButton</div>
+        <div class="comp-card-desc">Button with attached dropdown arrow</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">CycleButton</div>
+        <div class="comp-card-desc">Cycles through a list of states on click</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">SegmentedButton</div>
+        <div class="comp-card-desc">Grouped mutually exclusive button set</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Toolbar</div>
+        <div class="comp-card-desc">Horizontal/vertical action bar with overflow</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Menu</div>
+        <div class="comp-card-desc">Nested dropdown menus with check/radio items</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">TabPanel</div>
+        <div class="comp-card-desc">Tab container with closeable, scrollable tabs</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Accordion</div>
+        <div class="comp-card-desc">Collapsible content sections</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Breadcrumb</div>
+        <div class="comp-card-desc">Navigation breadcrumb trail</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">DataView</div>
+        <div class="comp-card-desc">Template-based item rendering with selection</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">ListView</div>
+        <div class="comp-card-desc">Single-column row-based list</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Tooltip</div>
+        <div class="comp-card-desc">Hover/focus tooltips with smart positioning</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">QuickTip</div>
+        <div class="comp-card-desc">Attribute-driven tooltip auto-registration</div>
+      </div>
+      <div class="comp-card reveal" style="background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(157,92,255,0.05)); border-color: rgba(108,99,255,0.3);">
+        <div class="comp-card-name" style="color: var(--accent);">⭐ TreeGrid</div>
+        <div class="comp-card-desc">Hierarchical grid with 22 examples and full feature set</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Grid -->
+<section class="comp-section" id="grid">
+  <div class="container">
+    <div class="comp-header">
+      <h2>Grid System</h2>
+      <span class="comp-pkg-badge">@framesquared/grid</span>
+    </div>
+    <div class="comp-grid">
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Grid</div>
+        <div class="comp-card-desc">High-performance data grid with virtual scrolling</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">GridView</div>
+        <div class="comp-card-desc">Row renderer with striping and hover states</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">NumberColumn</div>
+        <div class="comp-card-desc">Number formatting with decimal precision</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">DateColumn</div>
+        <div class="comp-card-desc">Date/time formatting with locale support</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">BooleanColumn</div>
+        <div class="comp-card-desc">Checkmark rendering for boolean fields</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">ActionColumn</div>
+        <div class="comp-card-desc">Per-row action icon buttons</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">CheckColumn</div>
+        <div class="comp-card-desc">Checkbox column with select-all header</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">RowNumberer</div>
+        <div class="comp-card-desc">Automatic sequential row numbers</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Grouping Feature</div>
+        <div class="comp-card-desc">Collapsible row groups by field value</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Summary Feature</div>
+        <div class="comp-card-desc">Column sum/avg/count summary footer</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">CellEditing Plugin</div>
+        <div class="comp-card-desc">Click-to-edit individual cells</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">RowEditing Plugin</div>
+        <div class="comp-card-desc">Full-row inline form editing</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Clipboard Plugin</div>
+        <div class="comp-card-desc">Copy/paste cell ranges with Excel compat</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Spreadsheet Select</div>
+        <div class="comp-card-desc">Drag-select multiple cells like Excel</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Lockable Columns</div>
+        <div class="comp-card-desc">Freeze columns left or right of the scroll area</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Forms -->
+<section class="comp-section" id="form">
+  <div class="container">
+    <div class="comp-header">
+      <h2>Form Components</h2>
+      <span class="comp-pkg-badge">@framesquared/form</span>
+    </div>
+    <div class="comp-grid">
+      <div class="comp-card reveal">
+        <div class="comp-card-name">TextField</div>
+        <div class="comp-card-desc">Single-line text input with mask support</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">TextArea</div>
+        <div class="comp-card-desc">Multi-line text with auto-grow</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">NumberField</div>
+        <div class="comp-card-desc">Numeric input with min/max/step</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">DateField</div>
+        <div class="comp-card-desc">Date picker with keyboard entry</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">ColorPicker</div>
+        <div class="comp-card-desc">HSV color wheel with hex input</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">ComboBox</div>
+        <div class="comp-card-desc">Searchable dropdown with remote querying</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">TagField</div>
+        <div class="comp-card-desc">Multi-value tag input with autocomplete</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Checkbox</div>
+        <div class="comp-card-desc">Standard checkbox with indeterminate state</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Radio</div>
+        <div class="comp-card-desc">Radio button groups with keyboard navigation</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Slider</div>
+        <div class="comp-card-desc">Single and range value sliders</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">FileField</div>
+        <div class="comp-card-desc">File upload with drag-and-drop zone</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">HtmlEditor</div>
+        <div class="comp-card-desc">Rich text WYSIWYG editor</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Spinner</div>
+        <div class="comp-card-desc">Number spinner with configurable step</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">FormPanel</div>
+        <div class="comp-card-desc">Form container with layout and validation</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">BasicForm</div>
+        <div class="comp-card-desc">Headless form for non-panel usage</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Validators</div>
+        <div class="comp-card-desc">Built-in email, URL, length, pattern validators</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- App / Themes -->
+<section class="comp-section" id="app">
+  <div class="container">
+    <div class="comp-header">
+      <h2>Application &amp; Theming</h2>
+      <span class="comp-pkg-badge">@framesquared/app · @framesquared/theme</span>
+    </div>
+    <div class="comp-grid">
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Application</div>
+        <div class="comp-card-desc">Entry point with lifecycle hooks and global config</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">ViewController</div>
+        <div class="comp-card-desc">MVC controller bound to a single component tree</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">ViewModel</div>
+        <div class="comp-card-desc">Reactive data store for MVVM binding</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Binding</div>
+        <div class="comp-card-desc">Two-way declarative property bindings</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">Router</div>
+        <div class="comp-card-desc">Hash and history API routing with params</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">ThemeManager</div>
+        <div class="comp-card-desc">Runtime theme switching without page reload</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">ClassicTheme</div>
+        <div class="comp-card-desc">Traditional enterprise desktop look and feel</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">ModernTheme</div>
+        <div class="comp-card-desc">Clean, flat modern design language</div>
+      </div>
+      <div class="comp-card reveal">
+        <div class="comp-card-name">DarkTheme</div>
+        <div class="comp-card-desc">Full dark mode with WCAG contrast ratios</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="container">
+    <h2 class="cta-title">Start building</h2>
+    <p class="cta-desc">Pick up the Getting Started guide and have your first app running in minutes.</p>
+    <div class="cta-actions">
+      <a href="getting-started.html" class="btn btn-primary btn-xl">Read the Docs</a>
+      <a href="examples.html" class="btn btn-ghost btn-xl">See Examples</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <span class="logo-mark">&#9632;</span>
+          <span class="logo-text">framesquared</span>
+        </a>
+        <p>Enterprise UI components for the modern web.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Framework</h4>
+          <ul>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="components.html">Components</a></li>
+            <li><a href="examples.html">Examples</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Framesquared. Built with TypeScript.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting Started — Framesquared</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="logo-mark">&#9632;</span>
+      <span class="logo-text">framesquared</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="components.html">Components</a></li>
+      <li><a href="getting-started.html">Docs</a></li>
+      <li><a href="examples.html">Examples</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-theme" id="themeToggle" aria-label="Toggle theme">
+        <span class="icon-sun">☀</span>
+        <span class="icon-moon">◑</span>
+      </button>
+      <a href="getting-started.html" class="btn btn-primary">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="container">
+    <div class="page-hero-inner">
+      <span class="section-eyebrow">Documentation</span>
+      <h1 class="page-title">Getting Started</h1>
+      <p class="page-desc">
+        Everything you need to set up your first Framesquared application,
+        from installation through your first component.
+      </p>
+    </div>
+  </div>
+</div>
+
+<section class="section" style="padding-top:3rem;">
+  <div class="container">
+    <div class="gs-layout">
+
+      <!-- Sidebar -->
+      <nav class="gs-sidebar">
+        <div class="gs-nav-group">
+          <h4>Setup</h4>
+          <a href="#prerequisites" class="active">Prerequisites</a>
+          <a href="#installation">Installation</a>
+          <a href="#project-structure">Project Structure</a>
+        </div>
+        <div class="gs-nav-group">
+          <h4>First App</h4>
+          <a href="#first-app">Your First App</a>
+          <a href="#adding-data">Adding Data</a>
+          <a href="#treegrid">TreeGrid Quickstart</a>
+        </div>
+        <div class="gs-nav-group">
+          <h4>Core Concepts</h4>
+          <a href="#class-system">Class System</a>
+          <a href="#events">Events</a>
+          <a href="#stores">Stores &amp; Models</a>
+          <a href="#theming">Theming</a>
+        </div>
+        <div class="gs-nav-group">
+          <h4>Advanced</h4>
+          <a href="#mvc">MVC / MVVM</a>
+          <a href="#routing">Routing</a>
+          <a href="#accessibility">Accessibility</a>
+        </div>
+      </nav>
+
+      <!-- Content -->
+      <div class="gs-content">
+
+        <section id="prerequisites">
+          <h2>Prerequisites</h2>
+          <p>Before installing Framesquared, make sure you have the following installed:</p>
+          <ul>
+            <li><strong>Node.js</strong> ≥ 18.0.0</li>
+            <li><strong>pnpm</strong> ≥ 8.0.0 (strongly recommended; npm and yarn also work)</li>
+            <li>A modern browser (Chrome 90+, Firefox 88+, Safari 14+)</li>
+          </ul>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-lang">bash</span>
+            </div>
+            <pre><code># Check your Node.js version
+node --version   # should be ≥ 18.0.0
+
+# Install pnpm globally if needed
+npm install -g pnpm@latest</code></pre>
+          </div>
+        </section>
+
+        <section id="installation">
+          <h2>Installation</h2>
+          <p>
+            Framesquared is organized as a monorepo. Install only the packages you need.
+            The most common starting point is <span class="inline-code">@framesquared/ui</span>
+            combined with <span class="inline-code">@framesquared/data</span>.
+          </p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-lang">bash</span>
+            </div>
+            <pre><code># Install the UI widget library and data layer
+pnpm add @framesquared/ui @framesquared/data
+
+# Optional: add the application architecture package
+pnpm add @framesquared/app
+
+# Optional: add form components
+pnpm add @framesquared/form
+
+# Optional: add the standalone grid package
+pnpm add @framesquared/grid</code></pre>
+          </div>
+          <p>
+            All packages are pure ESM. Your bundler (Vite, Rollup, esbuild, Webpack 5+)
+            will handle tree-shaking automatically — unused components are not included
+            in your production bundle.
+          </p>
+        </section>
+
+        <section id="project-structure">
+          <h2>Project Structure</h2>
+          <p>A typical Framesquared project looks like this:</p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-lang">text</span>
+            </div>
+            <pre><code>my-app/
+├── src/
+│   ├── app.ts          # Application entry point
+│   ├── models/         # Data model definitions
+│   ├── stores/         # Store definitions
+│   ├── views/          # Component/view definitions
+│   └── controllers/    # ViewControllers
+├── index.html
+├── tsconfig.json
+└── package.json</code></pre>
+          </div>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-lang">json</span>
+            </div>
+            <pre><code>{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "lib": ["ESNext", "DOM"]
+  }
+}</code></pre>
+          </div>
+        </section>
+
+        <section id="first-app">
+          <h2>Your First App</h2>
+          <p>
+            The simplest possible Framesquared app creates an
+            <span class="inline-code">Application</span> instance and renders a panel
+            into the document body.
+          </p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-lang">typescript</span>
+            </div>
+            <pre><code>import { Application } from '@framesquared/app';
+import { Panel } from '@framesquared/ui';
+
+new Application({
+  name: 'HelloWorld',
+  launch() {
+    new Panel({
+      renderTo: document.body,
+      title: 'Hello, Framesquared!',
+      html: '&lt;p&gt;Welcome to your first app.&lt;/p&gt;',
+      width: 400,
+      height: 200
+    });
+  }
+});</code></pre>
+          </div>
+        </section>
+
+        <section id="adding-data">
+          <h2>Adding Data</h2>
+          <p>
+            Connect a <span class="inline-code">Store</span> backed by a REST API proxy
+            and display the results in a component.
+          </p>
+          <h3>Define a Model</h3>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-lang">typescript</span>
+            </div>
+            <pre><code>import { Model, Field } from '@framesquared/data';
+
+class User extends Model {
+  static fields: Field[] = [
+    { name: 'id',    type: 'int' },
+    { name: 'name',  type: 'string' },
+    { name: 'email', type: 'string' },
+    { name: 'role',  type: 'string', defaultValue: 'viewer' }
+  ];
+}</code></pre>
+          </div>
+          <h3>Create a Store</h3>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-lang">typescript</span>
+            </div>
+            <pre><code>import { Store } from '@framesquared/data';
+
+const userStore = new Store({
+  model: User,
+  proxy: {
+    type: 'rest',
+    url: '/api/users',
+    reader: { type: 'json', rootProperty: 'data' }
+  },
+  autoLoad: true
+});</code></pre>
+          </div>
+        </section>
+
+        <section id="treegrid">
+          <h2>TreeGrid Quickstart</h2>
+          <p>
+            The <span class="inline-code">TreeGrid</span> is the flagship component.
+            Here's a complete example with async loading, multi-column layout,
+            and inline cell editing.
+          </p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-lang">typescript</span>
+            </div>
+            <pre><code>import { TreeGrid } from '@framesquared/ui';
+import { TreeStore } from '@framesquared/data';
+
+const store = new TreeStore({
+  proxy: {
+    type: 'ajax',
+    url: '/api/tree-nodes',
+    reader: { type: 'json', rootProperty: 'nodes' }
+  },
+  autoLoad: true
+});
+
+const grid = new TreeGrid({
+  renderTo: document.getElementById('app')!,
+  store,
+  height: 600,
+
+  columns: [
+    {
+      xtype: 'treecolumn',
+      text: 'Name',
+      dataIndex: 'name',
+      flex: 2,
+      editor: { xtype: 'textfield' }
+    },
+    {
+      text: 'Status',
+      dataIndex: 'status',
+      width: 120,
+      editor: {
+        xtype: 'combobox',
+        store: ['Active', 'Pending', 'Done']
+      }
+    },
+    {
+      text: 'Due Date',
+      dataIndex: 'dueDate',
+      xtype: 'datecolumn',
+      format: 'Y-m-d',
+      width: 110
+    }
+  ],
+
+  plugins: {
+    cellediting: { clicksToEdit: 2 }
+  },
+
+  selModel: { mode: 'MULTI' },
+  rootVisible: false
+});</code></pre>
+          </div>
+        </section>
+
+        <section id="class-system">
+          <h2>Class System</h2>
+          <p>
+            Every Framesquared object extends <span class="inline-code">Base</span>
+            from <span class="inline-code">@framesquared/core</span>. The class system
+            provides a consistent constructor config pattern, mixins, and the
+            <span class="inline-code">xtype</span> component alias registry.
+          </p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-lang">typescript</span>
+            </div>
+            <pre><code>import { Base, register } from '@framesquared/core';
+import { Panel } from '@framesquared/ui';
+
+// Extend any component
+@register('myapp-userpanel')
+class UserPanel extends Panel {
+  declare config: Panel['config'] &amp; {
+    userId?: number;
+  };
+
+  constructor(config?: UserPanel['config']) {
+    super(config);
+    // config properties are merged and applied automatically
+  }
+
+  onRender() {
+    super.onRender();
+    this.loadUser(this.userId);
+  }
+
+  loadUser(id?: number) {
+    // ...
+  }
+}
+
+// Use via xtype anywhere in the component tree
+const panel = new UserPanel({ userId: 42, title: 'Profile' });</code></pre>
+          </div>
+        </section>
+
+        <section id="events">
+          <h2>Events</h2>
+          <p>
+            All components inherit from <span class="inline-code">Observable</span>,
+            giving them a fully-featured event API.
+          </p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-lang">typescript</span>
+            </div>
+            <pre><code>// Listen to events
+grid.on('selectionchange', (grid, selected) => {
+  console.log('Selected:', selected.length, 'rows');
+});
+
+// One-time listener
+store.once('load', () => {
+  console.log('Store loaded for the first time');
+});
+
+// Fire custom events
+myComponent.fireEvent('myevent', myComponent, { data: 42 });
+
+// Remove a listener
+const handler = () => { /* ... */ };
+grid.on('itemclick', handler);
+grid.un('itemclick', handler);</code></pre>
+          </div>
+        </section>
+
+        <section id="stores">
+          <h2>Stores &amp; Models</h2>
+          <p>
+            Stores are the single source of truth for component data. They hold
+            a collection of <span class="inline-code">Model</span> instances and
+            connect to remote or local data through <em>Proxies</em>.
+          </p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-lang">typescript</span>
+            </div>
+            <pre><code>// Filter store data
+store.filter('status', 'Active');
+store.filter([
+  { property: 'role', value: 'admin' },
+  { property: 'active', value: true }
+]);
+
+// Sort
+store.sort('lastName', 'ASC');
+
+// Group
+store.group('department');
+
+// CRUD
+const record = store.add({ name: 'Alice', role: 'admin' });
+record.set('name', 'Alice Smith');
+store.sync();  // Commits to the proxy
+
+// Listen to changes
+store.on('datachanged', () => console.log('Data updated'));</code></pre>
+          </div>
+        </section>
+
+        <section id="theming">
+          <h2>Theming</h2>
+          <p>
+            Switch between the built-in themes at runtime, or create a fully custom
+            theme using the CSS token API.
+          </p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-lang">typescript</span>
+            </div>
+            <pre><code>import { ThemeManager, DarkTheme, ModernTheme } from '@framesquared/theme';
+
+// Apply a theme
+ThemeManager.setTheme(new DarkTheme());
+
+// Switch at runtime (no page reload)
+document.getElementById('toggle')!.addEventListener('click', () => {
+  ThemeManager.setTheme(new ModernTheme());
+});
+
+// Create a custom theme
+import { Theme } from '@framesquared/theme';
+
+class BrandTheme extends Theme {
+  tokens = {
+    ...ModernTheme.tokens,
+    primaryColor: '#00b894',
+    fontFamily: '"Söhne", sans-serif',
+    borderRadius: '6px'
+  };
+}
+
+ThemeManager.setTheme(new BrandTheme());</code></pre>
+          </div>
+        </section>
+
+        <section id="mvc">
+          <h2>MVC / MVVM</h2>
+          <p>
+            For larger applications, the <span class="inline-code">@framesquared/app</span>
+            package provides full MVC and MVVM architecture with automatic binding.
+          </p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-lang">typescript</span>
+            </div>
+            <pre><code">import { ViewController, ViewModel } from '@framesquared/app';
+import { Panel, Button } from '@framesquared/ui';
+
+class UserController extends ViewController {
+  onSaveClick() {
+    const vm = this.getViewModel();
+    const user = vm.get('selectedUser');
+    user.save();
+  }
+}
+
+const view = new Panel({
+  controller: new UserController(),
+  viewModel: new ViewModel({
+    data: { selectedUser: null, title: 'User Manager' }
+  }),
+  bind: {
+    title: '{title}'
+  },
+  items: [
+    new Button({
+      text: 'Save',
+      handler: 'onSaveClick'   // resolved on the controller
+    })
+  ]
+});</code></pre>
+          </div>
+        </section>
+
+        <section id="routing">
+          <h2>Routing</h2>
+          <p>
+            The built-in <span class="inline-code">Router</span> supports both
+            hash and History API routing with named parameters.
+          </p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-lang">typescript</span>
+            </div>
+            <pre><code>import { Router } from '@framesquared/app';
+
+const router = new Router({
+  routes: {
+    'home':           'onHome',
+    'users':          'onUsers',
+    'users/:id':      'onUserDetail',
+    'reports/:year/:month': 'onReport'
+  }
+});
+
+router.on('beforeroute', (route) => {
+  // Guard — return false to cancel navigation
+  if (!isAuthenticated()) return false;
+});
+
+function onUserDetail(id: string) {
+  console.log('Load user', id);
+}
+
+router.start();</code></pre>
+          </div>
+        </section>
+
+        <section id="accessibility">
+          <h2>Accessibility</h2>
+          <p>
+            Framesquared ships accessibility as a first-class feature. All interactive
+            components manage ARIA roles, states, and properties automatically.
+          </p>
+          <ul>
+            <li>Full keyboard navigation in Grid, TreeGrid, Menu, TabPanel, and Dialog</li>
+            <li>ARIA live regions for dynamic content updates</li>
+            <li>Focus trapping in modal Dialogs and Windows</li>
+            <li>RTL text direction support in all layout managers</li>
+            <li>High-contrast mode support via CSS custom properties</li>
+          </ul>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-lang">typescript</span>
+            </div>
+            <pre><code">import { AriaManager, FocusManager } from '@framesquared/core';
+
+// Announce a message to screen reader users
+AriaManager.announce('Record saved successfully', 'polite');
+
+// Trap focus within a container (e.g. a dialog)
+FocusManager.trap(dialogElement);
+
+// Release focus trap
+FocusManager.release();</code></pre>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="container">
+    <h2 class="cta-title">Ready to dive deeper?</h2>
+    <p class="cta-desc">Explore all 80+ components or run the live examples.</p>
+    <div class="cta-actions">
+      <a href="components.html" class="btn btn-primary btn-xl">Browse Components</a>
+      <a href="examples.html" class="btn btn-ghost btn-xl">View Examples</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <span class="logo-mark">&#9632;</span>
+          <span class="logo-text">framesquared</span>
+        </a>
+        <p>Enterprise UI components for the modern web.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Framework</h4>
+          <ul>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="components.html">Components</a></li>
+            <li><a href="examples.html">Examples</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Framesquared. Built with TypeScript.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>
