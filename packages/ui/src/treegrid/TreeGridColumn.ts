@@ -19,6 +19,22 @@ export type ElbowType = 'line' | 'empty' | 'end' | 'end-plus' | 'tee' | 'tee-plu
 // Column (plain grid column, not tree column)
 // ---------------------------------------------------------------------------
 
+export interface EditorConfig {
+  xtype: string;
+  /** options for combobox/select/radiogroup — array of {value,text} or plain strings */
+  options?: Array<{ value: string; text: string } | string>;
+  /** legacy: ExtJS-style store for combobox */
+  store?: Array<{ value: string; text: string } | string>;
+  displayField?: string;
+  valueField?: string;
+  minValue?: number;
+  maxValue?: number;
+  step?: number;
+  rows?: number;
+  allowBlank?: boolean;
+  [key: string]: unknown;
+}
+
 export interface ColumnConfig {
   dataIndex: string;
   text?: string;
@@ -26,6 +42,8 @@ export interface ColumnConfig {
   flex?: number;
   hidden?: boolean;
   renderer?: (value: unknown, record: NodeInterface) => string;
+  /** Editor config. Pass false to mark the column as read-only. */
+  editor?: EditorConfig | false;
 }
 
 export class Column {
@@ -36,6 +54,7 @@ export class Column {
   flex: number;
   hidden: boolean;
   renderer: ((value: unknown, record: NodeInterface) => string) | null;
+  editor: EditorConfig | false | null;
 
   constructor(config: ColumnConfig) {
     this.dataIndex = config.dataIndex;
@@ -44,6 +63,7 @@ export class Column {
     this.flex = config.flex ?? 0;
     this.hidden = config.hidden ?? false;
     this.renderer = config.renderer ?? null;
+    this.editor = config.editor ?? null;
   }
 
   /**

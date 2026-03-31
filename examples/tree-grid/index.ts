@@ -122,6 +122,7 @@ const registry: Record<string, ExampleLoader> = {
   'org-chart':         () => import('./examples/19-org-chart/OrgChart.js') as any,
   'accessibility':     () => import('./examples/20-accessibility/AccessibleTreeGrid.js') as any,
   'kitchen-sink':      () => import('./examples/21-kitchen-sink/KitchenSink.js') as any,
+  'rich-editing':      () => import('./examples/22-rich-editing/RichEditingTreeGrid.js') as any,
 };
 
 const descriptions: Record<string, string> = {
@@ -146,6 +147,7 @@ const descriptions: Record<string, string> = {
   'org-chart': `<h2>19 · Org Chart</h2><p>Organizational hierarchy with avatar initials, profile card, department filtering, drag-to-reorganize.</p>`,
   'accessibility': `<h2>20 · Accessibility</h2><p>Full keyboard navigation, ARIA attributes, screen reader simulation panel, accessibility audit, and high contrast mode.</p>`,
   'kitchen-sink': `<h2>21 · Kitchen Sink</h2><p>Every feature enabled simultaneously: checkboxes, drag-drop, sorting, filtering, locked columns, editing, summary, row expander, export, state.</p>`,
+  'rich-editing': `<h2>22 · Rich Editing</h2><p>All editor types in one grid: textfield, combobox/select, checkbox, radiogroup, numberfield, datefield, colorfield, and textarea. Employee directory as the data model.</p>`,
 };
 
 // ─── Navigation ──────────────────────────────────────────────────────────────
