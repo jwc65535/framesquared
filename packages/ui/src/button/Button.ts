@@ -257,10 +257,10 @@ export class Button extends Component {
     if (cfg.menu) {
       const menu = cfg.menu;
       if (menu.isVisible?.()) {
-        menu.hide();
+        menu.hide?.();
         this.el?.setAttribute('aria-expanded', 'false');
       } else {
-        menu.showBy(this);
+        menu.showBy?.(this);
         this.el?.setAttribute('aria-expanded', 'true');
       }
     }
