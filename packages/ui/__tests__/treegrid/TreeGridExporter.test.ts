@@ -201,10 +201,19 @@ describe('TreeGridExporter — download', () => {
   });
 
   it('download accepts ArrayBuffer', () => {
+    const originalCreateElement = document.createElement.bind(document);
+    vi.spyOn(document, 'createElement').mockImplementation((tag) => {
+      const el = originalCreateElement(tag);
+      if (tag === 'a') el.click = vi.fn();
+      return el;
+    });
+
     const grid = makeGrid();
     const buffer = TreeGridExporter.exportToXlsx(grid);
     expect(() => {
       TreeGridExporter.download(buffer, 'export.xlsx', 'application/vnd.ms-excel');
     }).not.toThrow();
+
+    vi.restoreAllMocks();
   });
 });
