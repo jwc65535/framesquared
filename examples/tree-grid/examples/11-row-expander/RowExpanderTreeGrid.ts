@@ -49,7 +49,7 @@ export function createExample(container: HTMLElement): { destroy: () => void } {
 
   const rowExpander = new TreeGridRowExpander({
     rowBodyTpl: detailTemplate,
-    singleExpand: false,
+    singleRowExpand: false,
     expandOnDblClick: false,
   });
 

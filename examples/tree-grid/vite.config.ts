@@ -1,22 +1,23 @@
 import { defineConfig } from 'vite';
-import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 
-const pkgRoot = path.resolve(__dirname, '../../packages');
+const pkgRoot = resolve(fileURLToPath(new URL('../../packages', import.meta.url)));
 
 export default defineConfig({
   resolve: {
     alias: {
-      '@framesquared/core': path.resolve(pkgRoot, 'core/src/index.ts'),
-      '@framesquared/data': path.resolve(pkgRoot, 'data/src/index.ts'),
-      '@framesquared/component': path.resolve(pkgRoot, 'component/src/index.ts'),
-      '@framesquared/layout': path.resolve(pkgRoot, 'layout/src/index.ts'),
-      '@framesquared/ui': path.resolve(pkgRoot, 'ui/src/index.ts'),
-      '@framesquared/form': path.resolve(pkgRoot, 'form/src/index.ts'),
-      '@framesquared/grid': path.resolve(pkgRoot, 'grid/src/index.ts'),
-      '@framesquared/dd': path.resolve(pkgRoot, 'dd/src/index.ts'),
-      '@framesquared/fx': path.resolve(pkgRoot, 'fx/src/index.ts'),
-      '@framesquared/app': path.resolve(pkgRoot, 'app/src/index.ts'),
-      '@framesquared/theme': path.resolve(pkgRoot, 'theme/src/index.ts'),
+      '@framesquared/core': resolve(pkgRoot, 'core/src/index.ts'),
+      '@framesquared/data': resolve(pkgRoot, 'data/src/index.ts'),
+      '@framesquared/component': resolve(pkgRoot, 'component/src/index.ts'),
+      '@framesquared/layout': resolve(pkgRoot, 'layout/src/index.ts'),
+      '@framesquared/ui': resolve(pkgRoot, 'ui/src/index.ts'),
+      '@framesquared/form': resolve(pkgRoot, 'form/src/index.ts'),
+      '@framesquared/grid': resolve(pkgRoot, 'grid/src/index.ts'),
+      '@framesquared/dd': resolve(pkgRoot, 'dd/src/index.ts'),
+      '@framesquared/fx': resolve(pkgRoot, 'fx/src/index.ts'),
+      '@framesquared/app': resolve(pkgRoot, 'app/src/index.ts'),
+      '@framesquared/theme': resolve(pkgRoot, 'theme/src/index.ts'),
     },
   },
   server: {

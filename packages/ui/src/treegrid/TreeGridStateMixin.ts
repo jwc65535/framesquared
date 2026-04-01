@@ -41,8 +41,8 @@ export class TreeGridStateMixin {
   private saveDebounceTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly saveDebounceMs = 100;
 
-  constructor(stateId: string) {
-    this.stateId = stateId;
+  constructor(stateId: string | { stateId: string }) {
+    this.stateId = typeof stateId === 'string' ? stateId : stateId.stateId;
   }
 
   init(treeGrid: TreeGrid): void {

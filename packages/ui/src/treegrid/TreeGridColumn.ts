@@ -53,8 +53,8 @@ export class Column {
   width: number;
   flex: number;
   hidden: boolean;
-  renderer: ((value: unknown, record: NodeInterface) => string) | null;
-  editor: EditorConfig | false | null;
+  renderer: ((value: unknown, record: NodeInterface) => string) | undefined;
+  editor: EditorConfig | false | undefined;
 
   constructor(config: ColumnConfig) {
     this.dataIndex = config.dataIndex;
@@ -62,8 +62,8 @@ export class Column {
     this.width = config.width ?? 100;
     this.flex = config.flex ?? 0;
     this.hidden = config.hidden ?? false;
-    this.renderer = config.renderer ?? null;
-    this.editor = config.editor ?? null;
+    this.renderer = config.renderer;
+    this.editor = config.editor;
   }
 
   /**
@@ -113,7 +113,7 @@ export class TreeGridColumn extends Column {
   defaultLeafIcon: string;
   showIcons: boolean;
   showExpanders: boolean;
-  innerRenderer: ((value: unknown, record: NodeInterface) => string) | null;
+  innerRenderer: ((value: unknown, record: NodeInterface) => string) | undefined;
 
   constructor(config: TreeGridColumnConfig = {}) {
     super({ ...config, dataIndex: config.dataIndex ?? (config.displayProperty ?? 'text') });
@@ -126,7 +126,7 @@ export class TreeGridColumn extends Column {
     this.defaultLeafIcon = config.defaultLeafIcon ?? 'x-treegrid-icon-leaf';
     this.showIcons = config.showIcons ?? true;
     this.showExpanders = config.showExpanders ?? true;
-    this.innerRenderer = config.innerRenderer ?? null;
+    this.innerRenderer = config.innerRenderer;
   }
 
   /**

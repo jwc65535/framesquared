@@ -26,9 +26,9 @@ export function createExample(container: HTMLElement): { destroy: () => void } {
 
   // TreeGridFilterPlugin adds filter inputs to column headers
   const filterPlugin = new TreeGridFilterPlugin({
-    // filterMode: 'bottomup' — matching nodes AND all their ancestors shown
-    // filterMode: 'topdown' — only matching nodes, ancestors only if matched
-    filterMode: 'bottomup',
+    // filterer: 'bottomup' — matching nodes AND all their ancestors shown
+    // filterer: 'topdown' — only matching nodes, ancestors only if matched
+    filterer: 'bottomup',
   });
 
   const grid = new TreeGrid({

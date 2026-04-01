@@ -706,7 +706,7 @@ export class TreeGrid extends Panel {
   // Event helper
   // -------------------------------------------------------------------------
 
-  private fire(eventName: string, ...args: unknown[]): boolean {
+  protected fire(eventName: string, ...args: unknown[]): boolean {
     if (typeof (this as any).fireEvent === 'function') {
       return (this as any).fireEvent(eventName, ...args);
     }

@@ -128,12 +128,11 @@ export function createExample(container: HTMLElement): { destroy: () => void } {
 
       // Append children to the node
       for (const child of data.children) {
-        const childNode = store.getRootNode().createNode?.({
+        node.appendChild({
           ...child,
           leaf: child.leaf ?? !child.hasChildren,
           expanded: false,
-        }) ?? child;
-        node.appendChild(childNode);
+        });
       }
 
       totalNodesLoaded += data.children.length;

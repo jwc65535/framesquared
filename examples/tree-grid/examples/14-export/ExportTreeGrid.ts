@@ -107,13 +107,13 @@ export function createExample(container: HTMLElement): { destroy: () => void } {
       }
       if (!node.isLeaf?.() && (node.isExpanded?.() || !expandedOnly)) {
         const children: any[] = [];
-        node.eachChild?.((c: any) => children.push(nodeToObj(c)));
+        node.eachChild?.((c: any) => { children.push(nodeToObj(c)); });
         if (children.length) obj.children = children;
       }
       return obj;
     }
     const roots: any[] = [];
-    store.getRootNode().eachChild?.((c: any) => roots.push(nodeToObj(c)));
+    store.getRootNode().eachChild?.((c: any) => { roots.push(nodeToObj(c)); });
     return JSON.stringify(roots, null, 2);
   }
 

@@ -103,7 +103,7 @@ export function createExample(container: HTMLElement): { destroy: () => void } {
       <strong>${node.text}</strong> — ${node.notes ?? 'No notes.'} Tags: ${(node.tags??[]).join(', ')||'none'}
     </div>`,
   });
-  const filterPlugin = new TreeGridFilterPlugin({ filterMode: 'bottomup' });
+  const filterPlugin = new TreeGridFilterPlugin({ filterer: 'bottomup' });
   const stateMixin = new TreeGridStateMixin({ stateId: KS_STATE_ID });
   const exporter = new TreeGridExporter({});
   const clipboard = new TreeGridClipboard({ copyHierarchy: true, includeHeaders: true });
@@ -207,11 +207,11 @@ export function createExample(container: HTMLElement): { destroy: () => void } {
   document.getElementById('ks-export-json')?.addEventListener('click', () => {
     function toObj(node: any): any {
       const obj: Record<string,unknown> = { text: node.text, status: node.status, assignee: node.assignee, percentComplete: node.percentComplete };
-      if (!node.isLeaf?.()) { const ch: any[] = []; node.eachChild?.((c: any) => ch.push(toObj(c))); if (ch.length) obj.children = ch; }
+      if (!node.isLeaf?.()) { const ch: any[] = []; node.eachChild?.((c: any) => { ch.push(toObj(c)); }); if (ch.length) obj.children = ch; }
       return obj;
     }
     const roots: any[] = [];
-    store.getRootNode().eachChild?.((c: any) => roots.push(toObj(c)));
+    store.getRootNode().eachChild?.((c: any) => { roots.push(toObj(c)); });
     const json = JSON.stringify(roots, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'kitchen-sink.json'; a.click(); URL.revokeObjectURL(url);

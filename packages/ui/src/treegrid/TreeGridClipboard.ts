@@ -7,7 +7,6 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { NodeInterface } from '@framesquared/data';
 import { TreeModel, applyNodeInterface } from '@framesquared/data';
 import type { TreeGrid } from './TreeGrid.js';
 
@@ -20,6 +19,7 @@ export interface TreeGridClipboardConfig {
   pasteAsChildren?: boolean;
   pasteIndentLevel?: boolean;
   indentCharacter?: string;
+  includeHeaders?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -37,6 +37,7 @@ export class TreeGridClipboard {
       pasteAsChildren: config.pasteAsChildren ?? true,
       pasteIndentLevel: config.pasteIndentLevel ?? false,
       indentCharacter: config.indentCharacter ?? '\t',
+      includeHeaders: config.includeHeaders ?? false,
     };
     this._onKeyDown = this._handleKeyDown.bind(this);
   }

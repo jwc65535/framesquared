@@ -8,7 +8,6 @@
 
 import type { NodeInterface } from '@framesquared/data';
 import type { TreeGrid } from './TreeGrid.js';
-import type { Column } from './TreeGridColumn.js';
 
 // ---------------------------------------------------------------------------
 // Types

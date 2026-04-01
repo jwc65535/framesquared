@@ -63,7 +63,6 @@ export class TreeGridDragDrop {
   private dropIndicatorEl: HTMLElement | null = null;
   private highlightedRow: HTMLElement | null = null;
   private expandTimer: ReturnType<typeof setTimeout> | null = null;
-  private scrollTimer: ReturnType<typeof setTimeout> | null = null;
 
   // Captured at pointerdown so movement/scroll can't change which node is dragged
   private _pendingRecord: NodeInterface | null = null;
@@ -296,7 +295,7 @@ export class TreeGridDragDrop {
     }
 
     this.treeGrid?.getView().refresh();
-    this.treeGrid?.fire?.('drop', target, this.dragData, target, position);
+    (this.treeGrid as any)?.fireEvent?.('drop', target, this.dragData, target, position);
   }
 
   private _insertNode(

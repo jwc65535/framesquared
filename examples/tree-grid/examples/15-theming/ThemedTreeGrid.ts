@@ -100,7 +100,7 @@ export function createExample(container: HTMLElement): { destroy: () => void } {
 
   return {
     destroy() {
-      ThemeManager.un?.('themechange', updateThemeInfo);
+      ThemeManager.off?.('themechange', updateThemeInfo);
       grid.destroy?.();
     },
   };

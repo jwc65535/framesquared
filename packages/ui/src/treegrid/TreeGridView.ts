@@ -40,8 +40,6 @@ export class TreeGridView {
   private rootVisible: boolean;
   private checkable: boolean;
   private lines: boolean;
-  private animate: boolean;
-  private animationDuration: number;
 
   private listeners: Map<string, Function[]> = new Map();
   private focusedNode: NodeInterface | null = null;
@@ -53,8 +51,6 @@ export class TreeGridView {
     this.rootVisible = config.rootVisible ?? false;
     this.checkable = config.checkable ?? false;
     this.lines = config.lines ?? false;
-    this.animate = config.animate ?? true;
-    this.animationDuration = config.animationDuration ?? 250;
   }
 
   // -------------------------------------------------------------------------
@@ -205,7 +201,7 @@ export class TreeGridView {
       parentRow.classList.add('x-treegrid-expanded');
       parentRow.setAttribute('aria-expanded', 'true');
       // Refresh tree column cell (to update expander icon)
-      this._refreshTreeColumnCell(parentRow, parentNode);
+      this._refreshTreeColumnCell(parentRow as HTMLTableRowElement, parentNode);
     }
 
     // Insert child rows after parent row
@@ -233,7 +229,7 @@ export class TreeGridView {
       parentRow.classList.remove('x-treegrid-expanded');
       parentRow.classList.add('x-treegrid-collapsed');
       parentRow.setAttribute('aria-expanded', 'false');
-      this._refreshTreeColumnCell(parentRow, parentNode);
+      this._refreshTreeColumnCell(parentRow as HTMLTableRowElement, parentNode);
     }
 
     // Remove all descendant rows
@@ -264,7 +260,7 @@ export class TreeGridView {
     this.fireEvent('collapse', parentNode);
   }
 
-  onNodeInsert(parent: NodeInterface, node: NodeInterface): void {
+  onNodeInsert(parent: NodeInterface, _node: NodeInterface): void {
     if (!parent.isExpanded() && !parent.isRoot()) return;
     this.refresh();
   }
@@ -401,10 +397,6 @@ export class TreeGridView {
     };
     walk(node);
     return result;
-  }
-
-  private _findInsertionPoint(parentNode: NodeInterface): HTMLElement | null {
-    return this.getNodeRow(parentNode);
   }
 
   // -------------------------------------------------------------------------

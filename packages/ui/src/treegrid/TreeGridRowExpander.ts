@@ -15,7 +15,7 @@ import type { TreeGrid } from './TreeGrid.js';
 // ---------------------------------------------------------------------------
 
 export interface TreeGridRowExpanderConfig {
-  rowBodyTpl?: string;
+  rowBodyTpl?: string | ((node: NodeInterface) => string);
   expandOnDblClick?: boolean;
   singleRowExpand?: boolean;
   bodyIndent?: boolean;
@@ -133,8 +133,9 @@ export class TreeGridRowExpander {
       td.style.paddingLeft = `${indent + tg.getTreeColumn().indentSize}px`;
     }
 
-    const content = this.config.rowBodyTpl
-      ? this._renderTpl(this.config.rowBodyTpl, record)
+    const tpl = this.config.rowBodyTpl;
+    const content = tpl
+      ? typeof tpl === 'function' ? tpl(record) : this._renderTpl(tpl, record)
       : '';
     td.innerHTML = content;
 

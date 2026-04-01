@@ -17,7 +17,6 @@ export class TreeDropZone {
   private tree: TreePanelLike & { getStore(): { insertBefore: Function; appendChild: Function } };
   ddGroup: string;
   private appendOnly: boolean;
-  private sortOnDrop: boolean;
   private indicatorEl: HTMLElement | null = null;
   private expandTimer: ReturnType<typeof setTimeout> | null = null;
   expandDelay: number;
@@ -37,7 +36,6 @@ export class TreeDropZone {
     this.tree = tree;
     this.ddGroup = config?.ddGroup ?? 'TreeDD';
     this.appendOnly = config?.appendOnly ?? false;
-    this.sortOnDrop = config?.sortOnDrop ?? false;
     this.expandDelay = config?.expandDelay ?? 500;
     this.boundDragOver = this.onDragOver.bind(this);
     this.boundDrop = this.onDrop.bind(this);
