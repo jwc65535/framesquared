@@ -159,7 +159,7 @@ export class TreeGrid extends Panel {
       this.fire('itemcontextmenu', this._view, node, e);
     });
 
-    this._view.on('expanderclick', (node: NodeInterface) => {
+    this._view.on('expanderclick', (_node: NodeInterface) => {
       // Already handled by store; just need to refresh
     });
 
@@ -289,7 +289,7 @@ export class TreeGrid extends Panel {
       } else if (cfg instanceof Column) {
         if (!treeColCreated && i === 0) {
           // Convert first column to TreeGridColumn
-          result.push(new TreeGridColumn(cfg));
+          result.push(new TreeGridColumn(cfg as unknown as TreeGridColumnConfig));
           treeColCreated = true;
         } else {
           result.push(cfg);
@@ -706,10 +706,10 @@ export class TreeGrid extends Panel {
   // Event helper
   // -------------------------------------------------------------------------
 
-  private fire(eventName: string, ...args: unknown[]): unknown {
+  private fire(eventName: string, ...args: unknown[]): boolean {
     if (typeof (this as any).fireEvent === 'function') {
       return (this as any).fireEvent(eventName, ...args);
     }
-    return undefined;
+    return true;
   }
 }
