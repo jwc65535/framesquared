@@ -22,7 +22,8 @@
     "typecheck": "pnpm -r run typecheck",
     "docs": "pnpm exec typedoc",
     "clean": "pnpm -r run clean && rm -rf node_modules",
-    "prepare": "husky"
+    "prepare": "husky",
+    "changeset": "changeset"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
