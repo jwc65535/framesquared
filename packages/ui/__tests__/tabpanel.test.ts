@@ -3,7 +3,6 @@ import { TabPanel } from '../src/tab/TabPanel.js';
 import { TabBar } from '../src/tab/TabBar.js';
 import { Tab } from '../src/tab/Tab.js';
 import { Panel } from '../src/panel/Panel.js';
-import { Component } from '@framesquared/component';
 
 class MockRO {
   constructor() {}

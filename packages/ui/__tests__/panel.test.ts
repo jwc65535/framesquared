@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Component } from '@framesquared/component';
 import { Panel } from '../src/panel/Panel.js';
-import type { ToolConfig } from '../src/panel/Panel.js';
 
 // ResizeObserver mock
 class MockRO {

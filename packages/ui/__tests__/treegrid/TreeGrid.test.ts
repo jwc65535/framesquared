@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TreeGrid } from '../../src/treegrid/TreeGrid.js';
 import { TreeGridColumn, Column } from '../../src/treegrid/TreeGridColumn.js';
 import { TreeStore, TreeModel, applyNodeInterface } from '@framesquared/data';
-import type { NodeInterface } from '@framesquared/data';
 
 // ─── Mock ResizeObserver ─────────────────────────────────────────────────────
 
@@ -644,7 +643,7 @@ describe('TreeGrid — getNodeRow', () => {
 describe('TreeGrid — setRootNode', () => {
   it('setRootNode refreshes the view', () => {
     const grid = makeGrid();
-    const newRoot = grid.getStore().setRoot({
+    const _newRoot = grid.getStore().setRoot({
       id: 'newroot',
       text: 'New Root',
       expanded: true,

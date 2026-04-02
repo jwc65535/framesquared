@@ -6,7 +6,7 @@
  * and `'arrowclick'` event independently from the main click.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Button } from './Button.js';
 import type { ButtonConfig } from './Button.js';

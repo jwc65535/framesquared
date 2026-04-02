@@ -4,7 +4,6 @@ import { Container } from '../src/Container.js';
 import { CQParser } from '../src/query/CQParser.js';
 import { CQMatcher } from '../src/query/CQMatcher.js';
 import { CQ } from '../src/query/ComponentQuery.js';
-import type { SelectorNode } from '../src/query/CQParser.js';
 
 // ResizeObserver mock
 class MockRO {

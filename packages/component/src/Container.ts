@@ -11,8 +11,8 @@
 import { Component } from './Component.js';
 import type { ComponentConfig } from './Component.js';
 import { ComponentQuery, matchesCQ } from './ComponentQuery.js';
-import { Layout, resolveLayout } from './Layout.js';
-import type { LayoutConfig } from './Layout.js';
+import { resolveLayout } from './Layout.js';
+import type { LayoutConfig , Layout} from './Layout.js';
 import { ClassManager } from '@framesquared/core';
 
 // ---------------------------------------------------------------------------

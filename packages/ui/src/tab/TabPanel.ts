@@ -9,7 +9,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component } from '@framesquared/component';
+import type { Component } from '@framesquared/component';
 import { Panel } from '../panel/Panel.js';
 import type { PanelConfig } from '../panel/Panel.js';
 import { TabBar } from './TabBar.js';

@@ -3,7 +3,7 @@
  * Renders as <input type="hidden">.  No label, no visible UI.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Field } from './Field.js';
 import type { FieldConfig } from './Field.js';

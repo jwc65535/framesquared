@@ -28,8 +28,8 @@ export interface TreeGridRowExpanderConfig {
 export class TreeGridRowExpander {
   private treeGrid: TreeGrid | null = null;
   private config: Required<TreeGridRowExpanderConfig>;
-  private expandedRows: Set<string | number> = new Set();
-  private bodyRowMap: Map<string | number, HTMLElement> = new Map();
+  private expandedRows = new Set<string | number>();
+  private bodyRowMap = new Map<string | number, HTMLElement>();
 
   private _onClick: (e: MouseEvent) => void;
   private _onDblClick: (e: MouseEvent) => void;

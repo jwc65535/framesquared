@@ -8,7 +8,7 @@
  * Alias: 'auto'
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import type { Component } from '@framesquared/component';
 import { Layout } from './Layout.js';

@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Component } from '../src/Component.js';
 import { Container } from '../src/Container.js';
-import { ComponentQuery } from '../src/ComponentQuery.js';
 
 // ResizeObserver mock
 class MockResizeObserver {

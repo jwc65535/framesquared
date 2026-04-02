@@ -2,7 +2,7 @@
  * @framesquared/data – Association (base class)
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import type { Model } from '../Model.js';
 

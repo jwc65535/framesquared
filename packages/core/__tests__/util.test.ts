@@ -305,7 +305,7 @@ describe('isString', () => {
   });
 
   it('returns false for String objects', () => {
-    // eslint-disable-next-line no-new-wrappers
+     
     expect(isString(new String('wrapped'))).toBe(false);
   });
 
@@ -365,7 +365,7 @@ describe('isBoolean', () => {
   });
 
   it('returns false for Boolean objects', () => {
-    // eslint-disable-next-line no-new-wrappers
+     
     expect(isBoolean(new Boolean(true))).toBe(false);
   });
 

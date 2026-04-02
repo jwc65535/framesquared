@@ -5,9 +5,6 @@ import {
   NumberColumn,
   DateColumn,
   BooleanColumn,
-  CheckColumn,
-  ActionColumn,
-  RowNumbererColumn,
 } from '../src/grid/column/Column.js';
 import { GridView } from '../src/grid/GridView.js';
 import { HeaderContainer } from '../src/grid/HeaderContainer.js';
@@ -37,7 +34,7 @@ function mockStore(data: Record<string, unknown>[] = []) {
       (d as any)[f] = v;
     },
   }));
-  let listeners: Record<string, Function[]> = {};
+  const listeners: Record<string, Function[]> = {};
   return {
     data: { items: records },
     getRange: () => records,

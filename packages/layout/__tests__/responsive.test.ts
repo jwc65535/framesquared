@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Component, Container } from '@framesquared/component';
 import { ResponsivePlugin } from '../src/ResponsivePlugin.js';
 import { ResponsiveColumnLayout } from '../src/ResponsiveColumnLayout.js';

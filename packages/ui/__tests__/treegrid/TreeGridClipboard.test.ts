@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TreeGridClipboard } from '../../src/treegrid/TreeGridClipboard.js';
 import { TreeGrid } from '../../src/treegrid/TreeGrid.js';
 import { TreeStore, TreeModel } from '@framesquared/data';

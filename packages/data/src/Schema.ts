@@ -10,7 +10,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { Model } from './Model.js';
-import { Association } from './association/Association.js';
+import type { Association } from './association/Association.js';
 import type { AssociationConfig } from './association/Association.js';
 import { HasOne } from './association/HasOne.js';
 import { HasMany } from './association/HasMany.js';

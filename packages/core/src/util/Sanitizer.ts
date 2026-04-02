@@ -16,7 +16,7 @@
  * @since 0.1.0
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 const SAFE_TAGS = new Set([
   'a',

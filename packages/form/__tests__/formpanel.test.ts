@@ -1,7 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TextField } from '../src/field/Text.js';
-import { Checkbox } from '../src/field/Checkbox.js';
-import { Field } from '../src/field/Field.js';
 import { FormPanel } from '../src/FormPanel.js';
 import { BasicForm } from '../src/form/BasicForm.js';
 import { FieldContainer } from '../src/field/FieldContainer.js';

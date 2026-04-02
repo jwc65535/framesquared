@@ -181,7 +181,7 @@ describe('singleExpand integration', () => {
         ],
       },
     });
-    const p = makePanel(store, { singleExpand: true });
+    const _p = makePanel(store, { singleExpand: true });
     const nodeA = store.getNodeById('a') as NodeInterface;
     const nodeB = store.getNodeById('b') as NodeInterface;
     // Expand B — should collapse A

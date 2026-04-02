@@ -5,7 +5,7 @@
  * a browse button, and a text display showing selected filename(s).
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Field } from './Field.js';
 import type { FieldConfig } from './Field.js';

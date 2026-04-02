@@ -4,7 +4,6 @@ import { Layout } from '../src/Layout.js';
 import { AutoLayout } from '../src/AutoLayout.js';
 import { LayoutContext } from '../src/LayoutContext.js';
 import { LayoutRunner } from '../src/LayoutRunner.js';
-import type { SizePolicy } from '../src/Layout.js';
 
 // ResizeObserver mock
 class MockRO {

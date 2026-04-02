@@ -5,7 +5,7 @@
  * formatting buttons, source edit mode, and XSS sanitization.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Field } from './Field.js';
 import type { FieldConfig } from './Field.js';

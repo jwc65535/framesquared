@@ -4,7 +4,7 @@
  * Serialize Model records for transport to the server.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import type { Model } from '../Model.js';
 

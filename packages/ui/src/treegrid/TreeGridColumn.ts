@@ -22,9 +22,9 @@ export type ElbowType = 'line' | 'empty' | 'end' | 'end-plus' | 'tee' | 'tee-plu
 export interface EditorConfig {
   xtype: string;
   /** options for combobox/select/radiogroup — array of {value,text} or plain strings */
-  options?: Array<{ value: string; text: string } | string>;
+  options?: ({ value: string; text: string } | string)[];
   /** legacy: ExtJS-style store for combobox */
-  store?: Array<{ value: string; text: string } | string>;
+  store?: ({ value: string; text: string } | string)[];
   displayField?: string;
   valueField?: string;
   minValue?: number;

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Model } from '../src/Model.js';
 import { FieldType } from '../src/field/Field.js';
-import { Operation } from '../src/Operation.js';
+import type { Operation } from '../src/Operation.js';
 import { ResultSet } from '../src/ResultSet.js';
 import { TreeStore } from '../src/store/TreeStore.js';
 import { BufferedStore } from '../src/store/BufferedStore.js';

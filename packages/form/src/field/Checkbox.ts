@@ -5,7 +5,7 @@
  * Returns inputValue when checked, uncheckedValue when unchecked.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Field } from './Field.js';
 import type { FieldConfig } from './Field.js';

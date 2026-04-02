@@ -58,11 +58,14 @@ export function getOrCreateMetaMap(metadata: DecoratorMetadataObject): Map<strin
   return map;
 }
 
+/** A class constructor type used for prototype-chain walking. */
+type ClassConstructor = abstract new (...args: unknown[]) => unknown;
+
 /**
  * Reads the metadata object from a class constructor.
  */
-function getClassMetadata(Ctor: Function): object | undefined {
-  return (Ctor as any)[METADATA_SYMBOL] as object | undefined;
+function getClassMetadata(Ctor: ClassConstructor): object | undefined {
+  return (Ctor as unknown as Record<symbol, object>)[METADATA_SYMBOL];
 }
 
 // ---------------------------------------------------------------------------
@@ -74,15 +77,15 @@ class ConfiguratorImpl {
    * Returns the ConfigMeta for a single config on the given class,
    * walking the prototype chain.
    */
-  getConfigMeta(Ctor: Function, configName: string): ConfigMeta | undefined {
-    let cur: Function | null = Ctor;
+  getConfigMeta(Ctor: ClassConstructor, configName: string): ConfigMeta | undefined {
+    let cur: ClassConstructor | null = Ctor;
     while (cur) {
       const md = getClassMetadata(cur);
       if (md) {
         const map = (md as any)[CONFIG_META_KEY] as Map<string, ConfigMeta> | undefined;
         if (map?.has(configName)) return map.get(configName)!;
       }
-      cur = Object.getPrototypeOf(cur) as Function | null;
+      cur = Object.getPrototypeOf(cur) as ClassConstructor | null;
     }
     return undefined;
   }
@@ -90,12 +93,12 @@ class ConfiguratorImpl {
   /**
    * Collects all ConfigMeta entries for `Ctor`, including inherited.
    */
-  getAllConfigMeta(Ctor: Function): ConfigMeta[] {
-    const chain: Function[] = [];
-    let cur: Function | null = Ctor;
+  getAllConfigMeta(Ctor: ClassConstructor): ConfigMeta[] {
+    const chain: ClassConstructor[] = [];
+    let cur: ClassConstructor | null = Ctor;
     while (cur) {
       chain.unshift(cur);
-      cur = Object.getPrototypeOf(cur) as Function | null;
+      cur = Object.getPrototypeOf(cur) as ClassConstructor | null;
     }
     const merged = new Map<string, ConfigMeta>();
     for (const cls of chain) {

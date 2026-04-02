@@ -5,7 +5,7 @@
  * group tracking to ensure single selection per name group.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Checkbox } from './Checkbox.js';
 import type { CheckboxConfig } from './Checkbox.js';

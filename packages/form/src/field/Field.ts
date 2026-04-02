@@ -6,7 +6,7 @@
  * error display.  Subclasses implement the actual input element.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Component } from '@framesquared/component';
 import type { ComponentConfig } from '@framesquared/component';

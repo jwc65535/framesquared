@@ -277,7 +277,7 @@ export class Store extends Base {
     return this.data.last();
   }
 
-  each(fn: (record: Model, index: number) => boolean | void): void {
+  each(fn: (record: Model, index: number) => boolean | undefined): void {
     this.data.each(fn);
   }
 

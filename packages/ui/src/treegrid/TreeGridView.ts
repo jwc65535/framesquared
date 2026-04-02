@@ -8,7 +8,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { TreeStore, NodeInterface } from '@framesquared/data';
-import { TreeGridColumn, Column } from './TreeGridColumn.js';
+import type { Column } from './TreeGridColumn.js';
+import { TreeGridColumn } from './TreeGridColumn.js';
 
 // ---------------------------------------------------------------------------
 // Config
@@ -41,9 +42,9 @@ export class TreeGridView {
   private checkable: boolean;
   private lines: boolean;
 
-  private listeners: Map<string, Function[]> = new Map();
+  private listeners = new Map<string, ((...args: unknown[]) => void)[]>();
   private focusedNode: NodeInterface | null = null;
-  private _rowCache: Map<string, HTMLTableRowElement> = new Map();
+  private _rowCache = new Map<string, HTMLTableRowElement>();
 
   constructor(config: TreeGridViewConfig) {
     this.store = config.store;
@@ -57,12 +58,12 @@ export class TreeGridView {
   // Event system
   // -------------------------------------------------------------------------
 
-  on(event: string, fn: Function): void {
+  on(event: string, fn: (...args: unknown[]) => void): void {
     if (!this.listeners.has(event)) this.listeners.set(event, []);
     this.listeners.get(event)!.push(fn);
   }
 
-  un(event: string, fn: Function): void {
+  un(event: string, fn: (...args: unknown[]) => void): void {
     const fns = this.listeners.get(event);
     if (!fns) return;
     const i = fns.indexOf(fn);
@@ -148,8 +149,7 @@ export class TreeGridView {
     if (node.isRoot()) tr.classList.add('x-treegrid-root-node');
 
     // Cells
-    for (let i = 0; i < this.columns.length; i++) {
-      const col = this.columns[i];
+    for (const col of this.columns) {
       if (col.hidden) continue;
       const td = document.createElement('td');
       td.className = 'x-grid-cell';

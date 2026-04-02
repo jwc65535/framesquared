@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { TreeColumn } from '../../src/tree/TreeColumn.js';
-import { TreeStore, TreeModel, applyNodeInterface } from '@framesquared/data';
+import { TreeStore, TreeModel} from '@framesquared/data';
 import type { NodeInterface } from '@framesquared/data';
 
 afterEach(() => {

@@ -6,7 +6,7 @@
  * Supports wildcard routes, before-route guards, and navigateTo.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 interface RouteEntry {
   pattern: string;

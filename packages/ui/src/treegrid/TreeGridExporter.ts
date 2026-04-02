@@ -29,7 +29,6 @@ export interface ExportOptions {
 // ---------------------------------------------------------------------------
 
 export class TreeGridExporter {
-  constructor(_options: ExportOptions = {}) {}
 
   /**
    * Exports the TreeGrid to CSV format.

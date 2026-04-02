@@ -3,7 +3,6 @@ import { Model } from '../src/Model.js';
 import { FieldType } from '../src/field/Field.js';
 import { Store } from '../src/store/Store.js';
 import { Collection } from '../src/store/Collection.js';
-import type { Sorter, Filter } from '../src/store/Store.js';
 
 // ---------------------------------------------------------------------------
 // Shared test model

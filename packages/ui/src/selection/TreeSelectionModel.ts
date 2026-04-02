@@ -23,7 +23,7 @@ export class TreeSelectionModel {
   private selected: Set<NodeInterface>;
   private mode: string;
   private pruneRemoved: boolean;
-  private listeners: Map<string, Function[]>;
+  private listeners: Map<string, ((...args: unknown[]) => void)[]>;
 
   constructor(config?: TreeSelectionModelConfig) {
     this.selected = new Set();
@@ -36,14 +36,14 @@ export class TreeSelectionModel {
   // Event system
   // -------------------------------------------------------------------------
 
-  on(event: string, fn: Function): void {
+  on(event: string, fn: (...args: unknown[]) => void): void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, []);
     }
     this.listeners.get(event)!.push(fn);
   }
 
-  un(event: string, fn: Function): void {
+  un(event: string, fn: (...args: unknown[]) => void): void {
     const fns = this.listeners.get(event);
     if (!fns) return;
     const idx = fns.indexOf(fn);

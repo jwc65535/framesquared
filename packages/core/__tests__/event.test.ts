@@ -1,8 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Base, define } from '../src/class/index.js';
+import { define } from '../src/class/index.js';
 import { ExtEvent } from '../src/event/Event.js';
 import { Observable } from '../src/event/Observable.js';
-import type { Destroyable, ListenerOptions } from '../src/event/Observable.js';
 
 // Helper: create a fresh Observable class for each test block
 function createObservableClass(name: string, extra: Record<string, unknown> = {}) {
@@ -747,11 +746,11 @@ describe('Memory cleanup on destroy', () => {
   it('WeakRef to handler is collectable after destroy', () => {
     const Cls = createObservableClass('test.ev.WeakRef');
     const inst = new Cls();
-    let handler: (() => void) | null = () => {};
-    const ref = new WeakRef(handler);
+    const handler: (() => void) | null = () => {};
+    const _ref = new WeakRef(handler);
+    void _ref;
     inst.on('test', handler);
     inst.destroy();
-    handler = null;
     // We can't force GC, but we can verify the handler is no longer
     // held by the event system by checking hasListener
     expect(inst.hasListener('test')).toBe(false);

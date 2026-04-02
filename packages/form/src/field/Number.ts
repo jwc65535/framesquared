@@ -36,7 +36,7 @@ export class NumberField extends TextField {
       { type: 'spinner-down', handler: (_f: any) => this.spinDown() },
       ...(config.triggers ?? []),
     ];
-    super({ xtype: 'numberfield', ...config, triggers, maskRe: config.maskRe ?? /[0-9.\-]/ });
+    super({ xtype: 'numberfield', ...config, triggers, maskRe: config.maskRe ?? /[0-9.-]/ });
   }
 
   protected override initialize(): void {

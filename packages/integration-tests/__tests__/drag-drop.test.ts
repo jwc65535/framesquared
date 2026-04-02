@@ -43,8 +43,8 @@ describe('Drag and drop integration', () => {
     const dropSpy = vi.fn();
     const endSpy = vi.fn();
 
-    const drag = new Draggable({ el: srcEl, groups: ['items'], onDragEnd: endSpy });
-    const drop = new Droppable({
+    const _drag = new Draggable({ el: srcEl, groups: ['items'], onDragEnd: endSpy });
+    const _drop = new Droppable({
       el: dropEl,
       accept: ['items'],
       onDragEnter: enterSpy,
@@ -82,8 +82,8 @@ describe('Drag and drop integration', () => {
     });
 
     const enterSpy = vi.fn();
-    const drag = new Draggable({ el: srcEl, groups: ['typeA'] });
-    const drop = new Droppable({ el: dropEl, accept: ['typeB'], onDragEnter: enterSpy });
+    const _drag = new Draggable({ el: srcEl, groups: ['typeA'] });
+    const _drop = new Droppable({ el: dropEl, accept: ['typeB'], onDragEnter: enterSpy });
 
     fire(srcEl, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 150, clientY: 150 });

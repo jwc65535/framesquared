@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { TreeSelectionModel } from '../../src/selection/TreeSelectionModel.js';
 import { CheckboxModel } from '../../src/tree/CheckboxModel.js';
 import { TreeStore, TreeModel } from '@framesquared/data';
@@ -159,7 +159,7 @@ describe('events', () => {
   });
 
   it('selectionchange event fires on deselectAll', () => {
-    const store = makeStore();
+    const _store = makeStore();
     const sm = new TreeSelectionModel();
     const spy = vi.fn();
     sm.on('selectionchange', spy);

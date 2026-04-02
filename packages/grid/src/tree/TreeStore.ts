@@ -210,7 +210,7 @@ export class TreeStore {
   get(field: string): unknown {
     return (this.root as any)[field];
   }
-  on(_evt: string, _fn: Function): void {
+  on(_evt: string, _fn: (...args: unknown[]) => void): void {
     /* placeholder */
   }
   sort(): void {

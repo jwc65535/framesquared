@@ -6,11 +6,12 @@
  * and fires 'resize' on window resize.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Container } from '@framesquared/component';
 import type { ContainerConfig } from '@framesquared/component';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ViewportConfig extends ContainerConfig {}
 
 export class Viewport extends Container {

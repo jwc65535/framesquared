@@ -14,7 +14,7 @@ export class CellEditing {
   private activeRecord: any = null;
   private activeColumn: any = null;
   private activeCell: HTMLElement | null = null;
-  private originalValue: string = '';
+  private originalValue = '';
 
   init(grid: any): void {
     this.grid = grid;

@@ -428,7 +428,7 @@ function evaluate(
   parentData: any,
   xindex: number,
   xcount: number,
-  memberFns: Record<string, Function>,
+  memberFns: Record<string, (...args: unknown[]) => unknown>,
 ): string {
   let result = '';
   for (const node of nodes) {
@@ -508,7 +508,7 @@ function evalExpr(
   _parentData: any,
   xindex: number,
   xcount: number,
-  memberFns: Record<string, Function>,
+  memberFns: Record<string, (...args: unknown[]) => unknown>,
 ): string {
   try {
     // Create a scope with `values`, `xindex`, `xcount`, and `this` bound to memberFns
@@ -530,7 +530,7 @@ function evalIf(
   parentData: any,
   xindex: number,
   xcount: number,
-  memberFns: Record<string, Function>,
+  memberFns: Record<string, (...args: unknown[]) => unknown>,
 ): string {
   if (evalCondition(node.condition, data)) {
     return evaluate(node.body, data, parentData, xindex, xcount, memberFns);
@@ -565,7 +565,7 @@ function evalFor(
   _parentData: any,
   _xindex: number,
   _xcount: number,
-  memberFns: Record<string, Function>,
+  memberFns: Record<string, (...args: unknown[]) => unknown>,
 ): string {
   let arr: any[];
   if (node.field === '.') {
@@ -610,10 +610,10 @@ class PrimitiveScope {
 
 export class XTemplate {
   private source: string;
-  private memberFns: Record<string, Function>;
+  private memberFns: Record<string, (...args: unknown[]) => unknown>;
   private ast: AstNode[] | null = null;
 
-  constructor(source: string, memberFns?: Record<string, Function>) {
+  constructor(source: string, memberFns?: Record<string, (...args: unknown[]) => unknown>) {
     this.source = source;
     this.memberFns = memberFns ?? {};
   }

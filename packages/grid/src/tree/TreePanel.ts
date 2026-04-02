@@ -6,7 +6,7 @@
  * folder/leaf icons, and optional checkboxes with cascade behavior.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Panel } from '@framesquared/ui';
 import type { PanelConfig } from '@framesquared/ui';

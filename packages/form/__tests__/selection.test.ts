@@ -414,7 +414,7 @@ describe('Radio', () => {
   });
 
   it('radio group: only one selected via name', () => {
-    const a = radio({ name: 'g', inputValue: 'a', checked: true });
+    const _a = radio({ name: 'g', inputValue: 'a', checked: true });
     const b = radio({ name: 'g', inputValue: 'b' });
     // In real browser, clicking b would uncheck a via native radio behavior
     // In jsdom we simulate by testing the Radio class group tracking
@@ -423,7 +423,7 @@ describe('Radio', () => {
   });
 
   it('getGroupValue returns the checked radio value', () => {
-    const a = radio({ name: 'grp', inputValue: 'a' });
+    const _a = radio({ name: 'grp', inputValue: 'a' });
     const b = radio({ name: 'grp', inputValue: 'b', checked: true });
     expect(b.getGroupValue()).toBe('b');
   });

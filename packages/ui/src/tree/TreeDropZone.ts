@@ -4,7 +4,7 @@
  * Drop target for tree drag-and-drop.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import type { NodeInterface } from '@framesquared/data';
 import type { DragData, TreePanelLike } from './TreeDragZone.js';
@@ -14,7 +14,7 @@ import type { DragData, TreePanelLike } from './TreeDragZone.js';
 // ---------------------------------------------------------------------------
 
 export class TreeDropZone {
-  private tree: TreePanelLike & { getStore(): { insertBefore: Function; appendChild: Function } };
+  private tree: TreePanelLike & { getStore(): { insertBefore: (...args: unknown[]) => void; appendChild: (...args: unknown[]) => void } };
   ddGroup: string;
   private appendOnly: boolean;
   private indicatorEl: HTMLElement | null = null;
@@ -25,7 +25,7 @@ export class TreeDropZone {
   private boundDrop: (e: DragEvent) => void;
 
   constructor(
-    tree: TreePanelLike & { getStore(): { insertBefore: Function; appendChild: Function } },
+    tree: TreePanelLike & { getStore(): { insertBefore: (...args: unknown[]) => void; appendChild: (...args: unknown[]) => void } },
     config?: {
       ddGroup?: string;
       appendOnly?: boolean;

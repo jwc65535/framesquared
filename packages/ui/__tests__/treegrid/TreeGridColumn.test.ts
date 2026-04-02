@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { TreeGridColumn, Column } from '../../src/treegrid/TreeGridColumn.js';
 import { TreeStore, TreeModel } from '@framesquared/data';
 import type { NodeInterface } from '@framesquared/data';

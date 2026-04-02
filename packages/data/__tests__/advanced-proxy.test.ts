@@ -5,7 +5,6 @@ import { BatchProxy } from '../src/proxy/BatchProxy.js';
 import { Connection } from '../src/data/Connection.js';
 import { Session } from '../src/data/Session.js';
 import { Operation } from '../src/Operation.js';
-import { ResultSet } from '../src/ResultSet.js';
 import { Model } from '../src/Model.js';
 
 // ---------------------------------------------------------------------------
@@ -55,7 +54,8 @@ describe('GraphQLProxy', () => {
       rootProperty: 'data.users',
     });
     const op = new Operation({ action: 'read' });
-    const result = await proxy.read(op);
+    const _result = await proxy.read(op);
+    void _result;
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe('/graphql');
@@ -95,7 +95,8 @@ describe('GraphQLProxy', () => {
     });
     const rec = TestModel.create({ name: 'Charlie' });
     const op = new Operation({ action: 'create', records: [rec] });
-    const result = await proxy.create(op);
+    const _result2 = await proxy.create(op);
+    void _result2;
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const body = JSON.parse(fetchMock.mock.calls[0][1].body);
     expect(body.query).toContain('mutation');

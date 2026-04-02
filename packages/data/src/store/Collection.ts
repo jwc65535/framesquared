@@ -80,7 +80,7 @@ export class Collection<T> {
     return [...this.items];
   }
 
-  each(fn: (item: T, index: number) => boolean | void): void {
+  each(fn: (item: T, index: number) => boolean | undefined): void {
     for (let i = 0; i < this.items.length; i++) {
       if (fn(this.items[i], i) === false) break;
     }

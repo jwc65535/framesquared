@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TreeGridDragDrop } from '../../src/treegrid/TreeGridDragDrop.js';
 import { TreeGrid } from '../../src/treegrid/TreeGrid.js';
-import { TreeStore, TreeModel, applyNodeInterface } from '@framesquared/data';
+import { TreeStore, TreeModel} from '@framesquared/data';
 import type { NodeInterface } from '@framesquared/data';
 
 class MockRO {

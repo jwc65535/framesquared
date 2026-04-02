@@ -1,12 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { Model } from '../src/Model.js';
 import { Schema } from '../src/Schema.js';
 import { FieldType } from '../src/field/Field.js';
-import { HasOne } from '../src/association/HasOne.js';
-import { HasMany } from '../src/association/HasMany.js';
-import { BelongsTo } from '../src/association/BelongsTo.js';
-import { ManyToMany } from '../src/association/ManyToMany.js';
-import type { AssociationConfig } from '../src/association/Association.js';
 
 // ---------------------------------------------------------------------------
 // Test model definitions

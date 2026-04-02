@@ -14,10 +14,10 @@ export interface DroppableConfig {
   accept?: string[];
   overCls?: string;
   disabled?: boolean;
-  onDragEnter?: (data: DragData) => boolean | void;
+  onDragEnter?: (data: DragData) => boolean | undefined;
   onDragOver?: (data: DragData) => void;
   onDragLeave?: (data: DragData) => void;
-  onDrop?: (data: DragData) => boolean | void;
+  onDrop?: (data: DragData) => boolean | undefined;
 }
 
 export class Droppable {

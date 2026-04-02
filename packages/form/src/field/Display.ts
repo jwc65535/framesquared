@@ -3,7 +3,7 @@
  * Read-only display of a value.  No input element, no form submission.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Field } from './Field.js';
 import type { FieldConfig } from './Field.js';

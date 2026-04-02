@@ -11,7 +11,7 @@
  * All dialogs are modal Windows that close on button click.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Window } from './Window.js';
 import type { WindowConfig } from './Window.js';

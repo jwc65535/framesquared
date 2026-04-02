@@ -4,7 +4,6 @@ import { Accordion } from '../src/container/Accordion.js';
 import { CardContainer } from '../src/container/CardContainer.js';
 import { Breadcrumb } from '../src/navigation/Breadcrumb.js';
 import { Panel } from '../src/panel/Panel.js';
-import { Component } from '@framesquared/component';
 
 class MockRO {
   constructor() {}
@@ -117,7 +116,7 @@ describe('Viewport', () => {
 
   it('responds to window resize', () => {
     const spy = vi.fn();
-    const vp = new Viewport({ items: [], listeners: { resize: spy } });
+    const _vp = new Viewport({ items: [], listeners: { resize: spy } });
     window.dispatchEvent(new Event('resize'));
     expect(spy).toHaveBeenCalled();
   });

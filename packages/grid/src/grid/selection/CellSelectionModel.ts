@@ -21,11 +21,11 @@ interface CellSelectableGrid extends SelectableGrid {
 export class CellSelectionModel {
   private grid: CellSelectableGrid | null = null;
   private position: CellPosition | null = null;
-  private listeners: Record<string, Function[]> = {};
+  private listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
   private maxRow = 0;
   private maxCol = 0;
 
-  on(event: string, fn: Function): void {
+  on(event: string, fn: (...args: unknown[]) => void): void {
     (this.listeners[event] ??= []).push(fn);
   }
 

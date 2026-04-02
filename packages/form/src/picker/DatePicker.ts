@@ -6,7 +6,7 @@
  * Fires 'select' when a date is clicked.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Component } from '@framesquared/component';
 import type { ComponentConfig } from '@framesquared/component';

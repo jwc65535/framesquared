@@ -6,7 +6,7 @@
  * for outside-click dismissal.  Supports keyboard navigation.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Container } from '@framesquared/component';
 import type { ContainerConfig, Component } from '@framesquared/component';

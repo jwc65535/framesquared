@@ -51,7 +51,7 @@ export class ModelCollection {
  * Extended collection for ManyToMany that exposes link/unlink semantics.
  */
 export class ManyToManyCollection extends ModelCollection {
-  private junctions: Map<Model, any> = new Map();
+  private junctions = new Map<Model, any>();
 
   link(record: Model, _junctionData?: Record<string, unknown>): void {
     this.add(record);

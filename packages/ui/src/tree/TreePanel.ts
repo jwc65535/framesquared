@@ -45,10 +45,6 @@ export class TreePanel extends Panel {
   declare private _checkable: boolean;
   declare private _cascadeChecks: boolean;
 
-  constructor(config: TreePanelConfig) {
-    super(config);
-  }
-
   // -------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------

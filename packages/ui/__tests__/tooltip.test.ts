@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Component } from '@framesquared/component';
 import { Tooltip } from '../src/tip/Tooltip.js';
 import { QuickTip } from '../src/tip/QuickTip.js';
 
@@ -260,7 +259,7 @@ describe('Tooltip — events', () => {
     const beforeSpy = vi.fn();
     const hideSpy = vi.fn();
     const el = target();
-    const t = new Tooltip({
+    const _t = new Tooltip({
       target: el,
       html: 'Evt',
       hideDelay: 0,

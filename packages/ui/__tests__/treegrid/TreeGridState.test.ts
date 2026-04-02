@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TreeGridStateMixin } from '../../src/treegrid/TreeGridStateMixin.js';
 import { TreeGrid } from '../../src/treegrid/TreeGrid.js';
 import { TreeStore, TreeModel } from '@framesquared/data';
-import type { NodeInterface } from '@framesquared/data';
 
 class MockRO {
   observe() {}

@@ -26,14 +26,14 @@ export class RowSelectionModel {
   private mode: string;
   private checkboxSelect: boolean;
   private selected = new Set<GridRecord>();
-  private listeners: Record<string, Function[]> = {};
+  private listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
 
   constructor(config: RowSelectionModelConfig = {}) {
     this.mode = config.mode ?? 'SINGLE';
     this.checkboxSelect = config.checkboxSelect ?? false;
   }
 
-  on(event: string, fn: Function): void {
+  on(event: string, fn: (...args: unknown[]) => void): void {
     (this.listeners[event] ??= []).push(fn);
   }
 

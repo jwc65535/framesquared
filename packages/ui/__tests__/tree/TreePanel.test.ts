@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TreePanel } from '../../src/tree/TreePanel.js';
 import { TreeSelectionModel } from '../../src/selection/TreeSelectionModel.js';
 import { TreeStore, TreeModel } from '@framesquared/data';
@@ -271,7 +271,7 @@ describe('singleExpand', () => {
         ],
       },
     });
-    const p = new TreePanel({ renderTo: document.body, store, singleExpand: true } as any);
+    const _p = new TreePanel({ renderTo: document.body, store, singleExpand: true } as any);
     const nodeB = store.getNodeById('b') as NodeInterface;
     const nodeA = store.getNodeById('a') as NodeInterface;
     store.expandNode(nodeB);

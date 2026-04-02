@@ -6,7 +6,7 @@
  * controls and a finished promise.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 export interface AnimationConfig {
   target: Element;

@@ -6,7 +6,7 @@
  * viewport, and z-index management via ZIndexManager.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Panel } from '../panel/Panel.js';
 import type { PanelConfig } from '../panel/Panel.js';

@@ -5,7 +5,7 @@
  * to show the current item's text and advance on click.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { SplitButton } from './SplitButton.js';
 import type { SplitButtonConfig } from './SplitButton.js';

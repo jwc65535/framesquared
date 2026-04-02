@@ -20,10 +20,10 @@ export class ViewModel {
   private _data: Record<string, unknown>;
   private _formulas: Record<string, (get: (path: string) => unknown) => unknown>;
   private _stores: Record<string, { data: unknown[] }>;
-  private _listeners: Record<string, Function[]> = {};
+  private _listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
   private _parent: ViewModel | null;
   private _children: ViewModel[] = [];
-  private _parentHandler: Function | null = null;
+  private _parentHandler: ((...args: unknown[]) => void) | null = null;
 
   constructor(config: ViewModelConfig = {}) {
     this._data = config.data ? this.deepClone(config.data) : {};
@@ -106,6 +106,7 @@ export class ViewModel {
   }
 
   getRoot(): ViewModel {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let current: ViewModel = this;
     while (current._parent) current = current._parent;
     return current;
@@ -115,11 +116,11 @@ export class ViewModel {
   // Events
   // -----------------------------------------------------------------------
 
-  on(event: string, fn: Function): void {
+  on(event: string, fn: (...args: unknown[]) => void): void {
     (this._listeners[event] ??= []).push(fn);
   }
 
-  un(event: string, fn: Function): void {
+  un(event: string, fn: (...args: unknown[]) => void): void {
     const list = this._listeners[event];
     if (!list) return;
     const idx = list.indexOf(fn);

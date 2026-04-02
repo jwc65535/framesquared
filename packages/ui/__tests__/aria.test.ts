@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { AriaManager } from '@framesquared/core';
 import { FocusManager } from '@framesquared/core';
 
@@ -11,8 +11,6 @@ import { Menu } from '../src/menu/Menu.js';
 import { MenuItem } from '../src/menu/MenuItem.js';
 import { Tooltip } from '../src/tip/Tooltip.js';
 import { TabPanel } from '../src/tab/TabPanel.js';
-import { Tab } from '../src/tab/Tab.js';
-import { TabBar } from '../src/tab/TabBar.js';
 
 class MockRO {
   constructor() {}

@@ -47,6 +47,7 @@ export class Application {
   constructor(config: ApplicationConfig) {
     this._name = config.name;
     this._launchFn = config.launch ?? null;
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     instance = this;
   }
 

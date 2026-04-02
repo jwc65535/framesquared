@@ -33,7 +33,7 @@ export interface GridStore {
   /** Sort by field name and direction. */
   sort(field: string, direction?: 'ASC' | 'DESC'): void;
   /** Subscribe to store events. */
-  on(event: string, fn: Function, ...args: any[]): any;
+  on(event: string, fn: (...args: unknown[]) => void, ...args: unknown[]): unknown;
   /** Iterate all records. */
-  each?(fn: (record: GridRecord, index: number) => boolean | void): void;
+  each?(fn: (record: GridRecord, index: number) => boolean | undefined): void;
 }

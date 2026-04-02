@@ -211,7 +211,7 @@ describe('Config system', () => {
         config: { score: 0 },
         updateScore: spy,
       });
-      const inst = new Cls({ score: 10 });
+      const _inst = new Cls({ score: 10 });
       expect(spy).toHaveBeenCalledWith(10, undefined);
     });
 
@@ -487,10 +487,10 @@ describe('Mixins', () => {
 
   describe('diamond inheritance', () => {
     it('does not apply the same mixin twice', () => {
-      let applyCount = 0;
+      let _applyCount = 0;
       const Shared = define('test.mixin.Shared', {
         sharedInit() {
-          applyCount++;
+          _applyCount++;
         },
       });
       const Left = define('test.mixin.Left', {
@@ -536,7 +536,7 @@ describe('Mixins', () => {
 describe('ClassManager', () => {
   describe('registration and lookup', () => {
     it('registers a class by name', () => {
-      const Cls = define('test.cm.Registered', {});
+      const _Cls = define('test.cm.Registered', {});
       expect(ClassManager.isRegistered('test.cm.Registered')).toBe(true);
     });
 
@@ -712,7 +712,7 @@ describe('define()', () => {
         return `I am ${this.getName()}`;
       },
     });
-    const Derived = define('test.intg.Derived', {
+    const _Derived = define('test.intg.Derived', {
       extend: Base1,
       mixins: [Loggable],
       alias: 'widget.derived',

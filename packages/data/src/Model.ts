@@ -11,8 +11,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Base, Observable } from '@framesquared/core';
-import { Field, createField } from './field/Field.js';
-import type { FieldDefinition } from './field/Field.js';
+import { createField } from './field/Field.js';
+import type { FieldDefinition , Field} from './field/Field.js';
 import { Schema } from './Schema.js';
 import type { Association } from './association/Association.js';
 import { ModelCollection, ManyToManyCollection } from './ModelCollection.js';
@@ -167,7 +167,7 @@ export class Model extends Base {
   modified: Record<string, unknown> = {};
 
   /** Per-instance association storage: assocName → Model | ModelCollection */
-  $associations: Map<string, Model | ModelCollection | ManyToManyCollection> = new Map();
+  $associations = new Map<string, Model | ModelCollection | ManyToManyCollection>();
 
   // -----------------------------------------------------------------------
   // Construction

@@ -6,7 +6,7 @@
  * row striping, and item events.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Panel } from '@framesquared/ui';
 import type { PanelConfig } from '@framesquared/ui';

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { FormPanel, TextField, NumberField, Checkbox } from '@framesquared/form';
 
 class MockRO {
@@ -135,7 +135,7 @@ describe('Form validation integration', () => {
 
   it('reset restores original values', () => {
     const nameField = new TextField({ name: 'name', fieldLabel: 'Name', value: 'Original' });
-    const form = new FormPanel({
+    const _form = new FormPanel({
       renderTo: document.body,
       title: 'Form',
       items: [nameField],

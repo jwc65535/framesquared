@@ -4,7 +4,7 @@
  * A grid of color swatches.  Fires 'select' with the hex color string.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Component } from '@framesquared/component';
 import type { ComponentConfig } from '@framesquared/component';

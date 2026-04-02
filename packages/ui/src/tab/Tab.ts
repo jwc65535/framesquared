@@ -5,7 +5,7 @@
  * optional icon, optional close button, and active state styling.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Component } from '@framesquared/component';
 import type { ComponentConfig } from '@framesquared/component';

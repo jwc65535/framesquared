@@ -95,7 +95,7 @@ describe('CardLayout', () => {
   });
 
   it('only active item is visible', () => {
-    const { ct, layout } = withLayout(CardLayout, {}, [
+    const { ct, layout: _layout } = withLayout(CardLayout, {}, [
       cmp({ html: 'A' }),
       cmp({ html: 'B' }),
       cmp({ html: 'C' }),
@@ -159,7 +159,7 @@ describe('CardLayout', () => {
   it('fires activate/deactivate events', () => {
     const activateSpy = vi.fn();
     const deactivateSpy = vi.fn();
-    const { ct, layout } = withLayout(CardLayout, {}, [cmp(), cmp()]);
+    const { ct: _ct, layout } = withLayout(CardLayout, {}, [cmp(), cmp()]);
     (layout as any).on('activate', activateSpy);
     (layout as any).on('deactivate', deactivateSpy);
     layout.setActiveItem(1);
@@ -456,7 +456,7 @@ describe('AccordionLayout', () => {
   });
 
   it('fill:true gives expanded item flex:1', () => {
-    const { ct, layout } = withLayout(AccordionLayout, { fill: true }, [
+    const { ct, layout: _layout1 } = withLayout(AccordionLayout, { fill: true }, [
       cmp({ title: 'A' }),
       cmp({ title: 'B' }),
     ]);
@@ -465,7 +465,7 @@ describe('AccordionLayout', () => {
   });
 
   it('collapsed items have zero flex and overflow hidden', () => {
-    const { ct, layout } = withLayout(AccordionLayout, { fill: true }, [
+    const { ct, layout: _layout2 } = withLayout(AccordionLayout, { fill: true }, [
       cmp({ title: 'A' }),
       cmp({ title: 'B' }),
     ]);

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { Application } from '../src/Application.js';
 import { ViewController } from '../src/ViewController.js';
 import { ViewModel } from '../src/ViewModel.js';

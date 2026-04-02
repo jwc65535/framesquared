@@ -10,7 +10,7 @@ import { Configurator } from '../src/class/Configurator.js';
 describe('@config basic', () => {
   it('auto-generates getX() and setX() methods', () => {
     class Widget extends Base {
-      @config accessor title: string = 'Untitled';
+      @config accessor title = 'Untitled';
     }
     const w = new Widget();
     expect(typeof w.getTitle).toBe('function');
@@ -19,7 +19,7 @@ describe('@config basic', () => {
 
   it('getter returns the initial default value', () => {
     class Widget extends Base {
-      @config accessor title: string = 'Default';
+      @config accessor title = 'Default';
     }
     const w = new Widget();
     expect(w.getTitle()).toBe('Default');
@@ -27,7 +27,7 @@ describe('@config basic', () => {
 
   it('setter updates the value', () => {
     class Widget extends Base {
-      @config accessor count: number = 0;
+      @config accessor count = 0;
     }
     const w = new Widget();
     w.setCount(42);
@@ -36,7 +36,7 @@ describe('@config basic', () => {
 
   it('accessor property reflects changes via set', () => {
     class Widget extends Base {
-      @config accessor count: number = 0;
+      @config accessor count = 0;
     }
     const w = new Widget();
     w.count = 10;
@@ -47,8 +47,8 @@ describe('@config basic', () => {
 
   it('initConfig applies provided values', () => {
     class Widget extends Base {
-      @config accessor name: string = '';
-      @config accessor age: number = 0;
+      @config accessor name = '';
+      @config accessor age = 0;
     }
     const w = new Widget({ name: 'Alice', age: 30 });
     expect(w.getName()).toBe('Alice');
@@ -57,7 +57,7 @@ describe('@config basic', () => {
 
   it('calls applyX hook to transform the value', () => {
     class Widget extends Base {
-      @config accessor label: string = '';
+      @config accessor label = '';
       applyLabel(value: string): string {
         return value.trim().toUpperCase();
       }
@@ -69,19 +69,19 @@ describe('@config basic', () => {
   it('calls updateX hook after the value changes', () => {
     const spy = vi.fn();
     class Widget extends Base {
-      @config accessor score: number = 0;
+      @config accessor score = 0;
       updateScore(newVal: number, oldVal: number) {
         spy(newVal, oldVal);
       }
     }
-    const w = new Widget({ score: 10 });
+    const _w = new Widget({ score: 10 });
     expect(spy).toHaveBeenCalledWith(10, 0);
   });
 
   it('updateX receives newValue and oldValue', () => {
     const spy = vi.fn();
     class Widget extends Base {
-      @config accessor score: number = 0;
+      @config accessor score = 0;
       updateScore(newVal: number, oldVal: number) {
         spy(newVal, oldVal);
       }
@@ -95,7 +95,7 @@ describe('@config basic', () => {
   it('updateX is NOT called when value does not change', () => {
     const spy = vi.fn();
     class Widget extends Base {
-      @config accessor value: number = 0;
+      @config accessor value = 0;
       updateValue(newVal: number, oldVal: number) {
         spy(newVal, oldVal);
       }
@@ -108,7 +108,7 @@ describe('@config basic', () => {
 
   it('applyX can reject a value by returning the old value', () => {
     class Widget extends Base {
-      @config accessor age: number = 0;
+      @config accessor age = 0;
       applyAge(newVal: number, oldVal: number): number {
         return newVal >= 0 ? newVal : oldVal;
       }
@@ -120,9 +120,9 @@ describe('@config basic', () => {
 
   it('supports multiple configs on one class', () => {
     class Panel extends Base {
-      @config accessor title: string = '';
-      @config accessor width: number = 100;
-      @config accessor collapsed: boolean = false;
+      @config accessor title = '';
+      @config accessor width = 100;
+      @config accessor collapsed = false;
     }
     const p = new Panel({ title: 'Test', width: 200, collapsed: true });
     expect(p.getTitle()).toBe('Test');
@@ -138,22 +138,22 @@ describe('@config basic', () => {
 describe('@config.required', () => {
   it('throws if the required config is not provided', () => {
     class Widget extends Base {
-      @config.required accessor name: string = '';
+      @config.required accessor name = '';
     }
     expect(() => new Widget()).toThrow(/name/);
   });
 
   it('does not throw when the required config IS provided', () => {
     class Widget extends Base {
-      @config.required accessor name: string = '';
+      @config.required accessor name = '';
     }
     expect(() => new Widget({ name: 'Alice' })).not.toThrow();
   });
 
   it('works alongside non-required configs', () => {
     class Widget extends Base {
-      @config.required accessor name: string = '';
-      @config accessor color: string = 'red';
+      @config.required accessor name = '';
+      @config accessor color = 'red';
     }
     const w = new Widget({ name: 'Test' });
     expect(w.getName()).toBe('Test');
@@ -162,8 +162,8 @@ describe('@config.required', () => {
 
   it('lists all missing required configs in the error', () => {
     class Widget extends Base {
-      @config.required accessor firstName: string = '';
-      @config.required accessor lastName: string = '';
+      @config.required accessor firstName = '';
+      @config.required accessor lastName = '';
     }
     expect(() => new Widget()).toThrow(/firstName/);
   });
@@ -193,7 +193,7 @@ describe('@config.lazy', () => {
         callCount++;
         return 'computed';
       })
-      accessor label: string = '';
+      accessor label = '';
     }
     const w = new Widget();
     w.getLabel();
@@ -204,7 +204,7 @@ describe('@config.lazy', () => {
   it('factory is NOT called if value is explicitly set before access', () => {
     const factory = vi.fn(() => 'lazy');
     class Widget extends Base {
-      @config.lazy(factory) accessor tag: string = '';
+      @config.lazy(factory) accessor tag = '';
     }
     const w = new Widget({ tag: 'explicit' });
     expect(w.getTag()).toBe('explicit');
@@ -213,11 +213,11 @@ describe('@config.lazy', () => {
 
   it('factory receives the instance as `this`', () => {
     class Widget extends Base {
-      @config accessor prefix: string = 'W';
+      @config accessor prefix = 'W';
       @config.lazy(function (this: Widget) {
         return `${this.getPrefix()}-item`;
       })
-      accessor label: string = '';
+      accessor label = '';
     }
     const w = new Widget({ prefix: 'Panel' });
     expect(w.getLabel()).toBe('Panel-item');
@@ -232,7 +232,7 @@ describe('@config.cached', () => {
   it('caches the getter result', () => {
     let readCount = 0;
     class Widget extends Base {
-      @config.cached accessor fullName: string = '';
+      @config.cached accessor fullName = '';
       applyFullName(v: string): string {
         readCount++;
         return v.toUpperCase();
@@ -250,7 +250,7 @@ describe('@config.cached', () => {
   it('invalidates cache when set is called', () => {
     let applyCount = 0;
     class Widget extends Base {
-      @config.cached accessor fullName: string = '';
+      @config.cached accessor fullName = '';
       applyFullName(v: string): string {
         applyCount++;
         return v.toUpperCase();
@@ -269,7 +269,7 @@ describe('@config.cached', () => {
   it('cache is per-instance', () => {
     let applyCount = 0;
     class Widget extends Base {
-      @config.cached accessor fullName: string = '';
+      @config.cached accessor fullName = '';
       applyFullName(v: string): string {
         applyCount++;
         return v.toUpperCase();
@@ -325,7 +325,7 @@ describe('@config.merge', () => {
 describe('@observable', () => {
   it('marks the config as observable in metadata', () => {
     class Widget extends Base {
-      @observable @config accessor title: string = '';
+      @observable @config accessor title = '';
     }
     const meta = Configurator.getConfigMeta(Widget, 'title');
     expect(meta).toBeDefined();
@@ -334,7 +334,7 @@ describe('@observable', () => {
 
   it('does not affect get/set behaviour (event integration is Phase 2)', () => {
     class Widget extends Base {
-      @observable @config accessor title: string = 'hi';
+      @observable @config accessor title = 'hi';
     }
     const w = new Widget();
     expect(w.getTitle()).toBe('hi');
@@ -491,7 +491,7 @@ describe('Configurator', () => {
   describe('getConfigMeta', () => {
     it('returns metadata for a decorated config', () => {
       class Widget extends Base {
-        @config accessor title: string = '';
+        @config accessor title = '';
       }
       const meta = Configurator.getConfigMeta(Widget, 'title');
       expect(meta).toBeDefined();
@@ -507,10 +507,10 @@ describe('Configurator', () => {
   describe('getAllConfigMeta', () => {
     it('returns all config meta for a class including inherited', () => {
       class Parent extends Base {
-        @config accessor x: number = 0;
+        @config accessor x = 0;
       }
       class Child extends Parent {
-        @config accessor y: number = 0;
+        @config accessor y = 0;
       }
       const allMeta = Configurator.getAllConfigMeta(Child);
       const names = allMeta.map((m) => m.name);
@@ -523,8 +523,8 @@ describe('Configurator', () => {
     it('initialises configs in the order they are declared', () => {
       const order: string[] = [];
       class Widget extends Base {
-        @config accessor first: string = '';
-        @config accessor second: string = '';
+        @config accessor first = '';
+        @config accessor second = '';
         applyFirst(v: string): string {
           order.push('first');
           return v;
@@ -542,16 +542,16 @@ describe('Configurator', () => {
   describe('required validation', () => {
     it('validates all required configs at construction time', () => {
       class Widget extends Base {
-        @config.required accessor a: string = '';
-        @config.required accessor b: string = '';
+        @config.required accessor a = '';
+        @config.required accessor b = '';
       }
       expect(() => new Widget({ a: 'yes' })).toThrow(/b/);
     });
 
     it('passes when all required configs are provided', () => {
       class Widget extends Base {
-        @config.required accessor a: string = '';
-        @config.required accessor b: string = '';
+        @config.required accessor a = '';
+        @config.required accessor b = '';
       }
       expect(() => new Widget({ a: '1', b: '2' })).not.toThrow();
     });
@@ -565,10 +565,10 @@ describe('Configurator', () => {
 describe('Decorated config inheritance', () => {
   it('subclass inherits parent @config accessors', () => {
     class Parent extends Base {
-      @config accessor name: string = 'parent';
+      @config accessor name = 'parent';
     }
     class Child extends Parent {
-      @config accessor age: number = 0;
+      @config accessor age = 0;
     }
     const c = new Child({ name: 'Alice', age: 25 });
     expect(c.getName()).toBe('Alice');
@@ -577,10 +577,10 @@ describe('Decorated config inheritance', () => {
 
   it('subclass default overrides parent default', () => {
     class Parent extends Base {
-      @config accessor color: string = 'red';
+      @config accessor color = 'red';
     }
     class Child extends Parent {
-      @config override accessor color: string = 'blue';
+      @config override accessor color = 'blue';
     }
     const c = new Child();
     expect(c.getColor()).toBe('blue');
@@ -588,13 +588,13 @@ describe('Decorated config inheritance', () => {
 
   it('three-level inheritance works', () => {
     class A extends Base {
-      @config accessor x: number = 1;
+      @config accessor x = 1;
     }
     class B extends A {
-      @config accessor y: number = 2;
+      @config accessor y = 2;
     }
     class C extends B {
-      @config accessor z: number = 3;
+      @config accessor z = 3;
     }
     const c = new C();
     expect(c.getX()).toBe(1);
@@ -605,13 +605,13 @@ describe('Decorated config inheritance', () => {
   it('parent apply hooks are inherited', () => {
     const spy = vi.fn((v: string) => v.toUpperCase());
     class Parent extends Base {
-      @config accessor label: string = '';
+      @config accessor label = '';
       applyLabel(v: string) {
         return spy(v);
       }
     }
     class Child extends Parent {
-      @config accessor extra: number = 0;
+      @config accessor extra = 0;
     }
     const c = new Child({ label: 'test' });
     expect(c.getLabel()).toBe('TEST');
@@ -635,9 +635,9 @@ describe('Combined decorators', () => {
     @mixin(Loggable)
     class SuperPanel extends Base {
       static override $className = 'test.dec.SuperPanel';
-      @config accessor title: string = 'Default';
-      @config.required accessor id: string = '';
-      @observable @config accessor theme: string = 'light';
+      @config accessor title = 'Default';
+      @config.required accessor id = '';
+      @observable @config accessor theme = 'light';
     }
 
     // Alias works
@@ -664,7 +664,7 @@ describe('Combined decorators', () => {
     });
 
     class DecClass extends Base {
-      @config accessor decProp: string = 'from-decorator';
+      @config accessor decProp = 'from-decorator';
     }
 
     expect(new (DefClass as any)().getDefProp()).toBe('from-define');

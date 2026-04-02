@@ -51,8 +51,8 @@ function getCacheEntry(inst: object) {
  * Generates `getX()` / `setX()` convenience methods on the prototype,
  * guarded so it only happens once per class per config.
  */
-function ensureAccessors(Ctor: Function, configName: string): void {
-  const proto = Ctor.prototype;
+function ensureAccessors(Ctor: abstract new (...args: unknown[]) => unknown, configName: string): void {
+  const proto = (Ctor as unknown as { prototype: Record<string, unknown> }).prototype;
   const cap = capitalize(configName);
   const getter = `get${cap}`;
   const setter = `set${cap}`;
@@ -101,7 +101,7 @@ function createConfigDecorator(metaOverrides: Partial<ConfigMeta> = {}) {
     // ── addInitializer: runs per-instance after super() + field init ──
     context.addInitializer(function (this: This) {
       const inst = this as any;
-      const Ctor = inst.constructor as Function;
+      const Ctor = inst.constructor as abstract new (...args: unknown[]) => unknown;
 
       // Generate getX / setX (once per class)
       ensureAccessors(Ctor, name);
@@ -109,7 +109,7 @@ function createConfigDecorator(metaOverrides: Partial<ConfigMeta> = {}) {
       // Apply pending config that Base stored during super()
       if (inst.$pendingConfig && name in inst.$pendingConfig) {
         inst[name] = inst.$pendingConfig[name];
-        delete inst.$pendingConfig[name];
+        Reflect.deleteProperty(inst.$pendingConfig as object, name);
         inst.$configInitialized?.add(name);
       }
 

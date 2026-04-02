@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { Locale } from '../src/locale/Locale.js';
 import { LocaleManager } from '../src/locale/LocaleManager.js';
 import { enUS } from '../src/locale/bundles/en-US.js';

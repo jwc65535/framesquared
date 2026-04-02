@@ -9,7 +9,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Base, Observable, generateId } from '@framesquared/core';
-import { Template } from './Template.js';
+import type { Template } from './Template.js';
 
 // ---------------------------------------------------------------------------
 // Observable bootstrap
@@ -52,7 +52,7 @@ export interface ComponentConfig {
   data?: Record<string, unknown>;
   renderTo?: Element | string;
   floating?: boolean;
-  listeners?: Record<string, Function>;
+  listeners?: Record<string, (...args: unknown[]) => void>;
   reference?: string;
   [key: string]: unknown;
 }

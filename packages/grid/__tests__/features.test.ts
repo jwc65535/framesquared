@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Grid } from '../src/grid/Grid.js';
-import { Column } from '../src/grid/column/Column.js';
 import { Grouping } from '../src/grid/feature/Grouping.js';
 import { Summary } from '../src/grid/feature/Summary.js';
 import { GroupingSummary } from '../src/grid/feature/GroupingSummary.js';

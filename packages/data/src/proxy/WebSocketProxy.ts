@@ -5,7 +5,7 @@
  * CRUD operations as JSON messages.  Auto-reconnects on disconnect.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import type { Operation } from '../Operation.js';
 import { ResultSet } from '../ResultSet.js';
@@ -24,7 +24,7 @@ export class WebSocketProxy extends Proxy {
   private reconnect: boolean;
   private reconnectInterval: number;
   private ws: WebSocket | null = null;
-  private listeners: Record<string, Function[]> = {};
+  private listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
   private intentionalClose = false;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -113,11 +113,11 @@ export class WebSocketProxy extends Proxy {
   // Events
   // -----------------------------------------------------------------------
 
-  on(event: string, fn: Function): void {
+  on(event: string, fn: (...args: unknown[]) => void): void {
     (this.listeners[event] ??= []).push(fn);
   }
 
-  off(event: string, fn: Function): void {
+  off(event: string, fn: (...args: unknown[]) => void): void {
     const list = this.listeners[event];
     if (!list) return;
     const idx = list.indexOf(fn);

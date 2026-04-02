@@ -11,7 +11,7 @@
  * ```
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 export class Template {
   private source: string;

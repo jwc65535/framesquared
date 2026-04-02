@@ -15,6 +15,7 @@ import { capitalize } from './util/String.js';
 /**
  * Declare the config-generated methods so TypeScript knows about them.
  */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface Plugin {
   getId(): string;
   setId(id: string): void;
@@ -22,6 +23,7 @@ export interface Plugin {
   setOwner(owner: Base | null): void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class Plugin extends Base {
   static override $className = 'Plugin';
 

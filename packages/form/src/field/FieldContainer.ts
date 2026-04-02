@@ -5,7 +5,7 @@
  * label.  Optionally combines child validation errors.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { Container } from '@framesquared/component';
 import type { ContainerConfig } from '@framesquared/component';

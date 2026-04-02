@@ -6,7 +6,7 @@
  * commit()/reject() clear tracked changes.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import type { Model } from '../Model.js';
 import { Operation } from '../Operation.js';

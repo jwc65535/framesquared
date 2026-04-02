@@ -13,8 +13,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component, Container } from '@framesquared/component';
-import type { ContainerConfig } from '@framesquared/component';
+import { Container } from '@framesquared/component';
+import type { ContainerConfig , Component} from '@framesquared/component';
 
 // ---------------------------------------------------------------------------
 // Types
