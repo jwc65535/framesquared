@@ -23,7 +23,8 @@
     "docs": "pnpm exec typedoc",
     "clean": "pnpm -r run clean && rm -rf node_modules",
     "prepare": "husky",
-    "changeset": "changeset"
+    "changeset": "changeset",
+    "release": "changeset publish"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
