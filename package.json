@@ -2,7 +2,7 @@
   "name": "framesquared-monorepo",
   "private": true,
   "version": "0.1.0",
-  "description": "Modern TypeScript reimplementation of ExtJS with ESM",
+  "description": "A TypeScript-native UI component library for building rich, data-driven web applications",
   "license": "MIT",
   "author": "John Carbone",
   "type": "module",
