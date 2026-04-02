@@ -16,7 +16,9 @@ function makeGrid() {
     store: new TreeStore({
       model: TreeModel,
       root: {
-        id: 'root', text: 'Root', expanded: true,
+        id: 'root',
+        text: 'Root',
+        expanded: true,
         children: [
           { id: 'a', text: 'Node A', status: 'active', hours: 10, leaf: true },
           { id: 'b', text: 'Node B', status: 'done', hours: 20, leaf: true },

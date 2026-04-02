@@ -158,7 +158,9 @@ describe('NodeInterface', () => {
     c1.appendChild(gc);
 
     const visited: string[] = [];
-    root.cascadeBy((n) => { visited.push(n.get('text') as string); });
+    root.cascadeBy((n) => {
+      visited.push(n.get('text') as string);
+    });
     expect(visited).toEqual(['R', 'C1', 'GC', 'C2']);
   });
 
@@ -187,7 +189,9 @@ describe('NodeInterface', () => {
     mid.appendChild(leaf);
 
     const visited: string[] = [];
-    leaf.bubble((n) => { visited.push(n.get('text') as string); });
+    leaf.bubble((n) => {
+      visited.push(n.get('text') as string);
+    });
     expect(visited).toEqual(['L', 'M', 'R']);
   });
 
@@ -282,10 +286,14 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'Root', children: [
+          id: 1,
+          text: 'Root',
+          children: [
             { id: 2, text: 'A', leaf: true },
             {
-              id: 3, text: 'B', children: [
+              id: 3,
+              text: 'B',
+              children: [
                 { id: 4, text: 'B1', leaf: true },
                 { id: 5, text: 'B2', leaf: true },
               ],
@@ -303,11 +311,13 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'Root', children: [
+          id: 1,
+          text: 'Root',
+          children: [
             {
-              id: 2, text: 'A', children: [
-                { id: 3, text: 'Deep', leaf: true },
-              ],
+              id: 2,
+              text: 'A',
+              children: [{ id: 3, text: 'Deep', leaf: true }],
             },
           ],
         },
@@ -321,9 +331,9 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'R', children: [
-            { id: 2, text: 'C', leaf: true },
-          ],
+          id: 1,
+          text: 'R',
+          children: [{ id: 2, text: 'C', leaf: true }],
         },
       });
       const root = store.getRoot();
@@ -340,7 +350,9 @@ describe('TreeStore', () => {
       store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'Root', children: [
+          id: 1,
+          text: 'Root',
+          children: [
             { id: 2, text: 'A', leaf: true },
             { id: 3, text: 'B', leaf: true },
           ],
@@ -381,10 +393,11 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'R', expanded: true, children: [
-            { id: 2, text: 'A', expanded: true, children: [
-              { id: 4, text: 'A1', leaf: true },
-            ]},
+          id: 1,
+          text: 'R',
+          expanded: true,
+          children: [
+            { id: 2, text: 'A', expanded: true, children: [{ id: 4, text: 'A1', leaf: true }] },
             { id: 3, text: 'B', leaf: true },
           ],
         },
@@ -398,10 +411,11 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'R', expanded: true, children: [
-            { id: 2, text: 'A', expanded: false, children: [
-              { id: 4, text: 'A1', leaf: true },
-            ]},
+          id: 1,
+          text: 'R',
+          expanded: true,
+          children: [
+            { id: 2, text: 'A', expanded: false, children: [{ id: 4, text: 'A1', leaf: true }] },
             { id: 3, text: 'B', leaf: true },
           ],
         },
@@ -417,11 +431,9 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'R', children: [
-            { id: 2, text: 'A', children: [
-              { id: 3, text: 'A1', leaf: true },
-            ]},
-          ],
+          id: 1,
+          text: 'R',
+          children: [{ id: 2, text: 'A', children: [{ id: 3, text: 'A1', leaf: true }] }],
         },
       });
       const spy = vi.fn();
@@ -436,10 +448,11 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'R', expanded: true, children: [
-            { id: 2, text: 'A', expanded: true, children: [
-              { id: 3, text: 'A1', leaf: true },
-            ]},
+          id: 1,
+          text: 'R',
+          expanded: true,
+          children: [
+            { id: 2, text: 'A', expanded: true, children: [{ id: 3, text: 'A1', leaf: true }] },
           ],
         },
       });
@@ -470,9 +483,9 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'R', children: [
-            { id: 2, text: 'C', leaf: true },
-          ],
+          id: 1,
+          text: 'R',
+          children: [{ id: 2, text: 'C', leaf: true }],
         },
       });
       const spy = vi.fn();
@@ -486,9 +499,9 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'R', children: [
-            { id: 2, text: 'A', leaf: true },
-          ],
+          id: 1,
+          text: 'R',
+          children: [{ id: 2, text: 'A', leaf: true }],
         },
       });
       const spy = vi.fn();

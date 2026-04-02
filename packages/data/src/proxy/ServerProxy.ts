@@ -114,7 +114,9 @@ export class AjaxProxy extends Proxy {
         try {
           const body = await response.json();
           if (body?.message) message = body.message;
-        } catch { /* ignore */ }
+        } catch {
+          /* ignore */
+        }
         return new ResultSet({ records: [], success: false, message });
       }
 

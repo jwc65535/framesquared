@@ -11,15 +11,22 @@ class MockRO {
   unobserve() {}
   disconnect() {}
 }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 // Helpers
 function cmp(cfg: Record<string, unknown> = {}): Component {
   return new Component(cfg);
 }
 
-function hboxContainer(layoutCfg: Record<string, unknown> = {}, items: Component[] = []): Container {
+function hboxContainer(
+  layoutCfg: Record<string, unknown> = {},
+  items: Component[] = [],
+): Container {
   const c = new Container({ renderTo: document.body });
   const layout = new HBoxLayout(layoutCfg);
   layout.setOwner(c);
@@ -33,7 +40,10 @@ function hboxContainer(layoutCfg: Record<string, unknown> = {}, items: Component
   return c;
 }
 
-function vboxContainer(layoutCfg: Record<string, unknown> = {}, items: Component[] = []): Container {
+function vboxContainer(
+  layoutCfg: Record<string, unknown> = {},
+  items: Component[] = [],
+): Container {
   const c = new Container({ renderTo: document.body });
   const layout = new VBoxLayout(layoutCfg);
   layout.setOwner(c);
@@ -64,11 +74,7 @@ describe('HBoxLayout — basics', () => {
   });
 
   it('renders items into the container', () => {
-    const c = hboxContainer({}, [
-      cmp({ html: 'A' }),
-      cmp({ html: 'B' }),
-      cmp({ html: 'C' }),
-    ]);
+    const c = hboxContainer({}, [cmp({ html: 'A' }), cmp({ html: 'B' }), cmp({ html: 'C' })]);
     expect(c.getBodyEl().children.length).toBe(3);
   });
 });
@@ -79,11 +85,7 @@ describe('HBoxLayout — basics', () => {
 
 describe('HBoxLayout — flex', () => {
   it('items with flex get flex-grow set', () => {
-    const c = hboxContainer({}, [
-      cmp({ flex: 1 }),
-      cmp({ flex: 2 }),
-      cmp({ flex: 1 }),
-    ]);
+    const c = hboxContainer({}, [cmp({ flex: 1 }), cmp({ flex: 2 }), cmp({ flex: 1 })]);
     const items = c.getItems();
     expect(items[0].el!.style.flexGrow).toBe('1');
     expect(items[1].el!.style.flexGrow).toBe('2');
@@ -91,17 +93,12 @@ describe('HBoxLayout — flex', () => {
   });
 
   it('flex items get flex-basis:0 for proportional sizing', () => {
-    const c = hboxContainer({}, [
-      cmp({ flex: 1 }),
-    ]);
+    const c = hboxContainer({}, [cmp({ flex: 1 })]);
     expect(c.getItems()[0].el!.style.flexBasis).toBe('0px');
   });
 
   it('items without flex keep their configured width', () => {
-    const c = hboxContainer({}, [
-      cmp({ width: 100 }),
-      cmp({ flex: 1 }),
-    ]);
+    const c = hboxContainer({}, [cmp({ width: 100 }), cmp({ flex: 1 })]);
     const items = c.getItems();
     expect(items[0].el!.style.width).toBe('100px');
     expect(items[0].el!.style.flexGrow).not.toBe('1');
@@ -109,10 +106,7 @@ describe('HBoxLayout — flex', () => {
   });
 
   it('mixed fixed + flex: fixed items have flex-shrink:0', () => {
-    const c = hboxContainer({}, [
-      cmp({ width: 200 }),
-      cmp({ flex: 1 }),
-    ]);
+    const c = hboxContainer({}, [cmp({ width: 200 }), cmp({ flex: 1 })]);
     expect(c.getItems()[0].el!.style.flexShrink).toBe('0');
   });
 });
@@ -123,30 +117,22 @@ describe('HBoxLayout — flex', () => {
 
 describe('HBoxLayout — min/max constraints', () => {
   it('minWidth is applied to flex items', () => {
-    const c = hboxContainer({}, [
-      cmp({ flex: 1, minWidth: 50 }),
-    ]);
+    const c = hboxContainer({}, [cmp({ flex: 1, minWidth: 50 })]);
     expect(c.getItems()[0].el!.style.minWidth).toBe('50px');
   });
 
   it('maxWidth is applied to flex items', () => {
-    const c = hboxContainer({}, [
-      cmp({ flex: 1, maxWidth: 300 }),
-    ]);
+    const c = hboxContainer({}, [cmp({ flex: 1, maxWidth: 300 })]);
     expect(c.getItems()[0].el!.style.maxWidth).toBe('300px');
   });
 
   it('minHeight is applied', () => {
-    const c = hboxContainer({}, [
-      cmp({ flex: 1, minHeight: 40 }),
-    ]);
+    const c = hboxContainer({}, [cmp({ flex: 1, minHeight: 40 })]);
     expect(c.getItems()[0].el!.style.minHeight).toBe('40px');
   });
 
   it('maxHeight is applied', () => {
-    const c = hboxContainer({}, [
-      cmp({ flex: 1, maxHeight: 200 }),
-    ]);
+    const c = hboxContainer({}, [cmp({ flex: 1, maxHeight: 200 })]);
     expect(c.getItems()[0].el!.style.maxHeight).toBe('200px');
   });
 });
@@ -303,11 +289,7 @@ describe('VBoxLayout — basics', () => {
   });
 
   it('items with flex get flex-grow on vertical axis', () => {
-    const c = vboxContainer({}, [
-      cmp({ flex: 1 }),
-      cmp({ flex: 1 }),
-      cmp({ flex: 1 }),
-    ]);
+    const c = vboxContainer({}, [cmp({ flex: 1 }), cmp({ flex: 1 }), cmp({ flex: 1 })]);
     const items = c.getItems();
     expect(items[0].el!.style.flexGrow).toBe('1');
     expect(items[1].el!.style.flexGrow).toBe('1');
@@ -315,10 +297,7 @@ describe('VBoxLayout — basics', () => {
   });
 
   it('fixed height items in vbox', () => {
-    const c = vboxContainer({}, [
-      cmp({ height: 50 }),
-      cmp({ flex: 1 }),
-    ]);
+    const c = vboxContainer({}, [cmp({ height: 50 }), cmp({ flex: 1 })]);
     const items = c.getItems();
     expect(items[0].el!.style.height).toBe('50px');
     expect(items[0].el!.style.flexShrink).toBe('0');

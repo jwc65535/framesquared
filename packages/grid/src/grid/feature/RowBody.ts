@@ -8,7 +8,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export interface RowBodyConfig {
-  getAdditionalData: (data: any, rowIndex: number, record: any) => { rowBody: string; rowBodyCls?: string };
+  getAdditionalData: (
+    data: any,
+    rowIndex: number,
+    record: any,
+  ) => { rowBody: string; rowBodyCls?: string };
 }
 
 export class RowBody {

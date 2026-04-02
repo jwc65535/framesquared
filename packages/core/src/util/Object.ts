@@ -30,9 +30,7 @@ export function entries<T extends object>(obj: T): [keyof T, T[keyof T]][] {
 /**
  * Typed wrapper around `Object.fromEntries`.
  */
-export function fromEntries<K extends string, V>(
-  items: [K, V][],
-): Record<K, V> {
+export function fromEntries<K extends string, V>(items: [K, V][]): Record<K, V> {
   return Object.fromEntries(items) as Record<K, V>;
 }
 
@@ -63,10 +61,7 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
  * - Arrays and non-plain objects are **overwritten** (not merged element-wise).
  * - Mutates and returns `target`.
  */
-export function merge<T extends object>(
-  target: T,
-  ...sources: Partial<T>[]
-): T {
+export function merge<T extends object>(target: T, ...sources: Partial<T>[]): T {
   for (const source of sources) {
     for (const key of Object.keys(source) as (keyof T)[]) {
       const srcVal = source[key];
@@ -89,10 +84,7 @@ export function merge<T extends object>(
 /**
  * Returns a new object containing only the specified `pickedKeys`.
  */
-export function pick<T extends object, K extends keyof T>(
-  obj: T,
-  pickedKeys: K[],
-): Pick<T, K> {
+export function pick<T extends object, K extends keyof T>(obj: T, pickedKeys: K[]): Pick<T, K> {
   const result = {} as Pick<T, K>;
   for (const key of pickedKeys) {
     if (key in obj) {
@@ -105,10 +97,7 @@ export function pick<T extends object, K extends keyof T>(
 /**
  * Returns a new object with the specified `omittedKeys` removed.
  */
-export function omit<T extends object, K extends keyof T>(
-  obj: T,
-  omittedKeys: K[],
-): Omit<T, K> {
+export function omit<T extends object, K extends keyof T>(obj: T, omittedKeys: K[]): Omit<T, K> {
   const excluded = new Set<PropertyKey>(omittedKeys);
   const result = {} as Record<PropertyKey, unknown>;
   for (const key of Object.keys(obj)) {
@@ -241,11 +230,7 @@ export function equals(a: unknown, b: unknown): boolean {
  * segment is missing).  If the final property exists but its value is
  * `undefined`, `undefined` is returned (not `defaultValue`).
  */
-export function getNestedValue(
-  obj: object,
-  path: string,
-  defaultValue?: unknown,
-): unknown {
+export function getNestedValue(obj: object, path: string, defaultValue?: unknown): unknown {
   const segments = path.split('.');
   let current: unknown = obj;
 
@@ -272,21 +257,13 @@ export function getNestedValue(
  * Sets a value at a dot-separated `path`, creating intermediate objects as
  * needed.
  */
-export function setNestedValue(
-  obj: object,
-  path: string,
-  value: unknown,
-): void {
+export function setNestedValue(obj: object, path: string, value: unknown): void {
   const segments = path.split('.');
   let current: Record<string, unknown> = obj as Record<string, unknown>;
 
   for (let i = 0; i < segments.length - 1; i++) {
     const seg = segments[i];
-    if (
-      current[seg] === undefined ||
-      current[seg] === null ||
-      typeof current[seg] !== 'object'
-    ) {
+    if (current[seg] === undefined || current[seg] === null || typeof current[seg] !== 'object') {
       current[seg] = {};
     }
     current = current[seg] as Record<string, unknown>;
@@ -304,10 +281,7 @@ export function setNestedValue(
  *
  * Arrays and non-plain objects are treated as leaf values (not recursed into).
  */
-export function flattenObject(
-  obj: object,
-  prefix?: string,
-): Record<string, unknown> {
+export function flattenObject(obj: object, prefix?: string): Record<string, unknown> {
   const result: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(obj)) {
@@ -327,9 +301,7 @@ export function flattenObject(
  * Reverse of {@link flattenObject}: expands dot-separated keys into a nested
  * object.
  */
-export function unflattenObject(
-  obj: Record<string, unknown>,
-): Record<string, unknown> {
+export function unflattenObject(obj: Record<string, unknown>): Record<string, unknown> {
   const result: Record<string, unknown> = {};
 
   for (const [path, value] of Object.entries(obj)) {

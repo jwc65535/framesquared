@@ -217,8 +217,10 @@ describe('ViewModel — formulas', () => {
     const vm = new ViewModel({
       data: { price: 100, quantity: 3, taxRate: 0.1 },
       formulas: {
-        subtotal: (get: (p: string) => unknown) => (get('price') as number) * (get('quantity') as number),
-        tax: (get: (p: string) => unknown) => (get('price') as number) * (get('quantity') as number) * (get('taxRate') as number),
+        subtotal: (get: (p: string) => unknown) =>
+          (get('price') as number) * (get('quantity') as number),
+        tax: (get: (p: string) => unknown) =>
+          (get('price') as number) * (get('quantity') as number) * (get('taxRate') as number),
         total: (get: (p: string) => unknown) => {
           const p = get('price') as number;
           const q = get('quantity') as number;

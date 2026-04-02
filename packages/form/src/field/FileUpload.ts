@@ -65,7 +65,9 @@ export class FileField extends Field {
     this._fileInput.addEventListener('change', () => {
       this._files = this._fileInput.files;
       const names = this._files
-        ? Array.from(this._files).map(f => f.name).join(', ')
+        ? Array.from(this._files)
+            .map((f) => f.name)
+            .join(', ')
         : '';
       this._textDisplay.textContent = names;
       this.fire('change', this, this._files);

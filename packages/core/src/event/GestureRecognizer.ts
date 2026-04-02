@@ -11,11 +11,11 @@
 // Constants
 // ---------------------------------------------------------------------------
 
-const TAP_MAX_DURATION = 400;       // ms — max time for a tap
-const TAP_MAX_DISTANCE = 15;        // px — max movement for a tap
-const DOUBLETAP_INTERVAL = 300;     // ms — max gap between two taps
-const LONGPRESS_DURATION = 500;     // ms — hold time for longpress
-const SWIPE_MIN_DISTANCE = 50;      // px — minimum swipe distance
+const TAP_MAX_DURATION = 400; // ms — max time for a tap
+const TAP_MAX_DISTANCE = 15; // px — max movement for a tap
+const DOUBLETAP_INTERVAL = 300; // ms — max gap between two taps
+const LONGPRESS_DURATION = 500; // ms — hold time for longpress
+const SWIPE_MIN_DISTANCE = 50; // px — minimum swipe distance
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -29,16 +29,14 @@ function angle(x1: number, y1: number, x2: number, y2: number): number {
   return Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
 }
 
-function dispatchGesture(
-  el: Element,
-  name: string,
-  detail?: Record<string, unknown>,
-): void {
-  el.dispatchEvent(new CustomEvent(name, {
-    bubbles: true,
-    cancelable: true,
-    detail: detail ?? {},
-  }));
+function dispatchGesture(el: Element, name: string, detail?: Record<string, unknown>): void {
+  el.dispatchEvent(
+    new CustomEvent(name, {
+      bubbles: true,
+      cancelable: true,
+      detail: detail ?? {},
+    }),
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -250,12 +248,16 @@ export class GestureRecognizer {
     const pts = [...this.pointers.values()];
     if (pts.length < 2) return;
     this.initialPinchDistance = distance(
-      pts[0].currentX, pts[0].currentY,
-      pts[1].currentX, pts[1].currentY,
+      pts[0].currentX,
+      pts[0].currentY,
+      pts[1].currentX,
+      pts[1].currentY,
     );
     this.initialPinchAngle = angle(
-      pts[0].currentX, pts[0].currentY,
-      pts[1].currentX, pts[1].currentY,
+      pts[0].currentX,
+      pts[0].currentY,
+      pts[1].currentX,
+      pts[1].currentY,
     );
   }
 
@@ -264,13 +266,12 @@ export class GestureRecognizer {
     if (pts.length < 2) return;
 
     const currentDist = distance(
-      pts[0].currentX, pts[0].currentY,
-      pts[1].currentX, pts[1].currentY,
+      pts[0].currentX,
+      pts[0].currentY,
+      pts[1].currentX,
+      pts[1].currentY,
     );
-    const currentAngle = angle(
-      pts[0].currentX, pts[0].currentY,
-      pts[1].currentX, pts[1].currentY,
-    );
+    const currentAngle = angle(pts[0].currentX, pts[0].currentY, pts[1].currentX, pts[1].currentY);
 
     // Pinch
     if (this.initialPinchDistance > 0) {

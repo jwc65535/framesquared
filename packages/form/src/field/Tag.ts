@@ -106,6 +106,6 @@ export class TagField extends ComboBox {
 
   override getValue(): any {
     const valueField = (this as any)._valueField;
-    return this.getSelection().map(r => r.get ? r.get(valueField) : null);
+    return this.getSelection().map((r) => (r.get ? r.get(valueField) : null));
   }
 }

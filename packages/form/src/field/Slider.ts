@@ -47,7 +47,7 @@ export class Slider extends Field {
     this._increment = cfg.increment ?? 0;
     this._vertical = cfg.vertical ?? false;
     this._values = cfg.values
-      ? cfg.values.map(v => this.snap(this.clamp(v)))
+      ? cfg.values.map((v) => this.snap(this.clamp(v)))
       : [this.snap(this.clamp(Number(cfg.value ?? this._min)))];
     this._trackEl = null;
     this._thumbEls = [];
@@ -112,14 +112,14 @@ export class Slider extends Field {
 
   setMinValue(min: number): void {
     this._min = min;
-    this._values = this._values.map(v => this.snap(this.clamp(v)));
+    this._values = this._values.map((v) => this.snap(this.clamp(v)));
     this.positionThumbs();
     this.updateAllAria();
   }
 
   setMaxValue(max: number): void {
     this._max = max;
-    this._values = this._values.map(v => this.snap(this.clamp(v)));
+    this._values = this._values.map((v) => this.snap(this.clamp(v)));
     this.positionThumbs();
     this.updateAllAria();
   }

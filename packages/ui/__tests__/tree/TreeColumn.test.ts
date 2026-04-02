@@ -88,9 +88,7 @@ describe('renderCell', () => {
         id: 'root',
         text: 'Root',
         expanded: true,
-        children: [
-          { id: 'a', text: 'A', children: [{ id: 'a1', text: 'A1', leaf: true }] },
-        ],
+        children: [{ id: 'a', text: 'A', children: [{ id: 'a1', text: 'A1', leaf: true }] }],
       },
     });
     const nodeA = store.getNodeById('a') as NodeInterface;
@@ -125,9 +123,7 @@ describe('renderCell', () => {
         id: 'root',
         text: 'Root',
         expanded: true,
-        children: [
-          { id: 'a', text: 'A', children: [{ id: 'a1', text: 'A1', leaf: true }] },
-        ],
+        children: [{ id: 'a', text: 'A', children: [{ id: 'a1', text: 'A1', leaf: true }] }],
       },
     });
     const nodeA = store.getNodeById('a') as NodeInterface;

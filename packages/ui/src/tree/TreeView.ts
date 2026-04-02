@@ -162,7 +162,7 @@ export class TreeView {
     while (target && target !== this.el) {
       const id = target.getAttribute('data-node-id');
       if (id !== null) {
-        return this.store.getNodeById(id) as NodeInterface | null ?? null;
+        return (this.store.getNodeById(id) as NodeInterface | null) ?? null;
       }
       target = target.parentElement;
     }
@@ -193,7 +193,7 @@ export class TreeView {
     while (el && el !== this.el) {
       if (el.hasAttribute('data-node-id')) {
         const id = el.getAttribute('data-node-id')!;
-        return this.store.getNodeById(id) as NodeInterface | null ?? null;
+        return (this.store.getNodeById(id) as NodeInterface | null) ?? null;
       }
       el = el.parentElement;
     }
@@ -237,7 +237,7 @@ export class TreeView {
 
   private onKeyDown(e: KeyboardEvent): void {
     const rows = this.tableEl
-      ? Array.from(this.tableEl.querySelectorAll('tr[data-node-id]')) as HTMLElement[]
+      ? (Array.from(this.tableEl.querySelectorAll('tr[data-node-id]')) as HTMLElement[])
       : [];
     const focused = document.activeElement as HTMLElement;
     const idx = rows.indexOf(focused);

@@ -2,9 +2,19 @@ import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { Panel, TabPanel, Accordion, CardContainer, Viewport } from '@framesquared/ui';
 import { TreePanel, TreeStore } from '@framesquared/grid';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; document.body.style.cssText = ''; });
+class MockRO {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+  document.body.style.cssText = '';
+});
 
 describe('Complex layout integration', () => {
   it('nested Panel hierarchy renders correctly', () => {
@@ -51,11 +61,10 @@ describe('Complex layout integration', () => {
   it('TreePanel within a Panel', () => {
     const treeStore = new TreeStore({
       root: {
-        text: 'Root', expanded: true,
+        text: 'Root',
+        expanded: true,
         children: [
-          { id: 'a', text: 'Section A', children: [
-            { id: 'a1', text: 'Item A1', leaf: true },
-          ]},
+          { id: 'a', text: 'Section A', children: [{ id: 'a1', text: 'Item A1', leaf: true }] },
           { id: 'b', text: 'Section B', leaf: true },
         ],
       },
@@ -64,9 +73,7 @@ describe('Complex layout integration', () => {
     const container = new Panel({
       title: 'Navigation',
       renderTo: document.body,
-      items: [
-        new TreePanel({ title: 'Tree', store: treeStore }),
-      ],
+      items: [new TreePanel({ title: 'Tree', store: treeStore })],
     });
 
     expect(container.el!.textContent).toContain('Section A');
@@ -116,9 +123,7 @@ describe('Complex layout integration', () => {
 
   it('Viewport renders into body', () => {
     const vp = new Viewport({
-      items: [
-        new Panel({ title: 'Main', html: '<p>Content</p>' }),
-      ],
+      items: [new Panel({ title: 'Main', html: '<p>Content</p>' })],
     });
 
     expect(vp.el!.parentNode).toBe(document.body);
@@ -139,7 +144,9 @@ describe('Complex layout integration', () => {
     expect(tp.getTabItems().length).toBe(3);
 
     // Close the closable tab
-    const closeBtn = tp.el!.querySelectorAll('.x-tab')[1].querySelector('.x-tab-close') as HTMLElement;
+    const closeBtn = tp
+      .el!.querySelectorAll('.x-tab')[1]
+      .querySelector('.x-tab-close') as HTMLElement;
     closeBtn.click();
 
     expect(tp.getTabItems().length).toBe(2);

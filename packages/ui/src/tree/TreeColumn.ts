@@ -50,17 +50,11 @@ export class TreeColumn {
       ? '<span class="x-tree-expander-placeholder"></span>'
       : `<span class="x-tree-expander x-tree-expander-${isExpanded ? 'collapse' : 'expand'}" role="button" aria-label="${isExpanded ? 'Collapse' : 'Expand'}"></span>`;
 
-    const checkboxHtml = checkable
-      ? `<span class="x-tree-checkbox" role="checkbox"></span>`
-      : '';
+    const checkboxHtml = checkable ? `<span class="x-tree-checkbox" role="checkbox"></span>` : '';
 
     const defaultIconCls =
       iconCls ||
-      (isLeaf
-        ? 'x-tree-icon-leaf'
-        : isExpanded
-          ? 'x-tree-icon-open'
-          : 'x-tree-icon-folder');
+      (isLeaf ? 'x-tree-icon-leaf' : isExpanded ? 'x-tree-icon-open' : 'x-tree-icon-folder');
 
     const iconHtml = customIcon
       ? `<img class="x-tree-icon" src="${customIcon}" alt="">`

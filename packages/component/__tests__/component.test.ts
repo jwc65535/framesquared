@@ -15,12 +15,16 @@ class MockResizeObserver {
     this.callback = cb;
     MockResizeObserver.instances.push(this);
   }
-  observe(el: Element) { this.observed.push(el); }
+  observe(el: Element) {
+    this.observed.push(el);
+  }
   unobserve(el: Element) {
     const i = this.observed.indexOf(el);
     if (i !== -1) this.observed.splice(i, 1);
   }
-  disconnect() { this.observed.length = 0; }
+  disconnect() {
+    this.observed.length = 0;
+  }
 
   // Test helper: simulate a resize
   trigger(entries: Partial<ResizeObserverEntry>[]) {
@@ -64,11 +68,21 @@ describe('Component Lifecycle', () => {
   it('lifecycle phases execute in order', () => {
     const order: string[] = [];
     class TestComp extends Component {
-      override beforeInitialize() { order.push('beforeInit'); }
-      override initialize() { order.push('init'); }
-      override afterInitialize() { order.push('afterInit'); }
-      override beforeRender() { order.push('beforeRender'); }
-      override afterRender() { order.push('afterRender'); }
+      override beforeInitialize() {
+        order.push('beforeInit');
+      }
+      override initialize() {
+        order.push('init');
+      }
+      override afterInitialize() {
+        order.push('afterInit');
+      }
+      override beforeRender() {
+        order.push('beforeRender');
+      }
+      override afterRender() {
+        order.push('afterRender');
+      }
     }
     const c = new TestComp({ renderTo: document.body });
     expect(order).toEqual(['beforeInit', 'init', 'afterInit', 'beforeRender', 'afterRender']);
@@ -78,9 +92,15 @@ describe('Component Lifecycle', () => {
   it('destroy lifecycle', () => {
     const order: string[] = [];
     class TestComp extends Component {
-      override beforeDestroy() { order.push('beforeDestroy'); }
-      override onDestroy() { order.push('onDestroy'); }
-      override afterDestroy() { order.push('afterDestroy'); }
+      override beforeDestroy() {
+        order.push('beforeDestroy');
+      }
+      override onDestroy() {
+        order.push('onDestroy');
+      }
+      override afterDestroy() {
+        order.push('afterDestroy');
+      }
     }
     const c = new TestComp({ renderTo: document.body });
     c.destroy();
@@ -368,10 +388,21 @@ describe('Size & Position', () => {
     const c = renderTo({ listeners: { resize: spy } });
     // Simulate resize
     const observer = MockResizeObserver.instances[MockResizeObserver.instances.length - 1];
-    observer.trigger([{
-      target: c.el!,
-      contentRect: { width: 500, height: 300, x: 0, y: 0, top: 0, left: 0, bottom: 300, right: 500 },
-    }]);
+    observer.trigger([
+      {
+        target: c.el!,
+        contentRect: {
+          width: 500,
+          height: 300,
+          x: 0,
+          y: 0,
+          top: 0,
+          left: 0,
+          bottom: 300,
+          right: 500,
+        },
+      },
+    ]);
     expect(spy).toHaveBeenCalled();
   });
 });

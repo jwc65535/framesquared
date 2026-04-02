@@ -191,9 +191,7 @@ export class TreeGridExporter {
 
   private static _getNodes(treeGrid: TreeGrid, options: ExportOptions): NodeInterface[] {
     if (options.expandedOnly) {
-      return (treeGrid.getStore().flattenNodes() as NodeInterface[]).filter(
-        (n) => !n.isRoot(),
-      );
+      return (treeGrid.getStore().flattenNodes() as NodeInterface[]).filter((n) => !n.isRoot());
     }
     // All nodes (default)
     const all: NodeInterface[] = [];

@@ -96,9 +96,7 @@ export class Tooltip extends Component {
     // Resolve and attach to target
     let targetEl: Element | null = null;
     if (cfg.target) {
-      targetEl = typeof cfg.target === 'string'
-        ? document.querySelector(cfg.target)
-        : cfg.target;
+      targetEl = typeof cfg.target === 'string' ? document.querySelector(cfg.target) : cfg.target;
     }
     this._targetEl = targetEl;
 

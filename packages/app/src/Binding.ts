@@ -47,8 +47,7 @@ export const Binding = {
       paths.push(match[2]);
     }
 
-    const expression = paths.length > 1 ||
-      expr.replace(PATH_RE, '').trim().length > 0;
+    const expression = paths.length > 1 || expr.replace(PATH_RE, '').trim().length > 0;
 
     return { paths, negated, expression, template: expr };
   },
@@ -89,7 +88,7 @@ export const Binding = {
    */
   multiBind(vm: ViewModel, paths: string[], onChange: (values: unknown[]) => void): () => void {
     const handler = () => {
-      onChange(paths.map(p => vm.get(p)));
+      onChange(paths.map((p) => vm.get(p)));
     };
     vm.on('datachange', handler);
     return () => vm.un('datachange', handler);

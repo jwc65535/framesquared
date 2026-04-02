@@ -56,9 +56,7 @@ describe('Field definition', () => {
 
   it('supports custom defaultValue', () => {
     class Item extends Model {
-      static override fields = [
-        { name: 'status', type: FieldType.STRING, defaultValue: 'active' },
-      ];
+      static override fields = [{ name: 'status', type: FieldType.STRING, defaultValue: 'active' }];
     }
     const item = Item.create({});
     expect(item.get('status')).toBe('active');
@@ -66,15 +64,10 @@ describe('Field definition', () => {
 
   it('fields are inherited from parent model', () => {
     class Base extends Model {
-      static override fields = [
-        { name: 'id', type: FieldType.INT },
-      ];
+      static override fields = [{ name: 'id', type: FieldType.INT }];
     }
     class Child extends Base {
-      static override fields = [
-        ...Base.fields,
-        { name: 'name', type: FieldType.STRING },
-      ];
+      static override fields = [...Base.fields, { name: 'name', type: FieldType.STRING }];
     }
     const c = Child.create({ id: 1, name: 'Alice' });
     expect(c.get('id')).toBe(1);
@@ -109,9 +102,7 @@ describe('Field definition', () => {
 
   it('field mapping returns undefined for broken nested path', () => {
     class Contact extends Model {
-      static override fields = [
-        { name: 'city', type: FieldType.STRING, mapping: 'address.city' },
-      ];
+      static override fields = [{ name: 'city', type: FieldType.STRING, mapping: 'address.city' }];
     }
     // address is missing entirely
     const c = Contact.create({});
@@ -120,9 +111,7 @@ describe('Field definition', () => {
 
   it('field mapping handles null intermediate in path', () => {
     class Contact extends Model {
-      static override fields = [
-        { name: 'city', type: FieldType.STRING, mapping: 'address.city' },
-      ];
+      static override fields = [{ name: 'city', type: FieldType.STRING, mapping: 'address.city' }];
     }
     const c = Contact.create({ address: null });
     expect(c.get('city')).toBe('');
@@ -150,9 +139,7 @@ describe('Field definition', () => {
 describe('Proxy-based property access', () => {
   it('reading a field via property uses get()', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'name', type: FieldType.STRING },
-      ];
+      static override fields = [{ name: 'name', type: FieldType.STRING }];
     }
     const u = User.create({ name: 'Alice' });
     expect((u as any).name).toBe('Alice');
@@ -160,9 +147,7 @@ describe('Proxy-based property access', () => {
 
   it('writing a field via property uses set()', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'name', type: FieldType.STRING },
-      ];
+      static override fields = [{ name: 'name', type: FieldType.STRING }];
     }
     const u = User.create({ name: 'Alice' });
     (u as any).name = 'Bob';
@@ -171,9 +156,7 @@ describe('Proxy-based property access', () => {
 
   it('non-field properties work normally', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'name', type: FieldType.STRING },
-      ];
+      static override fields = [{ name: 'name', type: FieldType.STRING }];
     }
     const u = User.create({ name: 'Alice' });
     expect(u.isDestroyed).toBe(false);
@@ -213,9 +196,7 @@ describe('get / set / getData', () => {
 
   it('set returns empty array when value does not change', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'name', type: FieldType.STRING },
-      ];
+      static override fields = [{ name: 'name', type: FieldType.STRING }];
     }
     const u = User.create({ name: 'Alice' });
     const changed = u.set('name', 'Alice');
@@ -255,9 +236,7 @@ describe('get / set / getData', () => {
 describe('Dirty tracking', () => {
   it('is not modified after creation', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'name', type: FieldType.STRING },
-      ];
+      static override fields = [{ name: 'name', type: FieldType.STRING }];
     }
     const u = User.create({ name: 'Alice' });
     expect(u.isModified()).toBe(false);
@@ -265,9 +244,7 @@ describe('Dirty tracking', () => {
 
   it('is modified after set()', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'name', type: FieldType.STRING },
-      ];
+      static override fields = [{ name: 'name', type: FieldType.STRING }];
     }
     const u = User.create({ name: 'Alice' });
     u.set('name', 'Bob');
@@ -301,9 +278,7 @@ describe('Dirty tracking', () => {
 
   it('modified stores previous values', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'name', type: FieldType.STRING },
-      ];
+      static override fields = [{ name: 'name', type: FieldType.STRING }];
     }
     const u = User.create({ name: 'Alice' });
     u.set('name', 'Bob');
@@ -312,9 +287,7 @@ describe('Dirty tracking', () => {
 
   it('commit clears dirty state', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'name', type: FieldType.STRING },
-      ];
+      static override fields = [{ name: 'name', type: FieldType.STRING }];
     }
     const u = User.create({ name: 'Alice' });
     u.set('name', 'Bob');
@@ -359,9 +332,7 @@ describe('Identification', () => {
   it('custom idProperty', () => {
     class Item extends Model {
       static override idProperty = 'itemId';
-      static override fields = [
-        { name: 'itemId', type: FieldType.STRING },
-      ];
+      static override fields = [{ name: 'itemId', type: FieldType.STRING }];
     }
     const item = Item.create({ itemId: 'abc-123' });
     expect(item.getId()).toBe('abc-123');
@@ -369,9 +340,7 @@ describe('Identification', () => {
 
   it('setId updates the id field', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'id', type: FieldType.INT },
-      ];
+      static override fields = [{ name: 'id', type: FieldType.INT }];
     }
     const u = User.create({ id: 1 });
     u.setId(42);
@@ -391,9 +360,7 @@ describe('Identification', () => {
 
   it('phantom is false when id is set', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'id', type: FieldType.INT },
-      ];
+      static override fields = [{ name: 'id', type: FieldType.INT }];
     }
     const u = User.create({ id: 1 });
     expect(u.phantom).toBe(false);
@@ -401,9 +368,7 @@ describe('Identification', () => {
 
   it('phantom becomes false after setId', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'id', type: FieldType.INT },
-      ];
+      static override fields = [{ name: 'id', type: FieldType.INT }];
     }
     const u = User.create({});
     expect(u.phantom).toBe(true);
@@ -419,9 +384,7 @@ describe('Identification', () => {
 describe('Validation', () => {
   it('validate returns valid result when all validators pass', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'name', type: FieldType.STRING, validators: [presence()] },
-      ];
+      static override fields = [{ name: 'name', type: FieldType.STRING, validators: [presence()] }];
     }
     const u = User.create({ name: 'Alice' });
     const result = u.validate();
@@ -431,9 +394,7 @@ describe('Validation', () => {
 
   it('presence validator fails for empty string', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'name', type: FieldType.STRING, validators: [presence()] },
-      ];
+      static override fields = [{ name: 'name', type: FieldType.STRING, validators: [presence()] }];
     }
     const u = User.create({ name: '' });
     const result = u.validate();
@@ -445,7 +406,11 @@ describe('Validation', () => {
   it('length validator checks min/max', () => {
     class User extends Model {
       static override fields = [
-        { name: 'name', type: FieldType.STRING, validators: [lengthValidator({ min: 2, max: 10 })] },
+        {
+          name: 'name',
+          type: FieldType.STRING,
+          validators: [lengthValidator({ min: 2, max: 10 })],
+        },
       ];
     }
     expect(User.create({ name: 'A' }).validate().valid).toBe(false);
@@ -496,9 +461,7 @@ describe('Validation', () => {
 
   it('email validator', () => {
     class Contact extends Model {
-      static override fields = [
-        { name: 'email', type: FieldType.STRING, validators: [email()] },
-      ];
+      static override fields = [{ name: 'email', type: FieldType.STRING, validators: [email()] }];
     }
     expect(Contact.create({ email: 'a@b.com' }).validate().valid).toBe(true);
     expect(Contact.create({ email: 'not-email' }).validate().valid).toBe(false);
@@ -506,13 +469,9 @@ describe('Validation', () => {
 
   it('custom function validator', () => {
     const even = (value: unknown) =>
-      typeof value === 'number' && value % 2 === 0
-        ? null
-        : 'Must be even';
+      typeof value === 'number' && value % 2 === 0 ? null : 'Must be even';
     class Num extends Model {
-      static override fields = [
-        { name: 'n', type: FieldType.INT, validators: [even] },
-      ];
+      static override fields = [{ name: 'n', type: FieldType.INT, validators: [even] }];
     }
     expect(Num.create({ n: 4 }).validate().valid).toBe(true);
     const r = Num.create({ n: 3 }).validate();
@@ -522,9 +481,7 @@ describe('Validation', () => {
 
   it('isValid is a shorthand for validate().valid', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'name', type: FieldType.STRING, validators: [presence()] },
-      ];
+      static override fields = [{ name: 'name', type: FieldType.STRING, validators: [presence()] }];
     }
     expect(User.create({ name: 'Alice' }).isValid()).toBe(true);
     expect(User.create({ name: '' }).isValid()).toBe(false);
@@ -553,9 +510,7 @@ describe('Validation', () => {
 describe('Events', () => {
   it('fires "change" event on set()', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'name', type: FieldType.STRING },
-      ];
+      static override fields = [{ name: 'name', type: FieldType.STRING }];
     }
     const u = User.create({ name: 'Alice' });
     const spy = vi.fn();
@@ -567,9 +522,7 @@ describe('Events', () => {
 
   it('does not fire "change" when value unchanged', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'name', type: FieldType.STRING },
-      ];
+      static override fields = [{ name: 'name', type: FieldType.STRING }];
     }
     const u = User.create({ name: 'Alice' });
     const spy = vi.fn();
@@ -604,9 +557,7 @@ describe('Events', () => {
 
   it('fires "idchanged" when ID changes via setId', () => {
     class User extends Model {
-      static override fields = [
-        { name: 'id', type: FieldType.INT },
-      ];
+      static override fields = [{ name: 'id', type: FieldType.INT }];
     }
     const u = User.create({});
     const spy = vi.fn();

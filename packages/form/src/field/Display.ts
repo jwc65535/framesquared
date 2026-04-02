@@ -51,9 +51,7 @@ export class DisplayField extends Field {
   private updateDisplay(): void {
     if (!this._displayEl) return;
     const cfg = this._config as DisplayFieldConfig;
-    const text = cfg.renderer
-      ? cfg.renderer(this._value)
-      : String(this._value ?? '');
+    const text = cfg.renderer ? cfg.renderer(this._value) : String(this._value ?? '');
     this._displayEl.textContent = text;
   }
 }

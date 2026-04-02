@@ -75,7 +75,9 @@ function resolveToolbarItem(item: any): Component {
 // ---------------------------------------------------------------------------
 
 export class ToolbarFill extends Component {
-  constructor() { super({}); }
+  constructor() {
+    super({});
+  }
   protected override afterRender(): void {
     super.afterRender();
     this.el!.classList.add('x-toolbar-fill');
@@ -84,7 +86,9 @@ export class ToolbarFill extends Component {
 }
 
 export class ToolbarSeparator extends Component {
-  constructor() { super({}); }
+  constructor() {
+    super({});
+  }
   protected override afterRender(): void {
     super.afterRender();
     this.el!.classList.add('x-toolbar-separator');
@@ -92,7 +96,9 @@ export class ToolbarSeparator extends Component {
 }
 
 export class ToolbarSpacer extends Component {
-  constructor() { super({}); }
+  constructor() {
+    super({});
+  }
   protected override afterRender(): void {
     super.afterRender();
     this.el!.classList.add('x-toolbar-spacer');

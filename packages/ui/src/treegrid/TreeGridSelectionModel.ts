@@ -85,10 +85,7 @@ export class TreeGridSelectionModel {
     if (!suppressEvent) this.fireEvent('selectionchange', this, this.getSelection());
   }
 
-  deselect(
-    nodes: NodeInterface | NodeInterface[],
-    suppressEvent = false,
-  ): void {
+  deselect(nodes: NodeInterface | NodeInterface[], suppressEvent = false): void {
     const toDeselect = Array.isArray(nodes) ? nodes : [nodes];
     for (const node of toDeselect) this.selected.delete(node);
     if (!suppressEvent) this.fireEvent('selectionchange', this, this.getSelection());
@@ -108,11 +105,7 @@ export class TreeGridSelectionModel {
   /**
    * Selects a range of nodes between anchor and the given node (inclusive).
    */
-  selectRange(
-    flatData: NodeInterface[],
-    toNode: NodeInterface,
-    suppressEvent = false,
-  ): void {
+  selectRange(flatData: NodeInterface[], toNode: NodeInterface, suppressEvent = false): void {
     if (this.mode !== 'MULTI') return;
     const anchorIdx = this.anchor ? flatData.indexOf(this.anchor) : 0;
     const toIdx = flatData.indexOf(toNode);
@@ -190,11 +183,7 @@ export class TreeGridSelectionModel {
     if (!suppressEvent) this.fireEvent('selectionchange', this, this.getSelection());
   }
 
-  deselectChildren(
-    node: NodeInterface,
-    deep = false,
-    suppressEvent = false,
-  ): void {
+  deselectChildren(node: NodeInterface, deep = false, suppressEvent = false): void {
     if (deep) {
       node.cascadeBy((child) => {
         if (child !== node) this.selected.delete(child);

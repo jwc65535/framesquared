@@ -15,7 +15,9 @@ function makeGrid(extra: Record<string, unknown> = {}) {
     store: new TreeStore({
       model: TreeModel,
       root: {
-        id: 'root', text: 'Root', expanded: true,
+        id: 'root',
+        text: 'Root',
+        expanded: true,
         children: [
           { id: 'a', text: 'Alpha', size: 10, leaf: true },
           { id: 'b', text: 'Beta', size: 20, leaf: true },
@@ -105,11 +107,16 @@ describe('TreeGridClipboard — copy', () => {
       store: new TreeStore({
         model: TreeModel,
         root: {
-          id: 'root', text: 'Root', expanded: true,
+          id: 'root',
+          text: 'Root',
+          expanded: true,
           children: [
-            { id: 'parent', text: 'Parent', expanded: true, children: [
-              { id: 'child1', text: 'Child', leaf: true },
-            ]},
+            {
+              id: 'parent',
+              text: 'Parent',
+              expanded: true,
+              children: [{ id: 'child1', text: 'Child', leaf: true }],
+            },
           ],
         },
       }),

@@ -36,7 +36,7 @@ export class CycleButton extends SplitButton {
 
   constructor(config: CycleButtonConfig = {}) {
     const items = config.items ?? [];
-    const checkedIdx = items.findIndex(i => i.checked);
+    const checkedIdx = items.findIndex((i) => i.checked);
     const activeIdx = checkedIdx >= 0 ? checkedIdx : 0;
     const activeItem = items[activeIdx];
 

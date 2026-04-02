@@ -151,7 +151,10 @@ export class DatePicker extends Component {
       const cell = document.createElement('span');
       cell.classList.add('x-datepicker-cell');
       cell.textContent = String(day);
-      cell.setAttribute('data-date', `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`);
+      cell.setAttribute(
+        'data-date',
+        `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+      );
 
       const disabled = this.isDateDisabled(cellDate);
       if (disabled) {
@@ -159,10 +162,12 @@ export class DatePicker extends Component {
       }
 
       // Selected
-      if (this._selectedDate &&
-          cellDate.getFullYear() === this._selectedDate.getFullYear() &&
-          cellDate.getMonth() === this._selectedDate.getMonth() &&
-          cellDate.getDate() === this._selectedDate.getDate()) {
+      if (
+        this._selectedDate &&
+        cellDate.getFullYear() === this._selectedDate.getFullYear() &&
+        cellDate.getMonth() === this._selectedDate.getMonth() &&
+        cellDate.getDate() === this._selectedDate.getDate()
+      ) {
         cell.classList.add('x-datepicker-selected');
       }
 

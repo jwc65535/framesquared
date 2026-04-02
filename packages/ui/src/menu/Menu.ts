@@ -75,7 +75,7 @@ export class Menu extends Container {
     // Position near the component
     const rect = component.el?.getBoundingClientRect();
     const x = rect?.left ?? 0;
-    const y = (rect?.bottom ?? 0);
+    const y = rect?.bottom ?? 0;
     this.showAt(x, y);
   }
 

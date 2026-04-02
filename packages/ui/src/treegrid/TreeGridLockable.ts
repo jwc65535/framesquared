@@ -54,8 +54,7 @@ export class TreeGridLockable {
     // or has an explicit locked flag set
     const hasUserDefinedColumns = columns.some(
       (c) =>
-        !(c instanceof TreeGridColumn) &&
-        (!(c as any)._autoCreated || (c as any).locked === true),
+        !(c instanceof TreeGridColumn) && (!(c as any)._autoCreated || (c as any).locked === true),
     );
     if (!hasUserDefinedColumns) return;
 

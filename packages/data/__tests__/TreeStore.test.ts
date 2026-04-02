@@ -34,9 +34,9 @@ describe('TreeStore – existing API', () => {
   describe('getNodeById', () => {
     it('finds node by id', () => {
       const store = buildStore({
-        id: 1, text: 'Root', children: [
-          { id: 2, text: 'Child', leaf: true },
-        ],
+        id: 1,
+        text: 'Root',
+        children: [{ id: 2, text: 'Child', leaf: true }],
       });
       const node = store.getNodeById(2);
       expect(node).toBeDefined();
@@ -53,7 +53,8 @@ describe('TreeStore – existing API', () => {
     it('appends a child to parent', () => {
       const store = buildStore({ id: 1, text: 'Root' });
       const root = store.getRoot();
-      const child = TreeModel.create({ id: 2, text: 'C' }) as InstanceType<typeof TreeModel> & NodeInterface;
+      const child = TreeModel.create({ id: 2, text: 'C' }) as InstanceType<typeof TreeModel> &
+        NodeInterface;
       store.appendChild(root, child);
       expect(root.childNodes).toHaveLength(1);
       expect(store.getNodeById(2)).toBe(child);
@@ -63,7 +64,8 @@ describe('TreeStore – existing API', () => {
       const store = buildStore({ id: 1, text: 'Root' });
       const spy = vi.fn();
       (store as unknown as { on: (e: string, fn: () => void) => void }).on('nodeappend', spy);
-      const child = TreeModel.create({ id: 2, text: 'C' }) as InstanceType<typeof TreeModel> & NodeInterface;
+      const child = TreeModel.create({ id: 2, text: 'C' }) as InstanceType<typeof TreeModel> &
+        NodeInterface;
       store.appendChild(store.getRoot(), child);
       expect(spy).toHaveBeenCalledOnce();
     });
@@ -72,7 +74,9 @@ describe('TreeStore – existing API', () => {
   describe('removeChild', () => {
     it('removes a child', () => {
       const store = buildStore({
-        id: 1, text: 'Root', children: [{ id: 2, text: 'C', leaf: true }],
+        id: 1,
+        text: 'Root',
+        children: [{ id: 2, text: 'C', leaf: true }],
       });
       const root = store.getRoot();
       store.removeChild(root, root.childNodes[0]);
@@ -84,14 +88,17 @@ describe('TreeStore – existing API', () => {
   describe('insertBefore', () => {
     it('inserts a node before another', () => {
       const store = buildStore({
-        id: 1, text: 'Root', children: [
+        id: 1,
+        text: 'Root',
+        children: [
           { id: 2, text: 'A', leaf: true },
           { id: 3, text: 'C', leaf: true },
         ],
       });
       const root = store.getRoot();
       const refNode = root.childNodes[1]; // C
-      const newNode = TreeModel.create({ id: 10, text: 'B' }) as InstanceType<typeof TreeModel> & NodeInterface;
+      const newNode = TreeModel.create({ id: 10, text: 'B' }) as InstanceType<typeof TreeModel> &
+        NodeInterface;
       store.insertBefore(newNode, refNode);
       expect(root.childNodes[1]).toBe(newNode);
       expect(root.childNodes).toHaveLength(3);
@@ -101,7 +108,9 @@ describe('TreeStore – existing API', () => {
   describe('expandNode / collapseNode', () => {
     it('expandNode sets expanded=true', () => {
       const store = buildStore({
-        id: 1, text: 'Root', children: [{ id: 2, text: 'A' }],
+        id: 1,
+        text: 'Root',
+        children: [{ id: 2, text: 'A' }],
       });
       const node = store.getNodeById(2)!;
       store.expandNode(node);
@@ -110,9 +119,10 @@ describe('TreeStore – existing API', () => {
 
     it('collapseNode sets expanded=false', () => {
       const store = buildStore({
-        id: 1, text: 'Root', expanded: true, children: [
-          { id: 2, text: 'A', expanded: true },
-        ],
+        id: 1,
+        text: 'Root',
+        expanded: true,
+        children: [{ id: 2, text: 'A', expanded: true }],
       });
       const node = store.getNodeById(2)!;
       store.collapseNode(node);
@@ -123,10 +133,11 @@ describe('TreeStore – existing API', () => {
   describe('flattenNodes', () => {
     it('returns all visible nodes in depth-first order', () => {
       const store = buildStore({
-        id: 1, text: 'Root', expanded: true, children: [
-          { id: 2, text: 'A', expanded: true, children: [
-            { id: 4, text: 'A1', leaf: true },
-          ]},
+        id: 1,
+        text: 'Root',
+        expanded: true,
+        children: [
+          { id: 2, text: 'A', expanded: true, children: [{ id: 4, text: 'A1', leaf: true }] },
           { id: 3, text: 'B', leaf: true },
         ],
       });
@@ -137,10 +148,11 @@ describe('TreeStore – existing API', () => {
 
     it('hides children of collapsed nodes', () => {
       const store = buildStore({
-        id: 1, text: 'Root', expanded: true, children: [
-          { id: 2, text: 'A', expanded: false, children: [
-            { id: 4, text: 'A1', leaf: true },
-          ]},
+        id: 1,
+        text: 'Root',
+        expanded: true,
+        children: [
+          { id: 2, text: 'A', expanded: false, children: [{ id: 4, text: 'A1', leaf: true }] },
           { id: 3, text: 'B', leaf: true },
         ],
       });
@@ -174,7 +186,9 @@ describe('TreeStore – setRoot', () => {
 
   it('old root nodes are unregistered', () => {
     const store = buildStore({
-      id: 1, text: 'Root', children: [{ id: 2, text: 'C', leaf: true }],
+      id: 1,
+      text: 'Root',
+      children: [{ id: 2, text: 'C', leaf: true }],
     });
     expect(store.getNodeById(2)).toBeDefined();
     store.setRoot({ id: 10, text: 'NewRoot' });
@@ -184,7 +198,9 @@ describe('TreeStore – setRoot', () => {
   it('new root with children registers them', () => {
     const store = buildStore({ id: 1, text: 'Root' });
     store.setRoot({
-      id: 10, text: 'NewRoot', children: [{ id: 20, text: 'Child', leaf: true }],
+      id: 10,
+      text: 'NewRoot',
+      children: [{ id: 20, text: 'Child', leaf: true }],
     });
     expect(store.getNodeById(20)).toBeDefined();
   });
@@ -195,11 +211,11 @@ describe('TreeStore – findNode', () => {
 
   beforeEach(() => {
     store = buildStore({
-      id: 1, text: 'Root', children: [
+      id: 1,
+      text: 'Root',
+      children: [
         { id: 2, text: 'Alpha', leaf: true },
-        { id: 3, text: 'Beta', children: [
-          { id: 4, text: 'Gamma', leaf: true },
-        ]},
+        { id: 3, text: 'Beta', children: [{ id: 4, text: 'Gamma', leaf: true }] },
       ],
     });
   });
@@ -230,10 +246,11 @@ describe('TreeStore – findNode', () => {
 describe('TreeStore – collapseAll / expandAll', () => {
   it('collapseAll collapses all nodes', () => {
     const store = buildStore({
-      id: 1, text: 'Root', expanded: true, children: [
-        { id: 2, text: 'A', expanded: true, children: [
-          { id: 3, text: 'A1', leaf: true },
-        ]},
+      id: 1,
+      text: 'Root',
+      expanded: true,
+      children: [
+        { id: 2, text: 'A', expanded: true, children: [{ id: 3, text: 'A1', leaf: true }] },
         { id: 4, text: 'B', expanded: true },
       ],
     });
@@ -248,10 +265,10 @@ describe('TreeStore – collapseAll / expandAll', () => {
 
   it('expandAll expands all nodes', () => {
     const store = buildStore({
-      id: 1, text: 'Root', children: [
-        { id: 2, text: 'A', children: [
-          { id: 3, text: 'A1', leaf: true },
-        ]},
+      id: 1,
+      text: 'Root',
+      children: [
+        { id: 2, text: 'A', children: [{ id: 3, text: 'A1', leaf: true }] },
         { id: 4, text: 'B' },
       ],
     });
@@ -268,7 +285,10 @@ describe('TreeStore – collapseAll / expandAll', () => {
 describe('TreeStore – getCount / getTotalCount', () => {
   it('getCount returns number of visible (flattened) nodes', () => {
     const store = buildStore({
-      id: 1, text: 'Root', expanded: true, children: [
+      id: 1,
+      text: 'Root',
+      expanded: true,
+      children: [
         { id: 2, text: 'A', leaf: true },
         { id: 3, text: 'B', leaf: true },
       ],
@@ -279,10 +299,11 @@ describe('TreeStore – getCount / getTotalCount', () => {
 
   it('getCount excludes children of collapsed nodes', () => {
     const store = buildStore({
-      id: 1, text: 'Root', expanded: true, children: [
-        { id: 2, text: 'A', expanded: false, children: [
-          { id: 4, text: 'A1', leaf: true },
-        ]},
+      id: 1,
+      text: 'Root',
+      expanded: true,
+      children: [
+        { id: 2, text: 'A', expanded: false, children: [{ id: 4, text: 'A1', leaf: true }] },
         { id: 3, text: 'B', leaf: true },
       ],
     });
@@ -292,10 +313,10 @@ describe('TreeStore – getCount / getTotalCount', () => {
 
   it('getTotalCount returns total number of nodes in tree', () => {
     const store = buildStore({
-      id: 1, text: 'Root', children: [
-        { id: 2, text: 'A', children: [
-          { id: 4, text: 'A1', leaf: true },
-        ]},
+      id: 1,
+      text: 'Root',
+      children: [
+        { id: 2, text: 'A', children: [{ id: 4, text: 'A1', leaf: true }] },
         { id: 3, text: 'B', leaf: true },
       ],
     });

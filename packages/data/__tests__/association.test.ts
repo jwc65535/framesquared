@@ -31,9 +31,7 @@ beforeEach(() => {
       { name: 'zip', type: FieldType.STRING },
     ];
     static override idProperty = 'id';
-    static belongsTo = [
-      { model: 'test.User', foreignKey: 'userId' },
-    ];
+    static belongsTo = [{ model: 'test.User', foreignKey: 'userId' }];
   };
 
   User = class User extends Model {
@@ -43,12 +41,8 @@ beforeEach(() => {
       { name: 'name', type: FieldType.STRING },
     ];
     static override idProperty = 'id';
-    static hasOne = [
-      { model: 'test.Address', foreignKey: 'userId' },
-    ];
-    static hasMany = [
-      { model: 'test.Order', foreignKey: 'userId' },
-    ];
+    static hasOne = [{ model: 'test.Address', foreignKey: 'userId' }];
+    static hasMany = [{ model: 'test.Order', foreignKey: 'userId' }];
   };
 
   Order = class Order extends Model {
@@ -59,9 +53,7 @@ beforeEach(() => {
       { name: 'total', type: FieldType.FLOAT },
     ];
     static override idProperty = 'id';
-    static belongsTo = [
-      { model: 'test.User', foreignKey: 'userId' },
-    ];
+    static belongsTo = [{ model: 'test.User', foreignKey: 'userId' }];
   };
 
   Student = class Student extends Model {
@@ -72,7 +64,12 @@ beforeEach(() => {
     ];
     static override idProperty = 'id';
     static manyToMany = [
-      { model: 'test.Course', through: 'test.Enrollment', foreignKey: 'studentId', otherKey: 'courseId' },
+      {
+        model: 'test.Course',
+        through: 'test.Enrollment',
+        foreignKey: 'studentId',
+        otherKey: 'courseId',
+      },
     ];
   };
 

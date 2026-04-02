@@ -15,10 +15,14 @@ function makeGrid(extra: Record<string, unknown> = {}) {
     store: new TreeStore({
       model: TreeModel,
       root: {
-        id: 'root', text: 'Root', expanded: true,
+        id: 'root',
+        text: 'Root',
+        expanded: true,
         children: [
           {
-            id: 'a', text: 'Node A', expanded: true,
+            id: 'a',
+            text: 'Node A',
+            expanded: true,
             children: [
               { id: 'a1', text: 'A1', leaf: true },
               { id: 'a2', text: 'A2', leaf: true },
@@ -71,7 +75,9 @@ describe('TreeGridAccessibility — ARIA roles', () => {
 
   it('expanders have role="button"', () => {
     const grid = makeGrid();
-    const expanders = grid.el!.querySelectorAll('.x-treegrid-expander:not(.x-treegrid-expander-leaf)');
+    const expanders = grid.el!.querySelectorAll(
+      '.x-treegrid-expander:not(.x-treegrid-expander-leaf)',
+    );
     expanders.forEach((exp) => {
       expect(exp.getAttribute('role')).toBe('button');
     });
@@ -79,7 +85,9 @@ describe('TreeGridAccessibility — ARIA roles', () => {
 
   it('expanders have aria-label', () => {
     const grid = makeGrid();
-    const expanders = grid.el!.querySelectorAll('.x-treegrid-expander:not(.x-treegrid-expander-leaf)');
+    const expanders = grid.el!.querySelectorAll(
+      '.x-treegrid-expander:not(.x-treegrid-expander-leaf)',
+    );
     expanders.forEach((exp) => {
       expect(exp.getAttribute('aria-label')).toBeTruthy();
     });
@@ -190,7 +198,9 @@ describe('TreeGridAccessibility — checkbox ARIA', () => {
 
   it('unchecked checkbox has aria-checked="false"', () => {
     const grid = makeGrid({ checkable: true });
-    const checkboxes = grid.el!.querySelectorAll('.x-treegrid-checkbox:not(.x-treegrid-checkbox-checked)');
+    const checkboxes = grid.el!.querySelectorAll(
+      '.x-treegrid-checkbox:not(.x-treegrid-checkbox-checked)',
+    );
     checkboxes.forEach((cb) => {
       expect(cb.getAttribute('aria-checked')).toBe('false');
     });

@@ -22,7 +22,7 @@ export const Connection = {
    */
   async fetch(url: string, init: RequestInit = {}): Promise<any> {
     // Apply default headers
-    init.headers = { ...defaultHeaders, ...(init.headers as Record<string, string> ?? {}) };
+    init.headers = { ...defaultHeaders, ...((init.headers as Record<string, string>) ?? {}) };
 
     // Apply request interceptors
     let currentUrl = url;

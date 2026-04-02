@@ -16,18 +16,25 @@ function makeGrid() {
     store: new TreeStore({
       model: TreeModel,
       root: {
-        id: 'root', text: 'Root', expanded: true,
+        id: 'root',
+        text: 'Root',
+        expanded: true,
         children: [
           {
-            id: 'folder1', text: 'Alpha', expanded: true,
+            id: 'folder1',
+            text: 'Alpha',
+            expanded: true,
             children: [
               { id: 'item1', text: 'Apple', size: 10, leaf: true },
               { id: 'item2', text: 'Banana', size: 20, leaf: true },
             ],
           },
-          { id: 'folder2', text: 'Beta', expanded: true, children: [
-            { id: 'item3', text: 'Cherry', size: 30, leaf: true },
-          ]},
+          {
+            id: 'folder2',
+            text: 'Beta',
+            expanded: true,
+            children: [{ id: 'item3', text: 'Cherry', size: 30, leaf: true }],
+          },
         ],
       },
     }),

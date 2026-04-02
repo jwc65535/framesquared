@@ -13,7 +13,9 @@ beforeEach(() => {
   }
   DragManager.reset();
 });
-afterEach(() => { document.body.innerHTML = ''; });
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 function fire(el: EventTarget, type: string, opts: Record<string, unknown> = {}) {
   el.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, ...opts } as any));
@@ -26,8 +28,15 @@ describe('Drag and drop integration', () => {
     document.body.appendChild(srcEl);
     document.body.appendChild(dropEl);
     dropEl.getBoundingClientRect = () => ({
-      x: 100, y: 100, width: 200, height: 200,
-      top: 100, left: 100, right: 300, bottom: 300, toJSON() {},
+      x: 100,
+      y: 100,
+      width: 200,
+      height: 200,
+      top: 100,
+      left: 100,
+      right: 300,
+      bottom: 300,
+      toJSON() {},
     });
 
     const enterSpy = vi.fn();
@@ -36,8 +45,11 @@ describe('Drag and drop integration', () => {
 
     const drag = new Draggable({ el: srcEl, groups: ['items'], onDragEnd: endSpy });
     const drop = new Droppable({
-      el: dropEl, accept: ['items'],
-      onDragEnter: enterSpy, onDrop: dropSpy, overCls: 'over',
+      el: dropEl,
+      accept: ['items'],
+      onDragEnter: enterSpy,
+      onDrop: dropSpy,
+      overCls: 'over',
     });
 
     // Drag from (0,0) to drop target at (150,150)
@@ -58,8 +70,15 @@ describe('Drag and drop integration', () => {
     document.body.appendChild(srcEl);
     document.body.appendChild(dropEl);
     dropEl.getBoundingClientRect = () => ({
-      x: 100, y: 100, width: 100, height: 100,
-      top: 100, left: 100, right: 200, bottom: 200, toJSON() {},
+      x: 100,
+      y: 100,
+      width: 100,
+      height: 100,
+      top: 100,
+      left: 100,
+      right: 200,
+      bottom: 200,
+      toJSON() {},
     });
 
     const enterSpy = vi.fn();
@@ -84,7 +103,9 @@ describe('Drag and drop integration', () => {
 
     const sortSpy = vi.fn();
     const sortable = new Sortable({
-      el: list, itemSelector: '.item', onSort: sortSpy,
+      el: list,
+      itemSelector: '.item',
+      onSort: sortSpy,
     });
 
     sortable.moveItem(0, 2);

@@ -17,7 +17,9 @@ function makeGrid(extra: Record<string, unknown> = {}) {
     store: new TreeStore({
       model: TreeModel,
       root: {
-        id: 'root', text: 'Root', expanded: true,
+        id: 'root',
+        text: 'Root',
+        expanded: true,
         children: [
           { id: 'a', text: 'A', size: 10, date: '2025-01-01', leaf: true },
           { id: 'b', text: 'B', size: 20, date: '2025-02-01', leaf: true },
@@ -85,15 +87,17 @@ describe('TreeGridLockable — panel splitting', () => {
       store: new TreeStore({
         model: TreeModel,
         root: {
-          id: 'root', text: 'Root', expanded: true,
-          children: [
-            { id: 'a', text: 'A', size: 10, leaf: true },
-          ],
+          id: 'root',
+          text: 'Root',
+          expanded: true,
+          children: [{ id: 'a', text: 'A', size: 10, leaf: true }],
         },
       }),
       columns: [
         { dataIndex: 'text', text: 'Name', width: 200 },
-        Object.assign(new Column({ dataIndex: 'size', text: 'Size', width: 100 }), { locked: false }),
+        Object.assign(new Column({ dataIndex: 'size', text: 'Size', width: 100 }), {
+          locked: false,
+        }),
       ],
     } as any);
 
@@ -115,7 +119,9 @@ describe('TreeGridLockable — panel splitting', () => {
       store: new TreeStore({
         model: TreeModel,
         root: {
-          id: 'root', text: 'Root', expanded: true,
+          id: 'root',
+          text: 'Root',
+          expanded: true,
           children: [{ id: 'a', text: 'A', size: 10, leaf: true }],
         },
       }),

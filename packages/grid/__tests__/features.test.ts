@@ -11,17 +11,31 @@ import { RowExpander } from '../src/grid/plugin/RowExpander.js';
 import { GridClipboard } from '../src/grid/plugin/Clipboard.js';
 import { GridDragDrop } from '../src/grid/plugin/DragDrop.js';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+class MockRO {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 function mockStore(data: Record<string, unknown>[] = []) {
   // Deep copy to prevent cross-test mutation
-  const dataCopy = data.map(d => ({ ...d }));
+  const dataCopy = data.map((d) => ({ ...d }));
   const records = dataCopy.map((d, i) => ({
-    id: d.id ?? i, data: d,
-    get(f: string) { return (d as any)[f]; },
-    set(f: string, v: unknown) { (d as any)[f] = v; },
+    id: d.id ?? i,
+    data: d,
+    get(f: string) {
+      return (d as any)[f];
+    },
+    set(f: string, v: unknown) {
+      (d as any)[f] = v;
+    },
   }));
   const listeners: Record<string, Function[]> = {};
   return {
@@ -30,8 +44,12 @@ function mockStore(data: Record<string, unknown>[] = []) {
     getCount: () => records.length,
     getAt: (i: number) => records[i],
     sort: vi.fn(),
-    on: (evt: string, fn: Function) => { (listeners[evt] ??= []).push(fn); },
-    fireEvent: (evt: string, ...args: unknown[]) => { (listeners[evt] ?? []).forEach(fn => fn(...args)); },
+    on: (evt: string, fn: Function) => {
+      (listeners[evt] ??= []).push(fn);
+    },
+    fireEvent: (evt: string, ...args: unknown[]) => {
+      (listeners[evt] ?? []).forEach((fn) => fn(...args));
+    },
     each: (fn: Function) => records.forEach(fn),
     getTotalCount: () => records.length,
     isLoading: () => false,
@@ -78,7 +96,7 @@ describe('Grouping', () => {
     const grouping = new Grouping({ groupField: 'dept' });
     grouping.init(g);
     const headers = g.el!.querySelectorAll('.x-grid-group-hd');
-    const texts = Array.from(headers).map(h => h.textContent);
+    const texts = Array.from(headers).map((h) => h.textContent);
     expect(texts).toContain('Eng');
     expect(texts).toContain('Sales');
   });
@@ -391,7 +409,9 @@ describe('RowEditing', () => {
     const re = new RowEditing();
     re.init(g);
     re.startEdit(0);
-    const inputs = g.el!.querySelectorAll('.x-grid-row-editor input') as NodeListOf<HTMLInputElement>;
+    const inputs = g.el!.querySelectorAll(
+      '.x-grid-row-editor input',
+    ) as NodeListOf<HTMLInputElement>;
     inputs[0].value = 'Updated';
     re.completeEdit();
     expect((g as any)._store.getAt(0).get('name')).toBe('Updated');

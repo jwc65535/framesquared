@@ -104,14 +104,20 @@ export class GroupingSummary {
 
   private calculate(records: any[], field: string, type: SummaryType): unknown {
     if (typeof type === 'function') return type(records);
-    const values = records.map(r => Number(r.get(field))).filter(n => !isNaN(n));
+    const values = records.map((r) => Number(r.get(field))).filter((n) => !isNaN(n));
     switch (type) {
-      case 'sum': return values.reduce((a, b) => a + b, 0);
-      case 'count': return records.length;
-      case 'average': return values.length ? Math.round(values.reduce((a, b) => a + b, 0) / values.length) : 0;
-      case 'min': return values.length ? Math.min(...values) : 0;
-      case 'max': return values.length ? Math.max(...values) : 0;
-      default: return '';
+      case 'sum':
+        return values.reduce((a, b) => a + b, 0);
+      case 'count':
+        return records.length;
+      case 'average':
+        return values.length ? Math.round(values.reduce((a, b) => a + b, 0) / values.length) : 0;
+      case 'min':
+        return values.length ? Math.min(...values) : 0;
+      case 'max':
+        return values.length ? Math.max(...values) : 0;
+      default:
+        return '';
     }
   }
 }

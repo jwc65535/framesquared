@@ -50,8 +50,18 @@ export type { SubmitOptions, SubmitResult } from './form/BasicForm.js';
 
 // Validators
 export {
-  presence, length, email, url, alpha, alphanum,
-  range, format, inclusion, exclusion, custom, validateChain,
+  presence,
+  length,
+  email,
+  url,
+  alpha,
+  alphanum,
+  range,
+  format,
+  inclusion,
+  exclusion,
+  custom,
+  validateChain,
 } from './form/Validators.js';
 
 // Field container
@@ -70,7 +80,13 @@ export type { SpinnerConfig } from './field/Spinner.js';
 
 // Date utilities
 export {
-  formatDate, parseDate, addDate, diffDate,
-  isLeapYear, getDaysInMonth, getMonthName, getMonthShortName,
+  formatDate,
+  parseDate,
+  addDate,
+  diffDate,
+  isLeapYear,
+  getDaysInMonth,
+  getMonthName,
+  getMonthShortName,
 } from './util/DateUtil.js';
 export type { DateUnit } from './util/DateUtil.js';

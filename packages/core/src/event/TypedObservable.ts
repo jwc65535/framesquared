@@ -75,15 +75,9 @@ export interface TypedObservable<Events extends { [K in keyof Events]: unknown[]
     scope?: object,
   ): void;
 
-  fireEvent<E extends keyof Events & string>(
-    eventName: E,
-    ...args: Events[E]
-  ): boolean;
+  fireEvent<E extends keyof Events & string>(eventName: E, ...args: Events[E]): boolean;
 
-  fireEventArgs<E extends keyof Events & string>(
-    eventName: E,
-    args: Events[E],
-  ): boolean;
+  fireEventArgs<E extends keyof Events & string>(eventName: E, args: Events[E]): boolean;
 
   hasListener<E extends keyof Events & string>(eventName: E): boolean;
 }

@@ -1,12 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { Base, define, ClassManager } from '../src/class/index.js';
-import {
-  config,
-  observable,
-  alias,
-  mixin,
-  override,
-} from '../src/class/decorators.js';
+import { config, observable, alias, mixin, override } from '../src/class/decorators.js';
 import { Configurator } from '../src/class/Configurator.js';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -76,7 +70,9 @@ describe('@config basic', () => {
     const spy = vi.fn();
     class Widget extends Base {
       @config accessor score: number = 0;
-      updateScore(newVal: number, oldVal: number) { spy(newVal, oldVal); }
+      updateScore(newVal: number, oldVal: number) {
+        spy(newVal, oldVal);
+      }
     }
     const w = new Widget({ score: 10 });
     expect(spy).toHaveBeenCalledWith(10, 0);
@@ -86,7 +82,9 @@ describe('@config basic', () => {
     const spy = vi.fn();
     class Widget extends Base {
       @config accessor score: number = 0;
-      updateScore(newVal: number, oldVal: number) { spy(newVal, oldVal); }
+      updateScore(newVal: number, oldVal: number) {
+        spy(newVal, oldVal);
+      }
     }
     const w = new Widget({ score: 5 });
     spy.mockClear();
@@ -98,7 +96,9 @@ describe('@config basic', () => {
     const spy = vi.fn();
     class Widget extends Base {
       @config accessor value: number = 0;
-      updateValue(newVal: number, oldVal: number) { spy(newVal, oldVal); }
+      updateValue(newVal: number, oldVal: number) {
+        spy(newVal, oldVal);
+      }
     }
     const w = new Widget({ value: 7 });
     spy.mockClear();
@@ -192,7 +192,8 @@ describe('@config.lazy', () => {
       @config.lazy(() => {
         callCount++;
         return 'computed';
-      }) accessor label: string = '';
+      })
+      accessor label: string = '';
     }
     const w = new Widget();
     w.getLabel();
@@ -215,7 +216,8 @@ describe('@config.lazy', () => {
       @config accessor prefix: string = 'W';
       @config.lazy(function (this: Widget) {
         return `${this.getPrefix()}-item`;
-      }) accessor label: string = '';
+      })
+      accessor label: string = '';
     }
     const w = new Widget({ prefix: 'Panel' });
     expect(w.getLabel()).toBe('Panel-item');
@@ -385,8 +387,16 @@ describe('@mixin class decorator', () => {
   });
 
   it('applies multiple mixins via stacked decorators', () => {
-    const M1 = define('test.dec.Mixin1', { m1() { return 'm1'; } });
-    const M2 = define('test.dec.Mixin2', { m2() { return 'm2'; } });
+    const M1 = define('test.dec.Mixin1', {
+      m1() {
+        return 'm1';
+      },
+    });
+    const M2 = define('test.dec.Mixin2', {
+      m2() {
+        return 'm2';
+      },
+    });
     @mixin(M1)
     @mixin(M2)
     class Widget extends Base {}
@@ -397,11 +407,15 @@ describe('@mixin class decorator', () => {
 
   it('does not overwrite existing methods on the target', () => {
     const M = define('test.dec.MixinOverwrite', {
-      greet() { return 'from mixin'; },
+      greet() {
+        return 'from mixin';
+      },
     });
     @mixin(M)
     class Widget extends Base {
-      greet() { return 'from class'; }
+      greet() {
+        return 'from class';
+      }
     }
     expect(new Widget().greet()).toBe('from class');
   });
@@ -448,13 +462,19 @@ describe('@override class decorator', () => {
 
   it('preserves methods not overridden', () => {
     class Original extends Base {
-      kept() { return 'kept'; }
-      replaced() { return 'old'; }
+      kept() {
+        return 'kept';
+      }
+      replaced() {
+        return 'old';
+      }
     }
 
     @override(Original)
     class _Patch extends Base {
-      replaced() { return 'new'; }
+      replaced() {
+        return 'new';
+      }
     }
 
     const o = new Original();
@@ -586,7 +606,9 @@ describe('Decorated config inheritance', () => {
     const spy = vi.fn((v: string) => v.toUpperCase());
     class Parent extends Base {
       @config accessor label: string = '';
-      applyLabel(v: string) { return spy(v); }
+      applyLabel(v: string) {
+        return spy(v);
+      }
     }
     class Child extends Parent {
       @config accessor extra: number = 0;
@@ -604,7 +626,9 @@ describe('Decorated config inheritance', () => {
 describe('Combined decorators', () => {
   it('class with @alias, @mixin, and @config all together', () => {
     const Loggable = define('test.dec.Loggable', {
-      log(msg: string) { return `[LOG] ${msg}`; },
+      log(msg: string) {
+        return `[LOG] ${msg}`;
+      },
     });
 
     @alias('widget.superpanel')

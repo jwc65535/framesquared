@@ -53,10 +53,7 @@ export class TreeDropZone {
   // Drop position calculation
   // -------------------------------------------------------------------------
 
-  getDropPosition(
-    targetEl: HTMLElement,
-    clientY: number,
-  ): 'before' | 'after' | 'append' {
+  getDropPosition(targetEl: HTMLElement, clientY: number): 'before' | 'after' | 'append' {
     if (this.appendOnly) return 'append';
 
     const rect = targetEl.getBoundingClientRect();

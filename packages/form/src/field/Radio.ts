@@ -31,7 +31,10 @@ export class Radio extends Checkbox {
     // Register in group
     if (this._name) {
       let group = radioGroups.get(this._name);
-      if (!group) { group = new Set(); radioGroups.set(this._name, group); }
+      if (!group) {
+        group = new Set();
+        radioGroups.set(this._name, group);
+      }
       group.add(this);
     }
   }

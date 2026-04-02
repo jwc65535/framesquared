@@ -4,17 +4,26 @@ import { FileField } from '../src/field/FileUpload.js';
 import { HtmlEditor } from '../src/field/HtmlEditor.js';
 import { Spinner } from '../src/field/Spinner.js';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
+class MockRO {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
 beforeEach(() => {
   (globalThis as any).ResizeObserver = MockRO;
   // jsdom doesn't have PointerEvent — polyfill it as MouseEvent subclass
   if (typeof PointerEvent === 'undefined') {
     (globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {
-      constructor(type: string, init?: MouseEventInit) { super(type, init); }
+      constructor(type: string, init?: MouseEventInit) {
+        super(type, init);
+      }
     };
   }
 });
-afterEach(() => { document.body.innerHTML = ''; });
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Slider — basics
@@ -153,7 +162,8 @@ describe('Slider — multi-thumb', () => {
   it('renders multiple thumbs', () => {
     const s = new Slider({
       renderTo: document.body,
-      minValue: 0, maxValue: 100,
+      minValue: 0,
+      maxValue: 100,
       values: [20, 50, 80],
     });
     const thumbs = s.el!.querySelectorAll('.x-slider-thumb');
@@ -163,7 +173,8 @@ describe('Slider — multi-thumb', () => {
   it('getValues returns all thumb values', () => {
     const s = new Slider({
       renderTo: document.body,
-      minValue: 0, maxValue: 100,
+      minValue: 0,
+      maxValue: 100,
       values: [10, 50, 90],
     });
     expect(s.getValues()).toEqual([10, 50, 90]);
@@ -178,7 +189,8 @@ describe('Slider — vertical', () => {
   it('vertical:true adds x-slider-vertical class', () => {
     const s = new Slider({
       renderTo: document.body,
-      minValue: 0, maxValue: 100,
+      minValue: 0,
+      maxValue: 100,
       vertical: true,
     });
     expect(s.el!.classList.contains('x-slider-vertical')).toBe(true);

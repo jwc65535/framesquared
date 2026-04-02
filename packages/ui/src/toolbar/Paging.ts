@@ -108,7 +108,9 @@ export class PagingToolbar extends Toolbar {
   // Navigation
   // -----------------------------------------------------------------------
 
-  private moveFirst(): void { this.loadPage(1); }
+  private moveFirst(): void {
+    this.loadPage(1);
+  }
 
   private movePrevious(): void {
     const page = Math.max(1, (this._store?.currentPage ?? 1) - 1);
@@ -120,7 +122,9 @@ export class PagingToolbar extends Toolbar {
     this.loadPage(page);
   }
 
-  private moveLast(): void { this.loadPage(this.getTotalPages()); }
+  private moveLast(): void {
+    this.loadPage(this.getTotalPages());
+  }
 
   private doRefresh(): void {
     this.loadPage(this._store?.currentPage ?? 1);

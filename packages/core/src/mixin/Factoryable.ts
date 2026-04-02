@@ -36,7 +36,7 @@ export const Factoryable = {
     if (!alias || typeof alias !== 'string') {
       throw new Error(
         'Factoryable.create(): config must have an "xtype" or "type" property, ' +
-        'be a string alias, or be a Base instance',
+          'be a string alias, or be a Base instance',
       );
     }
 

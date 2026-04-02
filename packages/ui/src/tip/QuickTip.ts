@@ -118,11 +118,17 @@ function hideQuickTip(): void {
 }
 
 function clearShow(): void {
-  if (showTimer !== null) { clearTimeout(showTimer); showTimer = null; }
+  if (showTimer !== null) {
+    clearTimeout(showTimer);
+    showTimer = null;
+  }
 }
 
 function clearHide(): void {
-  if (hideTimer !== null) { clearTimeout(hideTimer); hideTimer = null; }
+  if (hideTimer !== null) {
+    clearTimeout(hideTimer);
+    hideTimer = null;
+  }
 }
 
 // ---------------------------------------------------------------------------

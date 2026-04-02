@@ -4,9 +4,18 @@ import { Panel } from '../src/panel/Panel.js';
 import type { ToolConfig } from '../src/panel/Panel.js';
 
 // ResizeObserver mock
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+class MockRO {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 function panel(cfg: Record<string, unknown> = {}): Panel {
   return new Panel({ renderTo: document.body, ...cfg });
@@ -222,7 +231,8 @@ describe('Collapse / Expand', () => {
     const beforeSpy = vi.fn();
     const collapseSpy = vi.fn();
     const p = panel({
-      title: 'Test', collapsible: true,
+      title: 'Test',
+      collapsible: true,
       listeners: { beforecollapse: beforeSpy, collapse: collapseSpy },
     });
     p.collapse();
@@ -234,7 +244,9 @@ describe('Collapse / Expand', () => {
     const beforeSpy = vi.fn();
     const expandSpy = vi.fn();
     const p = panel({
-      title: 'Test', collapsible: true, collapsed: true,
+      title: 'Test',
+      collapsible: true,
+      collapsed: true,
       listeners: { beforeexpand: beforeSpy, expand: expandSpy },
     });
     p.expand();
@@ -268,7 +280,8 @@ describe('Close', () => {
     const beforeSpy = vi.fn();
     const closeSpy = vi.fn();
     const p = panel({
-      title: 'Test', closable: true,
+      title: 'Test',
+      closable: true,
       listeners: { beforeclose: beforeSpy, close: closeSpy },
     });
     p.close();
@@ -285,7 +298,8 @@ describe('Close', () => {
   it('clicking close tool calls close()', () => {
     const closeSpy = vi.fn();
     const p = panel({
-      title: 'Test', closable: true,
+      title: 'Test',
+      closable: true,
       listeners: { close: closeSpy },
     });
     const tool = p.el!.querySelector('.x-tool-close') as HTMLElement;
@@ -311,7 +325,9 @@ describe('Docked items', () => {
     const toolbar = new Component({ html: 'Top', dock: 'top' });
     p.addDocked(toolbar);
     const body = p.el!.querySelector('.x-panel-body') as HTMLElement;
-    expect(toolbar.el!.compareDocumentPosition(body) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(
+      toolbar.el!.compareDocumentPosition(body) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
   });
 
   it('docked "bottom" renders after body', () => {
@@ -518,7 +534,12 @@ describe('Additional Panel coverage', () => {
 
   it('collapse on already collapsed is no-op', () => {
     const spy = vi.fn();
-    const p = panel({ title: 'T', collapsible: true, collapsed: true, listeners: { collapse: spy } });
+    const p = panel({
+      title: 'T',
+      collapsible: true,
+      collapsed: true,
+      listeners: { collapse: spy },
+    });
     p.collapse();
     expect(spy).not.toHaveBeenCalled();
   });

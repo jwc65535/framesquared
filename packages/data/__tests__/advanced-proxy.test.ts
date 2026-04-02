@@ -65,7 +65,14 @@ describe('GraphQLProxy', () => {
   });
 
   it('parses GraphQL response into ResultSet', async () => {
-    mockFetchResponse({ data: { users: [{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }] } });
+    mockFetchResponse({
+      data: {
+        users: [
+          { id: 1, name: 'Alice' },
+          { id: 2, name: 'Bob' },
+        ],
+      },
+    });
     const proxy = new GraphQLProxy({
       model: TestModel,
       url: '/graphql',
@@ -147,8 +154,13 @@ describe('WebSocketProxy', () => {
         wsMock = this;
         setTimeout(() => this.onopen?.({ type: 'open' }), 0);
       }
-      send(data: string) { this.sent.push(data); }
-      close() { this.readyState = 3; this.onclose?.({ type: 'close' }); }
+      send(data: string) {
+        this.sent.push(data);
+      }
+      close() {
+        this.readyState = 3;
+        this.onclose?.({ type: 'close' });
+      }
     };
   });
 
@@ -191,7 +203,7 @@ describe('WebSocketProxy', () => {
     proxy.on('message', spy);
     proxy.connect();
     // Wait for onopen
-    await new Promise(r => setTimeout(r, 10));
+    await new Promise((r) => setTimeout(r, 10));
     // Simulate incoming message
     wsMock.onmessage?.({ data: JSON.stringify({ records: [{ id: 1, name: 'Alice' }] }) });
     expect(spy).toHaveBeenCalled();
@@ -206,7 +218,7 @@ describe('WebSocketProxy', () => {
     });
     proxy.on('open', spy);
     proxy.connect();
-    await new Promise(r => setTimeout(r, 10));
+    await new Promise((r) => setTimeout(r, 10));
     expect(spy).toHaveBeenCalled();
     proxy.disconnect();
   });
@@ -219,13 +231,13 @@ describe('WebSocketProxy', () => {
       reconnectInterval: 50,
     });
     proxy.connect();
-    await new Promise(r => setTimeout(r, 10));
+    await new Promise((r) => setTimeout(r, 10));
     expect(wsInstances.length).toBe(1);
     // Trigger close
     wsMock.readyState = 3;
     wsMock.onclose?.({ type: 'close' });
     // Wait for reconnect
-    await new Promise(r => setTimeout(r, 100));
+    await new Promise((r) => setTimeout(r, 100));
     expect(wsInstances.length).toBe(2);
     proxy.disconnect();
   });
@@ -262,9 +274,7 @@ describe('BatchProxy', () => {
   it('batch request body contains all operations', async () => {
     mockFetchResponse({ results: [{ success: true, records: [] }] });
     const proxy = new BatchProxy({ model: TestModel, url: '/batch' });
-    const ops = [
-      new Operation({ action: 'read', params: { page: 1 } }),
-    ];
+    const ops = [new Operation({ action: 'read', params: { page: 1 } })];
     await proxy.sendBatch(ops);
     const body = JSON.parse(fetchMock.mock.calls[0][1].body);
     expect(body.operations).toHaveLength(1);

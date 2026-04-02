@@ -27,7 +27,9 @@ class User extends Model {
   static override idProperty = 'id';
 }
 
-function u(data: Record<string, unknown>) { return User.create(data); }
+function u(data: Record<string, unknown>) {
+  return User.create(data);
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Operation
@@ -80,7 +82,11 @@ describe('Operation', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 describe('ResultSet', () => {
   it('stores records, total, success', () => {
-    const rs = new ResultSet({ records: [u({ id: 1, name: 'A', age: 20 })], total: 1, success: true });
+    const rs = new ResultSet({
+      records: [u({ id: 1, name: 'A', age: 20 })],
+      total: 1,
+      success: true,
+    });
     expect(rs.records.length).toBe(1);
     expect(rs.total).toBe(1);
     expect(rs.success).toBe(true);
@@ -92,7 +98,10 @@ describe('ResultSet', () => {
   });
 
   it('defaults total to records.length', () => {
-    const rs = new ResultSet({ records: [u({ id: 1, name: 'A', age: 20 }), u({ id: 2, name: 'B', age: 25 })], success: true });
+    const rs = new ResultSet({
+      records: [u({ id: 1, name: 'A', age: 20 }), u({ id: 2, name: 'B', age: 25 })],
+      success: true,
+    });
     expect(rs.total).toBe(2);
   });
 });
@@ -103,7 +112,10 @@ describe('ResultSet', () => {
 describe('JsonReader', () => {
   it('parses flat JSON array', () => {
     const reader = new JsonReader({ model: User });
-    const rs = reader.read([{ id: 1, name: 'A', age: 20 }, { id: 2, name: 'B', age: 25 }]);
+    const rs = reader.read([
+      { id: 1, name: 'A', age: 20 },
+      { id: 2, name: 'B', age: 25 },
+    ]);
     expect(rs.success).toBe(true);
     expect(rs.records.length).toBe(2);
     expect(rs.records[0].get('name')).toBe('A');
@@ -122,7 +134,11 @@ describe('JsonReader', () => {
   });
 
   it('extracts successProperty', () => {
-    const reader = new JsonReader({ model: User, rootProperty: 'data', successProperty: 'success' });
+    const reader = new JsonReader({
+      model: User,
+      rootProperty: 'data',
+      successProperty: 'success',
+    });
     const rs = reader.read({ data: [], success: false });
     expect(rs.success).toBe(false);
   });
@@ -150,7 +166,10 @@ describe('JsonReader', () => {
 describe('ArrayReader', () => {
   it('parses array-of-arrays using field order', () => {
     const reader = new ArrayReader({ model: User });
-    const rs = reader.read([[1, 'Alice', 30], [2, 'Bob', 25]]);
+    const rs = reader.read([
+      [1, 'Alice', 30],
+      [2, 'Bob', 25],
+    ]);
     expect(rs.records.length).toBe(2);
     expect(rs.records[0].get('id')).toBe(1);
     expect(rs.records[0].get('name')).toBe('Alice');
@@ -351,7 +370,9 @@ describe('LocalStorageProxy', () => {
   });
 
   it('data persists across proxy instances', async () => {
-    await proxy.create(new Operation({ action: 'create', records: [u({ id: 1, name: 'A', age: 20 })] }));
+    await proxy.create(
+      new Operation({ action: 'create', records: [u({ id: 1, name: 'A', age: 20 })] }),
+    );
     const proxy2 = new LocalStorageProxy({ model: User, id: 'test-users' });
     const rs = await proxy2.read(new Operation({ action: 'read' }));
     expect(rs.records.length).toBe(1);
@@ -382,7 +403,9 @@ describe('SessionStorageProxy', () => {
   it('uses sessionStorage instead of localStorage', async () => {
     sessionStorage.clear();
     const proxy = new SessionStorageProxy({ model: User, id: 'sess-users' });
-    await proxy.create(new Operation({ action: 'create', records: [u({ id: 1, name: 'A', age: 20 })] }));
+    await proxy.create(
+      new Operation({ action: 'create', records: [u({ id: 1, name: 'A', age: 20 })] }),
+    );
     const raw = sessionStorage.getItem('sess-users');
     expect(raw).not.toBeNull();
     const rs = await proxy.read(new Operation({ action: 'read' }));
@@ -487,9 +510,14 @@ describe('AjaxProxy', () => {
 
   it('supports AbortController cancellation', async () => {
     const controller = new AbortController();
-    fetchMock.mockImplementation(() => new Promise((_, reject) => {
-      controller.signal.addEventListener('abort', () => reject(new DOMException('Aborted', 'AbortError')));
-    }));
+    fetchMock.mockImplementation(
+      () =>
+        new Promise((_, reject) => {
+          controller.signal.addEventListener('abort', () =>
+            reject(new DOMException('Aborted', 'AbortError')),
+          );
+        }),
+    );
     const proxy = new AjaxProxy({ url: '/api/users', model: User });
     const promise = proxy.read(new Operation({ action: 'read' }), controller.signal);
     controller.abort();
@@ -514,7 +542,8 @@ describe('RestProxy', () => {
 
   beforeEach(() => {
     fetchMock = vi.fn().mockResolvedValue({
-      ok: true, status: 200,
+      ok: true,
+      status: 200,
       json: () => Promise.resolve({ id: 1, name: 'A', age: 20 }),
       text: () => Promise.resolve('{}'),
     });

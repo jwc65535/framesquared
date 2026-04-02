@@ -407,7 +407,10 @@ describe('createSequence', () => {
   });
 
   it('returns undefined', () => {
-    const seq = createSequence(() => 1, () => 2);
+    const seq = createSequence(
+      () => 1,
+      () => 2,
+    );
     expect(seq()).toBeUndefined();
   });
 

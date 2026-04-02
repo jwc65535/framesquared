@@ -20,10 +20,18 @@
 // ---------------------------------------------------------------------------
 
 const HTML_ENCODE_MAP: Record<string, string> = {
-  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
 };
 const HTML_DECODE_MAP: Record<string, string> = {
-  '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'",
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+  '&quot;': '"',
+  '&#39;': "'",
 };
 
 function htmlEncode(v: unknown): string {
@@ -31,7 +39,10 @@ function htmlEncode(v: unknown): string {
 }
 
 function htmlDecode(v: unknown): string {
-  return String(v ?? '').replace(/&amp;|&lt;|&gt;|&quot;|&#39;/g, (ent) => HTML_DECODE_MAP[ent] ?? ent);
+  return String(v ?? '').replace(
+    /&amp;|&lt;|&gt;|&quot;|&#39;/g,
+    (ent) => HTML_DECODE_MAP[ent] ?? ent,
+  );
 }
 
 const FORMAT_FNS: Record<string, (value: any, arg?: string) => string> = {
@@ -87,9 +98,20 @@ const FORMAT_FNS: Record<string, (value: any, arg?: string) => string> = {
 // AST node types
 // ---------------------------------------------------------------------------
 
-interface TextNode { type: 'text'; value: string; }
-interface InterpNode { type: 'interp'; path: string; format?: string; formatArg?: string; }
-interface ExprNode { type: 'expr'; code: string; }
+interface TextNode {
+  type: 'text';
+  value: string;
+}
+interface InterpNode {
+  type: 'interp';
+  path: string;
+  format?: string;
+  formatArg?: string;
+}
+interface ExprNode {
+  type: 'expr';
+  code: string;
+}
 interface IfNode {
   type: 'if';
   condition: string;
@@ -196,7 +218,10 @@ function parseInterp(inner: string): InterpNode {
 // <tpl> tag matching
 // ---------------------------------------------------------------------------
 
-interface TplOpenResult { tag: string; end: number; }
+interface TplOpenResult {
+  tag: string;
+  end: number;
+}
 
 function matchTplOpen(src: string, pos: number): TplOpenResult | null {
   if (src.slice(pos, pos + 4) !== '<tpl') return null;
@@ -234,7 +259,10 @@ function findClosingTpl(src: string, pos: number): number {
     if (src.slice(i, i + 4) === '<tpl') {
       // Find the close of this tag (quote-aware)
       const tagEnd = findTplTagEnd(src, i + 4);
-      if (tagEnd === -1) { i++; continue; }
+      if (tagEnd === -1) {
+        i++;
+        continue;
+      }
       const tagContent = src.slice(i + 4, tagEnd).trim();
 
       // <tpl else> or <tpl elseif="..."> at our depth — don't change depth
@@ -272,8 +300,7 @@ function findTplTagEnd(src: string, start: number): number {
 // If parsing
 // ---------------------------------------------------------------------------
 
-function parseIf(src: string, tag: string, bodyStart: number):
-  { node: IfNode; pos: number } {
+function parseIf(src: string, tag: string, bodyStart: number): { node: IfNode; pos: number } {
   const condition = extractQuoted(tag.slice(3)); // after "if="
   const closeTpl = findClosingTpl(src, bodyStart);
   const innerSrc = src.slice(bodyStart, closeTpl);
@@ -297,8 +324,7 @@ function parseIf(src: string, tag: string, bodyStart: number):
 
 function extractQuoted(s: string): string {
   s = s.trim();
-  if ((s.startsWith('"') && s.endsWith('"')) ||
-      (s.startsWith("'") && s.endsWith("'"))) {
+  if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
     return s.slice(1, -1);
   }
   return s;
@@ -325,12 +351,19 @@ function splitBranches(inner: string): BranchSplit {
     }
     if (inner.slice(i, i + 4) === '<tpl') {
       const tagEnd = findTplTagEnd(inner, i + 4);
-      if (tagEnd === -1) { i++; continue; }
+      if (tagEnd === -1) {
+        i++;
+        continue;
+      }
       const tagContent = inner.slice(i + 4, tagEnd).trim();
 
       if (depth === 0) {
         if (tagContent.startsWith('elseif=')) {
-          parts.push({ type: 'elseif', condition: extractQuoted(tagContent.slice(7)), start: tagEnd + 1 });
+          parts.push({
+            type: 'elseif',
+            condition: extractQuoted(tagContent.slice(7)),
+            start: tagEnd + 1,
+          });
           i = tagEnd + 1;
           continue;
         }
@@ -353,9 +386,8 @@ function splitBranches(inner: string): BranchSplit {
     result.ifBody = inner.slice(0, findTplTagBefore(inner, parts[0].start));
     for (let p = 0; p < parts.length; p++) {
       const part = parts[p];
-      const bodyEnd = p + 1 < parts.length
-        ? findTplTagBefore(inner, parts[p + 1].start)
-        : inner.length;
+      const bodyEnd =
+        p + 1 < parts.length ? findTplTagBefore(inner, parts[p + 1].start) : inner.length;
       const body = inner.slice(part.start, bodyEnd);
       if (part.type === 'elseif') {
         result.elseifs.push({ condition: part.condition!, body });
@@ -379,8 +411,7 @@ function findTplTagBefore(src: string, contentStart: number): number {
 // For parsing
 // ---------------------------------------------------------------------------
 
-function parseFor(src: string, tag: string, bodyStart: number):
-  { node: ForNode; pos: number } {
+function parseFor(src: string, tag: string, bodyStart: number): { node: ForNode; pos: number } {
   const field = extractQuoted(tag.slice(4)); // after "for="
   const closeTpl = findClosingTpl(src, bodyStart);
   const body = parseTemplate(src.slice(bodyStart, closeTpl));
@@ -481,8 +512,7 @@ function evalExpr(
 ): string {
   try {
     // Create a scope with `values`, `xindex`, `xcount`, and `this` bound to memberFns
-    const fn = new Function('values', 'xindex', 'xcount',
-      `"use strict"; return (${code});`);
+    const fn = new Function('values', 'xindex', 'xcount', `"use strict"; return (${code});`);
     const result = fn.call(memberFns, data, xindex, xcount);
     return result === undefined || result === null ? '' : String(result);
   } catch {

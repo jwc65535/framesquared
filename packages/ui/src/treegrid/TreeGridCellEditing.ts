@@ -246,7 +246,8 @@ export class TreeGridCellEditing {
           const v = typeof item === 'string' ? item : String(item.value);
           const t = typeof item === 'string' ? item : item.text;
           const label = document.createElement('label');
-          label.style.cssText = 'display:flex;align-items:center;gap:3px;cursor:pointer;white-space:nowrap;font:inherit;';
+          label.style.cssText =
+            'display:flex;align-items:center;gap:3px;cursor:pointer;white-space:nowrap;font:inherit;';
           const radio = document.createElement('input');
           radio.type = 'radio';
           radio.name = groupName;
@@ -292,13 +293,17 @@ export class TreeGridCellEditing {
           'display:flex;align-items:center;gap:4px;padding:0 4px;';
         const colorInput = document.createElement('input');
         colorInput.type = 'color';
-        colorInput.style.cssText = 'width:32px;height:24px;border:none;padding:0;cursor:pointer;background:transparent;';
+        colorInput.style.cssText =
+          'width:32px;height:24px;border:none;padding:0;cursor:pointer;background:transparent;';
         colorInput.value = String(value ?? '#000000');
         const textInput = document.createElement('input');
         textInput.type = 'text';
-        textInput.style.cssText = 'flex:1;border:none;outline:none;font:inherit;background:transparent;';
+        textInput.style.cssText =
+          'flex:1;border:none;outline:none;font:inherit;background:transparent;';
         textInput.value = String(value ?? '');
-        colorInput.addEventListener('input', () => { textInput.value = colorInput.value; });
+        colorInput.addEventListener('input', () => {
+          textInput.value = colorInput.value;
+        });
         textInput.addEventListener('input', () => {
           if (/^#[0-9a-fA-F]{6}$/.test(textInput.value)) {
             colorInput.value = textInput.value;
@@ -352,10 +357,10 @@ export class TreeGridCellEditing {
         return (editor as HTMLInputElement).valueAsNumber;
       }
       default: {
-        const focusable = editor.querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
-          'input,select,textarea',
-        );
-        return focusable ? focusable.value : (editor as HTMLInputElement).value ?? '';
+        const focusable = editor.querySelector<
+          HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >('input,select,textarea');
+        return focusable ? focusable.value : ((editor as HTMLInputElement).value ?? '');
       }
     }
   }
@@ -377,11 +382,7 @@ export class TreeGridCellEditing {
     this.activeEditor = null;
   }
 
-  private _focusNextCell(
-    record: NodeInterface,
-    currentDataIndex: string,
-    reverse = false,
-  ): void {
+  private _focusNextCell(record: NodeInterface, currentDataIndex: string, reverse = false): void {
     const columns = this.treeGrid?.getColumns() ?? [];
     const currentIdx = columns.findIndex((c) => c.dataIndex === currentDataIndex);
     const nextIdx = reverse ? currentIdx - 1 : currentIdx + 1;

@@ -289,14 +289,14 @@ export class Container extends Component {
 
     // Merge defaults
     const config = this._config as ContainerConfig;
-    const merged = config.defaults
-      ? { ...config.defaults, ...item }
-      : { ...item };
+    const merged = config.defaults ? { ...config.defaults, ...item } : { ...item };
 
     // Resolve xtype via ClassManager if registered, otherwise create generic Component
     const xtype = (merged as any).xtype;
     if (xtype) {
-      const Ctor = ClassManager.getByAlias(`widget.${xtype}`) as (new (cfg: any) => Component) | undefined;
+      const Ctor = ClassManager.getByAlias(`widget.${xtype}`) as
+        | (new (cfg: any) => Component)
+        | undefined;
       if (Ctor) return new Ctor(merged);
     }
     return new Component(merged);

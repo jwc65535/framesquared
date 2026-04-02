@@ -57,18 +57,54 @@ function getNestedValue(data: Record<string, unknown>, path: string): unknown {
 const MODEL_PROPS = new Set<string | symbol>([
   // Commonly accessed non-field properties/methods that should NOT
   // be intercepted by the proxy's field get/set logic.
-  'constructor', 'prototype', '__proto__',
-  'get', 'set', 'getData', 'getId', 'setId',
-  'isModified', 'getChanges', 'commit', 'reject', 'validate', 'isValid',
-  'on', 'un', 'fireEvent', 'fireEventArgs', 'addListener', 'removeListener',
-  'hasListener', 'clearListeners', 'suspendEvents', 'resumeEvents', 'isSuspended',
-  'mon', 'mun', 'relayEvents', 'fireEventedAction',
-  'destroy', 'isDestroyed', '$destroyHooks',
-  '$className', 'self', '$callStack', '$configInitialized', '$pendingConfig',
-  'hasMixin', 'initConfig', 'callParent',
-  'modified', 'phantom',
-  '$associations', '$fieldMap', '$data',
-  Symbol.dispose, Symbol.toPrimitive, Symbol.toStringTag,
+  'constructor',
+  'prototype',
+  '__proto__',
+  'get',
+  'set',
+  'getData',
+  'getId',
+  'setId',
+  'isModified',
+  'getChanges',
+  'commit',
+  'reject',
+  'validate',
+  'isValid',
+  'on',
+  'un',
+  'fireEvent',
+  'fireEventArgs',
+  'addListener',
+  'removeListener',
+  'hasListener',
+  'clearListeners',
+  'suspendEvents',
+  'resumeEvents',
+  'isSuspended',
+  'mon',
+  'mun',
+  'relayEvents',
+  'fireEventedAction',
+  'destroy',
+  'isDestroyed',
+  '$destroyHooks',
+  '$className',
+  'self',
+  '$callStack',
+  '$configInitialized',
+  '$pendingConfig',
+  'hasMixin',
+  'initConfig',
+  'callParent',
+  'modified',
+  'phantom',
+  '$associations',
+  '$fieldMap',
+  '$data',
+  Symbol.dispose,
+  Symbol.toPrimitive,
+  Symbol.toStringTag,
 ]);
 
 function createModelProxy(model: Model): Model {
@@ -80,8 +116,9 @@ function createModelProxy(model: Model): Model {
       }
       // If it exists directly on the instance or prototype, use normal access
       if (prop in target) {
-        const desc = Object.getOwnPropertyDescriptor(target, prop)
-          ?? Object.getOwnPropertyDescriptor(Object.getPrototypeOf(target), prop);
+        const desc =
+          Object.getOwnPropertyDescriptor(target, prop) ??
+          Object.getOwnPropertyDescriptor(Object.getPrototypeOf(target), prop);
         if (desc?.get || typeof desc?.value === 'function') {
           return Reflect.get(target, prop, receiver);
         }
@@ -218,9 +255,7 @@ export class Model extends Base {
 
   set(fieldNameOrData: string | Record<string, unknown>, value?: unknown): string[] {
     const changes: Record<string, unknown> =
-      typeof fieldNameOrData === 'string'
-        ? { [fieldNameOrData]: value }
-        : fieldNameOrData;
+      typeof fieldNameOrData === 'string' ? { [fieldNameOrData]: value } : fieldNameOrData;
 
     const modifiedFields: string[] = [];
 
@@ -382,10 +417,7 @@ function ensureObservable(instance: Model): void {
  * Processes all associations for the given instance's model class.
  * Installs getters/setters, loads nested data, sets up cascade hooks.
  */
-function installAssociations(
-  instance: Model,
-  rawData: Record<string, unknown>,
-): void {
+function installAssociations(instance: Model, rawData: Record<string, unknown>): void {
   const modelName = (instance.constructor as typeof Model).$className;
   const assocs = Schema.getAssociations(modelName);
   if (assocs.length === 0) return;
@@ -441,7 +473,7 @@ function installHasOne(
   // Load from nested data
   const nestedData = rawData[name];
   if (nestedData && typeof nestedData === 'object' && !Array.isArray(nestedData)) {
-    const childData = { ...nestedData as Record<string, unknown> };
+    const childData = { ...(nestedData as Record<string, unknown>) };
     // Set foreignKey
     const parentId = instance.get(assoc.primaryKey);
     if (parentId !== undefined) {
@@ -499,7 +531,7 @@ function installHasMany(
     const parentId = instance.get(assoc.primaryKey);
     for (const itemData of nestedData) {
       if (typeof itemData === 'object' && itemData !== null) {
-        const childData = { ...itemData as Record<string, unknown> };
+        const childData = { ...(itemData as Record<string, unknown>) };
         if (parentId !== undefined) {
           childData[assoc.foreignKey] = parentId;
         }

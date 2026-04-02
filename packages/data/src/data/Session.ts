@@ -56,9 +56,15 @@ export class Session {
   // Accessors
   // -----------------------------------------------------------------------
 
-  getCreated(): Model[] { return [...this.created.values()]; }
-  getUpdated(): Model[] { return [...this.updated.values()]; }
-  getDestroyed(): Model[] { return [...this.destroyed.values()]; }
+  getCreated(): Model[] {
+    return [...this.created.values()];
+  }
+  getUpdated(): Model[] {
+    return [...this.updated.values()];
+  }
+  getDestroyed(): Model[] {
+    return [...this.destroyed.values()];
+  }
 
   getChanges(): SessionChanges {
     return {
@@ -97,7 +103,7 @@ export class Session {
     }
 
     const results = await proxy.sendBatch(ops);
-    const success = results.every(r => r.success);
+    const success = results.every((r) => r.success);
     return { success, results };
   }
 

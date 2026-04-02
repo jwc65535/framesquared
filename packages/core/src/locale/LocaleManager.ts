@@ -13,7 +13,7 @@ let activeLocale: Locale | null = null;
 const listeners: Record<string, Function[]> = {};
 
 function fire(event: string, ...args: unknown[]): void {
-  (listeners[event] ?? []).forEach(fn => fn(...args));
+  (listeners[event] ?? []).forEach((fn) => fn(...args));
 }
 
 export const LocaleManager = {

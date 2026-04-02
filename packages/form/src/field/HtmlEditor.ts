@@ -36,7 +36,8 @@ const TOOLBAR_BUTTONS = [
 ];
 
 // Dangerous tags to strip for XSS prevention
-const XSS_TAGS = /(<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>|<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>|on\w+="[^"]*"|on\w+='[^']*')/gi;
+const XSS_TAGS =
+  /(<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>|<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>|on\w+="[^"]*"|on\w+='[^']*')/gi;
 
 export class HtmlEditor extends Field {
   static override $className = 'Ext.form.field.HtmlEditor';

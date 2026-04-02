@@ -170,7 +170,9 @@ export class TreeGridFilterPlugin {
         return Number(nodeVal) <= Number(filterVal);
       case 'contains':
       default:
-        return String(nodeVal ?? '').toLowerCase().includes(String(filterVal ?? '').toLowerCase());
+        return String(nodeVal ?? '')
+          .toLowerCase()
+          .includes(String(filterVal ?? '').toLowerCase());
     }
   }
 

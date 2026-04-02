@@ -193,9 +193,10 @@ export class BufferedStore extends Base {
     }
 
     // Prefetch trailing pages (after the requested range)
-    const maxPage = this.totalCount > 0
-      ? Math.floor((this.totalCount - 1) / this.pageSize)
-      : endPage + trailingPages;
+    const maxPage =
+      this.totalCount > 0
+        ? Math.floor((this.totalCount - 1) / this.pageSize)
+        : endPage + trailingPages;
 
     for (let p = endPage + 1; p <= endPage + trailingPages && p <= maxPage; p++) {
       if (!this.pageMap.has(p) && !this.pendingPages.has(p)) {

@@ -44,7 +44,12 @@ export class Window extends Panel {
   declare private _modal: boolean;
   declare private _maskEl: HTMLElement | null;
   declare private _maximized: boolean;
-  declare private _restoreState: { left: string; top: string; width: string; height: string } | null;
+  declare private _restoreState: {
+    left: string;
+    top: string;
+    width: string;
+    height: string;
+  } | null;
   declare private _closeAction: 'destroy' | 'hide';
   declare private _draggable: boolean;
   declare private _dragCleanup: (() => void) | null;

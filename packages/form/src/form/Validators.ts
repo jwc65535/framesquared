@@ -78,7 +78,18 @@ export function custom(value: unknown, opts: { fn: (v: unknown) => true | string
 // ---------------------------------------------------------------------------
 
 interface ChainEntry {
-  type: 'presence' | 'length' | 'email' | 'url' | 'alpha' | 'alphanum' | 'range' | 'format' | 'inclusion' | 'exclusion' | 'custom';
+  type:
+    | 'presence'
+    | 'length'
+    | 'email'
+    | 'url'
+    | 'alpha'
+    | 'alphanum'
+    | 'range'
+    | 'format'
+    | 'inclusion'
+    | 'exclusion'
+    | 'custom';
   [key: string]: unknown;
 }
 

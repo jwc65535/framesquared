@@ -184,7 +184,14 @@ export class Panel extends Container {
     if (cfg.header === false) return false;
     if (cfg.header === true) return true;
     // Show header if there's a title, icon, or tools
-    return !!(cfg.title || cfg.iconCls || cfg.icon || cfg.tools?.length || cfg.closable || cfg.collapsible);
+    return !!(
+      cfg.title ||
+      cfg.iconCls ||
+      cfg.icon ||
+      cfg.tools?.length ||
+      cfg.closable ||
+      cfg.collapsible
+    );
   }
 
   private buildHeader(cfg: PanelConfig): void {
@@ -257,9 +264,8 @@ export class Panel extends Container {
     const body = this._panelBodyEl!;
 
     if (cfg.bodyPadding !== undefined) {
-      body.style.padding = typeof cfg.bodyPadding === 'number'
-        ? `${cfg.bodyPadding}px`
-        : cfg.bodyPadding;
+      body.style.padding =
+        typeof cfg.bodyPadding === 'number' ? `${cfg.bodyPadding}px` : cfg.bodyPadding;
     }
 
     if (cfg.bodyStyle) {
@@ -406,7 +412,7 @@ export class Panel extends Container {
     this._dockedItems.push(item);
 
     if (this.rendered && this.el) {
-      const dock = (item as any)._config?.dock as string ?? 'top';
+      const dock = ((item as any)._config?.dock as string) ?? 'top';
       const body = this._panelBodyEl ?? this.el;
 
       if (dock === 'top' || dock === 'left') {

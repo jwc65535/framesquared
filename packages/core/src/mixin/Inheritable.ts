@@ -44,9 +44,10 @@ export const Inheritable: typeof Base = define('Ext.mixin.Inheritable', {
    */
   getInherited(this: Base): Record<string, unknown> {
     const parent = parentRef.get(this);
-    const parentState = parent && typeof (parent as any).getInherited === 'function'
-      ? (parent as any).getInherited()
-      : {};
+    const parentState =
+      parent && typeof (parent as any).getInherited === 'function'
+        ? (parent as any).getInherited()
+        : {};
     const own = ownState.get(this) ?? {};
     return { ...parentState, ...own };
   },

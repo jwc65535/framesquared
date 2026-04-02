@@ -234,22 +234,24 @@ describe('TreeGridPerformance — memory', () => {
     for (let i = 0; i < 10; i++) {
       const container = document.createElement('div');
       document.body.appendChild(container);
-      grids.push(new TreeGrid({
-        renderTo: container,
-        store: {
-          model: TreeModel,
-          root: {
-            id: `root${i}`,
-            text: 'Root',
-            expanded: true,
-            children: [
-              { id: `n${i}_1`, text: 'Node 1', leaf: true },
-              { id: `n${i}_2`, text: 'Node 2', leaf: true },
-            ],
+      grids.push(
+        new TreeGrid({
+          renderTo: container,
+          store: {
+            model: TreeModel,
+            root: {
+              id: `root${i}`,
+              text: 'Root',
+              expanded: true,
+              children: [
+                { id: `n${i}_1`, text: 'Node 1', leaf: true },
+                { id: `n${i}_2`, text: 'Node 2', leaf: true },
+              ],
+            },
           },
-        },
-        columns: [{ dataIndex: 'text', text: 'Name' }],
-      } as any));
+          columns: [{ dataIndex: 'text', text: 'Name' }],
+        } as any),
+      );
     }
 
     // Destroy all

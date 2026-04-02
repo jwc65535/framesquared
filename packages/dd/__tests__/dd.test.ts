@@ -19,7 +19,9 @@ beforeEach(() => {
   }
   DragManager.reset();
 });
-afterEach(() => { document.body.innerHTML = ''; });
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 function fire(el: EventTarget, type: string, opts: Record<string, unknown> = {}) {
   el.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, ...opts } as any));
@@ -138,7 +140,9 @@ describe('Draggable — basics', () => {
 describe('Draggable — axis lock', () => {
   it('axis:"x" locks vertical movement', () => {
     const el = document.createElement('div');
-    el.style.position = 'absolute'; el.style.left = '0px'; el.style.top = '0px';
+    el.style.position = 'absolute';
+    el.style.left = '0px';
+    el.style.top = '0px';
     document.body.appendChild(el);
     const d = new Draggable({ el, axis: 'x', proxy: false });
     fire(el, 'pointerdown', { clientX: 0, clientY: 0 });
@@ -150,7 +154,9 @@ describe('Draggable — axis lock', () => {
 
   it('axis:"y" locks horizontal movement', () => {
     const el = document.createElement('div');
-    el.style.position = 'absolute'; el.style.left = '0px'; el.style.top = '0px';
+    el.style.position = 'absolute';
+    el.style.left = '0px';
+    el.style.top = '0px';
     document.body.appendChild(el);
     const d = new Draggable({ el, axis: 'y', proxy: false });
     fire(el, 'pointerdown', { clientX: 0, clientY: 0 });
@@ -168,7 +174,9 @@ describe('Draggable — axis lock', () => {
 describe('Draggable — snap', () => {
   it('snaps to grid positions', () => {
     const el = document.createElement('div');
-    el.style.position = 'absolute'; el.style.left = '0px'; el.style.top = '0px';
+    el.style.position = 'absolute';
+    el.style.left = '0px';
+    el.style.top = '0px';
     document.body.appendChild(el);
     const d = new Draggable({ el, snap: { x: 20, y: 20 }, proxy: false });
     fire(el, 'pointerdown', { clientX: 0, clientY: 0 });
@@ -186,12 +194,27 @@ describe('Draggable — snap', () => {
 describe('Draggable — constrain', () => {
   it('constrainTo:"parent" keeps within parent bounds', () => {
     const parent = document.createElement('div');
-    parent.style.width = '200px'; parent.style.height = '200px'; parent.style.position = 'relative';
+    parent.style.width = '200px';
+    parent.style.height = '200px';
+    parent.style.position = 'relative';
     // Mock getBoundingClientRect
-    parent.getBoundingClientRect = () => ({ x: 0, y: 0, width: 200, height: 200, top: 0, left: 0, right: 200, bottom: 200, toJSON() {} });
+    parent.getBoundingClientRect = () => ({
+      x: 0,
+      y: 0,
+      width: 200,
+      height: 200,
+      top: 0,
+      left: 0,
+      right: 200,
+      bottom: 200,
+      toJSON() {},
+    });
     const el = document.createElement('div');
-    el.style.position = 'absolute'; el.style.left = '0px'; el.style.top = '0px';
-    el.style.width = '50px'; el.style.height = '50px';
+    el.style.position = 'absolute';
+    el.style.left = '0px';
+    el.style.top = '0px';
+    el.style.width = '50px';
+    el.style.height = '50px';
     parent.appendChild(el);
     document.body.appendChild(parent);
     const d = new Draggable({ el, constrainTo: 'parent', proxy: false });
@@ -215,7 +238,17 @@ describe('Droppable', () => {
     const dropEl = document.createElement('div');
     document.body.appendChild(dragEl);
     document.body.appendChild(dropEl);
-    dropEl.getBoundingClientRect = () => ({ x: 100, y: 100, width: 100, height: 100, top: 100, left: 100, right: 200, bottom: 200, toJSON() {} });
+    dropEl.getBoundingClientRect = () => ({
+      x: 100,
+      y: 100,
+      width: 100,
+      height: 100,
+      top: 100,
+      left: 100,
+      right: 200,
+      bottom: 200,
+      toJSON() {},
+    });
     const enterSpy = vi.fn();
     const drag = new Draggable({ el: dragEl, groups: ['test'] });
     const drop = new Droppable({ el: dropEl, accept: ['test'], onDragEnter: enterSpy });
@@ -230,7 +263,17 @@ describe('Droppable', () => {
     const dropEl = document.createElement('div');
     document.body.appendChild(dragEl);
     document.body.appendChild(dropEl);
-    dropEl.getBoundingClientRect = () => ({ x: 100, y: 100, width: 100, height: 100, top: 100, left: 100, right: 200, bottom: 200, toJSON() {} });
+    dropEl.getBoundingClientRect = () => ({
+      x: 100,
+      y: 100,
+      width: 100,
+      height: 100,
+      top: 100,
+      left: 100,
+      right: 200,
+      bottom: 200,
+      toJSON() {},
+    });
     const drag = new Draggable({ el: dragEl, groups: ['g1'] });
     const drop = new Droppable({ el: dropEl, accept: ['g1'], overCls: 'drop-hover' });
     fire(dragEl, 'pointerdown', { clientX: 0, clientY: 0 });
@@ -246,7 +289,17 @@ describe('Droppable', () => {
     const dropEl = document.createElement('div');
     document.body.appendChild(dragEl);
     document.body.appendChild(dropEl);
-    dropEl.getBoundingClientRect = () => ({ x: 100, y: 100, width: 100, height: 100, top: 100, left: 100, right: 200, bottom: 200, toJSON() {} });
+    dropEl.getBoundingClientRect = () => ({
+      x: 100,
+      y: 100,
+      width: 100,
+      height: 100,
+      top: 100,
+      left: 100,
+      right: 200,
+      bottom: 200,
+      toJSON() {},
+    });
     const dropSpy = vi.fn();
     const drag = new Draggable({ el: dragEl, groups: ['g'] });
     const drop = new Droppable({ el: dropEl, accept: ['g'], onDrop: dropSpy });
@@ -261,7 +314,17 @@ describe('Droppable', () => {
     const dropEl = document.createElement('div');
     document.body.appendChild(dragEl);
     document.body.appendChild(dropEl);
-    dropEl.getBoundingClientRect = () => ({ x: 100, y: 100, width: 100, height: 100, top: 100, left: 100, right: 200, bottom: 200, toJSON() {} });
+    dropEl.getBoundingClientRect = () => ({
+      x: 100,
+      y: 100,
+      width: 100,
+      height: 100,
+      top: 100,
+      left: 100,
+      right: 200,
+      bottom: 200,
+      toJSON() {},
+    });
     const enterSpy = vi.fn();
     const drag = new Draggable({ el: dragEl, groups: ['alpha'] });
     const drop = new Droppable({ el: dropEl, accept: ['beta'], onDragEnter: enterSpy });
@@ -276,10 +339,25 @@ describe('Droppable', () => {
     const dropEl = document.createElement('div');
     document.body.appendChild(dragEl);
     document.body.appendChild(dropEl);
-    dropEl.getBoundingClientRect = () => ({ x: 100, y: 100, width: 100, height: 100, top: 100, left: 100, right: 200, bottom: 200, toJSON() {} });
+    dropEl.getBoundingClientRect = () => ({
+      x: 100,
+      y: 100,
+      width: 100,
+      height: 100,
+      top: 100,
+      left: 100,
+      right: 200,
+      bottom: 200,
+      toJSON() {},
+    });
     const enterSpy = vi.fn();
     const drag = new Draggable({ el: dragEl, groups: ['g'] });
-    const drop = new Droppable({ el: dropEl, accept: ['g'], disabled: true, onDragEnter: enterSpy });
+    const drop = new Droppable({
+      el: dropEl,
+      accept: ['g'],
+      disabled: true,
+      onDragEnter: enterSpy,
+    });
     fire(dragEl, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 150, clientY: 150 });
     expect(enterSpy).not.toHaveBeenCalled();
@@ -294,7 +372,8 @@ describe('Droppable', () => {
 describe('DragProxy', () => {
   it('ghost follows cursor position', () => {
     const el = document.createElement('div');
-    el.style.width = '40px'; el.style.height = '40px';
+    el.style.width = '40px';
+    el.style.height = '40px';
     document.body.appendChild(el);
     const proxy = new DragProxy({ sourceEl: el, ghostCls: 'ghost' });
     proxy.show(10, 20);
@@ -338,8 +417,14 @@ describe('Sortable', () => {
       item.textContent = `Item ${i}`;
       item.style.height = '30px';
       item.getBoundingClientRect = () => ({
-        x: 0, y: i * 30, width: 200, height: 30,
-        top: i * 30, left: 0, right: 200, bottom: (i + 1) * 30,
+        x: 0,
+        y: i * 30,
+        width: 200,
+        height: 30,
+        top: i * 30,
+        left: 0,
+        right: 200,
+        bottom: (i + 1) * 30,
         toJSON() {},
       });
       list.appendChild(item);
@@ -369,7 +454,12 @@ describe('Sortable', () => {
     const list = makeList();
     const startSpy = vi.fn();
     const endSpy = vi.fn();
-    const s = new Sortable({ el: list, itemSelector: '.sort-item', onStart: startSpy, onEnd: endSpy });
+    const s = new Sortable({
+      el: list,
+      itemSelector: '.sort-item',
+      onStart: startSpy,
+      onEnd: endSpy,
+    });
     s.moveItem(1, 4);
     expect(startSpy).toHaveBeenCalled();
     expect(endSpy).toHaveBeenCalled();

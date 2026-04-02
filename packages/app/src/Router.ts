@@ -21,7 +21,11 @@ let beforeRouteFn: ((hash: string) => boolean) | null = null;
 let hashListener: ((e: Event) => void) | null = null;
 let started = false;
 
-function compileRoute(pattern: string): { paramNames: string[]; regex: RegExp; wildcard: string | null } {
+function compileRoute(pattern: string): {
+  paramNames: string[];
+  regex: RegExp;
+  wildcard: string | null;
+} {
   const paramNames: string[] = [];
   let wildcard: string | null = null;
 

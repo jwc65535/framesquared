@@ -12,13 +12,8 @@
 /**
  * Binds `fn` to `scope` with optional pre-filled arguments.
  */
-export function bind<T extends Function>(
-  fn: T,
-  scope: unknown,
-  ...args: unknown[]
-): T {
-  return ((...callArgs: unknown[]) =>
-    fn.apply(scope, [...args, ...callArgs])) as unknown as T;
+export function bind<T extends Function>(fn: T, scope: unknown, ...args: unknown[]): T {
+  return ((...callArgs: unknown[]) => fn.apply(scope, [...args, ...callArgs])) as unknown as T;
 }
 
 // ---------------------------------------------------------------------------
@@ -126,11 +121,7 @@ export function createBarrier(
  * Replaces `obj[methodName]` with a wrapper that calls `fn` **before** the
  * original method.  `fn` receives the same arguments as the original.
  */
-export function interceptBefore(
-  obj: object,
-  methodName: string,
-  fn: Function,
-): void {
+export function interceptBefore(obj: object, methodName: string, fn: Function): void {
   const rec = obj as Record<string, Function>;
   const original = rec[methodName];
 
@@ -145,11 +136,7 @@ export function interceptBefore(
  * original method.  `fn` receives the original method's return value as its
  * single argument.  The wrapper still returns the original return value.
  */
-export function interceptAfter(
-  obj: object,
-  methodName: string,
-  fn: Function,
-): void {
+export function interceptAfter(obj: object, methodName: string, fn: Function): void {
   const rec = obj as Record<string, Function>;
   const original = rec[methodName];
 
@@ -168,9 +155,7 @@ export function interceptAfter(
  * Returns a function that calls every function in `fns` in order, passing
  * all received arguments to each.
  */
-export function createSequence(
-  ...fns: Function[]
-): (...args: unknown[]) => void {
+export function createSequence(...fns: Function[]): (...args: unknown[]) => void {
   return (...args: unknown[]) => {
     for (const fn of fns) {
       fn(...args);
@@ -242,9 +227,7 @@ export function negate<T extends (...args: any[]) => boolean>(fn: T): T {
  * Right-to-left function composition.
  * `compose(f, g, h)(x)` is equivalent to `f(g(h(x)))`.
  */
-export function compose(
-  ...fns: Function[]
-): (...args: unknown[]) => unknown {
+export function compose(...fns: Function[]): (...args: unknown[]) => unknown {
   return (...args: unknown[]) => {
     let result: unknown = fns[fns.length - 1](...args);
     for (let i = fns.length - 2; i >= 0; i--) {
@@ -258,9 +241,7 @@ export function compose(
  * Left-to-right function composition (aka pipeline).
  * `pipe(f, g, h)(x)` is equivalent to `h(g(f(x)))`.
  */
-export function pipe(
-  ...fns: Function[]
-): (...args: unknown[]) => unknown {
+export function pipe(...fns: Function[]): (...args: unknown[]) => unknown {
   return (...args: unknown[]) => {
     let result: unknown = fns[0](...args);
     for (let i = 1; i < fns.length; i++) {

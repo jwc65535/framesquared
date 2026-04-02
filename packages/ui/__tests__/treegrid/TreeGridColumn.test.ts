@@ -214,7 +214,9 @@ describe('TreeGridColumn renderCell', () => {
     const store2 = new TreeStore({
       model: TreeModel,
       root: {
-        id: 'r', text: 'R', expanded: true,
+        id: 'r',
+        text: 'R',
+        expanded: true,
         children: [{ id: 'n1', text: 'N1', leaf: true, iconCls: 'my-custom-icon' }],
       },
     });
@@ -228,7 +230,9 @@ describe('TreeGridColumn renderCell', () => {
     const store2 = new TreeStore({
       model: TreeModel,
       root: {
-        id: 'r', text: 'R', expanded: true,
+        id: 'r',
+        text: 'R',
+        expanded: true,
         children: [{ id: 'n1', text: 'N1', leaf: true, icon: '/img/file.png' }],
       },
     });
@@ -278,7 +282,9 @@ describe('TreeGridColumn computeElbows', () => {
     const store2 = new TreeStore({
       model: TreeModel,
       root: {
-        id: 'r', text: 'R', expanded: true,
+        id: 'r',
+        text: 'R',
+        expanded: true,
         children: [{ id: 'n1', text: 'N1', leaf: true }],
       },
     });

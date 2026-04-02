@@ -18,10 +18,14 @@ function makeGrid(extra: Record<string, unknown> = {}) {
     store: new TreeStore({
       model: TreeModel,
       root: {
-        id: 'root', text: 'Root', expanded: true,
+        id: 'root',
+        text: 'Root',
+        expanded: true,
         children: [
           {
-            id: 'a', text: 'A', expanded: true,
+            id: 'a',
+            text: 'A',
+            expanded: true,
             children: [
               { id: 'a1', text: 'A1', leaf: true },
               { id: 'a2', text: 'A2', leaf: true },
@@ -31,9 +35,7 @@ function makeGrid(extra: Record<string, unknown> = {}) {
         ],
       },
     }),
-    columns: [
-      { dataIndex: 'text', text: 'Name', width: 200 },
-    ],
+    columns: [{ dataIndex: 'text', text: 'Name', width: 200 }],
     ...extra,
   } as any);
 }

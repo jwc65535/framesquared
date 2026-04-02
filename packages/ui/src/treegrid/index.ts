@@ -27,11 +27,7 @@ export { TreeGridClipboard } from './TreeGridClipboard.js';
 export type { TreeGridClipboardConfig } from './TreeGridClipboard.js';
 
 export { TreeGridSummary } from './TreeGridSummary.js';
-export type {
-  TreeGridSummaryConfig,
-  SummaryType,
-  SummaryColumnConfig,
-} from './TreeGridSummary.js';
+export type { TreeGridSummaryConfig, SummaryType, SummaryColumnConfig } from './TreeGridSummary.js';
 
 export { TreeGridGroupingSummary } from './TreeGridGroupingSummary.js';
 export type { TreeGridGroupingSummaryConfig } from './TreeGridGroupingSummary.js';

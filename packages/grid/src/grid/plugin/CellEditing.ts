@@ -67,8 +67,13 @@ export class CellEditing {
     input.classList.add('x-grid-editor-input');
 
     input.addEventListener('keydown', (e: KeyboardEvent) => {
-      if (e.key === 'Enter') { e.preventDefault(); this.completeEdit(); }
-      else if (e.key === 'Escape') { e.preventDefault(); this.cancelEdit(); }
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        this.completeEdit();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        this.cancelEdit();
+      }
     });
 
     editor.appendChild(input);

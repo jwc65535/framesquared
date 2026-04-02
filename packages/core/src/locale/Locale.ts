@@ -45,15 +45,19 @@ export class Locale {
     this._collator = new Intl.Collator(this._language);
     this._numberFormatter = new Intl.NumberFormat(this._language);
     this._dateFormatter = new Intl.DateTimeFormat(this._language, {
-      year: 'numeric', month: 'numeric', day: 'numeric',
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
     });
     this._timeFormatter = new Intl.DateTimeFormat(this._language, {
-      hour: 'numeric', minute: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
     });
 
     if (this._numberFormat.currency) {
       this._currencyFormatter = new Intl.NumberFormat(this._language, {
-        style: 'currency', currency: this._numberFormat.currency,
+        style: 'currency',
+        currency: this._numberFormat.currency,
       });
     }
   }
@@ -62,10 +66,18 @@ export class Locale {
   // Accessors
   // -----------------------------------------------------------------------
 
-  getLanguage(): string { return this._language; }
-  isRtl(): boolean { return this._rtl; }
-  getDirection(): 'ltr' | 'rtl' { return this._rtl ? 'rtl' : 'ltr'; }
-  getFirstDayOfWeek(): number { return this._firstDayOfWeek; }
+  getLanguage(): string {
+    return this._language;
+  }
+  isRtl(): boolean {
+    return this._rtl;
+  }
+  getDirection(): 'ltr' | 'rtl' {
+    return this._rtl ? 'rtl' : 'ltr';
+  }
+  getFirstDayOfWeek(): number {
+    return this._firstDayOfWeek;
+  }
 
   // -----------------------------------------------------------------------
   // Translation

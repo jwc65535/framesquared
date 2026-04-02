@@ -94,8 +94,8 @@ describe('TreeView structure', () => {
 
   it('node text is rendered', () => {
     const view = makeView();
-    const texts = Array.from(view.el!.querySelectorAll('.x-tree-node-text')).map(
-      (el) => el.textContent?.trim(),
+    const texts = Array.from(view.el!.querySelectorAll('.x-tree-node-text')).map((el) =>
+      el.textContent?.trim(),
     );
     expect(texts).toContain('Node A');
     expect(texts).toContain('Node B');
@@ -148,8 +148,8 @@ describe('refresh / refreshNode', () => {
     const root = store.getRootNode();
     store.appendChild(root, (TreeModel as any).create({ id: 'c', text: 'Node C', leaf: true }));
     view.refresh();
-    const texts = Array.from(view.el!.querySelectorAll('.x-tree-node-text')).map(
-      (el) => el.textContent?.trim(),
+    const texts = Array.from(view.el!.querySelectorAll('.x-tree-node-text')).map((el) =>
+      el.textContent?.trim(),
     );
     expect(texts).toContain('Node C');
   });

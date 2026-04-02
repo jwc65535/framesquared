@@ -5,7 +5,8 @@ import type { NodeInterface } from '../src/mixin/NodeInterface.js';
 describe('TreeModel', () => {
   describe('construction', () => {
     it('creates an instance with NodeInterface methods', () => {
-      const node = TreeModel.create({ id: 1, text: 'Root' }) as InstanceType<typeof TreeModel> & NodeInterface;
+      const node = TreeModel.create({ id: 1, text: 'Root' }) as InstanceType<typeof TreeModel> &
+        NodeInterface;
       expect(typeof node.isRoot).toBe('function');
       expect(typeof node.isLeaf).toBe('function');
       expect(typeof node.appendChild).toBe('function');
@@ -16,7 +17,8 @@ describe('TreeModel', () => {
     });
 
     it('isRoot() returns true for node with no parent', () => {
-      const node = TreeModel.create({ id: 1, text: 'Root' }) as InstanceType<typeof TreeModel> & NodeInterface;
+      const node = TreeModel.create({ id: 1, text: 'Root' }) as InstanceType<typeof TreeModel> &
+        NodeInterface;
       expect(node.isRoot()).toBe(true);
     });
 
@@ -48,7 +50,8 @@ describe('TreeModel', () => {
 
   describe('default fields', () => {
     it('has text field', () => {
-      const node = TreeModel.create({ id: 1, text: 'Hello' }) as InstanceType<typeof TreeModel> & NodeInterface;
+      const node = TreeModel.create({ id: 1, text: 'Hello' }) as InstanceType<typeof TreeModel> &
+        NodeInterface;
       expect(node.get('text')).toBe('Hello');
     });
 
@@ -58,7 +61,8 @@ describe('TreeModel', () => {
     });
 
     it('has leaf field', () => {
-      const node = TreeModel.create({ id: 1, leaf: true }) as InstanceType<typeof TreeModel> & NodeInterface;
+      const node = TreeModel.create({ id: 1, leaf: true }) as InstanceType<typeof TreeModel> &
+        NodeInterface;
       expect(node.get('leaf')).toBe(true);
     });
 
@@ -80,8 +84,10 @@ describe('TreeModel', () => {
 
   describe('tree operations', () => {
     it('appendChild attaches child and sets parentNode', () => {
-      const parent = TreeModel.create({ id: 1, text: 'Parent' }) as InstanceType<typeof TreeModel> & NodeInterface;
-      const child = TreeModel.create({ id: 2, text: 'Child' }) as InstanceType<typeof TreeModel> & NodeInterface;
+      const parent = TreeModel.create({ id: 1, text: 'Parent' }) as InstanceType<typeof TreeModel> &
+        NodeInterface;
+      const child = TreeModel.create({ id: 2, text: 'Child' }) as InstanceType<typeof TreeModel> &
+        NodeInterface;
       parent.appendChild(child);
 
       expect(parent.childNodes).toHaveLength(1);
@@ -97,13 +103,16 @@ describe('TreeModel', () => {
     });
 
     it('isLeaf returns true when leaf=true', () => {
-      const node = TreeModel.create({ id: 1, leaf: true }) as InstanceType<typeof TreeModel> & NodeInterface;
+      const node = TreeModel.create({ id: 1, leaf: true }) as InstanceType<typeof TreeModel> &
+        NodeInterface;
       expect(node.isLeaf()).toBe(true);
     });
 
     it('getPath returns path using text field', () => {
-      const root = TreeModel.create({ id: 1, text: 'Root' }) as InstanceType<typeof TreeModel> & NodeInterface;
-      const child = TreeModel.create({ id: 2, text: 'Child' }) as InstanceType<typeof TreeModel> & NodeInterface;
+      const root = TreeModel.create({ id: 1, text: 'Root' }) as InstanceType<typeof TreeModel> &
+        NodeInterface;
+      const child = TreeModel.create({ id: 2, text: 'Child' }) as InstanceType<typeof TreeModel> &
+        NodeInterface;
       root.appendChild(child);
       expect(child.getPath()).toBe('/Root/Child');
     });
@@ -129,19 +138,27 @@ describe('TreeModel', () => {
     }
 
     it('subclass inherits NodeInterface methods', () => {
-      const node = FolderNode.create({ id: 1, text: 'Docs', path: '/docs' }) as InstanceType<typeof FolderNode> & NodeInterface;
+      const node = FolderNode.create({ id: 1, text: 'Docs', path: '/docs' }) as InstanceType<
+        typeof FolderNode
+      > &
+        NodeInterface;
       expect(typeof node.appendChild).toBe('function');
       expect(node.isRoot()).toBe(true);
     });
 
     it('subclass has custom fields', () => {
-      const node = FolderNode.create({ id: 1, path: '/docs' }) as InstanceType<typeof FolderNode> & NodeInterface;
+      const node = FolderNode.create({ id: 1, path: '/docs' }) as InstanceType<typeof FolderNode> &
+        NodeInterface;
       expect(node.get('path')).toBe('/docs');
     });
 
     it('subclass can append children', () => {
-      const parent = FolderNode.create({ id: 1, text: 'Parent' }) as InstanceType<typeof FolderNode> & NodeInterface;
-      const child = FolderNode.create({ id: 2, text: 'Child' }) as InstanceType<typeof FolderNode> & NodeInterface;
+      const parent = FolderNode.create({ id: 1, text: 'Parent' }) as InstanceType<
+        typeof FolderNode
+      > &
+        NodeInterface;
+      const child = FolderNode.create({ id: 2, text: 'Child' }) as InstanceType<typeof FolderNode> &
+        NodeInterface;
       parent.appendChild(child);
       expect(parent.childNodes[0]).toBe(child);
     });

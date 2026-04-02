@@ -112,7 +112,9 @@ export class GridView {
       // Action column click delegation
       if (col instanceof ActionColumn) {
         td.addEventListener('click', (e) => {
-          const target = (e.target as HTMLElement).closest('.x-action-col-icon') as HTMLElement | null;
+          const target = (e.target as HTMLElement).closest(
+            '.x-action-col-icon',
+          ) as HTMLElement | null;
           if (!target) return;
           const actionIdx = parseInt(target.getAttribute('data-action') ?? '0', 10);
           const action = col.actions[actionIdx];
