@@ -6,13 +6,10 @@
   "linked": [
     ["@framesquared/core", "@framesquared/data", "@framesquared/component", "@framesquared/layout",
      "@framesquared/ui", "@framesquared/form", "@framesquared/grid", "@framesquared/dd",
-     "@framesquared/fx", "@framesquared/app", "@framesquared/theme", "framesquared"]
+     "@framesquared/fx", "@framesquared/app", "@framesquared/theme"]
   ],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": [
-    "@framesquared/integration-tests",
-    "@framesquared/build-tests"
-  ]
+  "ignore": ["@framesquared/integration-tests", "@framesquared/build-tests", "framesquared"]
 }
