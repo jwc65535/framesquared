@@ -4,15 +4,15 @@
   "commit": false,
   "fixed": [],
   "linked": [
-    ["@ext-ts/core", "@ext-ts/data", "@ext-ts/component", "@ext-ts/layout",
-     "@ext-ts/ui", "@ext-ts/form", "@ext-ts/grid", "@ext-ts/dd",
-     "@ext-ts/fx", "@ext-ts/app", "@ext-ts/theme", "ext-ts"]
+    ["@framesquared/core", "@framesquared/data", "@framesquared/component", "@framesquared/layout",
+     "@framesquared/ui", "@framesquared/form", "@framesquared/grid", "@framesquared/dd",
+     "@framesquared/fx", "@framesquared/app", "@framesquared/theme", "framesquared"]
   ],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": [
-    "@ext-ts/integration-tests",
-    "@ext-ts/build-tests"
+    "@framesquared/integration-tests",
+    "@framesquared/build-tests"
   ]
 }
