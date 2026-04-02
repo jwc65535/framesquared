@@ -1,5 +1,6 @@
 {
   "name": "framesquared",
+  "private": true,
   "version": "0.1.0",
   "description": "Modern TypeScript reimplementation of ExtJS — umbrella package",
   "type": "module",
