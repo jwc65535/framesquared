@@ -1,13 +1,15 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { FormPanel, TextField, NumberField, Checkbox } from '@framesquared/form';
 
 class MockRO {
-  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
 }
 beforeEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (globalThis as any).ResizeObserver = MockRO;
 });
 afterEach(() => {
@@ -135,7 +137,7 @@ describe('Form validation integration', () => {
 
   it('reset restores original values', () => {
     const nameField = new TextField({ name: 'name', fieldLabel: 'Name', value: 'Original' });
-    const form = new FormPanel({
+    const _form = new FormPanel({
       renderTo: document.body,
       title: 'Form',
       items: [nameField],
