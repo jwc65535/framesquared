@@ -1,9 +1,17 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { Application } from '../src/Application.js';
 import { ViewController } from '../src/ViewController.js';
 import { ViewModel } from '../src/ViewModel.js';
 import { Binding } from '../src/Binding.js';
 import { Router } from '../src/Router.js';
+
+interface MockView {
+  el: HTMLElement;
+  lookupReference: ReturnType<typeof vi.fn>;
+  query?: (sel: string) => NodeListOf<Element>;
+  fire?: ReturnType<typeof vi.fn>;
+  fireEvent?: ReturnType<typeof vi.fn>;
+}
 
 afterEach(() => {
   Application.clearInstance();
@@ -76,32 +84,32 @@ describe('ViewController', () => {
 
   it('init sets the view', () => {
     const vc = new ViewController({ id: 'c1' });
-    const mockView = { el: document.createElement('div'), lookupReference: vi.fn() };
-    vc.init(mockView as any);
+    const mockView: MockView = { el: document.createElement('div'), lookupReference: vi.fn() };
+    vc.init(mockView);
     expect(vc.getView()).toBe(mockView);
   });
 
   it('lookupReference delegates to view', () => {
     const vc = new ViewController({ id: 'c1' });
     const ref = { el: document.createElement('span') };
-    const mockView = {
+    const mockView: MockView = {
       el: document.createElement('div'),
       lookupReference: vi.fn(() => ref),
     };
-    vc.init(mockView as any);
+    vc.init(mockView);
     expect(vc.lookupReference('myRef')).toBe(ref);
   });
 
   it('fireViewEvent fires on the view', () => {
     const vc = new ViewController({ id: 'c1' });
     const fireSpy = vi.fn();
-    const mockView = {
+    const mockView: MockView = {
       el: document.createElement('div'),
       lookupReference: vi.fn(),
       fire: fireSpy,
       fireEvent: fireSpy,
     };
-    vc.init(mockView as any);
+    vc.init(mockView);
     vc.fireViewEvent('myevent', 'data');
     expect(fireSpy).toHaveBeenCalledWith('myevent', 'data');
   });
@@ -114,7 +122,7 @@ describe('ViewController', () => {
         '#saveBtn': { click: 'onSave' },
       },
     });
-    (vc as any).onSave = spy;
+    (vc as Record<string, unknown>).onSave = spy;
 
     // Mock view with query
     const btn = document.createElement('button');
@@ -122,7 +130,7 @@ describe('ViewController', () => {
     const viewEl = document.createElement('div');
     viewEl.appendChild(btn);
 
-    const mockView: any = {
+    const mockView: MockView = {
       el: viewEl,
       lookupReference: vi.fn(),
       query: (sel: string) => viewEl.querySelectorAll(sel.replace('#', '[id="') + '"]'),
@@ -136,7 +144,7 @@ describe('ViewController', () => {
 
   it('destroy cleans up', () => {
     const vc = new ViewController({ id: 'c1' });
-    vc.init({ el: document.createElement('div'), lookupReference: vi.fn() } as any);
+    vc.init({ el: document.createElement('div'), lookupReference: vi.fn() });
     vc.destroy();
     expect(vc.getView()).toBeNull();
   });

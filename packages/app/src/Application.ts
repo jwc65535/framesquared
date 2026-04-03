@@ -40,13 +40,17 @@ export class Application {
   private _stores = new Map<string, any>();
 
   /** Overridable lifecycle hooks. */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onInit: () => void = () => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onBeforeLaunch: () => void = () => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onLaunch: () => void = () => {};
 
   constructor(config: ApplicationConfig) {
     this._name = config.name;
     this._launchFn = config.launch ?? null;
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     instance = this;
   }
 

@@ -6,8 +6,6 @@
  * expression templates, and two-way binding.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { ViewModel } from './ViewModel.js';
 
 // ---------------------------------------------------------------------------

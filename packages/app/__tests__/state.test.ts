@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { Scheduler } from '../src/state/Scheduler.js';
-import { Stub, FormulaStub, ValueStub } from '../src/state/Stub.js';
+import { FormulaStub, ValueStub } from '../src/state/Stub.js';
 import { ViewModel } from '../src/ViewModel.js';
 import { Binding } from '../src/Binding.js';
 import { Application } from '../src/Application.js';
@@ -148,18 +148,18 @@ describe('ViewModel — auto dependency tracking', () => {
   });
 
   it('formula not affected by unrelated data changes', () => {
-    let computeCount = 0;
+    let _computeCount = 0;
     const vm = new ViewModel({
       data: { a: 1, b: 2, unrelated: 'x' },
       formulas: {
         sum: (get) => {
-          computeCount++;
+          _computeCount++;
           return (get('a') as number) + (get('b') as number);
         },
       },
     });
     vm.get('sum'); // initial compute
-    computeCount = 0;
+    _computeCount = 0;
     vm.set('unrelated', 'y');
     // Formula should still return correct value (recomputes lazily)
     expect(vm.get('sum')).toBe(3);
