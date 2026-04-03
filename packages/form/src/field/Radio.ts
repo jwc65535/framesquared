@@ -5,8 +5,6 @@
  * group tracking to ensure single selection per name group.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Checkbox } from './Checkbox.js';
 import type { CheckboxConfig } from './Checkbox.js';
 
@@ -25,13 +23,18 @@ export class Radio extends Checkbox {
 
     // Convert to radio
     this._inputEl.type = 'radio';
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.remove('x-checkbox');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-radio');
 
     // Register in group
     if (this._name) {
       let group = radioGroups.get(this._name);
-      if (!group) { group = new Set(); radioGroups.set(this._name, group); }
+      if (!group) {
+        group = new Set();
+        radioGroups.set(this._name, group);
+      }
       group.add(this);
     }
   }

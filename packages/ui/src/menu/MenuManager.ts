@@ -12,6 +12,7 @@ export class MenuManager {
   private menus: any[] = [];
   private listening = false;
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private constructor() {}
 
   static getInstance(): MenuManager {

@@ -43,6 +43,7 @@ export class SegmentedButton extends Container {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-segmented-btn');
 
     // Attach click interceptors to each button
@@ -104,7 +105,7 @@ export class SegmentedButton extends Container {
   getValue(): string | string[] {
     const pressed = this.getItems()
       .filter((item): item is Button => item instanceof Button && item.isPressed())
-      .map(b => b.getValue());
+      .map((b) => b.getValue());
 
     if (this._allowMultiple) return pressed;
     return pressed[0] ?? '';

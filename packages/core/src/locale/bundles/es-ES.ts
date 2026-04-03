@@ -64,7 +64,7 @@ export const esES = new Locale({
     'messagebox.confirm.title': 'Confirmar',
     'messagebox.prompt.title': 'Aviso',
 
-    'loading': 'Cargando...',
-    'error': 'Error',
+    loading: 'Cargando...',
+    error: 'Error',
   },
 });

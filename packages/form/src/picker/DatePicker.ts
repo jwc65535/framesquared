@@ -6,8 +6,6 @@
  * Fires 'select' when a date is clicked.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Component } from '@framesquared/component';
 import type { ComponentConfig } from '@framesquared/component';
 import { getMonthName, getDaysInMonth } from '../util/DateUtil.js';
@@ -51,6 +49,7 @@ export class DatePicker extends Component {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-datepicker');
     this.buildUI();
   }
@@ -60,6 +59,7 @@ export class DatePicker extends Component {
   // -----------------------------------------------------------------------
 
   private buildUI(): void {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
     el.innerHTML = '';
 
@@ -151,7 +151,10 @@ export class DatePicker extends Component {
       const cell = document.createElement('span');
       cell.classList.add('x-datepicker-cell');
       cell.textContent = String(day);
-      cell.setAttribute('data-date', `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`);
+      cell.setAttribute(
+        'data-date',
+        `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+      );
 
       const disabled = this.isDateDisabled(cellDate);
       if (disabled) {
@@ -159,10 +162,12 @@ export class DatePicker extends Component {
       }
 
       // Selected
-      if (this._selectedDate &&
-          cellDate.getFullYear() === this._selectedDate.getFullYear() &&
-          cellDate.getMonth() === this._selectedDate.getMonth() &&
-          cellDate.getDate() === this._selectedDate.getDate()) {
+      if (
+        this._selectedDate &&
+        cellDate.getFullYear() === this._selectedDate.getFullYear() &&
+        cellDate.getMonth() === this._selectedDate.getMonth() &&
+        cellDate.getDate() === this._selectedDate.getDate()
+      ) {
         cell.classList.add('x-datepicker-selected');
       }
 

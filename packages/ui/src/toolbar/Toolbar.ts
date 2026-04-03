@@ -40,6 +40,7 @@ export class Toolbar extends Container {
   protected override afterRender(): void {
     super.afterRender();
     const cfg = this._config as ToolbarConfig;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
     const body = this.getBodyEl();
 
@@ -75,27 +76,38 @@ function resolveToolbarItem(item: any): Component {
 // ---------------------------------------------------------------------------
 
 export class ToolbarFill extends Component {
-  constructor() { super({}); }
+  constructor() {
+    super({});
+  }
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-toolbar-fill');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.style.flexGrow = '1';
   }
 }
 
 export class ToolbarSeparator extends Component {
-  constructor() { super({}); }
+  constructor() {
+    super({});
+  }
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-toolbar-separator');
   }
 }
 
 export class ToolbarSpacer extends Component {
-  constructor() { super({}); }
+  constructor() {
+    super({});
+  }
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-toolbar-spacer');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.style.width = '8px';
   }
 }
@@ -106,6 +118,7 @@ export class ToolbarTextItem extends Component {
   }
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-toolbar-text');
   }
 }

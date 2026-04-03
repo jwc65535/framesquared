@@ -22,7 +22,13 @@ export interface ColumnConfig {
   hideable?: boolean;
   hidden?: boolean;
   align?: 'left' | 'center' | 'right';
-  renderer?: (value: unknown, metaData: any, record: any, rowIndex: number, colIndex: number) => string;
+  renderer?: (
+    value: unknown,
+    metaData: any,
+    record: any,
+    rowIndex: number,
+    colIndex: number,
+  ) => string;
   menuDisabled?: boolean;
   resizable?: boolean;
   draggable?: boolean;
@@ -79,7 +85,13 @@ export class Column {
     return record.get ? record.get(this.dataIndex) : record.data?.[this.dataIndex];
   }
 
-  renderCell(value: unknown, metaData: any, record: any, rowIndex: number, colIndex: number): string {
+  renderCell(
+    value: unknown,
+    metaData: any,
+    record: any,
+    rowIndex: number,
+    colIndex: number,
+  ): string {
     if (this._renderer) {
       return this._renderer(value, metaData, record, rowIndex, colIndex);
     }
@@ -92,7 +104,13 @@ export class Column {
   }
 
   /** Create the TD content — override in special columns. */
-  renderCellHtml(value: unknown, _metaData: any, record: any, rowIndex: number, colIndex: number): string {
+  renderCellHtml(
+    value: unknown,
+    _metaData: any,
+    record: any,
+    rowIndex: number,
+    colIndex: number,
+  ): string {
     return this.renderCell(value, _metaData, record, rowIndex, colIndex);
   }
 }
@@ -145,10 +163,7 @@ export class DateColumn extends Column {
     const m = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
 
-    return this._format
-      .replace('Y', String(Y))
-      .replace('m', m)
-      .replace('d', day);
+    return this._format.replace('Y', String(Y)).replace('m', m).replace('d', day);
   }
 }
 
@@ -180,7 +195,13 @@ export class CheckColumn extends Column {
     super({ ...config, xtype: 'checkcolumn' });
   }
 
-  override renderCellHtml(value: unknown, _metaData: any, _record: any, _rowIndex: number, _colIndex: number): string {
+  override renderCellHtml(
+    value: unknown,
+    _metaData: any,
+    _record: any,
+    _rowIndex: number,
+    _colIndex: number,
+  ): string {
     const checked = value ? ' checked' : '';
     return `<input type="checkbox"${checked} class="x-check-col-input" />`;
   }
@@ -198,13 +219,24 @@ export class ActionColumn extends Column {
     this._actions = config.actions ?? [];
   }
 
-  get actions(): ActionConfig[] { return this._actions; }
+  get actions(): ActionConfig[] {
+    return this._actions;
+  }
 
-  override renderCellHtml(_value: unknown, _metaData: any, _record: any, rowIndex: number, _colIndex: number): string {
-    return this._actions.map((a, ai) =>
-      `<span class="x-action-col-icon ${a.iconCls ?? ''}" ` +
-      `title="${a.tooltip ?? ''}" data-action="${ai}" data-row="${rowIndex}"></span>`
-    ).join('');
+  override renderCellHtml(
+    _value: unknown,
+    _metaData: any,
+    _record: any,
+    rowIndex: number,
+    _colIndex: number,
+  ): string {
+    return this._actions
+      .map(
+        (a, ai) =>
+          `<span class="x-action-col-icon ${a.iconCls ?? ''}" ` +
+          `title="${a.tooltip ?? ''}" data-action="${ai}" data-row="${rowIndex}"></span>`,
+      )
+      .join('');
   }
 }
 
@@ -214,10 +246,23 @@ export class ActionColumn extends Column {
 
 export class RowNumbererColumn extends Column {
   constructor(config: ColumnConfig = {}) {
-    super({ text: '#', width: 40, sortable: false, ...config, xtype: 'rownumberer', dataIndex: '' });
+    super({
+      text: '#',
+      width: 40,
+      sortable: false,
+      ...config,
+      xtype: 'rownumberer',
+      dataIndex: '',
+    });
   }
 
-  override renderCellHtml(_value: unknown, _metaData: any, _record: any, rowIndex: number, _colIndex: number): string {
+  override renderCellHtml(
+    _value: unknown,
+    _metaData: any,
+    _record: any,
+    rowIndex: number,
+    _colIndex: number,
+  ): string {
     return String(rowIndex + 1);
   }
 }
@@ -228,12 +273,19 @@ export class RowNumbererColumn extends Column {
 
 export function createColumn(config: ColumnConfig): Column {
   switch (config.xtype) {
-    case 'numbercolumn': return new NumberColumn(config);
-    case 'datecolumn': return new DateColumn(config);
-    case 'booleancolumn': return new BooleanColumn(config);
-    case 'checkcolumn': return new CheckColumn(config);
-    case 'actioncolumn': return new ActionColumn(config);
-    case 'rownumberer': return new RowNumbererColumn(config);
-    default: return new Column(config);
+    case 'numbercolumn':
+      return new NumberColumn(config);
+    case 'datecolumn':
+      return new DateColumn(config);
+    case 'booleancolumn':
+      return new BooleanColumn(config);
+    case 'checkcolumn':
+      return new CheckColumn(config);
+    case 'actioncolumn':
+      return new ActionColumn(config);
+    case 'rownumberer':
+      return new RowNumbererColumn(config);
+    default:
+      return new Column(config);
   }
 }

@@ -71,8 +71,7 @@ export class TreeGridGroupingSummary {
     const insertions: { afterEl: HTMLElement; summaryRow: HTMLElement }[] = [];
 
     for (const node of flatData) {
-      const shouldShow =
-        this.config.showSummaryFor === 'all' || !node.isLeaf();
+      const shouldShow = this.config.showSummaryFor === 'all' || !node.isLeaf();
       if (!shouldShow || !node.isExpanded() || node.isLeaf()) continue;
 
       const lastChild = node.lastChild;
@@ -101,6 +100,7 @@ export class TreeGridGroupingSummary {
   }
 
   private _buildGroupSummaryRow(parent: NodeInterface): HTMLElement {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const tg = this.treeGrid!;
     const columns = tg.getColumns();
 
@@ -165,11 +165,16 @@ export class TreeGridGroupingSummary {
     if (values.length === 0) return 0;
 
     switch (summaryType) {
-      case 'sum': return values.reduce((a, b) => a + b, 0);
-      case 'average': return values.reduce((a, b) => a + b, 0) / values.length;
-      case 'min': return Math.min(...values);
-      case 'max': return Math.max(...values);
-      default: return 0;
+      case 'sum':
+        return values.reduce((a, b) => a + b, 0);
+      case 'average':
+        return values.reduce((a, b) => a + b, 0) / values.length;
+      case 'min':
+        return Math.min(...values);
+      case 'max':
+        return Math.max(...values);
+      default:
+        return 0;
     }
   }
 }

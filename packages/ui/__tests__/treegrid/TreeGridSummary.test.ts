@@ -1,4 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TreeGridSummary } from '../../src/treegrid/TreeGridSummary.js';
 import { TreeGrid } from '../../src/treegrid/TreeGrid.js';
 import { TreeStore, TreeModel } from '@framesquared/data';
@@ -15,7 +18,9 @@ function makeGrid() {
     store: new TreeStore({
       model: TreeModel,
       root: {
-        id: 'root', text: 'Root', expanded: true,
+        id: 'root',
+        text: 'Root',
+        expanded: true,
         children: [
           { id: 'a', text: 'A', size: 10, leaf: true },
           { id: 'b', text: 'B', size: 20, leaf: true },
@@ -188,11 +193,13 @@ describe('TreeGridSummary — rendering', () => {
   it('summaryRenderer formats the output', () => {
     const grid = makeGrid();
     const feature = new TreeGridSummary({
-      summaryColumns: [{
-        dataIndex: 'size',
-        summaryType: 'sum',
-        summaryRenderer: (val) => `Total: ${val}`,
-      }],
+      summaryColumns: [
+        {
+          dataIndex: 'size',
+          summaryType: 'sum',
+          summaryRenderer: (val) => `Total: ${val}`,
+        },
+      ],
     });
     feature.init(grid);
     feature.renderSummary();

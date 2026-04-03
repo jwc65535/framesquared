@@ -1,13 +1,23 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TabPanel } from '../src/tab/TabPanel.js';
 import { TabBar } from '../src/tab/TabBar.js';
 import { Tab } from '../src/tab/Tab.js';
 import { Panel } from '../src/panel/Panel.js';
-import { Component } from '@framesquared/component';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+class MockRO {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 function tabPanel(cfg: Record<string, unknown> = {}): TabPanel {
   return new TabPanel({
@@ -150,10 +160,7 @@ describe('TabPanel — events', () => {
 describe('TabPanel — closable', () => {
   it('closable panel has close button on tab', () => {
     const tp = tabPanel({
-      items: [
-        new Panel({ title: 'A' }),
-        new Panel({ title: 'B', closable: true }),
-      ],
+      items: [new Panel({ title: 'A' }), new Panel({ title: 'B', closable: true })],
     });
     const tabs = tp.el!.querySelectorAll('.x-tab');
     expect(tabs[1].querySelector('.x-tab-close')).not.toBeNull();
@@ -168,7 +175,9 @@ describe('TabPanel — closable', () => {
         new Panel({ title: 'C' }),
       ],
     });
-    const closeBtn = tp.el!.querySelectorAll('.x-tab')[1].querySelector('.x-tab-close') as HTMLElement;
+    const closeBtn = tp
+      .el!.querySelectorAll('.x-tab')[1]
+      .querySelector('.x-tab-close') as HTMLElement;
     closeBtn.click();
     expect(tp.el!.querySelectorAll('.x-tab').length).toBe(2);
     expect(tp.getTabItems().length).toBe(2);
@@ -220,17 +229,21 @@ describe('TabPanel — activeTab config', () => {
 describe('TabPanel — tab position', () => {
   it('tabPosition:"top" (default) bar is before body', () => {
     const tp = tabPanel();
-    const children = Array.from(tp.el!.querySelector('.x-panel-body')?.parentElement?.children ?? []);
-    const barIdx = children.findIndex(c => c.classList.contains('x-tabbar'));
-    const bodyIdx = children.findIndex(c => c.classList.contains('x-panel-body'));
+    const children = Array.from(
+      tp.el!.querySelector('.x-panel-body')?.parentElement?.children ?? [],
+    );
+    const barIdx = children.findIndex((c) => c.classList.contains('x-tabbar'));
+    const bodyIdx = children.findIndex((c) => c.classList.contains('x-panel-body'));
     expect(barIdx).toBeLessThan(bodyIdx);
   });
 
   it('tabPosition:"bottom" bar is after body', () => {
     const tp = tabPanel({ tabPosition: 'bottom' });
-    const children = Array.from(tp.el!.querySelector('.x-panel-body')?.parentElement?.children ?? []);
-    const barIdx = children.findIndex(c => c.classList.contains('x-tabbar'));
-    const bodyIdx = children.findIndex(c => c.classList.contains('x-panel-body'));
+    const children = Array.from(
+      tp.el!.querySelector('.x-panel-body')?.parentElement?.children ?? [],
+    );
+    const barIdx = children.findIndex((c) => c.classList.contains('x-tabbar'));
+    const bodyIdx = children.findIndex((c) => c.classList.contains('x-panel-body'));
     expect(barIdx).toBeGreaterThan(bodyIdx);
   });
 

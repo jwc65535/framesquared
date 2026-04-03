@@ -8,7 +8,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Base } from '../class/Base.js';
+import type { Base } from '../class/Base.js';
 import { define } from '../class/ClassManager.js';
 
 // Per-instance storage for inherited state and parent reference.
@@ -44,9 +44,10 @@ export const Inheritable: typeof Base = define('Ext.mixin.Inheritable', {
    */
   getInherited(this: Base): Record<string, unknown> {
     const parent = parentRef.get(this);
-    const parentState = parent && typeof (parent as any).getInherited === 'function'
-      ? (parent as any).getInherited()
-      : {};
+    const parentState =
+      parent && typeof (parent as any).getInherited === 'function'
+        ? (parent as any).getInherited()
+        : {};
     const own = ownState.get(this) ?? {};
     return { ...parentState, ...own };
   },

@@ -5,8 +5,6 @@
  * a browse button, and a text display showing selected filename(s).
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Field } from './Field.js';
 import type { FieldConfig } from './Field.js';
 
@@ -36,8 +34,10 @@ export class FileField extends Field {
   protected override afterRender(): void {
     super.afterRender();
     const cfg = this._config as FileFieldConfig;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-filefield');
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const wrap = this._bodyWrapEl ?? this.el!;
 
     // Text display
@@ -65,7 +65,9 @@ export class FileField extends Field {
     this._fileInput.addEventListener('change', () => {
       this._files = this._fileInput.files;
       const names = this._files
-        ? Array.from(this._files).map(f => f.name).join(', ')
+        ? Array.from(this._files)
+            .map((f) => f.name)
+            .join(', ')
         : '';
       this._textDisplay.textContent = names;
       this.fire('change', this, this._files);

@@ -37,6 +37,7 @@ export class Accordion extends Container {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-accordion');
 
     const body = this.getBodyEl();

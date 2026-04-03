@@ -1,9 +1,20 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { FormPanel, TextField, NumberField, Checkbox } from '@framesquared/form';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+class MockRO {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 describe('Form validation integration', () => {
   it('FormPanel with multiple field types', () => {
@@ -74,8 +85,10 @@ describe('Form validation integration', () => {
 
   it('NumberField validates min/max', () => {
     const ageField = new NumberField({
-      name: 'age', fieldLabel: 'Age',
-      minValue: 18, maxValue: 99,
+      name: 'age',
+      fieldLabel: 'Age',
+      minValue: 18,
+      maxValue: 99,
       renderTo: document.body,
     });
 
@@ -91,8 +104,10 @@ describe('Form validation integration', () => {
 
   it('TextField validates minLength/maxLength', () => {
     const field = new TextField({
-      name: 'code', fieldLabel: 'Code',
-      minLength: 3, maxLength: 10,
+      name: 'code',
+      fieldLabel: 'Code',
+      minLength: 3,
+      maxLength: 10,
       renderTo: document.body,
     });
 
@@ -122,7 +137,7 @@ describe('Form validation integration', () => {
 
   it('reset restores original values', () => {
     const nameField = new TextField({ name: 'name', fieldLabel: 'Name', value: 'Original' });
-    const form = new FormPanel({
+    const _form = new FormPanel({
       renderTo: document.body,
       title: 'Form',
       items: [nameField],

@@ -25,6 +25,7 @@ export class CheckboxGroup extends Container {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-checkbox-group');
 
     const cfg = this._config as CheckboxGroupConfig;
@@ -38,13 +39,15 @@ export class CheckboxGroup extends Container {
   getValue(): string[] {
     return this.getItems()
       .filter((item): item is Checkbox => item instanceof Checkbox && item.isChecked())
-      .map(cb => cb.getValue());
+      .map((cb) => cb.getValue());
   }
 
   setValue(values: string[]): void {
     for (const item of this.getItems()) {
       if (item instanceof Checkbox) {
-        item.setChecked(values.includes(item.getValue()) || values.includes((item as any)._inputValue));
+        item.setChecked(
+          values.includes(item.getValue()) || values.includes((item as any)._inputValue),
+        );
       }
     }
   }

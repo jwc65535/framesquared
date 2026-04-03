@@ -10,8 +10,14 @@ export { GridView } from './grid/GridView.js';
 export type { GridViewConfig } from './grid/GridView.js';
 export { HeaderContainer } from './grid/HeaderContainer.js';
 export {
-  Column, NumberColumn, DateColumn, BooleanColumn,
-  CheckColumn, ActionColumn, RowNumbererColumn, createColumn,
+  Column,
+  NumberColumn,
+  DateColumn,
+  BooleanColumn,
+  CheckColumn,
+  ActionColumn,
+  RowNumbererColumn,
+  createColumn,
 } from './grid/column/Column.js';
 export type { ColumnConfig, ActionConfig } from './grid/column/Column.js';
 
@@ -35,7 +41,10 @@ export { GridDragDrop } from './grid/plugin/DragDrop.js';
 
 // Selection models
 export { RowSelectionModel } from './grid/selection/RowSelectionModel.js';
-export type { RowSelectionModelConfig, SelectableGrid } from './grid/selection/RowSelectionModel.js';
+export type {
+  RowSelectionModelConfig,
+  SelectableGrid,
+} from './grid/selection/RowSelectionModel.js';
 export { CellSelectionModel } from './grid/selection/CellSelectionModel.js';
 export type { CellPosition } from './grid/selection/CellSelectionModel.js';
 export { SpreadsheetSelectionModel } from './grid/selection/SpreadsheetSelectionModel.js';

@@ -58,6 +58,7 @@ function parseBinding(binding: KeyBinding): ParsedBinding {
   let meta = false;
 
   // The last part is the key; preceding parts are modifiers.
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const keyPart = parts.pop()!;
 
   for (const mod of parts) {

@@ -1,7 +1,9 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { ViewModel, Binding } from '@framesquared/app';
 
-afterEach(() => { document.body.innerHTML = ''; });
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 describe('Data binding integration', () => {
   it('ViewModel formula chain: data → subtotal → tax → total', () => {

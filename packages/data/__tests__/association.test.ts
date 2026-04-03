@@ -1,12 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Model } from '../src/Model.js';
 import { Schema } from '../src/Schema.js';
 import { FieldType } from '../src/field/Field.js';
-import { HasOne } from '../src/association/HasOne.js';
-import { HasMany } from '../src/association/HasMany.js';
-import { BelongsTo } from '../src/association/BelongsTo.js';
-import { ManyToMany } from '../src/association/ManyToMany.js';
-import type { AssociationConfig } from '../src/association/Association.js';
 
 // ---------------------------------------------------------------------------
 // Test model definitions
@@ -31,9 +27,7 @@ beforeEach(() => {
       { name: 'zip', type: FieldType.STRING },
     ];
     static override idProperty = 'id';
-    static belongsTo = [
-      { model: 'test.User', foreignKey: 'userId' },
-    ];
+    static belongsTo = [{ model: 'test.User', foreignKey: 'userId' }];
   };
 
   User = class User extends Model {
@@ -43,12 +37,8 @@ beforeEach(() => {
       { name: 'name', type: FieldType.STRING },
     ];
     static override idProperty = 'id';
-    static hasOne = [
-      { model: 'test.Address', foreignKey: 'userId' },
-    ];
-    static hasMany = [
-      { model: 'test.Order', foreignKey: 'userId' },
-    ];
+    static hasOne = [{ model: 'test.Address', foreignKey: 'userId' }];
+    static hasMany = [{ model: 'test.Order', foreignKey: 'userId' }];
   };
 
   Order = class Order extends Model {
@@ -59,9 +49,7 @@ beforeEach(() => {
       { name: 'total', type: FieldType.FLOAT },
     ];
     static override idProperty = 'id';
-    static belongsTo = [
-      { model: 'test.User', foreignKey: 'userId' },
-    ];
+    static belongsTo = [{ model: 'test.User', foreignKey: 'userId' }];
   };
 
   Student = class Student extends Model {
@@ -72,7 +60,12 @@ beforeEach(() => {
     ];
     static override idProperty = 'id';
     static manyToMany = [
-      { model: 'test.Course', through: 'test.Enrollment', foreignKey: 'studentId', otherKey: 'courseId' },
+      {
+        model: 'test.Course',
+        through: 'test.Enrollment',
+        foreignKey: 'studentId',
+        otherKey: 'courseId',
+      },
     ];
   };
 

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NumberField } from '../src/field/Number.js';
 import { DateField } from '../src/field/Date.js';
@@ -5,9 +7,18 @@ import { DatePicker } from '../src/picker/DatePicker.js';
 import { ColorPicker } from '../src/picker/ColorPicker.js';
 import * as DateUtil from '../src/util/DateUtil.js';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+class MockRO {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 // ═══════════════════════════════════════════════════════════════════════════
 // DateUtil
@@ -425,7 +436,9 @@ describe('DatePicker', () => {
     const cells = p.el!.querySelectorAll('.x-datepicker-cell');
     // Day 1 through 9 should be disabled
     let disabledCount = 0;
-    cells.forEach(c => { if (c.classList.contains('x-datepicker-disabled')) disabledCount++; });
+    cells.forEach((c) => {
+      if (c.classList.contains('x-datepicker-disabled')) disabledCount++;
+    });
     expect(disabledCount).toBeGreaterThan(0);
   });
 

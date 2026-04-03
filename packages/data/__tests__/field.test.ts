@@ -235,6 +235,7 @@ describe('AutoField', () => {
 
 describe('Field edge cases', () => {
   it('custom serialize overrides default', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const f = new StringField({ name: 'x', serialize: (v) => `custom:${v}` } as any);
     expect(f.serialize('test')).toBe('custom:test');
   });
@@ -262,6 +263,7 @@ describe('Field edge cases', () => {
   });
 
   it('custom defaultValue overrides type default', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const f = new IntField({ name: 'x', defaultValue: 99 } as any);
     expect(f.defaultValue).toBe(99);
   });

@@ -277,7 +277,7 @@ export class Store extends Base {
     return this.data.last();
   }
 
-  each(fn: (record: Model, index: number) => boolean | void): void {
+  each(fn: (record: Model, index: number) => boolean | undefined): void {
     this.data.each(fn);
   }
 
@@ -389,8 +389,10 @@ export class Store extends Base {
 
     const map = new Map<string, Model[]>();
     this.data.each((r) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const key = String(r.get(this.groupField!) ?? '');
       if (!map.has(key)) map.set(key, []);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       map.get(key)!.push(r);
     });
 

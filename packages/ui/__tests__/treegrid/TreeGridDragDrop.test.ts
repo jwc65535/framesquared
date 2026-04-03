@@ -1,7 +1,10 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TreeGridDragDrop } from '../../src/treegrid/TreeGridDragDrop.js';
 import { TreeGrid } from '../../src/treegrid/TreeGrid.js';
-import { TreeStore, TreeModel, applyNodeInterface } from '@framesquared/data';
+import { TreeStore, TreeModel } from '@framesquared/data';
 import type { NodeInterface } from '@framesquared/data';
 
 class MockRO {
@@ -14,12 +17,19 @@ function makeStore() {
   return new TreeStore({
     model: TreeModel,
     root: {
-      id: 'root', text: 'Root', expanded: true,
+      id: 'root',
+      text: 'Root',
+      expanded: true,
       children: [
-        { id: 'folder1', text: 'Folder 1', expanded: true, children: [
-          { id: 'file1', text: 'File 1', leaf: true },
-          { id: 'file2', text: 'File 2', leaf: true },
-        ]},
+        {
+          id: 'folder1',
+          text: 'Folder 1',
+          expanded: true,
+          children: [
+            { id: 'file1', text: 'File 1', leaf: true },
+            { id: 'file2', text: 'File 2', leaf: true },
+          ],
+        },
         { id: 'folder2', text: 'Folder 2', children: [] },
       ],
     },
@@ -37,9 +47,7 @@ function makeGrid(extra: Record<string, unknown> = {}) {
 beforeEach(() => {
   (globalThis as any).ResizeObserver = MockRO;
   if (typeof (globalThis as any).PointerEvent === 'undefined') {
-    (globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {
-      constructor(type: string, init?: PointerEventInit) { super(type, init); }
-    };
+    (globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {};
   }
 });
 

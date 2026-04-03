@@ -38,7 +38,7 @@ export class Sortable {
   }
 
   getOrder(): string[] {
-    return this.getItems().map(el => el.textContent ?? '');
+    return this.getItems().map((el) => el.textContent ?? '');
   }
 
   moveItem(fromIndex: number, toIndex: number): void {
@@ -51,6 +51,7 @@ export class Sortable {
 
     const item = items[fromIndex];
     // Remove from current position
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     item.parentNode!.removeChild(item);
 
     // Re-query after removal

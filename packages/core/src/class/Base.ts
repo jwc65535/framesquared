@@ -53,7 +53,7 @@ export function processClassConfigs(Ctor: typeof Base): void {
 
   const merged: Record<string, unknown> = {};
   for (const cls of chain) {
-    if (cls.hasOwnProperty('$configDefs')) {
+    if (Object.prototype.hasOwnProperty.call(cls, '$configDefs')) {
       Object.assign(merged, cls.$configDefs);
     }
   }
@@ -122,11 +122,7 @@ function generateAccessors(proto: object, configName: string): void {
  * Wraps a method so it pushes / pops from the instance's `$callStack`,
  * enabling `callParent()` to locate the correct super-method.
  */
-export function wrapMethod(
-  fn: Function,
-  methodName: string,
-  ownerClass: typeof Base,
-): Function {
+export function wrapMethod(fn: Function, methodName: string, ownerClass: typeof Base): Function {
   const wrapped = function (this: Base, ...args: unknown[]) {
     this.$callStack.push({ methodName, owner: ownerClass });
     try {
@@ -164,7 +160,7 @@ export class Base {
   $callStack: CallStackEntry[] = [];
 
   /** Tracks which config properties have been explicitly initialized. */
-  $configInitialized: Set<string> = new Set();
+  $configInitialized = new Set<string>();
 
   /**
    * Raw config object passed to the constructor.  Decorator-based configs

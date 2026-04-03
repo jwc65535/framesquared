@@ -6,8 +6,6 @@
  * viewport, and z-index management via ZIndexManager.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Panel } from '../panel/Panel.js';
 import type { PanelConfig } from '../panel/Panel.js';
 import { ZIndexManager } from '../ZIndexManager.js';
@@ -44,7 +42,12 @@ export class Window extends Panel {
   declare private _modal: boolean;
   declare private _maskEl: HTMLElement | null;
   declare private _maximized: boolean;
-  declare private _restoreState: { left: string; top: string; width: string; height: string } | null;
+  declare private _restoreState: {
+    left: string;
+    top: string;
+    width: string;
+    height: string;
+  } | null;
   declare private _closeAction: 'destroy' | 'hide';
   declare private _draggable: boolean;
   declare private _dragCleanup: (() => void) | null;
@@ -84,11 +87,15 @@ export class Window extends Panel {
     const cfg = this._config as WindowConfig;
 
     // Window classes
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-window');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.style.position = 'fixed';
 
     // Initial position
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (cfg.x !== undefined) this.el!.style.left = `${cfg.x}px`;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (cfg.y !== undefined) this.el!.style.top = `${cfg.y}px`;
 
     // Auto tools
@@ -118,13 +125,17 @@ export class Window extends Panel {
     }
 
     // ARIA
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.setAttribute('role', 'dialog');
     if (this._modal) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.el!.setAttribute('aria-modal', 'true');
     }
     // Link to title element via aria-labelledby
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const titleEl = this.el!.querySelector('.x-panel-header-text');
     if (titleEl && titleEl.id) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.el!.setAttribute('aria-labelledby', titleEl.id);
     }
   }
@@ -261,6 +272,7 @@ export class Window extends Panel {
   // -----------------------------------------------------------------------
 
   private setupDrag(): void {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const header = this.el!.querySelector('.x-panel-header') as HTMLElement | null;
     if (!header) return;
 
@@ -277,7 +289,9 @@ export class Window extends Panel {
       dragging = true;
       startX = e.clientX;
       startY = e.clientY;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       origLeft = parseInt(this.el!.style.left, 10) || 0;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       origTop = parseInt(this.el!.style.top, 10) || 0;
       e.preventDefault();
     };
@@ -286,13 +300,16 @@ export class Window extends Panel {
       if (!dragging) return;
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.el!.style.left = `${origLeft + dx}px`;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.el!.style.top = `${origTop + dy}px`;
     };
 
     const onPointerUp = () => {
       if (!dragging) return;
       dragging = false;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.fire('move', this, parseInt(this.el!.style.left, 10), parseInt(this.el!.style.top, 10));
     };
 

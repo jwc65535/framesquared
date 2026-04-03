@@ -6,8 +6,6 @@
  * event delegation, dismissDelay, and closable mode.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Component } from '@framesquared/component';
 import type { ComponentConfig } from '@framesquared/component';
 
@@ -96,9 +94,7 @@ export class Tooltip extends Component {
     // Resolve and attach to target
     let targetEl: Element | null = null;
     if (cfg.target) {
-      targetEl = typeof cfg.target === 'string'
-        ? document.querySelector(cfg.target)
-        : cfg.target;
+      targetEl = typeof cfg.target === 'string' ? document.querySelector(cfg.target) : cfg.target;
     }
     this._targetEl = targetEl;
 
@@ -196,7 +192,9 @@ export class Tooltip extends Component {
     // Update content (for delegation)
     this.updateContent();
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.style.display = '';
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.remove('x-tip-hidden');
     this._visible = true;
     this.positionAtMouse();
@@ -239,6 +237,7 @@ export class Tooltip extends Component {
   private renderTip(): void {
     this.render(document.body);
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
     el.classList.add('x-tooltip');
     el.setAttribute('role', 'tooltip');

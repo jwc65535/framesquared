@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Component, Container } from '@framesquared/component';
 import { FitLayout } from '../src/FitLayout.js';
@@ -10,14 +12,32 @@ import { AbsoluteLayout } from '../src/AbsoluteLayout.js';
 import { AccordionLayout } from '../src/AccordionLayout.js';
 
 // ResizeObserver mock
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+class MockRO {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
-function cmp(cfg: Record<string, unknown> = {}): Component { return new Component(cfg); }
+function cmp(cfg: Record<string, unknown> = {}): Component {
+  return new Component(cfg);
+}
 
 /** Create a rendered container with a layout applied to its body. */
-function withLayout<T extends { configureContainer(el: HTMLElement): void; applyItemStyles?(items: Component[], el: Element): void; setOwner(o: Component): void }>(
+function withLayout<
+  T extends {
+    configureContainer(el: HTMLElement): void;
+    applyItemStyles?(items: Component[], el: Element): void;
+    setOwner(o: Component): void;
+  },
+>(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   LayoutCls: new (...a: any[]) => T,
   layoutCfg: Record<string, unknown> = {},
   items: Component[] = [],
@@ -25,10 +45,13 @@ function withLayout<T extends { configureContainer(el: HTMLElement): void; apply
   const ct = new Container({ renderTo: document.body });
   const layout = new LayoutCls(layoutCfg) as T;
   layout.setOwner(ct);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (ct as any)._layoutInstance = layout;
   layout.configureContainer(ct.getBodyEl());
   for (const item of items) ct.add(item);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (typeof (layout as any).applyItemStyles === 'function') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (layout as any).applyItemStyles(ct.getItems(), ct.getBodyEl());
   }
   return { ct, layout };
@@ -78,8 +101,10 @@ describe('CardLayout', () => {
   });
 
   it('only active item is visible', () => {
-    const { ct, layout } = withLayout(CardLayout, {}, [
-      cmp({ html: 'A' }), cmp({ html: 'B' }), cmp({ html: 'C' }),
+    const { ct, layout: _layout } = withLayout(CardLayout, {}, [
+      cmp({ html: 'A' }),
+      cmp({ html: 'B' }),
+      cmp({ html: 'C' }),
     ]);
     const items = ct.getItems();
     expect(items[0].el!.style.display).not.toBe('none');
@@ -140,8 +165,10 @@ describe('CardLayout', () => {
   it('fires activate/deactivate events', () => {
     const activateSpy = vi.fn();
     const deactivateSpy = vi.fn();
-    const { ct, layout } = withLayout(CardLayout, {}, [cmp(), cmp()]);
+    const { ct: _ct, layout } = withLayout(CardLayout, {}, [cmp(), cmp()]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (layout as any).on('activate', activateSpy);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (layout as any).on('deactivate', deactivateSpy);
     layout.setActiveItem(1);
     expect(activateSpy).toHaveBeenCalled();
@@ -223,9 +250,7 @@ describe('BorderLayout', () => {
   });
 
   it('center region fills remaining space', () => {
-    const { ct } = withLayout(BorderLayout, {}, [
-      cmp({ region: 'center', html: 'C' }),
-    ]);
+    const { ct } = withLayout(BorderLayout, {}, [cmp({ region: 'center', html: 'C' })]);
     const center = ct.getItems()[0].el!;
     expect(center.style.gridArea).toBe('center');
   });
@@ -274,10 +299,7 @@ describe('ColumnLayout', () => {
   });
 
   it('fixed width columns keep their width', () => {
-    const { ct } = withLayout(ColumnLayout, {}, [
-      cmp({ width: 200 }),
-      cmp({ columnWidth: 1 }),
-    ]);
+    const { ct } = withLayout(ColumnLayout, {}, [cmp({ width: 200 }), cmp({ columnWidth: 1 })]);
     const items = ct.getItems();
     expect(items[0].el!.style.width).toBe('200px');
   });
@@ -305,8 +327,11 @@ describe('TableLayout', () => {
 
   it('renders items in a grid with specified columns', () => {
     const { ct } = withLayout(TableLayout, { columns: 3 }, [
-      cmp({ html: 'A' }), cmp({ html: 'B' }), cmp({ html: 'C' }),
-      cmp({ html: 'D' }), cmp({ html: 'E' }),
+      cmp({ html: 'A' }),
+      cmp({ html: 'B' }),
+      cmp({ html: 'C' }),
+      cmp({ html: 'D' }),
+      cmp({ html: 'E' }),
     ]);
     const body = ct.getBodyEl();
     expect(body.style.display).toBe('grid');
@@ -333,6 +358,7 @@ describe('TableLayout', () => {
 
   it('defaults to 1 column', () => {
     const layout = new TableLayout({});
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((layout as any).columns).toBe(1);
   });
 });
@@ -373,9 +399,7 @@ describe('AbsoluteLayout', () => {
   });
 
   it('children respect width/height config', () => {
-    const { ct } = withLayout(AbsoluteLayout, {}, [
-      cmp({ x: 0, y: 0, width: 100, height: 50 }),
-    ]);
+    const { ct } = withLayout(AbsoluteLayout, {}, [cmp({ x: 0, y: 0, width: 100, height: 50 })]);
     const el = ct.getItems()[0].el!;
     expect(el.style.width).toBe('100px');
     expect(el.style.height).toBe('50px');
@@ -411,7 +435,8 @@ describe('AccordionLayout', () => {
 
   it('expand() expands an item and collapses others', () => {
     const { ct, layout } = withLayout(AccordionLayout, {}, [
-      cmp({ title: 'A' }), cmp({ title: 'B' }),
+      cmp({ title: 'A' }),
+      cmp({ title: 'B' }),
     ]);
     const items = ct.getItems();
     layout.expand(items[1]);
@@ -421,7 +446,8 @@ describe('AccordionLayout', () => {
 
   it('multi:true allows multiple expanded', () => {
     const { ct, layout } = withLayout(AccordionLayout, { multi: true }, [
-      cmp({ title: 'A' }), cmp({ title: 'B' }),
+      cmp({ title: 'A' }),
+      cmp({ title: 'B' }),
     ]);
     const items = ct.getItems();
     layout.expand(items[1]);
@@ -431,23 +457,26 @@ describe('AccordionLayout', () => {
 
   it('collapse() collapses an item', () => {
     const { ct, layout } = withLayout(AccordionLayout, { multi: true }, [
-      cmp({ title: 'A' }), cmp({ title: 'B' }),
+      cmp({ title: 'A' }),
+      cmp({ title: 'B' }),
     ]);
     layout.collapse(ct.getItems()[0]);
     expect(layout.isExpanded(ct.getItems()[0])).toBe(false);
   });
 
   it('fill:true gives expanded item flex:1', () => {
-    const { ct, layout } = withLayout(AccordionLayout, { fill: true }, [
-      cmp({ title: 'A' }), cmp({ title: 'B' }),
+    const { ct, layout: _layout } = withLayout(AccordionLayout, { fill: true }, [
+      cmp({ title: 'A' }),
+      cmp({ title: 'B' }),
     ]);
     const expanded = ct.getItems()[0];
     expect(expanded.el!.style.flexGrow).toBe('1');
   });
 
   it('collapsed items have zero flex and overflow hidden', () => {
-    const { ct, layout } = withLayout(AccordionLayout, { fill: true }, [
-      cmp({ title: 'A' }), cmp({ title: 'B' }),
+    const { ct, layout: _layout } = withLayout(AccordionLayout, { fill: true }, [
+      cmp({ title: 'A' }),
+      cmp({ title: 'B' }),
     ]);
     const collapsed = ct.getItems()[1];
     expect(collapsed.el!.style.flexGrow).toBe('0');
@@ -455,9 +484,7 @@ describe('AccordionLayout', () => {
   });
 
   it('toggle() toggles expansion state', () => {
-    const { ct, layout } = withLayout(AccordionLayout, { multi: true }, [
-      cmp({ title: 'A' }),
-    ]);
+    const { ct, layout } = withLayout(AccordionLayout, { multi: true }, [cmp({ title: 'A' })]);
     const item = ct.getItems()[0];
     layout.toggle(item);
     expect(layout.isExpanded(item)).toBe(false);

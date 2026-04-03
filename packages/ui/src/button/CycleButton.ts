@@ -5,8 +5,6 @@
  * to show the current item's text and advance on click.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { SplitButton } from './SplitButton.js';
 import type { SplitButtonConfig } from './SplitButton.js';
 
@@ -36,7 +34,7 @@ export class CycleButton extends SplitButton {
 
   constructor(config: CycleButtonConfig = {}) {
     const items = config.items ?? [];
-    const checkedIdx = items.findIndex(i => i.checked);
+    const checkedIdx = items.findIndex((i) => i.checked);
     const activeIdx = checkedIdx >= 0 ? checkedIdx : 0;
     const activeItem = items[activeIdx];
 

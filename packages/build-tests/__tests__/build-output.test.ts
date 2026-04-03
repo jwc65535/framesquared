@@ -1,13 +1,22 @@
 import { describe, it, expect } from 'vitest';
-import { existsSync, statSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, statSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(fileURLToPath(import.meta.url), '../../../..');
 
 const PACKAGES = [
-  'core', 'data', 'component', 'layout', 'ui',
-  'form', 'grid', 'dd', 'fx', 'app', 'theme',
+  'core',
+  'data',
+  'component',
+  'layout',
+  'ui',
+  'form',
+  'grid',
+  'dd',
+  'fx',
+  'app',
+  'theme',
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -108,24 +117,24 @@ describe('Source maps', () => {
 
 describe('Size budgets (uncompressed)', () => {
   const BUDGETS: Record<string, number> = {
-    core: 150_000,      // < 150KB uncompressed (~30KB gzip)
-    data: 100_000,      // < 100KB (~20KB gzip)
-    component: 50_000,  // < 50KB
-    layout: 80_000,     // < 80KB
-    ui: 200_000,        // < 200KB (~50KB gzip)
-    form: 150_000,      // < 150KB
-    grid: 150_000,      // < 150KB
-    dd: 50_000,         // < 50KB
-    fx: 30_000,         // < 30KB
-    app: 50_000,        // < 50KB
-    theme: 30_000,      // < 30KB
+    core: 150_000, // < 150KB uncompressed (~30KB gzip)
+    data: 100_000, // < 100KB (~20KB gzip)
+    component: 50_000, // < 50KB
+    layout: 80_000, // < 80KB
+    ui: 200_000, // < 200KB (~50KB gzip)
+    form: 150_000, // < 150KB
+    grid: 150_000, // < 150KB
+    dd: 50_000, // < 50KB
+    fx: 30_000, // < 30KB
+    app: 50_000, // < 50KB
+    theme: 30_000, // < 30KB
   };
 
   for (const pkg of PACKAGES) {
-    it(`@framesquared/${pkg}: under ${BUDGETS[pkg]! / 1000}KB budget`, () => {
+    it(`@framesquared/${pkg}: under ${(BUDGETS[pkg] ?? 0) / 1000}KB budget`, () => {
       const jsPath = join(ROOT, 'packages', pkg, 'dist', 'index.js');
       const stat = statSync(jsPath);
-      expect(stat.size).toBeLessThan(BUDGETS[pkg]!);
+      expect(stat.size).toBeLessThan(BUDGETS[pkg] ?? Infinity);
     });
   }
 
@@ -196,7 +205,9 @@ describe('No circular dependencies', () => {
         imports.push(match[1]);
       }
       return imports;
-    } catch { return []; }
+    } catch {
+      return [];
+    }
   }
 
   // Dependency graph: each package should only import from packages lower in the stack
@@ -234,7 +245,7 @@ describe('No circular dependencies', () => {
   it('core has no @framesquared/* dependencies', () => {
     const indexPath = join(ROOT, 'packages/core/dist/index.js');
     const imports = getImports(indexPath);
-    const extImports = imports.filter(i => i.startsWith('@framesquared/'));
+    const extImports = imports.filter((i) => i.startsWith('@framesquared/'));
     expect(extImports).toEqual([]);
   });
 });

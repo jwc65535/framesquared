@@ -1,8 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Base, define } from '../src/class/index.js';
+import { define } from '../src/class/index.js';
 import { ExtEvent } from '../src/event/Event.js';
 import { Observable } from '../src/event/Observable.js';
-import type { Destroyable, ListenerOptions } from '../src/event/Observable.js';
 
 // Helper: create a fresh Observable class for each test block
 function createObservableClass(name: string, extra: Record<string, unknown> = {}) {
@@ -161,9 +160,13 @@ describe('Scope binding', () => {
     const Cls = createObservableClass('test.ev.Scope');
     const inst = new Cls();
     const scope = { name: 'ctx' };
-    inst.on('test', function (this: typeof scope) {
-      expect(this).toBe(scope);
-    }, scope);
+    inst.on(
+      'test',
+      function (this: typeof scope) {
+        expect(this).toBe(scope);
+      },
+      scope,
+    );
     inst.fireEvent('test');
   });
 
@@ -283,6 +286,7 @@ describe('Event cancellation', () => {
   it('fireEvent returns true when no listener cancels', () => {
     const Cls = createObservableClass('test.ev.NoCancel');
     const inst = new Cls();
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     inst.on('test', () => {});
     expect(inst.fireEvent('test')).toBe(true);
   });
@@ -415,6 +419,7 @@ describe('hasListener / clearListeners', () => {
     const Cls = createObservableClass('test.ev.HasL');
     const inst = new Cls();
     expect(inst.hasListener('click')).toBe(false);
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     inst.on('click', () => {});
     expect(inst.hasListener('click')).toBe(true);
   });
@@ -422,6 +427,7 @@ describe('hasListener / clearListeners', () => {
   it('hasListener returns false after un', () => {
     const Cls = createObservableClass('test.ev.HasLUn');
     const inst = new Cls();
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const fn = () => {};
     inst.on('click', fn);
     inst.un('click', fn);
@@ -466,10 +472,17 @@ describe('Listener map overload (on with object)', () => {
     const Cls = createObservableClass('test.ev.MapScope');
     const inst = new Cls();
     const scope = { id: 'scope' };
-    inst.on({
-      click(this: typeof scope) { expect(this).toBe(scope); },
-      hover(this: typeof scope) { expect(this).toBe(scope); },
-    }, scope);
+    inst.on(
+      {
+        click(this: typeof scope) {
+          expect(this).toBe(scope);
+        },
+        hover(this: typeof scope) {
+          expect(this).toBe(scope);
+        },
+      },
+      scope,
+    );
     inst.fireEvent('click');
     inst.fireEvent('hover');
   });
@@ -595,6 +608,7 @@ describe('options.destroyable', () => {
     const spy = vi.fn();
     const handle = inst.on('test', spy, undefined, { destroyable: true });
     expect(handle).toBeDefined();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(typeof handle!.destroy).toBe('function');
   });
 
@@ -602,6 +616,7 @@ describe('options.destroyable', () => {
     const Cls = createObservableClass('test.ev.DableRm');
     const inst = new Cls();
     const spy = vi.fn();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const handle = inst.on('test', spy, undefined, { destroyable: true })!;
     handle.destroy();
     inst.fireEvent('test');
@@ -657,12 +672,7 @@ describe('fireEventedAction', () => {
       () => order.push('beforeFn'),
       () => order.push('afterFn'),
     );
-    expect(order).toEqual([
-      'before-listener',
-      'beforeFn',
-      'save-listener',
-      'afterFn',
-    ]);
+    expect(order).toEqual(['before-listener', 'beforeFn', 'save-listener', 'afterFn']);
   });
 
   it('cancellation in before event skips everything', () => {
@@ -686,7 +696,14 @@ describe('fireEventedAction', () => {
     const mainSpy = vi.fn();
     inst.on('beforesave', beforeSpy);
     inst.on('save', mainSpy);
-    inst.fireEventedAction('save', ['payload'], () => {}, () => {});
+    inst.fireEventedAction(
+      'save',
+      ['payload'],
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      () => {},
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      () => {},
+    );
     expect(beforeSpy).toHaveBeenCalledWith('payload');
     expect(mainSpy).toHaveBeenCalledWith('payload');
   });
@@ -736,11 +753,11 @@ describe('Memory cleanup on destroy', () => {
   it('WeakRef to handler is collectable after destroy', () => {
     const Cls = createObservableClass('test.ev.WeakRef');
     const inst = new Cls();
-    let handler: (() => void) | null = () => {};
-    const ref = new WeakRef(handler);
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    const handler: (() => void) | null = () => {};
+    const _ref = new WeakRef(handler);
     inst.on('test', handler);
     inst.destroy();
-    handler = null;
     // We can't force GC, but we can verify the handler is no longer
     // held by the event system by checking hasListener
     expect(inst.hasListener('test')).toBe(false);

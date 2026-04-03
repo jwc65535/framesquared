@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Theme } from '../src/Theme.js';
 import { ThemeManager } from '../src/ThemeManager.js';
@@ -6,12 +7,14 @@ import { ModernTheme } from '../src/themes/ModernTheme.js';
 import { DarkTheme } from '../src/themes/DarkTheme.js';
 import { StyleSheet } from '../src/StyleSheet.js';
 
-beforeEach(() => { ThemeManager.reset(); });
+beforeEach(() => {
+  ThemeManager.reset();
+});
 afterEach(() => {
   ThemeManager.reset();
   // Clean up style elements
-  document.querySelectorAll('style[data-ext-theme]').forEach(el => el.remove());
-  document.querySelectorAll('style[data-ext-stylesheet]').forEach(el => el.remove());
+  document.querySelectorAll('style[data-ext-theme]').forEach((el) => el.remove());
+  document.querySelectorAll('style[data-ext-stylesheet]').forEach((el) => el.remove());
 });
 
 // ═══════════════════════════════════════════════════════════════════════════

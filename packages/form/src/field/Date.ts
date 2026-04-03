@@ -31,7 +31,12 @@ export class DateField extends TextField {
 
   constructor(config: DateFieldConfig = {}) {
     const triggers = [
-      { type: 'expand', handler: (_f: any) => { /* open picker placeholder */ } },
+      {
+        type: 'expand',
+        handler: (_f: any) => {
+          /* open picker placeholder */
+        },
+      },
       ...(config.triggers ?? []),
     ];
     super({ xtype: 'datefield', ...config, triggers });
@@ -48,6 +53,7 @@ export class DateField extends TextField {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-datefield');
 
     // Format initial date value
@@ -87,8 +93,12 @@ export class DateField extends TextField {
   // Constraints
   // -----------------------------------------------------------------------
 
-  setMinValue(date: Date): void { this._minDate = date; }
-  setMaxValue(date: Date): void { this._maxDate = date; }
+  setMinValue(date: Date): void {
+    this._minDate = date;
+  }
+  setMaxValue(date: Date): void {
+    this._maxDate = date;
+  }
 
   // -----------------------------------------------------------------------
   // Validation

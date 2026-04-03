@@ -29,9 +29,13 @@ function installWAAPIMock() {
   Element.prototype.animate = function (
     keyframes: Keyframe[] | PropertyIndexedKeyframes | null,
     options?: number | KeyframeAnimationOptions,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): any {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     let _resolve: () => void = () => {};
-    const finished = new Promise<void>((resolve) => { _resolve = resolve; });
+    const finished = new Promise<void>((resolve) => {
+      _resolve = resolve;
+    });
 
     const anim: MockWAAnimation = {
       keyframes: Array.isArray(keyframes) ? keyframes : [],
@@ -41,11 +45,22 @@ function installWAAPIMock() {
       playbackRate: 1,
       finished,
       _resolve,
-      play() { this.playState = 'running'; },
-      pause() { this.playState = 'paused'; },
-      cancel() { this.playState = 'idle'; },
-      finish() { this.playState = 'finished'; this._resolve(); },
-      reverse() { this.playbackRate *= -1; },
+      play() {
+        this.playState = 'running';
+      },
+      pause() {
+        this.playState = 'paused';
+      },
+      cancel() {
+        this.playState = 'idle';
+      },
+      finish() {
+        this.playState = 'finished';
+        this._resolve();
+      },
+      reverse() {
+        this.playbackRate *= -1;
+      },
     };
     animations.push(anim);
     return anim;
@@ -54,13 +69,20 @@ function installWAAPIMock() {
   return {
     getAll: () => animations,
     getLast: () => animations[animations.length - 1],
-    clear: () => { animations.length = 0; },
+    clear: () => {
+      animations.length = 0;
+    },
   };
 }
 
 let mock: ReturnType<typeof installWAAPIMock>;
-beforeEach(() => { mock = installWAAPIMock(); });
-afterEach(() => { document.body.innerHTML = ''; mock.clear(); });
+beforeEach(() => {
+  mock = installWAAPIMock();
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+  mock.clear();
+});
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Animation
@@ -93,8 +115,10 @@ describe('Animation', () => {
     const el = document.createElement('div');
     document.body.appendChild(el);
     const anim = new Animation({
-      target: el, keyframes: [{ opacity: '1' }],
-      duration: 300, easing: 'ease-in-out',
+      target: el,
+      keyframes: [{ opacity: '1' }],
+      duration: 300,
+      easing: 'ease-in-out',
     });
     anim.play();
     expect(mock.getLast().options.easing).toBe('ease-in-out');
@@ -104,8 +128,13 @@ describe('Animation', () => {
     const el = document.createElement('div');
     document.body.appendChild(el);
     const anim = new Animation({
-      target: el, keyframes: [{ opacity: '1' }], duration: 200,
-      delay: 100, iterations: 3, direction: 'alternate', fill: 'both',
+      target: el,
+      keyframes: [{ opacity: '1' }],
+      duration: 200,
+      delay: 100,
+      iterations: 3,
+      direction: 'alternate',
+      fill: 'both',
     });
     anim.play();
     const opts = mock.getLast().options;
@@ -292,7 +321,7 @@ describe('Anim — queue', () => {
 
     // Finish first animation → second should start
     mock.getLast().finish();
-    await new Promise(r => setTimeout(r, 0)); // microtask flush
+    await new Promise((r) => setTimeout(r, 0)); // microtask flush
 
     expect(mock.getAll().length).toBe(2);
     order.push('a2-started');
@@ -364,11 +393,23 @@ describe('Easing', () => {
 
   it('all named easings are defined', () => {
     const names = [
-      'linear', 'ease', 'easeIn', 'easeOut', 'easeInOut',
-      'easeInQuad', 'easeOutQuad', 'easeInOutQuad',
-      'easeInCubic', 'easeOutCubic', 'easeInOutCubic',
-      'easeInBack', 'easeOutBack', 'easeInOutBack',
-      'easeInBounce', 'easeOutBounce', 'easeInOutBounce',
+      'linear',
+      'ease',
+      'easeIn',
+      'easeOut',
+      'easeInOut',
+      'easeInQuad',
+      'easeOutQuad',
+      'easeInOutQuad',
+      'easeInCubic',
+      'easeOutCubic',
+      'easeInOutCubic',
+      'easeInBack',
+      'easeOutBack',
+      'easeInOutBack',
+      'easeInBounce',
+      'easeOutBounce',
+      'easeInOutBounce',
     ];
     for (const name of names) {
       expect((Easing as Record<string, string>)[name]).toBeDefined();

@@ -5,8 +5,6 @@
  * Tree-aware: tracks selected nodes from flatData, supports range selection.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { NodeInterface } from '@framesquared/data';
 
 // ---------------------------------------------------------------------------
@@ -26,8 +24,8 @@ export interface TreeGridSelectionModelConfig {
 
 export class TreeGridSelectionModel {
   private mode: 'SINGLE' | 'SIMPLE' | 'MULTI';
-  private selected: Set<NodeInterface> = new Set();
-  private listeners: Map<string, Function[]> = new Map();
+  private selected = new Set<NodeInterface>();
+  private listeners = new Map<string, ((...args: unknown[]) => void)[]>();
   readonly deselectOnCollapse: boolean;
   readonly pruneRemoved: boolean;
   readonly checkboxSelect: boolean;
@@ -44,12 +42,13 @@ export class TreeGridSelectionModel {
   // Event system
   // -------------------------------------------------------------------------
 
-  on(event: string, fn: Function): void {
+  on(event: string, fn: (...args: unknown[]) => void): void {
     if (!this.listeners.has(event)) this.listeners.set(event, []);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.listeners.get(event)!.push(fn);
   }
 
-  un(event: string, fn: Function): void {
+  un(event: string, fn: (...args: unknown[]) => void): void {
     const fns = this.listeners.get(event);
     if (!fns) return;
     const i = fns.indexOf(fn);
@@ -85,10 +84,7 @@ export class TreeGridSelectionModel {
     if (!suppressEvent) this.fireEvent('selectionchange', this, this.getSelection());
   }
 
-  deselect(
-    nodes: NodeInterface | NodeInterface[],
-    suppressEvent = false,
-  ): void {
+  deselect(nodes: NodeInterface | NodeInterface[], suppressEvent = false): void {
     const toDeselect = Array.isArray(nodes) ? nodes : [nodes];
     for (const node of toDeselect) this.selected.delete(node);
     if (!suppressEvent) this.fireEvent('selectionchange', this, this.getSelection());
@@ -108,11 +104,7 @@ export class TreeGridSelectionModel {
   /**
    * Selects a range of nodes between anchor and the given node (inclusive).
    */
-  selectRange(
-    flatData: NodeInterface[],
-    toNode: NodeInterface,
-    suppressEvent = false,
-  ): void {
+  selectRange(flatData: NodeInterface[], toNode: NodeInterface, suppressEvent = false): void {
     if (this.mode !== 'MULTI') return;
     const anchorIdx = this.anchor ? flatData.indexOf(this.anchor) : 0;
     const toIdx = flatData.indexOf(toNode);
@@ -190,11 +182,7 @@ export class TreeGridSelectionModel {
     if (!suppressEvent) this.fireEvent('selectionchange', this, this.getSelection());
   }
 
-  deselectChildren(
-    node: NodeInterface,
-    deep = false,
-    suppressEvent = false,
-  ): void {
+  deselectChildren(node: NodeInterface, deep = false, suppressEvent = false): void {
     if (deep) {
       node.cascadeBy((child) => {
         if (child !== node) this.selected.delete(child);

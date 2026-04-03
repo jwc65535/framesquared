@@ -5,8 +5,6 @@
  * where only one item in the group can be checked at a time.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Component } from '@framesquared/component';
 import type { ComponentConfig } from '@framesquared/component';
 
@@ -39,6 +37,7 @@ export class CheckItem extends Component {
   protected override afterRender(): void {
     super.afterRender();
     const cfg = this._config as CheckItemConfig;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
 
     el.classList.add('x-menu-item', 'x-menu-check-item');
@@ -70,7 +69,10 @@ export class CheckItem extends Component {
     // Group registration
     if (cfg.group) {
       let grp = checkGroups.get(cfg.group);
-      if (!grp) { grp = new Set(); checkGroups.set(cfg.group, grp); }
+      if (!grp) {
+        grp = new Set();
+        checkGroups.set(cfg.group, grp);
+      }
       grp.add(this);
     }
 

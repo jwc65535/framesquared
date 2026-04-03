@@ -29,6 +29,7 @@ export class MenuItem extends Component {
   protected override afterRender(): void {
     super.afterRender();
     const cfg = this._config as MenuItemConfig;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
 
     el.classList.add('x-menu-item');

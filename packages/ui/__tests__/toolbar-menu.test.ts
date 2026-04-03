@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Component, Container } from '@framesquared/component';
+import { Component } from '@framesquared/component';
 import { Button } from '../src/button/Button.js';
 import { Toolbar } from '../src/toolbar/Toolbar.js';
 import { PagingToolbar } from '../src/toolbar/Paging.js';
@@ -12,8 +15,13 @@ import { MenuManager } from '../src/menu/MenuManager.js';
 class MockRO {
   callback: ResizeObserverCallback;
   static instances: MockRO[] = [];
-  constructor(cb: ResizeObserverCallback) { this.callback = cb; MockRO.instances.push(this); }
-  observe() {} unobserve() {} disconnect() {}
+  constructor(cb: ResizeObserverCallback) {
+    this.callback = cb;
+    MockRO.instances.push(this);
+  }
+  observe() {}
+  unobserve() {}
+  disconnect() {}
   trigger(entries: Partial<ResizeObserverEntry>[]) {
     this.callback(entries as ResizeObserverEntry[], this as unknown as ResizeObserver);
   }
@@ -23,7 +31,9 @@ beforeEach(() => {
   (globalThis as any).ResizeObserver = MockRO;
   MenuManager.getInstance().closeAll();
 });
-afterEach(() => { document.body.innerHTML = ''; });
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Toolbar
@@ -198,7 +208,9 @@ describe('Menu', () => {
     });
     menu.showAt(100, 200);
     expect(menu.el!.classList.contains('x-menu')).toBe(true);
-    expect(menu.el!.style.position === 'fixed' || menu.el!.style.position === 'absolute').toBe(true);
+    expect(menu.el!.style.position === 'fixed' || menu.el!.style.position === 'absolute').toBe(
+      true,
+    );
     menu.hide();
   });
 
@@ -296,7 +308,11 @@ describe('MenuItem', () => {
   });
 
   it('href renders as <a>', () => {
-    const item = new MenuItem({ renderTo: document.body, text: 'Link', href: 'https://example.com' });
+    const item = new MenuItem({
+      renderTo: document.body,
+      text: 'Link',
+      href: 'https://example.com',
+    });
     const link = item.el!.querySelector('a');
     expect(link).not.toBeNull();
     expect(link!.href).toContain('example.com');
@@ -323,7 +339,11 @@ describe('CheckItem', () => {
 
   it('fires checkchange event', () => {
     const spy = vi.fn();
-    const item = new CheckItem({ renderTo: document.body, text: 'Opt', listeners: { checkchange: spy } });
+    const item = new CheckItem({
+      renderTo: document.body,
+      text: 'Opt',
+      listeners: { checkchange: spy },
+    });
     item.el!.click();
     expect(spy).toHaveBeenCalledWith(item, true);
   });
@@ -426,7 +446,9 @@ describe('Context menu', () => {
       e.preventDefault();
       menu.showAt(e.clientX, e.clientY);
     });
-    c.el!.dispatchEvent(new MouseEvent('contextmenu', { clientX: 100, clientY: 200, bubbles: true }));
+    c.el!.dispatchEvent(
+      new MouseEvent('contextmenu', { clientX: 100, clientY: 200, bubbles: true }),
+    );
     expect(menu.isVisible()).toBe(true);
     menu.hide();
   });

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Grid } from '../src/grid/Grid.js';
 import { RowSelectionModel } from '../src/grid/selection/RowSelectionModel.js';
@@ -6,27 +8,48 @@ import { SpreadsheetSelectionModel } from '../src/grid/selection/SpreadsheetSele
 import { Lockable } from '../src/grid/Lockable.js';
 import { GridState } from '../src/grid/state/GridState.js';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; localStorage.clear(); });
+class MockRO {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+  localStorage.clear();
+});
 
 function mockStore(data: Record<string, unknown>[] = []) {
-  const dataCopy = data.map(d => ({ ...d }));
+  const dataCopy = data.map((d) => ({ ...d }));
   const records = dataCopy.map((d, i) => ({
-    id: d.id ?? i, data: d,
-    get(f: string) { return (d as any)[f]; },
-    set(f: string, v: unknown) { (d as any)[f] = v; },
+    id: d.id ?? i,
+    data: d,
+    get(f: string) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (d as any)[f];
+    },
+    set(f: string, v: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (d as any)[f] = v;
+    },
   }));
-  const listeners: Record<string, Function[]> = {};
+  const listeners: Record<string, ((...args: unknown[]) => unknown)[]> = {};
   return {
     data: { items: records },
     getRange: () => records,
     getCount: () => records.length,
     getAt: (i: number) => records[i],
     sort: vi.fn(),
-    on: (evt: string, fn: Function) => { (listeners[evt] ??= []).push(fn); },
-    fireEvent: (evt: string, ...args: unknown[]) => { (listeners[evt] ?? []).forEach(fn => fn(...args)); },
-    each: (fn: Function) => records.forEach(fn),
+    on: (evt: string, fn: (...args: unknown[]) => unknown) => {
+      (listeners[evt] ??= []).push(fn);
+    },
+    fireEvent: (evt: string, ...args: unknown[]) => {
+      (listeners[evt] ?? []).forEach((fn) => fn(...args));
+    },
+    each: (fn: (...args: unknown[]) => unknown) => records.forEach(fn),
     getTotalCount: () => records.length,
     isLoading: () => false,
   };
@@ -63,6 +86,7 @@ describe('RowSelectionModel — SINGLE', () => {
     const g = testGrid();
     const sm = new RowSelectionModel({ mode: 'SINGLE' });
     sm.init(g);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (g as any)._store;
     sm.select(store.getAt(0));
     expect(sm.getCount()).toBe(1);
@@ -73,6 +97,7 @@ describe('RowSelectionModel — SINGLE', () => {
     const g = testGrid();
     const sm = new RowSelectionModel({ mode: 'SINGLE' });
     sm.init(g);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (g as any)._store;
     sm.select(store.getAt(0));
     sm.select(store.getAt(1));
@@ -85,6 +110,7 @@ describe('RowSelectionModel — SINGLE', () => {
     const g = testGrid();
     const sm = new RowSelectionModel({ mode: 'SINGLE' });
     sm.init(g);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (g as any)._store;
     sm.select(store.getAt(0));
     sm.deselect(store.getAt(0));
@@ -95,6 +121,7 @@ describe('RowSelectionModel — SINGLE', () => {
     const g = testGrid();
     const sm = new RowSelectionModel({ mode: 'SINGLE' });
     sm.init(g);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (g as any)._store;
     sm.select(store.getAt(2));
     const sel = sm.getSelection();
@@ -108,6 +135,7 @@ describe('RowSelectionModel — SINGLE', () => {
     const sm = new RowSelectionModel({ mode: 'SINGLE' });
     sm.on('selectionchange', spy);
     sm.init(g);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sm.select((g as any)._store.getAt(0));
     expect(spy).toHaveBeenCalled();
   });
@@ -118,6 +146,7 @@ describe('RowSelectionModel — SINGLE', () => {
     const sm = new RowSelectionModel({ mode: 'SINGLE' });
     sm.on('select', spy);
     sm.init(g);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sm.select((g as any)._store.getAt(0));
     expect(spy).toHaveBeenCalled();
   });
@@ -128,6 +157,7 @@ describe('RowSelectionModel — SINGLE', () => {
     const sm = new RowSelectionModel({ mode: 'SINGLE' });
     sm.on('deselect', spy);
     sm.init(g);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const rec = (g as any)._store.getAt(0);
     sm.select(rec);
     sm.deselect(rec);
@@ -162,6 +192,7 @@ describe('RowSelectionModel — MULTI', () => {
     const g = testGrid();
     const sm = new RowSelectionModel({ mode: 'MULTI' });
     sm.init(g);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (g as any)._store;
     sm.select(store.getAt(0));
     sm.select(store.getAt(2), true); // keepExisting
@@ -174,6 +205,7 @@ describe('RowSelectionModel — MULTI', () => {
     const g = testGrid();
     const sm = new RowSelectionModel({ mode: 'MULTI' });
     sm.init(g);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (g as any)._store;
     sm.selectRange(store.getAt(1), store.getAt(3));
     expect(sm.getCount()).toBe(3); // Bob, Charlie, Diana
@@ -206,6 +238,7 @@ describe('RowSelectionModel — SIMPLE', () => {
     const g = testGrid();
     const sm = new RowSelectionModel({ mode: 'SIMPLE' });
     sm.init(g);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (g as any)._store;
     sm.select(store.getAt(0));
     sm.select(store.getAt(1));
@@ -341,7 +374,9 @@ describe('SpreadsheetSelectionModel', () => {
     const cells = g.el!.querySelectorAll('tbody td');
     (cells[0] as HTMLElement).click();
     // Shift+click cell at row 2, col 1
-    const targetCell = g.el!.querySelectorAll('tbody tr')[2]?.querySelectorAll('td')[1] as HTMLElement;
+    const targetCell = g
+      .el!.querySelectorAll('tbody tr')[2]
+      ?.querySelectorAll('td')[1] as HTMLElement;
     targetCell?.dispatchEvent(new MouseEvent('click', { shiftKey: true, bubbles: true }));
 
     const range = sm.getSelectedRange();
@@ -442,13 +477,16 @@ describe('GridState', () => {
 
   it('restore applies saved column state', () => {
     // Pre-save a state
-    localStorage.setItem('ext-grid-state-myGrid', JSON.stringify({
-      columns: [
-        { dataIndex: 'name', width: 200, hidden: false },
-        { dataIndex: 'dept', width: 100, hidden: true },
-        { dataIndex: 'salary', width: 150, hidden: false },
-      ],
-    }));
+    localStorage.setItem(
+      'ext-grid-state-myGrid',
+      JSON.stringify({
+        columns: [
+          { dataIndex: 'name', width: 200, hidden: false },
+          { dataIndex: 'dept', width: 100, hidden: true },
+          { dataIndex: 'salary', width: 150, hidden: false },
+        ],
+      }),
+    );
 
     const g = testGrid();
     const state = new GridState({ stateId: 'myGrid' });

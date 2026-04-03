@@ -1,13 +1,23 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Component, Container } from '@framesquared/component';
 import { Button } from '../src/button/Button.js';
 import { SplitButton } from '../src/button/SplitButton.js';
 import { CycleButton } from '../src/button/CycleButton.js';
 import { SegmentedButton } from '../src/button/SegmentedButton.js';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+class MockRO {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 function btn(cfg: Record<string, unknown> = {}): Button {
   return new Button({ renderTo: document.body, ...cfg });
@@ -352,7 +362,7 @@ describe('SplitButton', () => {
     const arrowHandler = vi.fn();
     const s = splitBtn({ handler, arrowHandler });
     // Click the main button text area
-    const mainEl = s.el!.querySelector('.x-btn-text') as HTMLElement || s.el!;
+    const mainEl = (s.el!.querySelector('.x-btn-text') as HTMLElement) || s.el!;
     mainEl.click();
     expect(handler).toHaveBeenCalled();
   });

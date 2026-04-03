@@ -72,7 +72,7 @@ export const enUS = new Locale({
     'messagebox.prompt.title': 'Prompt',
 
     // Misc
-    'loading': 'Loading...',
-    'error': 'Error',
+    loading: 'Loading...',
+    error: 'Error',
   },
 });

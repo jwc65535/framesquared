@@ -17,6 +17,8 @@
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-function-type */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import { capitalize } from '../util/String.js';
 import type { Base } from './Base.js';
@@ -40,7 +42,10 @@ const cachedValues = new WeakMap<object, Map<string, { valid: boolean; value: un
 
 function getCacheEntry(inst: object) {
   let m = cachedValues.get(inst);
-  if (!m) { m = new Map(); cachedValues.set(inst, m); }
+  if (!m) {
+    m = new Map();
+    cachedValues.set(inst, m);
+  }
   return m;
 }
 
@@ -81,9 +86,7 @@ function createConfigDecorator(metaOverrides: Partial<ConfigMeta> = {}) {
     const updateName = `update${cap}`;
 
     // ── Register metadata at CLASS DEFINITION time via context.metadata ──
-    const metaMap = getOrCreateMetaMap(
-      context.metadata as DecoratorMetadataObject,
-    );
+    const metaMap = getOrCreateMetaMap(context.metadata as DecoratorMetadataObject);
     let meta = metaMap.get(name);
     if (!meta) {
       meta = {
@@ -108,7 +111,7 @@ function createConfigDecorator(metaOverrides: Partial<ConfigMeta> = {}) {
       // Apply pending config that Base stored during super()
       if (inst.$pendingConfig && name in inst.$pendingConfig) {
         inst[name] = inst.$pendingConfig[name];
-        delete inst.$pendingConfig[name];
+        Reflect.deleteProperty(inst.$pendingConfig, name);
         inst.$configInitialized?.add(name);
       }
 
@@ -134,10 +137,7 @@ function createConfigDecorator(metaOverrides: Partial<ConfigMeta> = {}) {
       const inst = this as any;
 
       // Lazy factory: compute on first access if not explicitly set
-      if (
-        meta!.lazyFactory &&
-        !inst.$configInitialized?.has(name)
-      ) {
+      if (meta!.lazyFactory && !inst.$configInitialized?.has(name)) {
         const computed = meta!.lazyFactory.call(inst) as Value;
         target.set.call(this, computed);
         inst.$configInitialized?.add(name);
@@ -213,7 +213,9 @@ interface ConfigDecorator {
     context: ClassAccessorDecoratorContext<This, Value>,
   ) => ClassAccessorDecoratorResult<This, Value>;
 
-  lazy: (factory: (this: any) => unknown) => <This extends Base, Value>(
+  lazy: (
+    factory: (this: any) => unknown,
+  ) => <This extends Base, Value>(
     target: ClassAccessorDecoratorTarget<This, Value>,
     context: ClassAccessorDecoratorContext<This, Value>,
   ) => ClassAccessorDecoratorResult<This, Value>;
@@ -229,17 +231,14 @@ interface ConfigDecorator {
   ) => ClassAccessorDecoratorResult<This, Value>;
 }
 
-export const config: ConfigDecorator = Object.assign(
-  createConfigDecorator(),
-  {
-    required: createConfigDecorator({ required: true }),
-    lazy(factory: (this: any) => unknown) {
-      return createConfigDecorator({ lazyFactory: factory });
-    },
-    cached: createConfigDecorator({ cached: true }),
-    merge: createConfigDecorator({ merge: true }),
+export const config: ConfigDecorator = Object.assign(createConfigDecorator(), {
+  required: createConfigDecorator({ required: true }),
+  lazy(factory: (this: any) => unknown) {
+    return createConfigDecorator({ lazyFactory: factory });
   },
-);
+  cached: createConfigDecorator({ cached: true }),
+  merge: createConfigDecorator({ merge: true }),
+});
 
 // ---------------------------------------------------------------------------
 // @observable
@@ -254,9 +253,7 @@ export function observable<This extends Base, Value>(
   context: ClassAccessorDecoratorContext<This, Value>,
 ): void {
   const name = String(context.name);
-  const metaMap = getOrCreateMetaMap(
-    context.metadata as DecoratorMetadataObject,
-  );
+  const metaMap = getOrCreateMetaMap(context.metadata as DecoratorMetadataObject);
   let meta = metaMap.get(name);
   if (!meta) {
     meta = {

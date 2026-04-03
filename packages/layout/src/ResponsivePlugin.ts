@@ -39,7 +39,7 @@ function toMediaQuery(expr: string): string {
   if (expr.startsWith('(') || expr.startsWith('@media')) return expr;
 
   // Parse shorthand: 'width < 600', 'width >= 600 && width < 1024', etc.
-  const parts = expr.split('&&').map(s => s.trim());
+  const parts = expr.split('&&').map((s) => s.trim());
   const conditions: string[] = [];
 
   for (const part of parts) {
@@ -53,11 +53,21 @@ function toMediaQuery(expr: string): string {
     const val = parseInt(m[2], 10);
 
     switch (op) {
-      case '<':  conditions.push(`(max-width: ${val - 1}px)`); break;
-      case '<=': conditions.push(`(max-width: ${val}px)`); break;
-      case '>':  conditions.push(`(min-width: ${val + 1}px)`); break;
-      case '>=': conditions.push(`(min-width: ${val}px)`); break;
-      case '==': conditions.push(`(width: ${val}px)`); break;
+      case '<':
+        conditions.push(`(max-width: ${val - 1}px)`);
+        break;
+      case '<=':
+        conditions.push(`(max-width: ${val}px)`);
+        break;
+      case '>':
+        conditions.push(`(min-width: ${val + 1}px)`);
+        break;
+      case '>=':
+        conditions.push(`(min-width: ${val}px)`);
+        break;
+      case '==':
+        conditions.push(`(width: ${val}px)`);
+        break;
     }
   }
 
@@ -75,10 +85,12 @@ function applyConfig(owner: Component, config: Record<string, unknown>): void {
         if (typeof value === 'string') owner.addCls(value);
         break;
       case 'hidden':
-        if (value) owner.hide(); else owner.show();
+        if (value) owner.hide();
+        else owner.show();
         break;
       case 'disabled':
-        if (value) owner.disable(); else owner.enable();
+        if (value) owner.disable();
+        else owner.enable();
         break;
       case 'width':
         if (typeof value === 'number' || typeof value === 'string') owner.setWidth(value);

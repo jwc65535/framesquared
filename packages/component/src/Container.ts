@@ -11,7 +11,7 @@
 import { Component } from './Component.js';
 import type { ComponentConfig } from './Component.js';
 import { ComponentQuery, matchesCQ } from './ComponentQuery.js';
-import { Layout, resolveLayout } from './Layout.js';
+import { type Layout, resolveLayout } from './Layout.js';
 import type { LayoutConfig } from './Layout.js';
 import { ClassManager } from '@framesquared/core';
 
@@ -60,6 +60,7 @@ export class Container extends Component {
     // Create body element inside el for child rendering
     this._bodyEl = document.createElement('div');
     this._bodyEl.classList.add('x-container-body');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.appendChild(this._bodyEl);
 
     // Render any items that were added before this container was rendered
@@ -95,6 +96,7 @@ export class Container extends Component {
    * Falls back to el if body hasn't been created yet.
    */
   getBodyEl(): HTMLElement {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this._bodyEl ?? this.el!;
   }
 
@@ -289,14 +291,14 @@ export class Container extends Component {
 
     // Merge defaults
     const config = this._config as ContainerConfig;
-    const merged = config.defaults
-      ? { ...config.defaults, ...item }
-      : { ...item };
+    const merged = config.defaults ? { ...config.defaults, ...item } : { ...item };
 
     // Resolve xtype via ClassManager if registered, otherwise create generic Component
     const xtype = (merged as any).xtype;
     if (xtype) {
-      const Ctor = ClassManager.getByAlias(`widget.${xtype}`) as (new (cfg: any) => Component) | undefined;
+      const Ctor = ClassManager.getByAlias(`widget.${xtype}`) as
+        | (new (cfg: any) => Component)
+        | undefined;
       if (Ctor) return new Ctor(merged);
     }
     return new Component(merged);

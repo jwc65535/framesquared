@@ -5,8 +5,6 @@
  * formatting buttons, source edit mode, and XSS sanitization.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Field } from './Field.js';
 import type { FieldConfig } from './Field.js';
 
@@ -36,7 +34,8 @@ const TOOLBAR_BUTTONS = [
 ];
 
 // Dangerous tags to strip for XSS prevention
-const XSS_TAGS = /(<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>|<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>|on\w+="[^"]*"|on\w+='[^']*')/gi;
+const XSS_TAGS =
+  /(<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>|<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>|on\w+="[^"]*"|on\w+='[^']*')/gi;
 
 export class HtmlEditor extends Field {
   static override $className = 'Ext.form.field.HtmlEditor';
@@ -60,8 +59,10 @@ export class HtmlEditor extends Field {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-htmleditor');
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const wrap = this._bodyWrapEl ?? this.el!;
 
     // Toolbar

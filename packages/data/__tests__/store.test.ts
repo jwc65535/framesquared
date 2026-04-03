@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Model } from '../src/Model.js';
 import { FieldType } from '../src/field/Field.js';
 import { Store } from '../src/store/Store.js';
 import { Collection } from '../src/store/Collection.js';
-import type { Sorter, Filter } from '../src/store/Store.js';
 
 // ---------------------------------------------------------------------------
 // Shared test model
@@ -123,7 +123,9 @@ describe('Collection', () => {
     c.add(u({ id: 1, name: 'A' }));
     c.add(u({ id: 2, name: 'B' }));
     const names: string[] = [];
-    c.each((r) => { names.push(r.get('name') as string); });
+    c.each((r) => {
+      names.push(r.get('name') as string);
+    });
     expect(names).toEqual(['A', 'B']);
   });
 
@@ -257,7 +259,9 @@ describe('Store CRUD', () => {
 
   it('each iterates all records', () => {
     const names: string[] = [];
-    store.each((r) => { names.push(r.get('name') as string); });
+    store.each((r) => {
+      names.push(r.get('name') as string);
+    });
     expect(names).toEqual(['Alice', 'Bob', 'Carol']);
   });
 
@@ -325,15 +329,17 @@ describe('Store Sorting', () => {
   });
 
   it('custom sorterFn', () => {
-    store.sort([{
-      property: 'name',
-      direction: 'ASC',
-      sorterFn: (a, b) => {
-        const an = a.get('name') as string;
-        const bn = b.get('name') as string;
-        return bn.length - an.length; // sort by name length desc
+    store.sort([
+      {
+        property: 'name',
+        direction: 'ASC',
+        sorterFn: (a, b) => {
+          const an = a.get('name') as string;
+          const bn = b.get('name') as string;
+          return bn.length - an.length; // sort by name length desc
+        },
       },
-    }]);
+    ]);
     expect(store.getAt(0)!.get('name')).toBe('Carol');
   });
 
@@ -414,11 +420,13 @@ describe('Store Filtering', () => {
   });
 
   it('custom filterFn', () => {
-    store.filter([{
-      property: 'name',
-      value: null,
-      filterFn: (record) => (record.get('name') as string).length > 3,
-    }]);
+    store.filter([
+      {
+        property: 'name',
+        value: null,
+        filterFn: (record) => (record.get('name') as string).length > 3,
+      },
+    ]);
     expect(store.getCount()).toBe(3); // Alice, Carol, Dave
   });
 
@@ -444,6 +452,7 @@ describe('Store Filtering', () => {
   it('clearFilter with suppressEvent=true does not fire event', () => {
     const spy = vi.fn();
     store.filter('city', 'NYC');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (store as any).on('filter', spy);
     store.clearFilter(true);
     expect(spy).not.toHaveBeenCalled();
@@ -520,14 +529,13 @@ describe('Store Events', () => {
   beforeEach(() => {
     store = new Store({
       model: User,
-      data: [
-        { id: 1, name: 'Alice', age: 30, city: 'NYC', active: true },
-      ],
+      data: [{ id: 1, name: 'Alice', age: 30, city: 'NYC', active: true }],
     });
   });
 
   it('fires "add" when records are added', () => {
     const spy = vi.fn();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (store as any).on('add', spy);
     store.add(u({ id: 2, name: 'Bob', age: 25, city: 'LA', active: true }));
     expect(spy).toHaveBeenCalledOnce();
@@ -535,6 +543,7 @@ describe('Store Events', () => {
 
   it('fires "remove" when records are removed', () => {
     const spy = vi.fn();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (store as any).on('remove', spy);
     store.remove(store.getAt(0)!);
     expect(spy).toHaveBeenCalledOnce();
@@ -542,6 +551,7 @@ describe('Store Events', () => {
 
   it('fires "clear" on removeAll', () => {
     const spy = vi.fn();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (store as any).on('clear', spy);
     store.removeAll();
     expect(spy).toHaveBeenCalledOnce();
@@ -549,6 +559,7 @@ describe('Store Events', () => {
 
   it('removeAll(silent=true) does not fire "clear"', () => {
     const spy = vi.fn();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (store as any).on('clear', spy);
     store.removeAll(true);
     expect(spy).not.toHaveBeenCalled();
@@ -556,6 +567,7 @@ describe('Store Events', () => {
 
   it('fires "sort" when sorted', () => {
     const spy = vi.fn();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (store as any).on('sort', spy);
     store.sort('name');
     expect(spy).toHaveBeenCalledOnce();
@@ -563,6 +575,7 @@ describe('Store Events', () => {
 
   it('fires "filter" when filtered', () => {
     const spy = vi.fn();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (store as any).on('filter', spy);
     store.filter('city', 'NYC');
     expect(spy).toHaveBeenCalledOnce();
@@ -570,6 +583,7 @@ describe('Store Events', () => {
 
   it('fires "groupchange" when grouped', () => {
     const spy = vi.fn();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (store as any).on('groupchange', spy);
     store.group('city');
     expect(spy).toHaveBeenCalledOnce();
@@ -577,6 +591,7 @@ describe('Store Events', () => {
 
   it('fires "datachanged" on add, remove, and removeAll', () => {
     const spy = vi.fn();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (store as any).on('datachanged', spy);
     store.add(u({ id: 2, name: 'Bob', age: 25, city: 'LA', active: true }));
     store.remove(store.getById(2)!);

@@ -55,7 +55,7 @@ export const AriaManager = {
     descEl.textContent = description;
     descEl.style.cssText =
       'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);';
-    element.parentNode?.appendChild(descEl) ?? document.body.appendChild(descEl);
+    (element.parentNode ?? document.body).appendChild(descEl);
     element.setAttribute('aria-describedby', id);
   },
 

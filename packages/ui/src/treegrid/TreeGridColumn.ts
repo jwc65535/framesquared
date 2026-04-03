@@ -22,9 +22,9 @@ export type ElbowType = 'line' | 'empty' | 'end' | 'end-plus' | 'tee' | 'tee-plu
 export interface EditorConfig {
   xtype: string;
   /** options for combobox/select/radiogroup — array of {value,text} or plain strings */
-  options?: Array<{ value: string; text: string } | string>;
+  options?: ({ value: string; text: string } | string)[];
   /** legacy: ExtJS-style store for combobox */
-  store?: Array<{ value: string; text: string } | string>;
+  store?: ({ value: string; text: string } | string)[];
   displayField?: string;
   valueField?: string;
   minValue?: number;
@@ -116,7 +116,7 @@ export class TreeGridColumn extends Column {
   innerRenderer: ((value: unknown, record: NodeInterface) => string) | undefined;
 
   constructor(config: TreeGridColumnConfig = {}) {
-    super({ ...config, dataIndex: config.dataIndex ?? (config.displayProperty ?? 'text') });
+    super({ ...config, dataIndex: config.dataIndex ?? config.displayProperty ?? 'text' });
     this.indentSize = config.indentSize ?? 20;
     this.iconProperty = config.iconProperty ?? 'icon';
     this.iconClsProperty = config.iconClsProperty ?? 'iconCls';
@@ -168,11 +168,7 @@ export class TreeGridColumn extends Column {
   /**
    * Renders the complete tree cell HTML.
    */
-  renderCell(
-    record: NodeInterface,
-    checkable: boolean,
-    lines: boolean,
-  ): string {
+  renderCell(record: NodeInterface, checkable: boolean, lines: boolean): string {
     const depth = record.depth ?? 0;
     const indent = depth * this.indentSize;
 

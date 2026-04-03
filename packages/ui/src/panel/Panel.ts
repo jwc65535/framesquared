@@ -13,7 +13,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component, Container } from '@framesquared/component';
+import type { Component } from '@framesquared/component';
+import { Container } from '@framesquared/component';
 import type { ContainerConfig } from '@framesquared/component';
 
 // ---------------------------------------------------------------------------
@@ -101,8 +102,11 @@ export class Panel extends Container {
     const cfg = this._config as PanelConfig;
 
     // Root element classes
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-panel');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (cfg.frame) this.el!.classList.add('x-panel-framed');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (cfg.border === false) this.el!.classList.add('x-panel-noborder');
 
     // -- Header --
@@ -118,6 +122,7 @@ export class Panel extends Container {
     this._panelBodyEl = document.createElement('div');
     this._panelBodyEl.classList.add('x-panel-body');
     this.applyBodyStyles(cfg);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.appendChild(this._panelBodyEl);
 
     // Point Container's body to our panel-body
@@ -127,6 +132,7 @@ export class Panel extends Container {
     if (cfg.footer) {
       this._footerEl = document.createElement('div');
       this._footerEl.classList.add('x-panel-footer');
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.el!.appendChild(this._footerEl);
     }
 
@@ -136,6 +142,7 @@ export class Panel extends Container {
     // -- Collapsed state --
     if (this._collapsed) {
       this._panelBodyEl.style.display = 'none';
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.el!.classList.add('x-panel-collapsed');
     }
 
@@ -160,9 +167,12 @@ export class Panel extends Container {
     }
 
     // -- ARIA --
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.setAttribute('role', 'region');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (cfg.title) this.el!.setAttribute('aria-label', cfg.title);
     if (cfg.collapsible) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.el!.setAttribute('aria-expanded', String(!this._collapsed));
     }
   }
@@ -184,7 +194,14 @@ export class Panel extends Container {
     if (cfg.header === false) return false;
     if (cfg.header === true) return true;
     // Show header if there's a title, icon, or tools
-    return !!(cfg.title || cfg.iconCls || cfg.icon || cfg.tools?.length || cfg.closable || cfg.collapsible);
+    return !!(
+      cfg.title ||
+      cfg.iconCls ||
+      cfg.icon ||
+      cfg.tools?.length ||
+      cfg.closable ||
+      cfg.collapsible
+    );
   }
 
   private buildHeader(cfg: PanelConfig): void {
@@ -226,6 +243,7 @@ export class Panel extends Container {
       }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.appendChild(this._headerEl);
   }
 
@@ -254,12 +272,12 @@ export class Panel extends Container {
   // -----------------------------------------------------------------------
 
   private applyBodyStyles(cfg: PanelConfig): void {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const body = this._panelBodyEl!;
 
     if (cfg.bodyPadding !== undefined) {
-      body.style.padding = typeof cfg.bodyPadding === 'number'
-        ? `${cfg.bodyPadding}px`
-        : cfg.bodyPadding;
+      body.style.padding =
+        typeof cfg.bodyPadding === 'number' ? `${cfg.bodyPadding}px` : cfg.bodyPadding;
     }
 
     if (cfg.bodyStyle) {
@@ -406,17 +424,19 @@ export class Panel extends Container {
     this._dockedItems.push(item);
 
     if (this.rendered && this.el) {
-      const dock = (item as any)._config?.dock as string ?? 'top';
+      const dock = ((item as any)._config?.dock as string) ?? 'top';
       const body = this._panelBodyEl ?? this.el;
 
       if (dock === 'top' || dock === 'left') {
         // Insert before body
         item.render(this.el);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.el.insertBefore(item.el!, body);
       } else {
         // Insert after body
         item.render(this.el);
         if (body.nextSibling) {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           this.el.insertBefore(item.el!, body.nextSibling);
         }
         // If no nextSibling, render already appended it

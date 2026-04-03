@@ -10,10 +10,10 @@ import type { Theme } from './Theme.js';
 const themes = new Map<string, Theme>();
 let activeTheme: Theme | null = null;
 let activeName = '';
-const listeners: Record<string, Function[]> = {};
+const listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
 
 function fire(event: string, ...args: unknown[]): void {
-  (listeners[event] ?? []).forEach(fn => fn(...args));
+  (listeners[event] ?? []).forEach((fn) => fn(...args));
 }
 
 export const ThemeManager = {
@@ -49,11 +49,11 @@ export const ThemeManager = {
     return activeTheme?.getToken(path) ?? undefined;
   },
 
-  on(event: string, fn: Function): void {
+  on(event: string, fn: (...args: unknown[]) => void): void {
     (listeners[event] ??= []).push(fn);
   },
 
-  off(event: string, fn: Function): void {
+  off(event: string, fn: (...args: unknown[]) => void): void {
     const list = listeners[event];
     if (!list) return;
     const idx = list.indexOf(fn);

@@ -21,16 +21,16 @@ interface CellSelectableGrid extends SelectableGrid {
 export class CellSelectionModel {
   private grid: CellSelectableGrid | null = null;
   private position: CellPosition | null = null;
-  private listeners: Record<string, Function[]> = {};
+  private listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
   private maxRow = 0;
   private maxCol = 0;
 
-  on(event: string, fn: Function): void {
+  on(event: string, fn: (...args: unknown[]) => void): void {
     (this.listeners[event] ??= []).push(fn);
   }
 
   private fire(event: string, ...args: unknown[]): void {
-    (this.listeners[event] ?? []).forEach(fn => fn(...args));
+    (this.listeners[event] ?? []).forEach((fn) => fn(...args));
   }
 
   init(grid: CellSelectableGrid): void {
@@ -75,7 +75,7 @@ export class CellSelectionModel {
     if (!table) return null;
     const tr = table.querySelector(`tbody tr[data-rowindex="${row}"]`);
     if (!tr) return null;
-    return tr.children[col] as HTMLElement ?? null;
+    return (tr.children[col] as HTMLElement) ?? null;
   }
 
   private attachListeners(): void {
@@ -95,23 +95,35 @@ export class CellSelectionModel {
     });
 
     // Keyboard navigation
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (this.grid!.el) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.grid!.el.setAttribute('tabindex', '0');
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.grid!.el.addEventListener('keydown', (e: KeyboardEvent) => {
         if (!this.position) return;
         let { row, column } = this.position;
 
         switch (e.key) {
-          case 'ArrowRight': column++; break;
-          case 'ArrowLeft': column--; break;
-          case 'ArrowDown': row++; break;
-          case 'ArrowUp': row--; break;
+          case 'ArrowRight':
+            column++;
+            break;
+          case 'ArrowLeft':
+            column--;
+            break;
+          case 'ArrowDown':
+            row++;
+            break;
+          case 'ArrowUp':
+            row--;
+            break;
           case 'Tab':
             e.preventDefault();
             if (e.shiftKey) column--;
             else column++;
             break;
-          default: return;
+          default:
+            return;
         }
 
         this.selectCell(row, column);

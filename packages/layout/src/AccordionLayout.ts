@@ -39,7 +39,7 @@ export class AccordionLayout extends Layout {
 
   applyItemStyles(items: Component[], _target: Element): void {
     // Expand first item by default if none expanded
-    if (items.length > 0 && !items.some(i => this.expandedSet.has(i))) {
+    if (items.length > 0 && !items.some((i) => this.expandedSet.has(i))) {
       this.expandedSet.add(items[0]);
     }
 

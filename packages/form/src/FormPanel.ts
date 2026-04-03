@@ -45,9 +45,10 @@ export class FormPanel extends Panel {
   constructor(config: FormPanelConfig = {}) {
     // Apply fieldDefaults to items
     if (config.fieldDefaults && config.items) {
-      config.items = (config.items as any[]).map(item => {
+      config.items = (config.items as any[]).map((item) => {
         if (item instanceof Component) {
           const cfg = (item as any)._config;
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           for (const [k, v] of Object.entries(config.fieldDefaults!)) {
             if (cfg[k] === undefined) cfg[k] = v;
           }
@@ -70,6 +71,7 @@ export class FormPanel extends Panel {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-form');
     // Collect fields from children
     this.collectFields();
@@ -150,7 +152,9 @@ export class FormPanel extends Panel {
   // Submit
   // -----------------------------------------------------------------------
 
-  async submit(options: SubmitOptions & { clientValidation?: boolean } = {}): Promise<SubmitResult> {
+  async submit(
+    options: SubmitOptions & { clientValidation?: boolean } = {},
+  ): Promise<SubmitResult> {
     // Client validation
     if (options.clientValidation !== false && options.clientValidation !== undefined) {
       if (!this.isValid()) {

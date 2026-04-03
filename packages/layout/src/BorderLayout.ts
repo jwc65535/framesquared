@@ -86,7 +86,7 @@ export class BorderLayout extends Layout {
     const el = target as HTMLElement;
     el.style.gridTemplateRows = rows.join(' ');
     el.style.gridTemplateColumns = colSizes.join(' ');
-    el.style.gridTemplateAreas = areas.map(r => `"${r.join(' ')}"`).join(' ');
+    el.style.gridTemplateAreas = areas.map((r) => `"${r.join(' ')}"`).join(' ');
 
     // Apply grid-area to each child
     for (const item of items) {

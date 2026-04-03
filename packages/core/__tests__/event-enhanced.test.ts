@@ -57,7 +57,9 @@ describe('DestroyableUtil.combine', () => {
     const inst = new Cls();
     const spy1 = vi.fn();
     const spy2 = vi.fn();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const h1 = inst.on('a', spy1, undefined, { destroyable: true })!;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const h2 = inst.on('b', spy2, undefined, { destroyable: true })!;
     const combined = DestroyableUtil.combine(h1, h2);
     combined.destroy();
@@ -90,10 +92,8 @@ describe('EventDomain', () => {
       const Widget = createObs('test.dom.Widget', { config: { isWidget: true } });
       const Store = createObs('test.dom.Store', { config: { isStore: true } });
 
-      const widgetDomain = new EventDomain(
-        'widget',
-        (target) => !!(target as any).getIsWidget?.(),
-      );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const widgetDomain = new EventDomain('widget', (target) => !!(target as any).getIsWidget?.());
 
       const w = new Widget({ isWidget: true });
       const s = new Store({ isStore: true });
@@ -108,10 +108,8 @@ describe('EventDomain', () => {
       const Widget = createObs('test.dom.ListenWidget', {
         config: { itemId: '', isWidget: true },
       });
-      const widgetDomain = new EventDomain(
-        'widgetListen',
-        (t) => !!(t as any).getIsWidget?.(),
-      );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const widgetDomain = new EventDomain('widgetListen', (t) => !!(t as any).getIsWidget?.());
       EventDomain.register('widgetListen', widgetDomain);
 
       const spy = vi.fn();
@@ -133,10 +131,8 @@ describe('EventDomain', () => {
       const Widget = createObs('test.dom.NoMatch', {
         config: { itemId: '', isWidget: true },
       });
-      const domain = new EventDomain(
-        'widgetNoMatch',
-        (t) => !!(t as any).getIsWidget?.(),
-      );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const domain = new EventDomain('widgetNoMatch', (t) => !!(t as any).getIsWidget?.());
 
       const spy = vi.fn();
       domain.listen({ '#otherBtn': { click: spy } });
@@ -150,10 +146,8 @@ describe('EventDomain', () => {
       const Widget = createObs('test.dom.ByClass', {
         config: { isWidget: true },
       });
-      const domain = new EventDomain(
-        'widgetByClass',
-        (t) => !!(t as any).getIsWidget?.(),
-      );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const domain = new EventDomain('widgetByClass', (t) => !!(t as any).getIsWidget?.());
 
       const spy = vi.fn();
       domain.listen({
@@ -250,10 +244,15 @@ describe('EventBus', () => {
   describe('scope binding', () => {
     it('binds handler to the provided scope', () => {
       const scope = { id: 'myScope' };
-      EventBus.subscribe('test.scope', function (this: typeof scope) {
-        expect(this).toBe(scope);
-      }, scope);
+      EventBus.subscribe(
+        'test.scope',
+        function (this: typeof scope) {
+          expect(this).toBe(scope);
+        },
+        scope,
+      );
       EventBus.publish('test.scope');
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       EventBus.unsubscribe('test.scope', () => {});
     });
   });
@@ -354,8 +353,11 @@ describe('TypedObservable — type-safe events', () => {
     const Cls = createObs('test.typed.Correct');
     const inst = new Cls() as Base & TypedObservable<PanelEvents>;
     // This should compile fine:
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     inst.on('expand', (_panel: Base) => {});
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     inst.on('resize', (_panel: Base, _w: number, _h: number) => {});
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     inst.on('close', () => {});
     expect(true).toBe(true);
   });
@@ -376,6 +378,7 @@ describe('TypedObservable — type-safe events', () => {
     const Cls = createObs('test.typed.WrongName');
     const inst = new Cls() as Base & TypedObservable<PanelEvents>;
     // @ts-expect-error — 'nonexistent' is not a key of PanelEvents
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     inst.on('nonexistent', () => {});
     expect(true).toBe(true);
   });
@@ -384,6 +387,7 @@ describe('TypedObservable — type-safe events', () => {
     const Cls = createObs('test.typed.WrongParams');
     const inst = new Cls() as Base & TypedObservable<PanelEvents>;
     // @ts-expect-error — resize handler expects (Base, number, number), not (string)
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     inst.on('resize', (_s: string) => {});
     expect(true).toBe(true);
   });
@@ -399,6 +403,7 @@ describe('TypedObservable — type-safe events', () => {
   it('un also works with typed events', () => {
     const Cls = createObs('test.typed.Un');
     const inst = new Cls() as Base & TypedObservable<PanelEvents>;
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const handler = (_p: Base) => {};
     inst.on('expand', handler);
     inst.un('expand', handler);
@@ -416,10 +421,8 @@ describe('EventDomain + Observable integration', () => {
       config: { itemId: '', isWidget: true },
     });
 
-    const domain = new EventDomain(
-      'intgWidget',
-      (t) => !!(t as any).getIsWidget?.(),
-    );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const domain = new EventDomain('intgWidget', (t) => !!(t as any).getIsWidget?.());
     EventDomain.register('intgWidget', domain);
 
     const spy = vi.fn();

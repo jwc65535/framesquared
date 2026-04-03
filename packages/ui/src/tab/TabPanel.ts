@@ -9,7 +9,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component } from '@framesquared/component';
+import type { Component } from '@framesquared/component';
 import { Panel } from '../panel/Panel.js';
 import type { PanelConfig } from '../panel/Panel.js';
 import { TabBar } from './TabBar.js';
@@ -68,7 +68,9 @@ export class TabPanel extends Panel {
   protected override afterRender(): void {
     super.afterRender();
     const cfg = this._config as TabPanelConfig;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-tabpanel');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (cfg.plain) this.el!.classList.add('x-tabpanel-plain');
 
     const bodyEl = this.getBodyEl();
@@ -79,15 +81,19 @@ export class TabPanel extends Panel {
 
     // Create TabBar
     this._tabBar = new TabBar({ position: this._tabPosition as any });
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this._tabBar.render(this.el!);
 
     // Position the bar relative to body
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const barEl = this._tabBar.el!;
     if (this._tabPosition === 'bottom' || this._tabPosition === 'right') {
       // Bar after body
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       bodyEl.parentNode!.insertBefore(barEl, bodyEl.nextSibling);
     } else {
       // Bar before body (top/left)
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       bodyEl.parentNode!.insertBefore(barEl, bodyEl);
     }
 
@@ -146,6 +152,7 @@ export class TabPanel extends Panel {
     });
 
     this._tabs.push(tab);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this._tabBar!.addTab(tab);
 
     // ARIA: link tab to its panel
@@ -160,6 +167,7 @@ export class TabPanel extends Panel {
       // Store panelId for later
       (item as any)._ariaPanelId = panelId;
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       if (!item.rendered) item.render(this._tabBodyEl!);
       if (item.el) {
         item.el.id = panelId;
@@ -174,6 +182,7 @@ export class TabPanel extends Panel {
     const tab = this._tabs[originalIndex];
     if (!tab) return;
     const item = tab.card;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const currentIndex = this._tabItems.indexOf(item!);
     if (currentIndex < 0) return;
 
@@ -181,6 +190,7 @@ export class TabPanel extends Panel {
     if (cancelled === false) return;
 
     // Remove tab and item
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this._tabBar!.removeTab(tab);
     this._tabs.splice(this._tabs.indexOf(tab), 1);
     this._tabItems.splice(currentIndex, 1);
@@ -242,6 +252,7 @@ export class TabPanel extends Panel {
 
     // Deferred render: render on first activation
     if (!newItem.rendered) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       newItem.render(this._tabBodyEl!);
       // Apply deferred ARIA panel ID
       const panelId = (newItem as any)._ariaPanelId;

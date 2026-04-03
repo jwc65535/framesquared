@@ -1,21 +1,27 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { DragManager, Draggable, Droppable, Sortable, Resizable } from '@framesquared/dd';
 
 beforeEach(() => {
   if (typeof PointerEvent === 'undefined') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {
       readonly pointerId: number;
       constructor(type: string, init?: PointerEventInit) {
         super(type, init);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         this.pointerId = (init as any)?.pointerId ?? 0;
       }
     };
   }
   DragManager.reset();
 });
-afterEach(() => { document.body.innerHTML = ''; });
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 function fire(el: EventTarget, type: string, opts: Record<string, unknown> = {}) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   el.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, ...opts } as any));
 }
 
@@ -26,18 +32,28 @@ describe('Drag and drop integration', () => {
     document.body.appendChild(srcEl);
     document.body.appendChild(dropEl);
     dropEl.getBoundingClientRect = () => ({
-      x: 100, y: 100, width: 200, height: 200,
-      top: 100, left: 100, right: 300, bottom: 300, toJSON() {},
+      x: 100,
+      y: 100,
+      width: 200,
+      height: 200,
+      top: 100,
+      left: 100,
+      right: 300,
+      bottom: 300,
+      toJSON() {},
     });
 
     const enterSpy = vi.fn();
     const dropSpy = vi.fn();
     const endSpy = vi.fn();
 
-    const drag = new Draggable({ el: srcEl, groups: ['items'], onDragEnd: endSpy });
-    const drop = new Droppable({
-      el: dropEl, accept: ['items'],
-      onDragEnter: enterSpy, onDrop: dropSpy, overCls: 'over',
+    const _drag = new Draggable({ el: srcEl, groups: ['items'], onDragEnd: endSpy });
+    const _drop = new Droppable({
+      el: dropEl,
+      accept: ['items'],
+      onDragEnter: enterSpy,
+      onDrop: dropSpy,
+      overCls: 'over',
     });
 
     // Drag from (0,0) to drop target at (150,150)
@@ -58,13 +74,20 @@ describe('Drag and drop integration', () => {
     document.body.appendChild(srcEl);
     document.body.appendChild(dropEl);
     dropEl.getBoundingClientRect = () => ({
-      x: 100, y: 100, width: 100, height: 100,
-      top: 100, left: 100, right: 200, bottom: 200, toJSON() {},
+      x: 100,
+      y: 100,
+      width: 100,
+      height: 100,
+      top: 100,
+      left: 100,
+      right: 200,
+      bottom: 200,
+      toJSON() {},
     });
 
     const enterSpy = vi.fn();
-    const drag = new Draggable({ el: srcEl, groups: ['typeA'] });
-    const drop = new Droppable({ el: dropEl, accept: ['typeB'], onDragEnter: enterSpy });
+    const _drag = new Draggable({ el: srcEl, groups: ['typeA'] });
+    const _drop = new Droppable({ el: dropEl, accept: ['typeB'], onDragEnter: enterSpy });
 
     fire(srcEl, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 150, clientY: 150 });
@@ -84,7 +107,9 @@ describe('Drag and drop integration', () => {
 
     const sortSpy = vi.fn();
     const sortable = new Sortable({
-      el: list, itemSelector: '.item', onSort: sortSpy,
+      el: list,
+      itemSelector: '.item',
+      onSort: sortSpy,
     });
 
     sortable.moveItem(0, 2);

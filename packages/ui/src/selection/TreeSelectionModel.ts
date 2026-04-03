@@ -23,7 +23,7 @@ export class TreeSelectionModel {
   private selected: Set<NodeInterface>;
   private mode: string;
   private pruneRemoved: boolean;
-  private listeners: Map<string, Function[]>;
+  private listeners: Map<string, ((...args: unknown[]) => void)[]>;
 
   constructor(config?: TreeSelectionModelConfig) {
     this.selected = new Set();
@@ -36,14 +36,15 @@ export class TreeSelectionModel {
   // Event system
   // -------------------------------------------------------------------------
 
-  on(event: string, fn: Function): void {
+  on(event: string, fn: (...args: unknown[]) => void): void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, []);
     }
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.listeners.get(event)!.push(fn);
   }
 
-  un(event: string, fn: Function): void {
+  un(event: string, fn: (...args: unknown[]) => void): void {
     const fns = this.listeners.get(event);
     if (!fns) return;
     const idx = fns.indexOf(fn);
@@ -114,11 +115,7 @@ export class TreeSelectionModel {
   }
 
   // Convenience aliases matching Ext-style API
-  selectNode(
-    node: NodeInterface,
-    keepExisting = false,
-    suppressEvent = false,
-  ): void {
+  selectNode(node: NodeInterface, keepExisting = false, suppressEvent = false): void {
     this.select(node, keepExisting, suppressEvent);
   }
 

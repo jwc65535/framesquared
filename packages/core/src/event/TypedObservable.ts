@@ -24,9 +24,6 @@
  * untyped Observable methods are used.
  */
 
-/* eslint-disable @typescript-eslint/no-unsafe-function-type */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { Destroyable } from './Destroyable.js';
 import type { ListenerOptions } from './Observable.js';
 
@@ -42,7 +39,7 @@ import type { ListenerOptions } from './Observable.js';
  * ```
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export type EventMap = {};
+export interface EventMap {}
 
 /**
  * Overlay interface that narrows Observable's string-based API to a
@@ -51,39 +48,33 @@ export type EventMap = {};
 export interface TypedObservable<Events extends { [K in keyof Events]: unknown[] }> {
   on<E extends keyof Events & string>(
     eventName: E,
-    handler: (...args: Events[E]) => void | false,
+    handler: (...args: Events[E]) => false | undefined,
     scope?: object,
     options?: ListenerOptions,
-  ): Destroyable | void;
+  ): Destroyable | undefined;
 
   un<E extends keyof Events & string>(
     eventName: E,
-    handler: (...args: Events[E]) => void | false,
+    handler: (...args: Events[E]) => false | undefined,
     scope?: object,
   ): void;
 
   addListener<E extends keyof Events & string>(
     eventName: E,
-    handler: (...args: Events[E]) => void | false,
+    handler: (...args: Events[E]) => false | undefined,
     scope?: object,
     options?: ListenerOptions,
-  ): Destroyable | void;
+  ): Destroyable | undefined;
 
   removeListener<E extends keyof Events & string>(
     eventName: E,
-    handler: (...args: Events[E]) => void | false,
+    handler: (...args: Events[E]) => false | undefined,
     scope?: object,
   ): void;
 
-  fireEvent<E extends keyof Events & string>(
-    eventName: E,
-    ...args: Events[E]
-  ): boolean;
+  fireEvent<E extends keyof Events & string>(eventName: E, ...args: Events[E]): boolean;
 
-  fireEventArgs<E extends keyof Events & string>(
-    eventName: E,
-    args: Events[E],
-  ): boolean;
+  fireEventArgs<E extends keyof Events & string>(eventName: E, args: Events[E]): boolean;
 
   hasListener<E extends keyof Events & string>(eventName: E): boolean;
 }

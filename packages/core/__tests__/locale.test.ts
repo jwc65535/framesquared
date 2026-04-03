@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { Locale } from '../src/locale/Locale.js';
 import { LocaleManager } from '../src/locale/LocaleManager.js';
 import { enUS } from '../src/locale/bundles/en-US.js';
@@ -38,7 +38,7 @@ describe('Locale — basics', () => {
   it('t() with parameter substitution', () => {
     const loc = new Locale({
       language: 'en-US',
-      messages: { 'greeting': 'Hello, {name}! You have {count} items.' },
+      messages: { greeting: 'Hello, {name}! You have {count} items.' },
     });
     expect(loc.t('greeting', { name: 'Alice', count: 5 })).toBe('Hello, Alice! You have 5 items.');
   });
@@ -46,7 +46,7 @@ describe('Locale — basics', () => {
   it('t() handles multiple occurrences of same param', () => {
     const loc = new Locale({
       language: 'en-US',
-      messages: { 'repeat': '{x} and {x}' },
+      messages: { repeat: '{x} and {x}' },
     });
     expect(loc.t('repeat', { x: 'foo' })).toBe('foo and foo');
   });
@@ -141,7 +141,7 @@ describe('Locale — plural rules', () => {
     const loc = new Locale({
       language: 'custom',
       messages: {},
-      pluralRules: (n) => n === 0 ? 'zero' : n === 1 ? 'one' : 'other',
+      pluralRules: (n) => (n === 0 ? 'zero' : n === 1 ? 'one' : 'other'),
     });
     expect(loc.getPlural(0)).toBe('zero');
     expect(loc.getPlural(1)).toBe('one');
@@ -180,14 +180,14 @@ describe('Locale — sorting', () => {
 
 describe('LocaleManager', () => {
   it('register and set locale', () => {
-    const loc = new Locale({ language: 'en-US', messages: { 'hi': 'Hello' } });
+    const loc = new Locale({ language: 'en-US', messages: { hi: 'Hello' } });
     LocaleManager.register(loc);
     LocaleManager.setLocale('en-US');
     expect(LocaleManager.getLocale()).toBe(loc);
   });
 
   it('t() delegates to active locale', () => {
-    const loc = new Locale({ language: 'en-US', messages: { 'ok': 'OK' } });
+    const loc = new Locale({ language: 'en-US', messages: { ok: 'OK' } });
     LocaleManager.register(loc);
     LocaleManager.setLocale('en-US');
     expect(LocaleManager.t('ok')).toBe('OK');
@@ -204,8 +204,8 @@ describe('LocaleManager', () => {
   });
 
   it('switching locale changes translations', () => {
-    const en = new Locale({ language: 'en-US', messages: { 'greet': 'Hello' } });
-    const es = new Locale({ language: 'es-ES', messages: { 'greet': 'Hola' } });
+    const en = new Locale({ language: 'en-US', messages: { greet: 'Hello' } });
+    const es = new Locale({ language: 'es-ES', messages: { greet: 'Hola' } });
     LocaleManager.register(en);
     LocaleManager.register(es);
     LocaleManager.setLocale('en-US');

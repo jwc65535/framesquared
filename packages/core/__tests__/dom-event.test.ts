@@ -8,6 +8,7 @@ import { KeyMap } from '../src/event/KeyMap.js';
 // ---------------------------------------------------------------------------
 function ensurePointerEvent() {
   if (typeof globalThis.PointerEvent === 'undefined') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {
       readonly pointerId: number;
       readonly pointerType: string;
@@ -47,24 +48,28 @@ function createDiv(id = 'test-div'): HTMLDivElement {
 }
 
 function firePointer(el: Element, type: string, init: Record<string, unknown> = {}): void {
-  el.dispatchEvent(new PointerEvent(type, {
-    bubbles: true,
-    cancelable: true,
-    clientX: 0,
-    clientY: 0,
-    pointerId: 1,
-    pointerType: 'touch',
-    isPrimary: true,
-    ...init,
-  } as PointerEventInit));
+  el.dispatchEvent(
+    new PointerEvent(type, {
+      bubbles: true,
+      cancelable: true,
+      clientX: 0,
+      clientY: 0,
+      pointerId: 1,
+      pointerType: 'touch',
+      isPrimary: true,
+      ...init,
+    } as PointerEventInit),
+  );
 }
 
 function fireKey(el: Element, type: string, init: KeyboardEventInit = {}): void {
-  el.dispatchEvent(new KeyboardEvent(type, {
-    bubbles: true,
-    cancelable: true,
-    ...init,
-  }));
+  el.dispatchEvent(
+    new KeyboardEvent(type, {
+      bubbles: true,
+      cancelable: true,
+      ...init,
+    }),
+  );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -117,7 +122,9 @@ describe('EventManager', () => {
 
     it('handler receives the native Event object', () => {
       let received: Event | null = null;
-      EventManager.on(div, 'click', (e) => { received = e; });
+      EventManager.on(div, 'click', (e) => {
+        received = e;
+      });
       div.click();
       expect(received).toBeInstanceOf(Event);
     });
@@ -375,8 +382,11 @@ describe('GestureRecognizer', () => {
 
   describe('swipe', () => {
     it('fires "swipe" with direction "right"', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let detail: any = null;
-      div.addEventListener('swipe', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+      div.addEventListener('swipe', ((e: CustomEvent) => {
+        detail = e.detail;
+      }) as EventListener);
       firePointer(div, 'pointerdown', { clientX: 10, clientY: 50 });
       vi.advanceTimersByTime(50);
       firePointer(div, 'pointermove', { clientX: 200, clientY: 55 });
@@ -386,8 +396,11 @@ describe('GestureRecognizer', () => {
     });
 
     it('fires "swipe" with direction "left"', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let detail: any = null;
-      div.addEventListener('swipe', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+      div.addEventListener('swipe', ((e: CustomEvent) => {
+        detail = e.detail;
+      }) as EventListener);
       firePointer(div, 'pointerdown', { clientX: 200, clientY: 50 });
       vi.advanceTimersByTime(50);
       firePointer(div, 'pointermove', { clientX: 10, clientY: 55 });
@@ -396,8 +409,11 @@ describe('GestureRecognizer', () => {
     });
 
     it('fires "swipe" with direction "down"', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let detail: any = null;
-      div.addEventListener('swipe', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+      div.addEventListener('swipe', ((e: CustomEvent) => {
+        detail = e.detail;
+      }) as EventListener);
       firePointer(div, 'pointerdown', { clientX: 50, clientY: 10 });
       vi.advanceTimersByTime(50);
       firePointer(div, 'pointermove', { clientX: 55, clientY: 200 });
@@ -406,8 +422,11 @@ describe('GestureRecognizer', () => {
     });
 
     it('fires "swipe" with direction "up"', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let detail: any = null;
-      div.addEventListener('swipe', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+      div.addEventListener('swipe', ((e: CustomEvent) => {
+        detail = e.detail;
+      }) as EventListener);
       firePointer(div, 'pointerdown', { clientX: 50, clientY: 200 });
       vi.advanceTimersByTime(50);
       firePointer(div, 'pointermove', { clientX: 55, clientY: 10 });
@@ -428,8 +447,11 @@ describe('GestureRecognizer', () => {
 
   describe('pinch', () => {
     it('fires "pinch" with scale factor on two-pointer gesture', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let detail: any = null;
-      div.addEventListener('pinch', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+      div.addEventListener('pinch', ((e: CustomEvent) => {
+        detail = e.detail;
+      }) as EventListener);
 
       // Pointer 1 down
       firePointer(div, 'pointerdown', { pointerId: 1, clientX: 100, clientY: 100 });
@@ -447,8 +469,11 @@ describe('GestureRecognizer', () => {
 
   describe('rotate', () => {
     it('fires "rotate" with angle delta on two-pointer rotation', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let detail: any = null;
-      div.addEventListener('rotate', ((e: CustomEvent) => { detail = e.detail; }) as EventListener);
+      div.addEventListener('rotate', ((e: CustomEvent) => {
+        detail = e.detail;
+      }) as EventListener);
 
       // Two pointers horizontal: (100,100) and (200,100) → angle = 0
       firePointer(div, 'pointerdown', { pointerId: 1, clientX: 100, clientY: 100 });
@@ -518,10 +543,14 @@ describe('KeyMap', () => {
       let received: KeyboardEvent | null = null;
       const km = new KeyMap({
         target: div,
-        bindings: [{
-          key: 'a',
-          handler: (e: KeyboardEvent) => { received = e; },
-        }],
+        bindings: [
+          {
+            key: 'a',
+            handler: (e: KeyboardEvent) => {
+              received = e;
+            },
+          },
+        ],
       });
       fireKey(div, 'keydown', { key: 'a' });
       expect(received).toBeInstanceOf(KeyboardEvent);
@@ -620,13 +649,15 @@ describe('KeyMap', () => {
       const scope = { name: 'ctx' };
       const km = new KeyMap({
         target: div,
-        bindings: [{
-          key: 'Enter',
-          handler: function (this: typeof scope) {
-            expect(this).toBe(scope);
+        bindings: [
+          {
+            key: 'Enter',
+            handler: function (this: typeof scope) {
+              expect(this).toBe(scope);
+            },
+            scope,
           },
-          scope,
-        }],
+        ],
       });
       fireKey(div, 'keydown', { key: 'Enter' });
       km.destroy();

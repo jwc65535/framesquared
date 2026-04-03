@@ -5,8 +5,6 @@
  * Returns inputValue when checked, uncheckedValue when unchecked.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Field } from './Field.js';
 import type { FieldConfig } from './Field.js';
 
@@ -40,6 +38,7 @@ export class Checkbox extends Field {
   protected override afterRender(): void {
     super.afterRender();
     const cfg = this._config as CheckboxConfig;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-checkbox');
 
     // Create checkbox input
@@ -49,6 +48,7 @@ export class Checkbox extends Field {
     if (this._name) this._inputEl.name = this._name;
     this._inputEl.checked = this._checked;
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this._bodyWrapEl!.appendChild(this._inputEl);
 
     // Box label
@@ -56,6 +56,7 @@ export class Checkbox extends Field {
       const label = document.createElement('span');
       label.classList.add('x-checkbox-label');
       label.textContent = cfg.boxLabel;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this._bodyWrapEl!.appendChild(label);
     }
 

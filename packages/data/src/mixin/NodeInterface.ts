@@ -38,21 +38,24 @@ export interface NodeInterface extends Model {
   insertBefore(newChild: NodeInterface, refChild: NodeInterface): void;
 
   getPath(separator?: string): string;
-  cascadeBy(fn: (node: NodeInterface) => boolean | void): void;
-  bubble(fn: (node: NodeInterface) => boolean | void): void;
+  cascadeBy(fn: (node: NodeInterface) => boolean | undefined): void;
+  bubble(fn: (node: NodeInterface) => boolean | undefined): void;
   contains(child: NodeInterface): boolean;
   findChild(field: string, value: unknown, deep?: boolean): NodeInterface | undefined;
   sort(sorters: Sorter[]): void;
   serialize(): any;
 
   // Extended methods
-  eachChild(fn: (child: NodeInterface, index: number) => boolean | void, scope?: object): void;
+  eachChild(fn: (child: NodeInterface, index: number) => boolean | undefined, scope?: object): void;
   indexOf(child: NodeInterface): number;
   getChildAt(index: number): NodeInterface | undefined;
   childCount(): number;
   hasChildNodes(): boolean;
   getChildren(deep?: boolean): NodeInterface[];
-  findChildBy(predicate: (node: NodeInterface) => boolean | void, deep?: boolean): NodeInterface | undefined;
+  findChildBy(
+    predicate: (node: NodeInterface) => boolean | undefined,
+    deep?: boolean,
+  ): NodeInterface | undefined;
   removeAll(): NodeInterface[];
   copy(deep?: boolean): NodeInterface;
   getDepth(): number;
@@ -182,19 +185,21 @@ export function applyNodeInterface(model: Model, depth = 0): void {
 
   node.getPath = function (separator = '/'): string {
     const parts: string[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let current: NodeInterface | null = this;
     while (current) {
-      parts.unshift(current.get('text') as string ?? String(current.getId()));
+      parts.unshift((current.get('text') as string) ?? String(current.getId()));
       current = current.parentNode;
     }
     return separator + parts.join(separator);
   };
 
-  node.cascadeBy = function (fn: (n: NodeInterface) => boolean | void): void {
+  node.cascadeBy = function (fn: (n: NodeInterface) => boolean | undefined): void {
     cascadeByImpl(this, fn);
   };
 
-  node.bubble = function (fn: (n: NodeInterface) => boolean | void): void {
+  node.bubble = function (fn: (n: NodeInterface) => boolean | undefined): void {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let current: NodeInterface | null = this;
     while (current) {
       if (fn(current) === false) return;
@@ -251,7 +256,7 @@ export function applyNodeInterface(model: Model, depth = 0): void {
   };
 
   node.eachChild = function (
-    fn: (child: NodeInterface, index: number) => boolean | void,
+    fn: (child: NodeInterface, index: number) => boolean | undefined,
   ): void {
     for (let i = 0; i < this.childNodes.length; i++) {
       if (fn(this.childNodes[i], i) === false) return;
@@ -290,7 +295,7 @@ export function applyNodeInterface(model: Model, depth = 0): void {
   };
 
   node.findChildBy = function (
-    predicate: (n: NodeInterface) => boolean | void,
+    predicate: (n: NodeInterface) => boolean | undefined,
     deep = false,
   ): NodeInterface | undefined {
     for (const child of this.childNodes) {
@@ -348,11 +353,7 @@ function updateDepthRecursive(node: NodeInterface, depth: number): void {
 /**
  * Recursively copies a node (and optionally its children) with new IDs.
  */
-function copyNodeImpl(
-  node: NodeInterface,
-  deep: boolean,
-  counter: { i: number },
-): NodeInterface {
+function copyNodeImpl(node: NodeInterface, deep: boolean, counter: { i: number }): NodeInterface {
   counter.i += 1;
   const newId = 'copy-' + Date.now() + '-' + counter.i;
   const data = (node as any).getData() as Record<string, unknown>;
@@ -376,7 +377,7 @@ function copyNodeImpl(
  */
 function cascadeByImpl(
   node: NodeInterface,
-  fn: (n: NodeInterface) => boolean | void,
+  fn: (n: NodeInterface) => boolean | undefined,
 ): boolean {
   if (fn(node) === false) return false;
   for (const child of [...node.childNodes]) {

@@ -56,7 +56,7 @@ export class BasicForm {
   }
 
   findField(name: string): Field | undefined {
-    return this.fields.find(f => f.getName() === name);
+    return this.fields.find((f) => f.getName() === name);
   }
 
   // -----------------------------------------------------------------------
@@ -89,11 +89,11 @@ export class BasicForm {
   // -----------------------------------------------------------------------
 
   isValid(): boolean {
-    return this.fields.every(f => f.isValid());
+    return this.fields.every((f) => f.isValid());
   }
 
   isDirty(): boolean {
-    return this.fields.some(f => f.isDirty());
+    return this.fields.some((f) => f.isDirty());
   }
 
   reset(): void {

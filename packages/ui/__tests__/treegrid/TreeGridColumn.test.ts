@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { describe, it, expect, beforeEach } from 'vitest';
 import { TreeGridColumn, Column } from '../../src/treegrid/TreeGridColumn.js';
 import { TreeStore, TreeModel } from '@framesquared/data';
 import type { NodeInterface } from '@framesquared/data';
@@ -214,7 +215,9 @@ describe('TreeGridColumn renderCell', () => {
     const store2 = new TreeStore({
       model: TreeModel,
       root: {
-        id: 'r', text: 'R', expanded: true,
+        id: 'r',
+        text: 'R',
+        expanded: true,
         children: [{ id: 'n1', text: 'N1', leaf: true, iconCls: 'my-custom-icon' }],
       },
     });
@@ -228,7 +231,9 @@ describe('TreeGridColumn renderCell', () => {
     const store2 = new TreeStore({
       model: TreeModel,
       root: {
-        id: 'r', text: 'R', expanded: true,
+        id: 'r',
+        text: 'R',
+        expanded: true,
         children: [{ id: 'n1', text: 'N1', leaf: true, icon: '/img/file.png' }],
       },
     });
@@ -278,7 +283,9 @@ describe('TreeGridColumn computeElbows', () => {
     const store2 = new TreeStore({
       model: TreeModel,
       root: {
-        id: 'r', text: 'R', expanded: true,
+        id: 'r',
+        text: 'R',
+        expanded: true,
         children: [{ id: 'n1', text: 'N1', leaf: true }],
       },
     });

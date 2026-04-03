@@ -1,13 +1,13 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TreeGrid } from '../../src/treegrid/TreeGrid.js';
-import { TreeGridColumn, Column } from '../../src/treegrid/TreeGridColumn.js';
 import { TreeGridCellEditing } from '../../src/treegrid/TreeGridCellEditing.js';
 import { TreeGridSummary } from '../../src/treegrid/TreeGridSummary.js';
 import { TreeGridFilterPlugin } from '../../src/treegrid/TreeGridFilterPlugin.js';
-import { TreeGridDragDrop } from '../../src/treegrid/TreeGridDragDrop.js';
 import { TreeGridExporter } from '../../src/treegrid/TreeGridExporter.js';
 import { TreeStore, TreeModel, applyNodeInterface } from '@framesquared/data';
-import type { NodeInterface } from '@framesquared/data';
 
 class MockRO {
   observe() {}
@@ -38,17 +38,24 @@ describe('Integration — File Explorer', () => {
       store: new TreeStore({
         model: TreeModel,
         root: {
-          id: 'root', text: 'Root', expanded: true,
+          id: 'root',
+          text: 'Root',
+          expanded: true,
           children: [
             {
-              id: 'docs', text: 'Documents', type: 'folder', expanded: true,
+              id: 'docs',
+              text: 'Documents',
+              type: 'folder',
+              expanded: true,
               children: [
                 { id: 'file1', text: 'Resume.pdf', size: 1024, type: 'pdf', leaf: true },
                 { id: 'file2', text: 'Budget.xlsx', size: 2048, type: 'xlsx', leaf: true },
               ],
             },
             {
-              id: 'photos', text: 'Photos', type: 'folder',
+              id: 'photos',
+              text: 'Photos',
+              type: 'folder',
               children: [
                 { id: 'photo1', text: 'vacation.jpg', size: 5120, type: 'jpg', leaf: true },
               ],
@@ -121,20 +128,23 @@ describe('Integration — Project Tasks', () => {
       store: new TreeStore({
         model: TreeModel,
         root: {
-          id: 'root', text: 'Project', expanded: true,
+          id: 'root',
+          text: 'Project',
+          expanded: true,
           children: [
             {
-              id: 'phase1', text: 'Phase 1', expanded: true,
+              id: 'phase1',
+              text: 'Phase 1',
+              expanded: true,
               children: [
                 { id: 't1', text: 'Design', status: 'done', hours: 20, leaf: true },
                 { id: 't2', text: 'Development', status: 'active', hours: 40, leaf: true },
               ],
             },
             {
-              id: 'phase2', text: 'Phase 2',
-              children: [
-                { id: 't3', text: 'Testing', status: 'pending', hours: 15, leaf: true },
-              ],
+              id: 'phase2',
+              text: 'Phase 2',
+              children: [{ id: 't3', text: 'Testing', status: 'pending', hours: 15, leaf: true }],
             },
           ],
         },
@@ -200,12 +210,19 @@ describe('Integration — Sorting', () => {
       store: new TreeStore({
         model: TreeModel,
         root: {
-          id: 'root', text: 'Root', expanded: true,
+          id: 'root',
+          text: 'Root',
+          expanded: true,
           children: [
-            { id: 'a', text: 'A', expanded: true, children: [
-              { id: 'a1', text: 'A1', leaf: true },
-              { id: 'a2', text: 'A2', leaf: true },
-            ]},
+            {
+              id: 'a',
+              text: 'A',
+              expanded: true,
+              children: [
+                { id: 'a1', text: 'A1', leaf: true },
+                { id: 'a2', text: 'A2', leaf: true },
+              ],
+            },
             { id: 'b', text: 'B', leaf: true },
           ],
         },
@@ -232,11 +249,16 @@ describe('Integration — Cell Editing', () => {
       store: new TreeStore({
         model: TreeModel,
         root: {
-          id: 'root', text: 'Root', expanded: true,
+          id: 'root',
+          text: 'Root',
+          expanded: true,
           children: [
-            { id: 'a', text: 'A', expanded: true, children: [
-              { id: 'a1', text: 'A1', leaf: true },
-            ]},
+            {
+              id: 'a',
+              text: 'A',
+              expanded: true,
+              children: [{ id: 'a1', text: 'A1', leaf: true }],
+            },
           ],
         },
       }),
@@ -270,10 +292,10 @@ describe('Integration — Export', () => {
       store: new TreeStore({
         model: TreeModel,
         root: {
-          id: 'root', text: 'Root', expanded: true,
-          children: [
-            { id: 'a', text: 'A', size: 10, leaf: true },
-          ],
+          id: 'root',
+          text: 'Root',
+          expanded: true,
+          children: [{ id: 'a', text: 'A', size: 10, leaf: true }],
         },
       }),
       columns: [
@@ -298,11 +320,16 @@ describe('Integration — Export', () => {
       store: new TreeStore({
         model: TreeModel,
         root: {
-          id: 'root', text: 'Root', expanded: true,
+          id: 'root',
+          text: 'Root',
+          expanded: true,
           children: [
-            { id: 'folder', text: 'Folder', expanded: true, children: [
-              { id: 'file', text: 'File', leaf: true },
-            ]},
+            {
+              id: 'folder',
+              text: 'Folder',
+              expanded: true,
+              children: [{ id: 'file', text: 'File', leaf: true }],
+            },
           ],
         },
       }),
@@ -326,13 +353,17 @@ describe('Integration — Selection + Scroll', () => {
       store: new TreeStore({
         model: TreeModel,
         root: {
-          id: 'root', text: 'Root', expanded: true,
+          id: 'root',
+          text: 'Root',
+          expanded: true,
           children: [
-            { id: 'a', text: 'A', children: [
-              { id: 'a1', text: 'A1', children: [
-                { id: 'a1a', text: 'A1A', leaf: true },
-              ]},
-            ]},
+            {
+              id: 'a',
+              text: 'A',
+              children: [
+                { id: 'a1', text: 'A1', children: [{ id: 'a1a', text: 'A1A', leaf: true }] },
+              ],
+            },
           ],
         },
       }),
@@ -359,11 +390,16 @@ describe('Integration — Store mutations', () => {
       store: new TreeStore({
         model: TreeModel,
         root: {
-          id: 'root', text: 'Root', expanded: true,
+          id: 'root',
+          text: 'Root',
+          expanded: true,
           children: [
-            { id: 'a', text: 'A', expanded: true, children: [
-              { id: 'a1', text: 'A1', leaf: true },
-            ]},
+            {
+              id: 'a',
+              text: 'A',
+              expanded: true,
+              children: [{ id: 'a1', text: 'A1', leaf: true }],
+            },
           ],
         },
       }),
@@ -388,7 +424,9 @@ describe('Integration — Store mutations', () => {
       store: new TreeStore({
         model: TreeModel,
         root: {
-          id: 'root', text: 'Root', expanded: true,
+          id: 'root',
+          text: 'Root',
+          expanded: true,
           children: [
             { id: 'a', text: 'A', leaf: true },
             { id: 'b', text: 'B', leaf: true },

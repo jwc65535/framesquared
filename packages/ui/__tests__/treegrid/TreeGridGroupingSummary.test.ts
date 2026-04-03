@@ -1,8 +1,10 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TreeGridGroupingSummary } from '../../src/treegrid/TreeGridGroupingSummary.js';
 import { TreeGrid } from '../../src/treegrid/TreeGrid.js';
 import { TreeStore, TreeModel } from '@framesquared/data';
-import type { NodeInterface } from '@framesquared/data';
 
 class MockRO {
   observe() {}
@@ -16,18 +18,25 @@ function makeGrid() {
     store: new TreeStore({
       model: TreeModel,
       root: {
-        id: 'root', text: 'Root', expanded: true,
+        id: 'root',
+        text: 'Root',
+        expanded: true,
         children: [
           {
-            id: 'phase1', text: 'Phase 1', expanded: true,
+            id: 'phase1',
+            text: 'Phase 1',
+            expanded: true,
             children: [
               { id: 't1', text: 'Task 1', hours: 5, leaf: true },
               { id: 't2', text: 'Task 2', hours: 10, leaf: true },
             ],
           },
-          { id: 'phase2', text: 'Phase 2', expanded: false, children: [
-            { id: 't3', text: 'Task 3', hours: 15, leaf: true },
-          ]},
+          {
+            id: 'phase2',
+            text: 'Phase 2',
+            expanded: false,
+            children: [{ id: 't3', text: 'Task 3', hours: 15, leaf: true }],
+          },
         ],
       },
     }),

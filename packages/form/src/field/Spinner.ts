@@ -6,11 +6,10 @@
  * Subclasses implement onSpinUp() and onSpinDown().
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { TextField } from './Text.js';
 import type { TextFieldConfig } from './Text.js';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface SpinnerConfig extends TextFieldConfig {}
 
 export abstract class Spinner extends TextField {
@@ -27,6 +26,7 @@ export abstract class Spinner extends TextField {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-spinner');
 
     // Keyboard up/down

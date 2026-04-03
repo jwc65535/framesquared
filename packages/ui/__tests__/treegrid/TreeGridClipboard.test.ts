@@ -1,4 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TreeGridClipboard } from '../../src/treegrid/TreeGridClipboard.js';
 import { TreeGrid } from '../../src/treegrid/TreeGrid.js';
 import { TreeStore, TreeModel } from '@framesquared/data';
@@ -15,7 +18,9 @@ function makeGrid(extra: Record<string, unknown> = {}) {
     store: new TreeStore({
       model: TreeModel,
       root: {
-        id: 'root', text: 'Root', expanded: true,
+        id: 'root',
+        text: 'Root',
+        expanded: true,
         children: [
           { id: 'a', text: 'Alpha', size: 10, leaf: true },
           { id: 'b', text: 'Beta', size: 20, leaf: true },
@@ -105,11 +110,16 @@ describe('TreeGridClipboard — copy', () => {
       store: new TreeStore({
         model: TreeModel,
         root: {
-          id: 'root', text: 'Root', expanded: true,
+          id: 'root',
+          text: 'Root',
+          expanded: true,
           children: [
-            { id: 'parent', text: 'Parent', expanded: true, children: [
-              { id: 'child1', text: 'Child', leaf: true },
-            ]},
+            {
+              id: 'parent',
+              text: 'Parent',
+              expanded: true,
+              children: [{ id: 'child1', text: 'Child', leaf: true }],
+            },
           ],
         },
       }),

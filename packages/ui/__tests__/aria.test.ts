@@ -1,4 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { AriaManager } from '@framesquared/core';
 import { FocusManager } from '@framesquared/core';
 
@@ -11,12 +14,19 @@ import { Menu } from '../src/menu/Menu.js';
 import { MenuItem } from '../src/menu/MenuItem.js';
 import { Tooltip } from '../src/tip/Tooltip.js';
 import { TabPanel } from '../src/tab/TabPanel.js';
-import { Tab } from '../src/tab/Tab.js';
-import { TabBar } from '../src/tab/TabBar.js';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; FocusManager.reset(); });
+class MockRO {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+  FocusManager.reset();
+});
 
 // ═══════════════════════════════════════════════════════════════════════════
 // AriaManager
@@ -73,8 +83,10 @@ describe('AriaManager', () => {
 describe('FocusManager', () => {
   it('trapFocus keeps focus within container', () => {
     const container = document.createElement('div');
-    const btn1 = document.createElement('button'); btn1.textContent = 'A';
-    const btn2 = document.createElement('button'); btn2.textContent = 'B';
+    const btn1 = document.createElement('button');
+    btn1.textContent = 'A';
+    const btn2 = document.createElement('button');
+    btn2.textContent = 'B';
     container.appendChild(btn1);
     container.appendChild(btn2);
     document.body.appendChild(container);

@@ -6,8 +6,6 @@
  * controls and a finished promise.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 export interface AnimationConfig {
   target: Element;
   keyframes: Keyframe[];
@@ -50,7 +48,9 @@ export class Animation {
     // Wire the finished promise
     this.waAnimation.finished
       .then(() => this._resolveFinished())
-      .catch(() => { /* cancelled */ });
+      .catch(() => {
+        /* cancelled */
+      });
     return this;
   }
 
@@ -79,7 +79,7 @@ export class Animation {
   }
 
   get currentTime(): number | null {
-    return this.waAnimation?.currentTime as number | null ?? null;
+    return (this.waAnimation?.currentTime as number | null) ?? null;
   }
 
   get playbackRate(): number {

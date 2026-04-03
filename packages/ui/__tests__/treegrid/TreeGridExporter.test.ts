@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TreeGridExporter } from '../../src/treegrid/TreeGridExporter.js';
 import { TreeGrid } from '../../src/treegrid/TreeGrid.js';
@@ -15,10 +18,14 @@ function makeGrid() {
     store: new TreeStore({
       model: TreeModel,
       root: {
-        id: 'root', text: 'Root', expanded: true,
+        id: 'root',
+        text: 'Root',
+        expanded: true,
         children: [
           {
-            id: 'folder1', text: 'Folder 1', expanded: true,
+            id: 'folder1',
+            text: 'Folder 1',
+            expanded: true,
             children: [
               { id: 'f1', text: 'File 1', size: 100, leaf: true },
               { id: 'f2', text: 'File 2', size: 200, leaf: true },

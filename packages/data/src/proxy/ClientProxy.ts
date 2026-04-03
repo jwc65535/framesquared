@@ -33,17 +33,25 @@ export class MemoryProxy extends Proxy {
     // Local filtering
     if (operation.filters && operation.filters.length > 0) {
       data = data.filter((raw) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return operation.filters!.every((f: any) => {
           const fieldVal = raw[f.property];
           const op = f.operator ?? '=';
           switch (op) {
-            case '=': return fieldVal === f.value;
-            case '!=': return fieldVal !== f.value;
-            case '<': return (fieldVal as number) < f.value;
-            case '<=': return (fieldVal as number) <= f.value;
-            case '>': return (fieldVal as number) > f.value;
-            case '>=': return (fieldVal as number) >= f.value;
-            default: return true;
+            case '=':
+              return fieldVal === f.value;
+            case '!=':
+              return fieldVal !== f.value;
+            case '<':
+              return (fieldVal as number) < f.value;
+            case '<=':
+              return (fieldVal as number) <= f.value;
+            case '>':
+              return (fieldVal as number) > f.value;
+            case '>=':
+              return (fieldVal as number) >= f.value;
+            default:
+              return true;
           }
         });
       });
@@ -52,6 +60,7 @@ export class MemoryProxy extends Proxy {
     // Local sorting
     if (operation.sorters && operation.sorters.length > 0) {
       data.sort((a, b) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         for (const sorter of operation.sorters!) {
           const va = a[sorter.property] as string | number;
           const vb = b[sorter.property] as string | number;

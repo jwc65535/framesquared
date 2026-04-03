@@ -26,19 +26,19 @@ export class RowSelectionModel {
   private mode: string;
   private checkboxSelect: boolean;
   private selected = new Set<GridRecord>();
-  private listeners: Record<string, Function[]> = {};
+  private listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
 
   constructor(config: RowSelectionModelConfig = {}) {
     this.mode = config.mode ?? 'SINGLE';
     this.checkboxSelect = config.checkboxSelect ?? false;
   }
 
-  on(event: string, fn: Function): void {
+  on(event: string, fn: (...args: unknown[]) => void): void {
     (this.listeners[event] ??= []).push(fn);
   }
 
   private fire(event: string, ...args: unknown[]): void {
-    (this.listeners[event] ?? []).forEach(fn => fn(...args));
+    (this.listeners[event] ?? []).forEach((fn) => fn(...args));
   }
 
   init(grid: SelectableGrid): void {
@@ -159,6 +159,7 @@ export class RowSelectionModel {
     const idx = records.indexOf(record);
     if (idx < 0) return;
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const view = this.grid!.getView();
     const table = view?.getTable();
     if (!table) return;
@@ -184,6 +185,7 @@ export class RowSelectionModel {
       if ((e.target as HTMLElement).closest('.x-grid-row-checker')) return;
 
       const rowIdx = parseInt(tr.getAttribute('data-rowindex') ?? '-1', 10);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const store = this.grid!.getStore();
       if (!store) return;
       const record = store.getAt(rowIdx);
@@ -213,6 +215,7 @@ export class RowSelectionModel {
     const table = view?.getTable();
     if (!table) return;
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const store = this.grid!.getStore();
     if (!store) return;
     const records = store.getRange();

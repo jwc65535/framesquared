@@ -11,8 +11,11 @@
 import type { Component } from '../Component.js';
 import { CQParser } from './CQParser.js';
 import type {
-  SelectorNode, CompoundSelectorNode, CombinatorNode,
-  SelectorListNode, SimpleSelectorNode,
+  SelectorNode,
+  CompoundSelectorNode,
+  CombinatorNode,
+  SelectorListNode,
+  SimpleSelectorNode,
 } from './CQParser.js';
 
 // ---------------------------------------------------------------------------
@@ -58,15 +61,9 @@ function collectDescendants(container: any): Component[] {
 // Context-aware matching (handles combinators)
 // ---------------------------------------------------------------------------
 
-function matchesInContext(
-  component: Component,
-  ast: SelectorNode,
-  _root: Component,
-): boolean {
+function matchesInContext(component: Component, ast: SelectorNode, _root: Component): boolean {
   if (ast.type === 'list') {
-    return (ast as SelectorListNode).items.some(
-      (item) => matchesInContext(component, item, _root),
-    );
+    return (ast as SelectorListNode).items.some((item) => matchesInContext(component, item, _root));
   }
 
   if (ast.type === 'compound') {
@@ -159,9 +156,7 @@ function matchesNode(component: Component, ast: SelectorNode): boolean {
     return matchesCombinator(component, ast as CombinatorNode);
   }
   if (ast.type === 'list') {
-    return (ast as SelectorListNode).items.some(
-      (item) => matchesNode(component, item),
-    );
+    return (ast as SelectorListNode).items.some((item) => matchesNode(component, item));
   }
   return false;
 }

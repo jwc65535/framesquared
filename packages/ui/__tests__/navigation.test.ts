@@ -1,44 +1,85 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Viewport } from '../src/container/Viewport.js';
 import { Accordion } from '../src/container/Accordion.js';
 import { CardContainer } from '../src/container/CardContainer.js';
 import { Breadcrumb } from '../src/navigation/Breadcrumb.js';
 import { Panel } from '../src/panel/Panel.js';
-import { Component } from '@framesquared/component';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; document.body.style.cssText = ''; });
+class MockRO {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+  document.body.style.cssText = '';
+});
 
 // Minimal tree node for Breadcrumb tests
 function makeTree() {
   const root: any = {
-    id: 'root', text: 'Home', leaf: false, children: [],
-    parent: null, get(f: string) { return (this as any)[f]; },
+    id: 'root',
+    text: 'Home',
+    leaf: false,
+    children: [],
+    parent: null,
+    get(f: string) {
+      return (this as any)[f];
+    },
   };
   const docs: any = {
-    id: 'docs', text: 'Docs', leaf: false, children: [],
-    parent: root, get(f: string) { return (this as any)[f]; },
+    id: 'docs',
+    text: 'Docs',
+    leaf: false,
+    children: [],
+    parent: root,
+    get(f: string) {
+      return (this as any)[f];
+    },
   };
   const api: any = {
-    id: 'api', text: 'API', leaf: true, children: [],
-    parent: docs, get(f: string) { return (this as any)[f]; },
+    id: 'api',
+    text: 'API',
+    leaf: true,
+    children: [],
+    parent: docs,
+    get(f: string) {
+      return (this as any)[f];
+    },
   };
   const guide: any = {
-    id: 'guide', text: 'Guide', leaf: true, children: [],
-    parent: docs, get(f: string) { return (this as any)[f]; },
+    id: 'guide',
+    text: 'Guide',
+    leaf: true,
+    children: [],
+    parent: docs,
+    get(f: string) {
+      return (this as any)[f];
+    },
   };
   docs.children = [api, guide];
   const about: any = {
-    id: 'about', text: 'About', leaf: true, children: [],
-    parent: root, get(f: string) { return (this as any)[f]; },
+    id: 'about',
+    text: 'About',
+    leaf: true,
+    children: [],
+    parent: root,
+    get(f: string) {
+      return (this as any)[f];
+    },
   };
   root.children = [docs, about];
 
   const allNodes = [root, docs, api, guide, about];
   return {
     getRoot: () => root,
-    getNodeById: (id: string) => allNodes.find(n => n.id === id) ?? null,
+    getNodeById: (id: string) => allNodes.find((n) => n.id === id) ?? null,
   };
 }
 
@@ -64,23 +105,20 @@ describe('Viewport', () => {
   });
 
   it('sets body overflow hidden', () => {
-    const _vp = new Viewport({ items: [] });
+    new Viewport({ items: [] });
     expect(document.body.style.overflow).toBe('hidden');
   });
 
   it('contains child items', () => {
     const vp = new Viewport({
-      items: [
-        new Panel({ title: 'North' }),
-        new Panel({ title: 'Center' }),
-      ],
+      items: [new Panel({ title: 'North' }), new Panel({ title: 'Center' })],
     });
     expect(vp.getItems().length).toBe(2);
   });
 
   it('responds to window resize', () => {
     const spy = vi.fn();
-    const vp = new Viewport({ items: [], listeners: { resize: spy } });
+    const _vp = new Viewport({ items: [], listeners: { resize: spy } });
     window.dispatchEvent(new Event('resize'));
     expect(spy).toHaveBeenCalled();
   });
@@ -295,7 +333,11 @@ describe('Breadcrumb', () => {
   it('fires selectionchange event on navigation', () => {
     const spy = vi.fn();
     const store = makeTree();
-    const b = breadcrumb({ store, selection: store.getNodeById('api'), listeners: { selectionchange: spy } });
+    const b = breadcrumb({
+      store,
+      selection: store.getNodeById('api'),
+      listeners: { selectionchange: spy },
+    });
     const items = b.el!.querySelectorAll('.x-breadcrumb-item');
     (items[0] as HTMLElement).click();
     expect(spy).toHaveBeenCalled();

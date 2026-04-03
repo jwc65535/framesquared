@@ -46,6 +46,7 @@ describe('bind', () => {
   });
 
   it('returns a function', () => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     expect(typeof bind(() => {}, null)).toBe('function');
   });
 });
@@ -309,6 +310,7 @@ describe('interceptBefore', () => {
         return 42;
       },
     };
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     interceptBefore(obj, 'value', () => {});
     expect(obj.value()).toBe(42);
   });
@@ -407,7 +409,10 @@ describe('createSequence', () => {
   });
 
   it('returns undefined', () => {
-    const seq = createSequence(() => 1, () => 2);
+    const seq = createSequence(
+      () => 1,
+      () => 2,
+    );
     expect(seq()).toBeUndefined();
   });
 

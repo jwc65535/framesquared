@@ -50,6 +50,7 @@ export class PagingToolbar extends Toolbar {
   protected override afterRender(): void {
     super.afterRender();
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-paging-toolbar');
     const body = this.getBodyEl();
 
@@ -65,6 +66,7 @@ export class PagingToolbar extends Toolbar {
     this._pageInput.value = String(this._store?.currentPage ?? 1);
     this._pageInput.addEventListener('keydown', (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const page = parseInt(this._pageInput!.value, 10);
         if (!isNaN(page) && page >= 1 && page <= this.getTotalPages()) {
           this.loadPage(page);
@@ -108,7 +110,9 @@ export class PagingToolbar extends Toolbar {
   // Navigation
   // -----------------------------------------------------------------------
 
-  private moveFirst(): void { this.loadPage(1); }
+  private moveFirst(): void {
+    this.loadPage(1);
+  }
 
   private movePrevious(): void {
     const page = Math.max(1, (this._store?.currentPage ?? 1) - 1);
@@ -120,7 +124,9 @@ export class PagingToolbar extends Toolbar {
     this.loadPage(page);
   }
 
-  private moveLast(): void { this.loadPage(this.getTotalPages()); }
+  private moveLast(): void {
+    this.loadPage(this.getTotalPages());
+  }
 
   private doRefresh(): void {
     this.loadPage(this._store?.currentPage ?? 1);

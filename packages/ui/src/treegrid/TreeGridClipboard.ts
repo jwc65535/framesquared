@@ -96,9 +96,7 @@ export class TreeGridClipboard {
     const columns = tg.getColumns().filter((c) => !c.hidden);
     const selection = tg.getSelection();
     const parent =
-      selection.length > 0 && this.config.pasteAsChildren
-        ? selection[0]
-        : tg.getRootNode();
+      selection.length > 0 && this.config.pasteAsChildren ? selection[0] : tg.getRootNode();
 
     for (const line of lines) {
       const values = line.split('\t');

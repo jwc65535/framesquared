@@ -1,19 +1,27 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TextField } from '../src/field/Text.js';
-import { Checkbox } from '../src/field/Checkbox.js';
-import { Field } from '../src/field/Field.js';
 import { FormPanel } from '../src/FormPanel.js';
 import { BasicForm } from '../src/form/BasicForm.js';
 import { FieldContainer } from '../src/field/FieldContainer.js';
 import * as V from '../src/form/Validators.js';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
+class MockRO {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
 beforeEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (globalThis as any).ResizeObserver = MockRO;
   // Mock fetch
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (globalThis as any).fetch = vi.fn();
 });
-afterEach(() => { document.body.innerHTML = ''; });
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 function tf(cfg: Record<string, unknown> = {}): TextField {
   return new TextField(cfg);
@@ -82,7 +90,7 @@ describe('Validators', () => {
   });
 
   it('custom function validator', () => {
-    const custom = (val: unknown) => val === 'magic' ? true : 'Not magic';
+    const custom = (val: unknown) => (val === 'magic' ? true : 'Not magic');
     expect(V.custom('magic', { fn: custom })).toBe(true);
     expect(V.custom('other', { fn: custom })).toBe('Not magic');
   });
@@ -303,6 +311,7 @@ describe('FormPanel', () => {
 
 describe('FormPanel — submit', () => {
   it('submit sends field values via fetch', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ success: true }),
@@ -316,6 +325,7 @@ describe('FormPanel — submit', () => {
 
     const result = await fp.submit();
     expect(fetch).toHaveBeenCalled();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [url, opts] = (fetch as any).mock.calls[0];
     expect(url).toBe('/api/save');
     expect(opts.method).toBe('POST');
@@ -323,6 +333,7 @@ describe('FormPanel — submit', () => {
   });
 
   it('submit with clientValidation:false skips validation', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ success: true }),
@@ -351,6 +362,7 @@ describe('FormPanel — submit', () => {
   });
 
   it('jsonSubmit sends JSON body', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ success: true }),
@@ -364,12 +376,14 @@ describe('FormPanel — submit', () => {
     });
 
     await fp.submit();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [, opts] = (fetch as any).mock.calls[0];
     expect(opts.headers['Content-Type']).toBe('application/json');
     expect(JSON.parse(opts.body)).toEqual({ x: 'hello' });
   });
 
   it('fires beforeaction and actioncomplete', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ success: true }),
@@ -390,6 +404,7 @@ describe('FormPanel — submit', () => {
   });
 
   it('fires actionfailed on fetch error', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).fetch = vi.fn().mockResolvedValue({
       ok: false,
       status: 500,
@@ -415,6 +430,7 @@ describe('FormPanel — submit', () => {
 
 describe('FormPanel — load', () => {
   it('load populates fields from server response', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ success: true, data: { first: 'Loaded', last: 'Data' } }),
@@ -459,10 +475,7 @@ describe('FieldContainer', () => {
       renderTo: document.body,
       fieldLabel: 'Info',
       combineErrors: true,
-      items: [
-        tf({ name: 'a', allowBlank: false }),
-        tf({ name: 'b', allowBlank: false }),
-      ],
+      items: [tf({ name: 'a', allowBlank: false }), tf({ name: 'b', allowBlank: false })],
     });
     const errors = fc.getErrors();
     expect(errors.length).toBeGreaterThan(0);
@@ -471,9 +484,7 @@ describe('FieldContainer', () => {
   it('isValid checks child fields', () => {
     const fc = new FieldContainer({
       renderTo: document.body,
-      items: [
-        tf({ name: 'a', value: 'ok', allowBlank: false }),
-      ],
+      items: [tf({ name: 'a', value: 'ok', allowBlank: false })],
     });
     expect(fc.isValid()).toBe(true);
   });

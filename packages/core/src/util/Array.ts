@@ -199,10 +199,7 @@ export function groupBy<T, K extends string | number>(
  * Splits an array into two: elements that satisfy the predicate and those
  * that don't.
  */
-export function partition<T>(
-  array: T[],
-  predicate: (item: T) => boolean,
-): [T[], T[]] {
+export function partition<T>(array: T[], predicate: (item: T) => boolean): [T[], T[]] {
   const yes: T[] = [];
   const no: T[] = [];
   for (const item of array) {

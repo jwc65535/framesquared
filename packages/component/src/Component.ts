@@ -9,7 +9,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Base, Observable, generateId } from '@framesquared/core';
-import { Template } from './Template.js';
+import type { Template } from './Template.js';
 
 // ---------------------------------------------------------------------------
 // Observable bootstrap
@@ -52,7 +52,7 @@ export interface ComponentConfig {
   data?: Record<string, unknown>;
   renderTo?: Element | string;
   floating?: boolean;
-  listeners?: Record<string, Function>;
+  listeners?: Record<string, (...args: unknown[]) => void>;
   reference?: string;
   [key: string]: unknown;
 }
@@ -149,6 +149,7 @@ export class Component extends Base {
   // Lifecycle hooks (override in subclasses)
   // -----------------------------------------------------------------------
 
+  /* eslint-disable @typescript-eslint/no-empty-function */
   /** Called before initialize(). Override in subclasses. */
   protected beforeInitialize(): void {}
   /** Main initialization. Override in subclasses. */
@@ -165,6 +166,7 @@ export class Component extends Base {
   protected onDestroy(): void {}
   /** Called after destroy(). Override in subclasses. */
   protected afterDestroy(): void {}
+  /* eslint-enable @typescript-eslint/no-empty-function */
 
   // -----------------------------------------------------------------------
   // Render
@@ -224,6 +226,7 @@ export class Component extends Base {
   // -----------------------------------------------------------------------
 
   private applyConfigs(): void {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
     const cfg = this._config;
 

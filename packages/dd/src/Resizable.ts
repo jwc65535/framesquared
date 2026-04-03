@@ -22,10 +22,14 @@ export interface ResizableConfig {
 type HandleDir = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
 
 const HANDLE_CURSORS: Record<string, string> = {
-  n: 'ns-resize', s: 'ns-resize',
-  e: 'ew-resize', w: 'ew-resize',
-  ne: 'nesw-resize', sw: 'nesw-resize',
-  nw: 'nwse-resize', se: 'nwse-resize',
+  n: 'ns-resize',
+  s: 'ns-resize',
+  e: 'ew-resize',
+  w: 'ew-resize',
+  ne: 'nesw-resize',
+  sw: 'nesw-resize',
+  nw: 'nwse-resize',
+  se: 'nwse-resize',
 };
 
 export class Resizable {
@@ -89,14 +93,43 @@ export class Resizable {
     handle.style.height = size;
 
     switch (dir) {
-      case 'se': handle.style.right = '0'; handle.style.bottom = '0'; break;
-      case 'sw': handle.style.left = '0'; handle.style.bottom = '0'; break;
-      case 'ne': handle.style.right = '0'; handle.style.top = '0'; break;
-      case 'nw': handle.style.left = '0'; handle.style.top = '0'; break;
-      case 'e': handle.style.right = '0'; handle.style.top = '50%'; handle.style.height = '100%'; handle.style.top = '0'; break;
-      case 'w': handle.style.left = '0'; handle.style.top = '0'; handle.style.height = '100%'; break;
-      case 's': handle.style.bottom = '0'; handle.style.left = '0'; handle.style.width = '100%'; break;
-      case 'n': handle.style.top = '0'; handle.style.left = '0'; handle.style.width = '100%'; break;
+      case 'se':
+        handle.style.right = '0';
+        handle.style.bottom = '0';
+        break;
+      case 'sw':
+        handle.style.left = '0';
+        handle.style.bottom = '0';
+        break;
+      case 'ne':
+        handle.style.right = '0';
+        handle.style.top = '0';
+        break;
+      case 'nw':
+        handle.style.left = '0';
+        handle.style.top = '0';
+        break;
+      case 'e':
+        handle.style.right = '0';
+        handle.style.top = '50%';
+        handle.style.height = '100%';
+        handle.style.top = '0';
+        break;
+      case 'w':
+        handle.style.left = '0';
+        handle.style.top = '0';
+        handle.style.height = '100%';
+        break;
+      case 's':
+        handle.style.bottom = '0';
+        handle.style.left = '0';
+        handle.style.width = '100%';
+        break;
+      case 'n':
+        handle.style.top = '0';
+        handle.style.left = '0';
+        handle.style.width = '100%';
+        break;
     }
   }
 
@@ -128,9 +161,15 @@ export class Resizable {
 
       // Compute new dimensions based on handle direction
       if (dir.includes('e')) newW = startW + dx;
-      if (dir.includes('w')) { newW = startW - dx; newLeft = startLeft + dx; }
+      if (dir.includes('w')) {
+        newW = startW - dx;
+        newLeft = startLeft + dx;
+      }
       if (dir.includes('s')) newH = startH + dy;
-      if (dir.includes('n')) { newH = startH - dy; newTop = startTop + dy; }
+      if (dir.includes('n')) {
+        newH = startH - dy;
+        newTop = startTop + dy;
+      }
 
       // Preserve ratio
       if (this.preserveRatio) {

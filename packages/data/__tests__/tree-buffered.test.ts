@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Model } from '../src/Model.js';
 import { FieldType } from '../src/field/Field.js';
-import { Operation } from '../src/Operation.js';
+import type { Operation } from '../src/Operation.js';
 import { ResultSet } from '../src/ResultSet.js';
 import { TreeStore } from '../src/store/TreeStore.js';
 import { BufferedStore } from '../src/store/BufferedStore.js';
@@ -158,7 +159,9 @@ describe('NodeInterface', () => {
     c1.appendChild(gc);
 
     const visited: string[] = [];
-    root.cascadeBy((n) => { visited.push(n.get('text') as string); });
+    root.cascadeBy((n) => {
+      visited.push(n.get('text') as string);
+    });
     expect(visited).toEqual(['R', 'C1', 'GC', 'C2']);
   });
 
@@ -187,7 +190,9 @@ describe('NodeInterface', () => {
     mid.appendChild(leaf);
 
     const visited: string[] = [];
-    leaf.bubble((n) => { visited.push(n.get('text') as string); });
+    leaf.bubble((n) => {
+      visited.push(n.get('text') as string);
+    });
     expect(visited).toEqual(['L', 'M', 'R']);
   });
 
@@ -282,10 +287,14 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'Root', children: [
+          id: 1,
+          text: 'Root',
+          children: [
             { id: 2, text: 'A', leaf: true },
             {
-              id: 3, text: 'B', children: [
+              id: 3,
+              text: 'B',
+              children: [
                 { id: 4, text: 'B1', leaf: true },
                 { id: 5, text: 'B2', leaf: true },
               ],
@@ -303,11 +312,13 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'Root', children: [
+          id: 1,
+          text: 'Root',
+          children: [
             {
-              id: 2, text: 'A', children: [
-                { id: 3, text: 'Deep', leaf: true },
-              ],
+              id: 2,
+              text: 'A',
+              children: [{ id: 3, text: 'Deep', leaf: true }],
             },
           ],
         },
@@ -321,9 +332,9 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'R', children: [
-            { id: 2, text: 'C', leaf: true },
-          ],
+          id: 1,
+          text: 'R',
+          children: [{ id: 2, text: 'C', leaf: true }],
         },
       });
       const root = store.getRoot();
@@ -340,7 +351,9 @@ describe('TreeStore', () => {
       store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'Root', children: [
+          id: 1,
+          text: 'Root',
+          children: [
             { id: 2, text: 'A', leaf: true },
             { id: 3, text: 'B', leaf: true },
           ],
@@ -381,10 +394,11 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'R', expanded: true, children: [
-            { id: 2, text: 'A', expanded: true, children: [
-              { id: 4, text: 'A1', leaf: true },
-            ]},
+          id: 1,
+          text: 'R',
+          expanded: true,
+          children: [
+            { id: 2, text: 'A', expanded: true, children: [{ id: 4, text: 'A1', leaf: true }] },
             { id: 3, text: 'B', leaf: true },
           ],
         },
@@ -398,10 +412,11 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'R', expanded: true, children: [
-            { id: 2, text: 'A', expanded: false, children: [
-              { id: 4, text: 'A1', leaf: true },
-            ]},
+          id: 1,
+          text: 'R',
+          expanded: true,
+          children: [
+            { id: 2, text: 'A', expanded: false, children: [{ id: 4, text: 'A1', leaf: true }] },
             { id: 3, text: 'B', leaf: true },
           ],
         },
@@ -417,16 +432,16 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'R', children: [
-            { id: 2, text: 'A', children: [
-              { id: 3, text: 'A1', leaf: true },
-            ]},
-          ],
+          id: 1,
+          text: 'R',
+          children: [{ id: 2, text: 'A', children: [{ id: 3, text: 'A1', leaf: true }] }],
         },
       });
       const spy = vi.fn();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (store as any).on('nodeexpand', spy);
       const a = store.getNodeById(2)!;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       store.expandNode(a as any);
       expect(a.isExpanded()).toBe(true);
       expect(spy).toHaveBeenCalledOnce();
@@ -436,16 +451,19 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'R', expanded: true, children: [
-            { id: 2, text: 'A', expanded: true, children: [
-              { id: 3, text: 'A1', leaf: true },
-            ]},
+          id: 1,
+          text: 'R',
+          expanded: true,
+          children: [
+            { id: 2, text: 'A', expanded: true, children: [{ id: 3, text: 'A1', leaf: true }] },
           ],
         },
       });
       const spy = vi.fn();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (store as any).on('nodecollapse', spy);
       const a = store.getNodeById(2)!;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       store.collapseNode(a as any);
       expect(a.isExpanded()).toBe(false);
       expect(spy).toHaveBeenCalledOnce();
@@ -459,6 +477,7 @@ describe('TreeStore', () => {
         root: { id: 1, text: 'R' },
       });
       const spy = vi.fn();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (store as any).on('nodeappend', spy);
       const child = TreeNode.create({ id: 2, text: 'C' }) as Model & NodeInterface;
       applyNodeInterface(child);
@@ -470,12 +489,13 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'R', children: [
-            { id: 2, text: 'C', leaf: true },
-          ],
+          id: 1,
+          text: 'R',
+          children: [{ id: 2, text: 'C', leaf: true }],
         },
       });
       const spy = vi.fn();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (store as any).on('noderemove', spy);
       const root = store.getRoot();
       store.removeChild(root, root.childNodes[0]);
@@ -486,12 +506,13 @@ describe('TreeStore', () => {
       const store = new TreeStore({
         model: TreeNode,
         root: {
-          id: 1, text: 'R', children: [
-            { id: 2, text: 'A', leaf: true },
-          ],
+          id: 1,
+          text: 'R',
+          children: [{ id: 2, text: 'A', leaf: true }],
         },
       });
       const spy = vi.fn();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (store as any).on('nodeinsert', spy);
       const newNode = TreeNode.create({ id: 3, text: 'B' }) as Model & NodeInterface;
       applyNodeInterface(newNode);
@@ -542,6 +563,7 @@ describe('BufferedStore', () => {
     const store = new BufferedStore({
       model: PagedItem,
       pageSize: 25,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       proxy: proxy as any,
     });
 
@@ -555,10 +577,12 @@ describe('BufferedStore', () => {
     const store = new BufferedStore({
       model: PagedItem,
       pageSize: 25,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       proxy: proxy as any,
     });
 
     const spy = vi.fn();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (store as any).on('guaranteedrange', spy);
     await store.guaranteeRange(0, 24);
     expect(spy).toHaveBeenCalled();
@@ -569,6 +593,7 @@ describe('BufferedStore', () => {
     const store = new BufferedStore({
       model: PagedItem,
       pageSize: 25,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       proxy: proxy as any,
     });
 
@@ -581,6 +606,7 @@ describe('BufferedStore', () => {
     const store = new BufferedStore({
       model: PagedItem,
       pageSize: 25,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       proxy: proxy as any,
     });
 
@@ -595,6 +621,7 @@ describe('BufferedStore', () => {
     const store = new BufferedStore({
       model: PagedItem,
       pageSize: 25,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       proxy: proxy as any,
     });
 
@@ -609,6 +636,7 @@ describe('BufferedStore', () => {
     const store = new BufferedStore({
       model: PagedItem,
       pageSize: 25,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       proxy: proxy as any,
     });
 
@@ -628,6 +656,7 @@ describe('BufferedStore', () => {
     const store = new BufferedStore({
       model: PagedItem,
       pageSize: 25,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       proxy: proxy as any,
       leadingBufferZone: 25,
       trailingBufferZone: 25,
@@ -643,6 +672,7 @@ describe('BufferedStore', () => {
     const store = new BufferedStore({
       model: PagedItem,
       pageSize: 25,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       proxy: proxy as any,
     });
 

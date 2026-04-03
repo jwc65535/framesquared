@@ -119,7 +119,9 @@ export class StringField extends Field {
     super({ ...def, type: FieldType.STRING });
   }
 
-  protected getTypeDefault(): unknown { return ''; }
+  protected getTypeDefault(): unknown {
+    return '';
+  }
 
   protected coerce(value: unknown): unknown {
     if (value === null) return '';
@@ -136,7 +138,9 @@ export class IntField extends Field {
     super({ ...def, type: FieldType.INT });
   }
 
-  protected getTypeDefault(): unknown { return 0; }
+  protected getTypeDefault(): unknown {
+    return 0;
+  }
 
   protected coerce(value: unknown): unknown {
     if (value === null) return 0;
@@ -155,7 +159,9 @@ export class FloatField extends Field {
     super({ ...def, type: FieldType.FLOAT });
   }
 
-  protected getTypeDefault(): unknown { return 0; }
+  protected getTypeDefault(): unknown {
+    return 0;
+  }
 
   protected coerce(value: unknown): unknown {
     if (value === null) return 0;
@@ -176,7 +182,9 @@ export class BooleanField extends Field {
     super({ ...def, type: FieldType.BOOLEAN });
   }
 
-  protected getTypeDefault(): unknown { return false; }
+  protected getTypeDefault(): unknown {
+    return false;
+  }
 
   protected coerce(value: unknown): unknown {
     if (value === null || value === undefined) return false;
@@ -196,7 +204,9 @@ export class DateField extends Field {
     super({ ...def, type: FieldType.DATE });
   }
 
-  protected getTypeDefault(): unknown { return null; }
+  protected getTypeDefault(): unknown {
+    return null;
+  }
 
   protected coerce(value: unknown): unknown {
     if (value instanceof Date) return value;
@@ -223,7 +233,9 @@ export class AutoField extends Field {
     super({ ...def, type: FieldType.AUTO });
   }
 
-  protected getTypeDefault(): unknown { return undefined; }
+  protected getTypeDefault(): unknown {
+    return undefined;
+  }
 
   protected coerce(value: unknown): unknown {
     return value;

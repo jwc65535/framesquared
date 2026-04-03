@@ -200,6 +200,7 @@ export class TreeGridStateMixin {
   }
 
   private _wireEvents(): void {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const tg = this.treeGrid!;
     const store = tg.getStore() as any;
     store.on('nodeexpand', () => this._debouncedSave());

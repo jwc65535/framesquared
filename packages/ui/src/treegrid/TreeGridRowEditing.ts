@@ -29,7 +29,7 @@ export class TreeGridRowEditing {
   private config: Required<TreeGridRowEditingConfig>;
   private editingRecord: NodeInterface | null = null;
   private editorRow: HTMLElement | null = null;
-  private fieldMap: Map<string, HTMLInputElement> = new Map();
+  private fieldMap = new Map<string, HTMLInputElement>();
 
   private _onDblClick: (e: MouseEvent) => void;
 

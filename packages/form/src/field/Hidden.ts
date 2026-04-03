@@ -3,8 +3,6 @@
  * Renders as <input type="hidden">.  No label, no visible UI.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Field } from './Field.js';
 import type { FieldConfig } from './Field.js';
 
@@ -19,10 +17,14 @@ export class HiddenField extends Field {
 
   protected override afterRender(): void {
     // Skip label rendering — call Component afterRender only
-    const ComponentProto = Object.getPrototypeOf(Object.getPrototypeOf(Object.getPrototypeOf(this)));
+    const ComponentProto = Object.getPrototypeOf(
+      Object.getPrototypeOf(Object.getPrototypeOf(this)),
+    );
     ComponentProto.afterRender?.call(this);
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-field', 'x-hidden-field');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.style.display = 'none';
 
     this._hiddenInput = document.createElement('input');
@@ -31,6 +33,7 @@ export class HiddenField extends Field {
     if (this._value !== undefined && this._value !== null) {
       this._hiddenInput.value = String(this._value);
     }
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.appendChild(this._hiddenInput);
   }
 

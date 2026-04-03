@@ -1,20 +1,26 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Component } from '../src/Component.js';
 import { Container } from '../src/Container.js';
 import { CQParser } from '../src/query/CQParser.js';
 import { CQMatcher } from '../src/query/CQMatcher.js';
 import { CQ } from '../src/query/ComponentQuery.js';
-import type { SelectorNode } from '../src/query/CQParser.js';
 
 // ResizeObserver mock
 class MockRO {
-  constructor() {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   observe() {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   unobserve() {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   disconnect() {}
 }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+beforeEach(() => {
+  (globalThis as Record<string, unknown>).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 // Helpers
 function cmp(cfg: Record<string, unknown> = {}): Component {
@@ -37,6 +43,7 @@ function ct(cfg: Record<string, unknown> = {}): Container {
 function buildTree() {
   const viewport = ct({ xtype: 'viewport' });
   const mainPanel = new Container({ xtype: 'panel', cls: 'highlighted', title: 'Settings' });
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   (mainPanel as any).componentId = 'main'; // override for test
   const saveBtn = cmp({ xtype: 'button', cls: 'primary' });
   (saveBtn as any).componentId = 'save';
@@ -55,11 +62,22 @@ function buildTree() {
   (toolBtn as any).componentId = 'toolBtn';
   const toolBtn2 = cmp({ xtype: 'button', cls: 'primary', disabled: true });
   (toolBtn2 as any).componentId = 'toolBtn2';
+  /* eslint-enable @typescript-eslint/no-explicit-any */
   toolbar.add(toolBtn, toolBtn2);
 
   viewport.add(mainPanel, sidebar, toolbar);
 
-  return { viewport, mainPanel, saveBtn, cancelBtn, sidebar, searchField, toolbar, toolBtn, toolBtn2 };
+  return {
+    viewport,
+    mainPanel,
+    saveBtn,
+    cancelBtn,
+    sidebar,
+    searchField,
+    toolbar,
+    toolBtn,
+    toolBtn2,
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

@@ -9,7 +9,7 @@
 
 let pending = false;
 let flushing = false;
-const flushListeners: Function[] = [];
+const flushListeners: (() => void)[] = [];
 const processing = new Set<string>();
 
 export const Scheduler = {
@@ -37,12 +37,12 @@ export const Scheduler = {
   },
 
   /** Register a flush callback. */
-  onFlush(fn: Function): void {
+  onFlush(fn: () => void): void {
     if (!flushListeners.includes(fn)) flushListeners.push(fn);
   },
 
   /** Unregister a flush callback. */
-  offFlush(fn: Function): void {
+  offFlush(fn: () => void): void {
     const idx = flushListeners.indexOf(fn);
     if (idx >= 0) flushListeners.splice(idx, 1);
   },

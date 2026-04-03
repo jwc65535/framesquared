@@ -1,42 +1,66 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Grid } from '../src/grid/Grid.js';
-import { Column, NumberColumn, DateColumn, BooleanColumn, CheckColumn, ActionColumn, RowNumbererColumn } from '../src/grid/column/Column.js';
+import { Column, NumberColumn, DateColumn, BooleanColumn } from '../src/grid/column/Column.js';
 import { GridView } from '../src/grid/GridView.js';
 import { HeaderContainer } from '../src/grid/HeaderContainer.js';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+class MockRO {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 // Minimal mock store
 function mockStore(data: Record<string, unknown>[] = []) {
   const records = data.map((d, i) => ({
-    id: d.id ?? i, data: d,
-    get(f: string) { return (d as any)[f]; },
-    set(f: string, v: unknown) { (d as any)[f] = v; },
+    id: d.id ?? i,
+    data: d,
+    get(f: string) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (d as any)[f];
+    },
+    set(f: string, v: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (d as any)[f] = v;
+    },
   }));
-  let listeners: Record<string, Function[]> = {};
+  const listeners: Record<string, ((...args: unknown[]) => unknown)[]> = {};
   return {
     data: { items: records },
     getRange: () => records,
     getCount: () => records.length,
     getAt: (i: number) => records[i],
-    findRecord: (f: string, v: unknown) => records.find(r => r.get(f) === v),
+    findRecord: (f: string, v: unknown) => records.find((r) => r.get(f) === v),
     sort: vi.fn(),
-    on: (evt: string, fn: Function) => { (listeners[evt] ??= []).push(fn); },
-    fireEvent: (evt: string, ...args: unknown[]) => { (listeners[evt] ?? []).forEach(fn => fn(...args)); },
-    each: (fn: Function) => records.forEach(fn),
+    on: (evt: string, fn: (...args: unknown[]) => unknown) => {
+      (listeners[evt] ??= []).push(fn);
+    },
+    fireEvent: (evt: string, ...args: unknown[]) => {
+      (listeners[evt] ?? []).forEach((fn) => fn(...args));
+    },
+    each: (fn: (...args: unknown[]) => unknown) => records.forEach(fn),
     getTotalCount: () => records.length,
     isLoading: () => false,
   };
 }
 
 function grid(cfg: Record<string, unknown> = {}): Grid {
-  const store = cfg.store ?? mockStore([
-    { id: 1, name: 'Alice', age: 30, active: true, joined: '2020-01-15' },
-    { id: 2, name: 'Bob', age: 25, active: false, joined: '2021-06-20' },
-    { id: 3, name: 'Charlie', age: 35, active: true, joined: '2019-03-10' },
-  ]);
+  const store =
+    cfg.store ??
+    mockStore([
+      { id: 1, name: 'Alice', age: 30, active: true, joined: '2020-01-15' },
+      { id: 2, name: 'Bob', age: 25, active: false, joined: '2021-06-20' },
+      { id: 3, name: 'Charlie', age: 35, active: true, joined: '2019-03-10' },
+    ]);
   return new Grid({
     renderTo: document.body,
     title: 'Test Grid',
@@ -119,9 +143,7 @@ describe('Grid — renderer', () => {
   it('custom renderer called with (value, metaData, record, rowIndex, colIndex)', () => {
     const renderer = vi.fn((_v: unknown) => 'custom');
     const g = grid({
-      columns: [
-        { text: 'Name', dataIndex: 'name', renderer },
-      ],
+      columns: [{ text: 'Name', dataIndex: 'name', renderer }],
     });
     expect(renderer).toHaveBeenCalled();
     const args = renderer.mock.calls[0];
@@ -143,6 +165,7 @@ describe('Grid — sorting', () => {
     const g = grid({ sortableColumns: true });
     const th = g.el!.querySelector('th') as HTMLElement;
     th.click();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (g as any)._store;
     expect(store.sort).toHaveBeenCalled();
   });
@@ -151,7 +174,10 @@ describe('Grid — sorting', () => {
     const g = grid({ sortableColumns: true });
     const th = g.el!.querySelector('th') as HTMLElement;
     th.click();
-    expect(th.classList.contains('x-column-header-sort-ASC') || th.classList.contains('x-column-header-sort-DESC')).toBe(true);
+    expect(
+      th.classList.contains('x-column-header-sort-ASC') ||
+        th.classList.contains('x-column-header-sort-DESC'),
+    ).toBe(true);
   });
 });
 
@@ -194,7 +220,14 @@ describe('Grid — store binding', () => {
     expect(g.el!.querySelectorAll('tbody tr').length).toBe(1);
 
     // Simulate adding a record and firing datachanged
-    store.data.items.push({ id: 2, data: { id: 2, name: 'B', age: 2, active: false }, get: (f: string) => ({ id: 2, name: 'B', age: 2, active: false } as any)[f], set: vi.fn() } as any);
+    store.data.items.push({
+      id: 2,
+      data: { id: 2, name: 'B', age: 2, active: false },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      get: (f: string) => (({ id: 2, name: 'B', age: 2, active: false }) as any)[f],
+      set: vi.fn(),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
     store.fireEvent('datachanged');
 
     expect(g.el!.querySelectorAll('tbody tr').length).toBe(2);
@@ -266,7 +299,12 @@ describe('DateColumn', () => {
 
 describe('BooleanColumn', () => {
   it('shows trueText/falseText', () => {
-    const col = new BooleanColumn({ text: 'Active', dataIndex: 'active', trueText: 'Yes', falseText: 'No' });
+    const col = new BooleanColumn({
+      text: 'Active',
+      dataIndex: 'active',
+      trueText: 'Yes',
+      falseText: 'No',
+    });
     expect(col.formatValue(true)).toBe('Yes');
     expect(col.formatValue(false)).toBe('No');
   });
@@ -279,9 +317,7 @@ describe('BooleanColumn', () => {
 describe('CheckColumn', () => {
   it('renders checkboxes in cells', () => {
     const g = grid({
-      columns: [
-        { text: 'Active', dataIndex: 'active', xtype: 'checkcolumn' },
-      ],
+      columns: [{ text: 'Active', dataIndex: 'active', xtype: 'checkcolumn' }],
     });
     const checkboxes = g.el!.querySelectorAll('tbody td input[type="checkbox"]');
     expect(checkboxes.length).toBe(3);
@@ -289,12 +325,12 @@ describe('CheckColumn', () => {
 
   it('checkbox reflects record value', () => {
     const g = grid({
-      columns: [
-        { text: 'Active', dataIndex: 'active', xtype: 'checkcolumn' },
-      ],
+      columns: [{ text: 'Active', dataIndex: 'active', xtype: 'checkcolumn' }],
     });
-    const checkboxes = g.el!.querySelectorAll('tbody td input[type="checkbox"]') as NodeListOf<HTMLInputElement>;
-    expect(checkboxes[0].checked).toBe(true);  // Alice active
+    const checkboxes = g.el!.querySelectorAll(
+      'tbody td input[type="checkbox"]',
+    ) as NodeListOf<HTMLInputElement>;
+    expect(checkboxes[0].checked).toBe(true); // Alice active
     expect(checkboxes[1].checked).toBe(false); // Bob not active
   });
 });
@@ -309,7 +345,8 @@ describe('ActionColumn', () => {
       columns: [
         { text: 'Name', dataIndex: 'name' },
         {
-          text: 'Actions', xtype: 'actioncolumn',
+          text: 'Actions',
+          xtype: 'actioncolumn',
           actions: [
             { iconCls: 'fa-edit', tooltip: 'Edit' },
             { iconCls: 'fa-trash', tooltip: 'Delete' },
@@ -326,7 +363,8 @@ describe('ActionColumn', () => {
     const g = grid({
       columns: [
         {
-          text: 'Act', xtype: 'actioncolumn',
+          text: 'Act',
+          xtype: 'actioncolumn',
           actions: [{ iconCls: 'fa-edit', handler }],
         },
       ],
@@ -344,10 +382,7 @@ describe('ActionColumn', () => {
 describe('RowNumbererColumn', () => {
   it('shows row numbers starting at 1', () => {
     const g = grid({
-      columns: [
-        { xtype: 'rownumberer' },
-        { text: 'Name', dataIndex: 'name' },
-      ],
+      columns: [{ xtype: 'rownumberer' }, { text: 'Name', dataIndex: 'name' }],
     });
     const cells = g.el!.querySelectorAll('tbody tr td:first-child');
     expect(cells[0].textContent).toBe('1');
@@ -377,7 +412,13 @@ describe('GridView', () => {
     const table = view.render();
     document.body.appendChild(table);
 
-    store.data.items.push({ id: 2, data: { name: 'B' }, get: (f: string) => f === 'name' ? 'B' : null, set: vi.fn() } as any);
+    store.data.items.push({
+      id: 2,
+      data: { name: 'B' },
+      get: (f: string) => (f === 'name' ? 'B' : null),
+      set: vi.fn(),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
     view.refresh();
     expect(table.querySelectorAll('tbody tr').length).toBe(2);
   });
@@ -420,12 +461,14 @@ describe('Column', () => {
 
   it('getCellValue extracts from record', () => {
     const c = new Column({ text: 'X', dataIndex: 'x' });
-    const rec = { get: (f: string) => f === 'x' ? 42 : null };
+    const rec = { get: (f: string) => (f === 'x' ? 42 : null) };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(c.getCellValue(rec as any)).toBe(42);
   });
 
   it('renderer overrides cell content', () => {
     const c = new Column({ text: 'X', dataIndex: 'x', renderer: (v: unknown) => `$${v}` });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(c.renderCell(100, {} as any, {} as any, 0, 0)).toBe('$100');
   });
 });

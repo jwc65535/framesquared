@@ -144,8 +144,7 @@ export class XmlReader {
     ) as string[];
 
     const records: Model[] = [];
-    for (let i = 0; i < nodes.length; i++) {
-      const node = nodes[i];
+    for (const node of nodes) {
       const obj: Record<string, unknown> = {};
       for (const fieldName of fieldNames) {
         // Try exact tag match first, then first-letter tag ('n' for 'name')

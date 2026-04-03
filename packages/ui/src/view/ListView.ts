@@ -56,6 +56,7 @@ export class ListView extends Component {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-listview');
 
     this._tableEl = document.createElement('table');
@@ -79,6 +80,7 @@ export class ListView extends Component {
     this._tbodyEl = document.createElement('tbody');
     this._tableEl.appendChild(this._tbodyEl);
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.appendChild(this._tableEl);
     this.renderRows();
     this.bindStoreEvents();

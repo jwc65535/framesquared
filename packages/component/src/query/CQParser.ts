@@ -36,7 +36,7 @@ export interface ClassSelectorNode {
 export interface AttributeSelectorNode {
   type: 'attribute';
   name: string;
-  operator?: string;  // '=', '!=', '>', '<', '>=', '<='
+  operator?: string; // '=', '!=', '>', '<', '>=', '<='
   value?: string;
 }
 
@@ -76,18 +76,23 @@ export type SimpleSelectorNode =
   | PseudoSelectorNode
   | MethodSelectorNode;
 
-export type SelectorNode =
-  | CompoundSelectorNode
-  | CombinatorNode
-  | SelectorListNode;
+export type SelectorNode = CompoundSelectorNode | CombinatorNode | SelectorListNode;
 
 // ---------------------------------------------------------------------------
 // Tokenizer
 // ---------------------------------------------------------------------------
 
 interface Token {
-  type: 'ident' | 'hash' | 'dot' | 'bracket' | 'colon' | 'brace' |
-        'combinator' | 'comma' | 'whitespace';
+  type:
+    | 'ident'
+    | 'hash'
+    | 'dot'
+    | 'bracket'
+    | 'colon'
+    | 'brace'
+    | 'combinator'
+    | 'comma'
+    | 'whitespace';
   value: string;
 }
 
@@ -261,6 +266,7 @@ export class CQParser {
   // selectorList = combinatorExpr ( ',' combinatorExpr )*
   private parseSelectorList(): SelectorNode {
     const first = this.parseCombinatorExpr();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (!this.peek() || this.peek()!.type !== 'comma') return first;
 
     const items: SelectorNode[] = [first];
@@ -278,6 +284,7 @@ export class CQParser {
     let left: SelectorNode = this.parseCompound();
 
     while (this.peek()) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const tok = this.peek()!;
 
       if (tok.type === 'combinator') {
@@ -305,6 +312,7 @@ export class CQParser {
     const selectors: SimpleSelectorNode[] = [];
 
     while (this.peek()) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const tok = this.peek()!;
 
       if (tok.type === 'ident') {
@@ -338,8 +346,10 @@ export class CQParser {
     if (opMatch) {
       let val = opMatch[3].trim();
       // Strip quotes
-      if ((val.startsWith('"') && val.endsWith('"')) ||
-          (val.startsWith("'") && val.endsWith("'"))) {
+      if (
+        (val.startsWith('"') && val.endsWith('"')) ||
+        (val.startsWith("'") && val.endsWith("'"))
+      ) {
         val = val.slice(1, -1);
       }
       return { type: 'attribute', name: opMatch[1], operator: opMatch[2], value: val };

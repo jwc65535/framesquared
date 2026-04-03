@@ -71,10 +71,12 @@ export class DataView extends Component {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-dataview');
 
     this._contentEl = document.createElement('div');
     this._contentEl.classList.add('x-dataview-content');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.appendChild(this._contentEl);
 
     this.renderItems();

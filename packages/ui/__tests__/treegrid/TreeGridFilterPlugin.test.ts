@@ -1,8 +1,10 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TreeGridFilterPlugin } from '../../src/treegrid/TreeGridFilterPlugin.js';
 import { TreeGrid } from '../../src/treegrid/TreeGrid.js';
 import { TreeStore, TreeModel } from '@framesquared/data';
-import type { NodeInterface } from '@framesquared/data';
 
 class MockRO {
   observe() {}
@@ -16,18 +18,25 @@ function makeGrid() {
     store: new TreeStore({
       model: TreeModel,
       root: {
-        id: 'root', text: 'Root', expanded: true,
+        id: 'root',
+        text: 'Root',
+        expanded: true,
         children: [
           {
-            id: 'folder1', text: 'Alpha', expanded: true,
+            id: 'folder1',
+            text: 'Alpha',
+            expanded: true,
             children: [
               { id: 'item1', text: 'Apple', size: 10, leaf: true },
               { id: 'item2', text: 'Banana', size: 20, leaf: true },
             ],
           },
-          { id: 'folder2', text: 'Beta', expanded: true, children: [
-            { id: 'item3', text: 'Cherry', size: 30, leaf: true },
-          ]},
+          {
+            id: 'folder2',
+            text: 'Beta',
+            expanded: true,
+            children: [{ id: 'item3', text: 'Cherry', size: 30, leaf: true }],
+          },
         ],
       },
     }),

@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { describe, it, expect, afterEach } from 'vitest';
 import { TreeColumn } from '../../src/tree/TreeColumn.js';
-import { TreeStore, TreeModel, applyNodeInterface } from '@framesquared/data';
+import { TreeStore, TreeModel } from '@framesquared/data';
 import type { NodeInterface } from '@framesquared/data';
 
 afterEach(() => {
@@ -88,9 +89,7 @@ describe('renderCell', () => {
         id: 'root',
         text: 'Root',
         expanded: true,
-        children: [
-          { id: 'a', text: 'A', children: [{ id: 'a1', text: 'A1', leaf: true }] },
-        ],
+        children: [{ id: 'a', text: 'A', children: [{ id: 'a1', text: 'A1', leaf: true }] }],
       },
     });
     const nodeA = store.getNodeById('a') as NodeInterface;
@@ -125,9 +124,7 @@ describe('renderCell', () => {
         id: 'root',
         text: 'Root',
         expanded: true,
-        children: [
-          { id: 'a', text: 'A', children: [{ id: 'a1', text: 'A1', leaf: true }] },
-        ],
+        children: [{ id: 'a', text: 'A', children: [{ id: 'a1', text: 'A1', leaf: true }] }],
       },
     });
     const nodeA = store.getNodeById('a') as NodeInterface;

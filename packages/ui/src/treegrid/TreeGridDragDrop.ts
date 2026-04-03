@@ -147,7 +147,9 @@ export class TreeGridDragDrop {
       (e.target as Element).setPointerCapture(e.pointerId);
       this._captureTarget = e.target as Element;
       this._pointerId = e.pointerId;
-    } catch (_) { /* ignore — older browsers */ }
+    } catch {
+      /* ignore — older browsers */
+    }
 
     document.addEventListener('pointermove', this._onPointerMove);
     document.addEventListener('pointerup', this._onPointerUp);
@@ -165,16 +167,16 @@ export class TreeGridDragDrop {
       if (!record) return;
 
       const selection = this.treeGrid?.getSelection() ?? [];
-      const records = selection.includes(record) && selection.length > 1
-        ? selection
-        : [record];
+      const records = selection.includes(record) && selection.length > 1 ? selection : [record];
 
-      const displayText = records.length === 1
-        ? String((records[0] as any).get?.(this.config.displayField) ?? '')
-        : this.config.dragText.replace('{0}', String(records.length));
+      const displayText =
+        records.length === 1
+          ? String((records[0] as any).get?.(this.config.displayField) ?? '')
+          : this.config.dragText.replace('{0}', String(records.length));
 
       const isCopy = this.config.copy || ((e.ctrlKey || e.metaKey) && this.config.allowCopy);
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.dragData = { records, source: this.treeGrid!, copy: isCopy, displayText };
       this.dragging = true;
       this._createGhost(displayText, e.clientX, e.clientY);
@@ -228,8 +230,7 @@ export class TreeGridDragDrop {
 
     if (target && this.config.enableDrop && this._isValidDrop(target)) {
       const position = this._computeDropPosition(e.clientY, target);
-      const isCopy =
-        this.config.copy || ((e.ctrlKey || e.metaKey) && this.config.allowCopy);
+      const isCopy = this.config.copy || ((e.ctrlKey || e.metaKey) && this.config.allowCopy);
       this.dragData.copy = isCopy;
 
       // Fire beforedrop
@@ -246,11 +247,7 @@ export class TreeGridDragDrop {
   // Drop execution
   // -------------------------------------------------------------------------
 
-  private _executeDrop(
-    target: NodeInterface,
-    position: DropPosition,
-    store: any,
-  ): void {
+  private _executeDrop(target: NodeInterface, position: DropPosition, store: any): void {
     if (!this.dragData) return;
     const { records, copy } = this.dragData;
 
@@ -425,7 +422,9 @@ export class TreeGridDragDrop {
     if (this._captureTarget !== null && this._pointerId !== null) {
       try {
         this._captureTarget.releasePointerCapture(this._pointerId);
-      } catch (_) { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
       this._captureTarget = null;
       this._pointerId = null;
     }

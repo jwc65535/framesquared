@@ -5,11 +5,9 @@
  * strip of tabs.  Supports adding, removing, and overflow.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Component } from '@framesquared/component';
 import type { ComponentConfig } from '@framesquared/component';
-import { Tab } from './Tab.js';
+import type { Tab } from './Tab.js';
 
 export interface TabBarConfig extends ComponentConfig {
   position?: 'top' | 'bottom' | 'left' | 'right';
@@ -35,6 +33,7 @@ export class TabBar extends Component {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
     el.classList.add('x-tabbar');
     if (this._position !== 'top') {

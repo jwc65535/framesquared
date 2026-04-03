@@ -1,4 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { TreeGridView } from '../../src/treegrid/TreeGridView.js';
 import { TreeGridColumn, Column } from '../../src/treegrid/TreeGridColumn.js';
 import { TreeStore, TreeModel, applyNodeInterface } from '@framesquared/data';
@@ -36,7 +38,10 @@ function makeColumns() {
   ];
 }
 
-function makeView(store: TreeStore, extra: Partial<ConstructorParameters<typeof TreeGridView>[0]> = {}) {
+function makeView(
+  store: TreeStore,
+  extra: Partial<ConstructorParameters<typeof TreeGridView>[0]> = {},
+) {
   const view = new TreeGridView({
     store,
     columns: makeColumns(),
@@ -384,7 +389,9 @@ describe('TreeGridView — events', () => {
 
     const node = store.getNodeById('folder2') as NodeInterface;
     const row = view.getNodeRow(node)!;
-    const expander = row.querySelector('.x-treegrid-expander:not(.x-treegrid-expander-leaf)') as HTMLElement;
+    const expander = row.querySelector(
+      '.x-treegrid-expander:not(.x-treegrid-expander-leaf)',
+    ) as HTMLElement;
     if (expander) {
       expander.click();
       expect(spy).toHaveBeenCalled();

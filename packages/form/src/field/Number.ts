@@ -36,7 +36,7 @@ export class NumberField extends TextField {
       { type: 'spinner-down', handler: (_f: any) => this.spinDown() },
       ...(config.triggers ?? []),
     ];
-    super({ xtype: 'numberfield', ...config, triggers, maskRe: config.maskRe ?? /[0-9.\-]/ });
+    super({ xtype: 'numberfield', ...config, triggers, maskRe: config.maskRe ?? /[0-9.-]/ });
   }
 
   protected override initialize(): void {
@@ -51,6 +51,7 @@ export class NumberField extends TextField {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-numberfield');
 
     // Format initial value with precision
@@ -104,8 +105,12 @@ export class NumberField extends TextField {
   // Constraints
   // -----------------------------------------------------------------------
 
-  setMinValue(value: number): void { this._minValue = value; }
-  setMaxValue(value: number): void { this._maxValue = value; }
+  setMinValue(value: number): void {
+    this._minValue = value;
+  }
+  setMaxValue(value: number): void {
+    this._maxValue = value;
+  }
 
   // -----------------------------------------------------------------------
   // Validation

@@ -1,9 +1,11 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TreeGridLockable } from '../../src/treegrid/TreeGridLockable.js';
 import { TreeGrid } from '../../src/treegrid/TreeGrid.js';
-import { TreeGridColumn, Column } from '../../src/treegrid/TreeGridColumn.js';
+import { Column } from '../../src/treegrid/TreeGridColumn.js';
 import { TreeStore, TreeModel } from '@framesquared/data';
-import type { NodeInterface } from '@framesquared/data';
 
 class MockRO {
   observe() {}
@@ -17,7 +19,9 @@ function makeGrid(extra: Record<string, unknown> = {}) {
     store: new TreeStore({
       model: TreeModel,
       root: {
-        id: 'root', text: 'Root', expanded: true,
+        id: 'root',
+        text: 'Root',
+        expanded: true,
         children: [
           { id: 'a', text: 'A', size: 10, date: '2025-01-01', leaf: true },
           { id: 'b', text: 'B', size: 20, date: '2025-02-01', leaf: true },
@@ -85,15 +89,17 @@ describe('TreeGridLockable — panel splitting', () => {
       store: new TreeStore({
         model: TreeModel,
         root: {
-          id: 'root', text: 'Root', expanded: true,
-          children: [
-            { id: 'a', text: 'A', size: 10, leaf: true },
-          ],
+          id: 'root',
+          text: 'Root',
+          expanded: true,
+          children: [{ id: 'a', text: 'A', size: 10, leaf: true }],
         },
       }),
       columns: [
         { dataIndex: 'text', text: 'Name', width: 200 },
-        Object.assign(new Column({ dataIndex: 'size', text: 'Size', width: 100 }), { locked: false }),
+        Object.assign(new Column({ dataIndex: 'size', text: 'Size', width: 100 }), {
+          locked: false,
+        }),
       ],
     } as any);
 
@@ -115,7 +121,9 @@ describe('TreeGridLockable — panel splitting', () => {
       store: new TreeStore({
         model: TreeModel,
         root: {
-          id: 'root', text: 'Root', expanded: true,
+          id: 'root',
+          text: 'Root',
+          expanded: true,
           children: [{ id: 'a', text: 'A', size: 10, leaf: true }],
         },
       }),

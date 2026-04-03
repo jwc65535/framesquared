@@ -6,8 +6,6 @@
  * their children for navigation.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Component } from '@framesquared/component';
 import type { ComponentConfig } from '@framesquared/component';
 
@@ -65,10 +63,14 @@ export class Breadcrumb extends Component {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-breadcrumb');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.style.display = 'flex';
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.style.alignItems = 'center';
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this._contentEl = this.el!;
     this.renderPath();
   }

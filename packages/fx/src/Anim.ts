@@ -15,10 +15,18 @@ export interface AnimOptions {
   fill?: FillMode;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface SlideOptions extends AnimOptions {}
-interface HighlightOptions extends AnimOptions { color?: string; }
-interface ScaleOptions extends AnimOptions { from?: number; to?: number; }
-interface RotateOptions extends AnimOptions { degrees?: number; }
+interface HighlightOptions extends AnimOptions {
+  color?: string;
+}
+interface ScaleOptions extends AnimOptions {
+  from?: number;
+  to?: number;
+}
+interface RotateOptions extends AnimOptions {
+  degrees?: number;
+}
 
 export const Anim = {
   // -----------------------------------------------------------------------
@@ -51,7 +59,11 @@ export const Anim = {
   // Slide
   // -----------------------------------------------------------------------
 
-  slideIn(el: Element, direction: 'left' | 'right' | 'top' | 'bottom' = 'left', opts: SlideOptions = {}): Animation {
+  slideIn(
+    el: Element,
+    direction: 'left' | 'right' | 'top' | 'bottom' = 'left',
+    opts: SlideOptions = {},
+  ): Animation {
     const transforms: Record<string, string> = {
       left: 'translateX(-100%)',
       right: 'translateX(100%)',
@@ -70,7 +82,11 @@ export const Anim = {
     });
   },
 
-  slideOut(el: Element, direction: 'left' | 'right' | 'top' | 'bottom' = 'right', opts: SlideOptions = {}): Animation {
+  slideOut(
+    el: Element,
+    direction: 'left' | 'right' | 'top' | 'bottom' = 'right',
+    opts: SlideOptions = {},
+  ): Animation {
     const transforms: Record<string, string> = {
       left: 'translateX(-100%)',
       right: 'translateX(100%)',
@@ -97,10 +113,7 @@ export const Anim = {
     const color = opts.color ?? 'yellow';
     return new Animation({
       target: el,
-      keyframes: [
-        { backgroundColor: color },
-        { backgroundColor: 'transparent' },
-      ],
+      keyframes: [{ backgroundColor: color }, { backgroundColor: 'transparent' }],
       duration: opts.duration ?? 1000,
       easing: opts.easing ?? 'ease-in-out',
       fill: opts.fill ?? 'both',
@@ -116,10 +129,7 @@ export const Anim = {
     const to = opts.to ?? 1.5;
     return new Animation({
       target: el,
-      keyframes: [
-        { transform: `scale(${from})` },
-        { transform: `scale(${to})` },
-      ],
+      keyframes: [{ transform: `scale(${from})` }, { transform: `scale(${to})` }],
       duration: opts.duration ?? 300,
       easing: opts.easing ?? 'ease',
       fill: opts.fill ?? 'both',
@@ -134,10 +144,7 @@ export const Anim = {
     const degrees = opts.degrees ?? 360;
     return new Animation({
       target: el,
-      keyframes: [
-        { transform: 'rotate(0deg)' },
-        { transform: `rotate(${degrees}deg)` },
-      ],
+      keyframes: [{ transform: 'rotate(0deg)' }, { transform: `rotate(${degrees}deg)` }],
       duration: opts.duration ?? 500,
       easing: opts.easing ?? 'ease',
       fill: opts.fill ?? 'both',
@@ -189,10 +196,7 @@ export const Anim = {
   flip(el: Element, opts: AnimOptions = {}): Animation {
     return new Animation({
       target: el,
-      keyframes: [
-        { transform: 'rotateY(0deg)' },
-        { transform: 'rotateY(180deg)' },
-      ],
+      keyframes: [{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(180deg)' }],
       duration: opts.duration ?? 600,
       easing: opts.easing ?? 'ease-in-out',
       fill: opts.fill ?? 'both',
@@ -218,6 +222,6 @@ export const Anim = {
     for (const anim of animations) {
       anim.play();
     }
-    await Promise.all(animations.map(a => a.finished));
+    await Promise.all(animations.map((a) => a.finished));
   },
 };

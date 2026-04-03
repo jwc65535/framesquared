@@ -120,6 +120,7 @@ export class TreeGridSummary {
   }
 
   private _getNodes(): NodeInterface[] {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const tg = this.treeGrid!;
     if (this.config.includeCollapsed) {
       const all: NodeInterface[] = [];
@@ -133,6 +134,7 @@ export class TreeGridSummary {
   }
 
   private _buildSummaryRow(): HTMLElement {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const tg = this.treeGrid!;
     const columns = tg.getColumns();
     const treeCol = tg.getTreeColumn();

@@ -2,11 +2,9 @@
  * @framesquared/data – Proxy (abstract base)
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { Model } from '../Model.js';
 import type { Operation } from '../Operation.js';
-import { ResultSet } from '../ResultSet.js';
+import type { ResultSet } from '../ResultSet.js';
 
 export interface BatchOptions {
   create?: Model[];

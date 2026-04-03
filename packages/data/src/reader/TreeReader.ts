@@ -62,10 +62,7 @@ export class TreeReader extends JsonReader {
     return Array.isArray(data) ? (data as Record<string, unknown>[]) : [];
   }
 
-  private collectFlat(
-    items: Record<string, unknown>[],
-    out: Record<string, unknown>[],
-  ): void {
+  private collectFlat(items: Record<string, unknown>[], out: Record<string, unknown>[]): void {
     for (const item of items) {
       out.push(item);
       const children = item[this.childrenProperty];

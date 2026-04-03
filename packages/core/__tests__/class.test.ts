@@ -1,9 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import {
-  Base,
-  ClassManager,
-  define,
-} from '../src/class/index.js';
+import { Base, ClassManager, define } from '../src/class/index.js';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // BASE CLASS — identity, factory, lifecycle
@@ -215,7 +211,7 @@ describe('Config system', () => {
         config: { score: 0 },
         updateScore: spy,
       });
-      const inst = new Cls({ score: 10 });
+      const _inst = new Cls({ score: 10 });
       expect(spy).toHaveBeenCalledWith(10, undefined);
     });
 
@@ -347,22 +343,30 @@ describe('callParent', () => {
 
   it('works through three levels of inheritance', () => {
     const A = define('test.cp.A', {
-      value() { return 'A'; },
+      value() {
+        return 'A';
+      },
     });
     const B = define('test.cp.B', {
       extend: A,
-      value() { return (this as Base).callParent() + '+B'; },
+      value() {
+        return (this as Base).callParent() + '+B';
+      },
     });
     const C = define('test.cp.C', {
       extend: B,
-      value() { return (this as Base).callParent() + '+C'; },
+      value() {
+        return (this as Base).callParent() + '+C';
+      },
     });
     expect(new C().value()).toBe('A+B+C');
   });
 
   it('passes arguments to the parent method', () => {
     const Parent = define('test.cp.ArgsParent', {
-      add(a: number, b: number) { return a + b; },
+      add(a: number, b: number) {
+        return a + b;
+      },
     });
     const Child = define('test.cp.ArgsChild', {
       extend: Parent,
@@ -385,7 +389,9 @@ describe('callParent', () => {
 
   it('callParent works for constructor-like init methods', () => {
     const Parent = define('test.cp.InitParent', {
-      init() { (this as Record<string, unknown>).parentInit = true; },
+      init() {
+        (this as Record<string, unknown>).parentInit = true;
+      },
     });
     const Child = define('test.cp.InitChild', {
       extend: Parent,
@@ -423,11 +429,15 @@ describe('Mixins', () => {
 
     it('does not overwrite methods already on the target', () => {
       const Mixin = define('test.mixin.Overwrite', {
-        hello() { return 'from mixin'; },
+        hello() {
+          return 'from mixin';
+        },
       });
       const Cls = define('test.mixin.OwnMethod', {
         mixins: [Mixin],
-        hello() { return 'from class'; },
+        hello() {
+          return 'from class';
+        },
       });
       expect(new Cls().hello()).toBe('from class');
     });
@@ -477,17 +487,23 @@ describe('Mixins', () => {
 
   describe('diamond inheritance', () => {
     it('does not apply the same mixin twice', () => {
-      let applyCount = 0;
+      let _applyCount = 0;
       const Shared = define('test.mixin.Shared', {
-        sharedInit() { applyCount++; },
+        sharedInit() {
+          _applyCount++;
+        },
       });
       const Left = define('test.mixin.Left', {
         mixins: [Shared],
-        leftMethod() { return 'left'; },
+        leftMethod() {
+          return 'left';
+        },
       });
       const Right = define('test.mixin.Right', {
         mixins: [Shared],
-        rightMethod() { return 'right'; },
+        rightMethod() {
+          return 'right';
+        },
       });
       const Combined = define('test.mixin.Combined', {
         mixins: [Left, Right],
@@ -520,7 +536,7 @@ describe('Mixins', () => {
 describe('ClassManager', () => {
   describe('registration and lookup', () => {
     it('registers a class by name', () => {
-      const Cls = define('test.cm.Registered', {});
+      const _Cls = define('test.cm.Registered', {});
       expect(ClassManager.isRegistered('test.cm.Registered')).toBe(true);
     });
 
@@ -625,7 +641,9 @@ describe('define()', () => {
 
   it('copies methods from definition to prototype', () => {
     const Cls = define('test.def.Methods', {
-      greet(name: string) { return `Hi, ${name}`; },
+      greet(name: string) {
+        return `Hi, ${name}`;
+      },
     });
     expect(new Cls().greet('World')).toBe('Hi, World');
   });
@@ -642,7 +660,9 @@ describe('define()', () => {
 
   it('applies mixins', () => {
     const M = define('test.def.MixinSrc', {
-      mixed() { return 'mixed'; },
+      mixed() {
+        return 'mixed';
+      },
     });
     const Cls = define('test.def.MixinDst', {
       mixins: [M],
@@ -654,11 +674,13 @@ describe('define()', () => {
     const Cls = define('test.def.Statics', {
       statics: {
         TYPE: 'static_val',
-        helper() { return 42; },
+        helper() {
+          return 42;
+        },
       },
     });
     expect((Cls as Record<string, unknown>).TYPE).toBe('static_val');
-    expect((Cls as Record<string, Function>).helper()).toBe(42);
+    expect((Cls as Record<string, (...args: unknown[]) => unknown>).helper()).toBe(42);
   });
 
   it('sets up alias', () => {
@@ -690,7 +712,7 @@ describe('define()', () => {
         return `I am ${this.getName()}`;
       },
     });
-    const Derived = define('test.intg.Derived', {
+    const _Derived = define('test.intg.Derived', {
       extend: Base1,
       mixins: [Loggable],
       alias: 'widget.derived',

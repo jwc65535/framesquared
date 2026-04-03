@@ -37,12 +37,16 @@ export class BoundList extends Component {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-boundlist');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.setAttribute('role', 'listbox');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.tabIndex = -1;
 
     this.renderItems();
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.addEventListener('keydown', (e: KeyboardEvent) => {
       this.onKeyDown(e);
     });
@@ -82,6 +86,7 @@ export class BoundList extends Component {
   }
 
   private highlightItem(index: number): void {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const items = this.el!.querySelectorAll('.x-boundlist-item');
     items.forEach((el, i) => {
       el.classList.toggle('x-boundlist-item-over', i === index);
@@ -90,6 +95,7 @@ export class BoundList extends Component {
   }
 
   private onKeyDown(e: KeyboardEvent): void {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const items = this.el!.querySelectorAll('.x-boundlist-item');
     const count = items.length;
     if (count === 0) return;

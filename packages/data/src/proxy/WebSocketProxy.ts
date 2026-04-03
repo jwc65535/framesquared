@@ -5,8 +5,6 @@
  * CRUD operations as JSON messages.  Auto-reconnects on disconnect.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { Operation } from '../Operation.js';
 import { ResultSet } from '../ResultSet.js';
 import { Proxy } from './Proxy.js';
@@ -24,7 +22,7 @@ export class WebSocketProxy extends Proxy {
   private reconnect: boolean;
   private reconnectInterval: number;
   private ws: WebSocket | null = null;
-  private listeners: Record<string, Function[]> = {};
+  private listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
   private intentionalClose = false;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -79,7 +77,7 @@ export class WebSocketProxy extends Proxy {
     if (!this.ws || this.ws.readyState !== 1) return;
     const message = {
       action: operation.action,
-      records: operation.records.map(r => r.getData()),
+      records: operation.records.map((r) => r.getData()),
       params: operation.params,
     };
     this.ws.send(JSON.stringify(message));
@@ -113,11 +111,11 @@ export class WebSocketProxy extends Proxy {
   // Events
   // -----------------------------------------------------------------------
 
-  on(event: string, fn: Function): void {
+  on(event: string, fn: (...args: unknown[]) => void): void {
     (this.listeners[event] ??= []).push(fn);
   }
 
-  off(event: string, fn: Function): void {
+  off(event: string, fn: (...args: unknown[]) => void): void {
     const list = this.listeners[event];
     if (!list) return;
     const idx = list.indexOf(fn);
@@ -125,6 +123,6 @@ export class WebSocketProxy extends Proxy {
   }
 
   private fire(event: string, ...args: unknown[]): void {
-    (this.listeners[event] ?? []).forEach(fn => fn(...args));
+    (this.listeners[event] ?? []).forEach((fn) => fn(...args));
   }
 }

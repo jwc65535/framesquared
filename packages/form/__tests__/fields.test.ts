@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Field } from '../src/field/Field.js';
 import { TextField } from '../src/field/Text.js';
@@ -6,9 +8,18 @@ import { DisplayField } from '../src/field/Display.js';
 import { HiddenField } from '../src/field/Hidden.js';
 import { VTypes } from '../src/field/VTypes.js';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+class MockRO {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 function textField(cfg: Record<string, unknown> = {}): TextField {
   return new TextField({ renderTo: document.body, ...cfg });

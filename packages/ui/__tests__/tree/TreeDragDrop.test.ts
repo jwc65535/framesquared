@@ -1,9 +1,10 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TreeDragZone } from '../../src/tree/TreeDragZone.js';
 import { TreeDropZone } from '../../src/tree/TreeDropZone.js';
 import { TreeViewDragDrop } from '../../src/tree/TreeViewDragDrop.js';
 import { TreeStore, TreeModel } from '@framesquared/data';
-import type { NodeInterface } from '@framesquared/data';
 import type { TreePanelLike } from '../../src/tree/TreeDragZone.js';
 
 class MockRO {
