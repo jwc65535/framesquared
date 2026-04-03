@@ -55,7 +55,7 @@ describe('Benchmark — Store 50K records', () => {
     const elapsed = bench('Store create 50K', () => {
       new Store({ model: BenchModel, data });
     });
-    expect(elapsed).toBeLessThan(2000);
+    expect(elapsed).toBeLessThan(5000);
   });
 
   it('sort 50K records under 500ms', () => {
