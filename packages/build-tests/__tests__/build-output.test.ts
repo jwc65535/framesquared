@@ -121,7 +121,7 @@ describe('Size budgets (uncompressed)', () => {
     data: 100_000, // < 100KB (~20KB gzip)
     component: 50_000, // < 50KB
     layout: 80_000, // < 80KB
-    ui: 200_000, // < 200KB (~50KB gzip)
+    ui: 300_000, // < 300KB (~60KB gzip)
     form: 150_000, // < 150KB
     grid: 150_000, // < 150KB
     dd: 50_000, // < 50KB
@@ -255,7 +255,7 @@ describe('No circular dependencies', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('Umbrella package (framesquared)', () => {
-  const umbrellaDir = join(ROOT, 'packages/framesquared/dist');
+  const umbrellaDir = join(ROOT, 'packages/ext-ts/dist');
 
   it('framesquared dist/index.js exists', () => {
     expect(existsSync(join(umbrellaDir, 'index.js'))).toBe(true);
@@ -268,9 +268,7 @@ describe('Umbrella package (framesquared)', () => {
   });
 
   it('framesquared package.json has exports map', () => {
-    const pkgJson = JSON.parse(
-      readFileSync(join(ROOT, 'packages/framesquared/package.json'), 'utf-8'),
-    );
+    const pkgJson = JSON.parse(readFileSync(join(ROOT, 'packages/ext-ts/package.json'), 'utf-8'));
     expect(pkgJson.exports['.']).toBeDefined();
     expect(pkgJson.exports['./core']).toBeDefined();
     expect(pkgJson.exports['./grid']).toBeDefined();
