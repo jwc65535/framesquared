@@ -52,7 +52,8 @@ export interface ComponentConfig {
   data?: Record<string, unknown>;
   renderTo?: Element | string;
   floating?: boolean;
-  listeners?: Record<string, (...args: unknown[]) => void>;
+
+  listeners?: Record<string, (...args: any[]) => void>;
   reference?: string;
   [key: string]: unknown;
 }

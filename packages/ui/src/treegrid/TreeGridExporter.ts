@@ -29,6 +29,9 @@ export interface ExportOptions {
 // ---------------------------------------------------------------------------
 
 export class TreeGridExporter {
+  // eslint-disable-next-line @typescript-eslint/no-useless-constructor, @typescript-eslint/no-empty-function
+  constructor(_options: Record<string, unknown> = {}) {}
+
   /**
    * Exports the TreeGrid to CSV format.
    */

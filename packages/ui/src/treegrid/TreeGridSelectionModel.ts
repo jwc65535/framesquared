@@ -25,7 +25,8 @@ export interface TreeGridSelectionModelConfig {
 export class TreeGridSelectionModel {
   private mode: 'SINGLE' | 'SIMPLE' | 'MULTI';
   private selected = new Set<NodeInterface>();
-  private listeners = new Map<string, ((...args: unknown[]) => void)[]>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private listeners = new Map<string, ((...args: any[]) => void)[]>();
   readonly deselectOnCollapse: boolean;
   readonly pruneRemoved: boolean;
   readonly checkboxSelect: boolean;
@@ -42,13 +43,15 @@ export class TreeGridSelectionModel {
   // Event system
   // -------------------------------------------------------------------------
 
-  on(event: string, fn: (...args: unknown[]) => void): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  on(event: string, fn: (...args: any[]) => void): void {
     if (!this.listeners.has(event)) this.listeners.set(event, []);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.listeners.get(event)!.push(fn);
   }
 
-  un(event: string, fn: (...args: unknown[]) => void): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  un(event: string, fn: (...args: any[]) => void): void {
     const fns = this.listeners.get(event);
     if (!fns) return;
     const i = fns.indexOf(fn);

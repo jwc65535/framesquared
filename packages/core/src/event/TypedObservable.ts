@@ -51,7 +51,8 @@ export interface TypedObservable<Events extends { [K in keyof Events]: unknown[]
     handler: (...args: Events[E]) => false | undefined,
     scope?: object,
     options?: ListenerOptions,
-  ): Destroyable | undefined;
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  ): Destroyable | void;
 
   un<E extends keyof Events & string>(
     eventName: E,
@@ -64,7 +65,8 @@ export interface TypedObservable<Events extends { [K in keyof Events]: unknown[]
     handler: (...args: Events[E]) => false | undefined,
     scope?: object,
     options?: ListenerOptions,
-  ): Destroyable | undefined;
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  ): Destroyable | void;
 
   removeListener<E extends keyof Events & string>(
     eventName: E,

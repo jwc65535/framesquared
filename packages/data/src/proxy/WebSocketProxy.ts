@@ -22,7 +22,8 @@ export class WebSocketProxy extends Proxy {
   private reconnect: boolean;
   private reconnectInterval: number;
   private ws: WebSocket | null = null;
-  private listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private listeners: Record<string, ((...args: any[]) => void)[]> = {};
   private intentionalClose = false;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -111,11 +112,13 @@ export class WebSocketProxy extends Proxy {
   // Events
   // -----------------------------------------------------------------------
 
-  on(event: string, fn: (...args: unknown[]) => void): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  on(event: string, fn: (...args: any[]) => void): void {
     (this.listeners[event] ??= []).push(fn);
   }
 
-  off(event: string, fn: (...args: unknown[]) => void): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  off(event: string, fn: (...args: any[]) => void): void {
     const list = this.listeners[event];
     if (!list) return;
     const idx = list.indexOf(fn);

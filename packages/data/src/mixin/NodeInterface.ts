@@ -38,22 +38,26 @@ export interface NodeInterface extends Model {
   insertBefore(newChild: NodeInterface, refChild: NodeInterface): void;
 
   getPath(separator?: string): string;
-  cascadeBy(fn: (node: NodeInterface) => boolean | undefined): void;
-  bubble(fn: (node: NodeInterface) => boolean | undefined): void;
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  cascadeBy(fn: (node: NodeInterface) => boolean | void): void;
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  bubble(fn: (node: NodeInterface) => boolean | void): void;
   contains(child: NodeInterface): boolean;
   findChild(field: string, value: unknown, deep?: boolean): NodeInterface | undefined;
   sort(sorters: Sorter[]): void;
   serialize(): any;
 
   // Extended methods
-  eachChild(fn: (child: NodeInterface, index: number) => boolean | undefined, scope?: object): void;
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  eachChild(fn: (child: NodeInterface, index: number) => boolean | void, scope?: object): void;
   indexOf(child: NodeInterface): number;
   getChildAt(index: number): NodeInterface | undefined;
   childCount(): number;
   hasChildNodes(): boolean;
   getChildren(deep?: boolean): NodeInterface[];
   findChildBy(
-    predicate: (node: NodeInterface) => boolean | undefined,
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+    predicate: (node: NodeInterface) => boolean | void,
     deep?: boolean,
   ): NodeInterface | undefined;
   removeAll(): NodeInterface[];
@@ -194,11 +198,13 @@ export function applyNodeInterface(model: Model, depth = 0): void {
     return separator + parts.join(separator);
   };
 
-  node.cascadeBy = function (fn: (n: NodeInterface) => boolean | undefined): void {
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  node.cascadeBy = function (fn: (n: NodeInterface) => boolean | void): void {
     cascadeByImpl(this, fn);
   };
 
-  node.bubble = function (fn: (n: NodeInterface) => boolean | undefined): void {
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  node.bubble = function (fn: (n: NodeInterface) => boolean | void): void {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     let current: NodeInterface | null = this;
     while (current) {
@@ -256,7 +262,8 @@ export function applyNodeInterface(model: Model, depth = 0): void {
   };
 
   node.eachChild = function (
-    fn: (child: NodeInterface, index: number) => boolean | undefined,
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+    fn: (child: NodeInterface, index: number) => boolean | void,
   ): void {
     for (let i = 0; i < this.childNodes.length; i++) {
       if (fn(this.childNodes[i], i) === false) return;
@@ -295,7 +302,8 @@ export function applyNodeInterface(model: Model, depth = 0): void {
   };
 
   node.findChildBy = function (
-    predicate: (n: NodeInterface) => boolean | undefined,
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+    predicate: (n: NodeInterface) => boolean | void,
     deep = false,
   ): NodeInterface | undefined {
     for (const child of this.childNodes) {
@@ -377,7 +385,8 @@ function copyNodeImpl(node: NodeInterface, deep: boolean, counter: { i: number }
  */
 function cascadeByImpl(
   node: NodeInterface,
-  fn: (n: NodeInterface) => boolean | undefined,
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  fn: (n: NodeInterface) => boolean | void,
 ): boolean {
   if (fn(node) === false) return false;
   for (const child of [...node.childNodes]) {

@@ -21,11 +21,13 @@ interface CellSelectableGrid extends SelectableGrid {
 export class CellSelectionModel {
   private grid: CellSelectableGrid | null = null;
   private position: CellPosition | null = null;
-  private listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private listeners: Record<string, ((...args: any[]) => void)[]> = {};
   private maxRow = 0;
   private maxCol = 0;
 
-  on(event: string, fn: (...args: unknown[]) => void): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  on(event: string, fn: (...args: any[]) => void): void {
     (this.listeners[event] ??= []).push(fn);
   }
 

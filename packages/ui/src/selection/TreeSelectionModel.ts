@@ -23,7 +23,8 @@ export class TreeSelectionModel {
   private selected: Set<NodeInterface>;
   private mode: string;
   private pruneRemoved: boolean;
-  private listeners: Map<string, ((...args: unknown[]) => void)[]>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private listeners: Map<string, ((...args: any[]) => void)[]>;
 
   constructor(config?: TreeSelectionModelConfig) {
     this.selected = new Set();
@@ -36,7 +37,8 @@ export class TreeSelectionModel {
   // Event system
   // -------------------------------------------------------------------------
 
-  on(event: string, fn: (...args: unknown[]) => void): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  on(event: string, fn: (...args: any[]) => void): void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, []);
     }
@@ -44,7 +46,8 @@ export class TreeSelectionModel {
     this.listeners.get(event)!.push(fn);
   }
 
-  un(event: string, fn: (...args: unknown[]) => void): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  un(event: string, fn: (...args: any[]) => void): void {
     const fns = this.listeners.get(event);
     if (!fns) return;
     const idx = fns.indexOf(fn);

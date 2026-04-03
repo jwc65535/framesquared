@@ -42,7 +42,7 @@ export class TreeGridView {
   private checkable: boolean;
   private lines: boolean;
 
-  private listeners = new Map<string, ((...args: unknown[]) => void)[]>();
+  private listeners = new Map<string, ((...args: any[]) => void)[]>();
   private focusedNode: NodeInterface | null = null;
   private _rowCache = new Map<string, HTMLTableRowElement>();
 
@@ -58,13 +58,13 @@ export class TreeGridView {
   // Event system
   // -------------------------------------------------------------------------
 
-  on(event: string, fn: (...args: unknown[]) => void): void {
+  on(event: string, fn: (...args: any[]) => void): void {
     if (!this.listeners.has(event)) this.listeners.set(event, []);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.listeners.get(event)!.push(fn);
   }
 
-  un(event: string, fn: (...args: unknown[]) => void): void {
+  un(event: string, fn: (...args: any[]) => void): void {
     const fns = this.listeners.get(event);
     if (!fns) return;
     const i = fns.indexOf(fn);

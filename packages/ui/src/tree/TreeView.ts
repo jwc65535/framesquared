@@ -31,7 +31,8 @@ export class TreeView {
   private displayField: string;
   private checkable: boolean;
   private column: TreeColumn;
-  private listeners = new Map<string, ((...args: unknown[]) => void)[]>();
+
+  private listeners = new Map<string, ((...args: any[]) => void)[]>();
 
   constructor(config: TreeViewConfig) {
     this.store = config.store;
@@ -44,7 +45,7 @@ export class TreeView {
   // Event system
   // -------------------------------------------------------------------------
 
-  on(event: string, fn: (...args: unknown[]) => void): void {
+  on(event: string, fn: (...args: any[]) => void): void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, []);
     }
@@ -52,7 +53,7 @@ export class TreeView {
     this.listeners.get(event)!.push(fn);
   }
 
-  un(event: string, fn: (...args: unknown[]) => void): void {
+  un(event: string, fn: (...args: any[]) => void): void {
     const fns = this.listeners.get(event);
     if (!fns) return;
     const idx = fns.indexOf(fn);

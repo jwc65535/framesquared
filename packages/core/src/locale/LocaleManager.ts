@@ -10,7 +10,8 @@ import type { Locale } from './Locale.js';
 
 const locales = new Map<string, Locale>();
 let activeLocale: Locale | null = null;
-const listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const listeners: Record<string, ((...args: any[]) => void)[]> = {};
 
 function fire(event: string, ...args: unknown[]): void {
   (listeners[event] ?? []).forEach((fn) => fn(...args));
@@ -47,11 +48,13 @@ export const LocaleManager = {
     return activeLocale?.getDirection() ?? 'ltr';
   },
 
-  on(event: string, fn: (...args: unknown[]) => void): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  on(event: string, fn: (...args: any[]) => void): void {
     (listeners[event] ??= []).push(fn);
   },
 
-  off(event: string, fn: (...args: unknown[]) => void): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  off(event: string, fn: (...args: any[]) => void): void {
     const list = listeners[event];
     if (!list) return;
     const idx = list.indexOf(fn);

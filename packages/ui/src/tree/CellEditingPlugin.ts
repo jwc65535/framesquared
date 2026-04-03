@@ -18,7 +18,7 @@ export interface CellEditingConfig {
 
 /** Minimal interface CellEditingPlugin needs from TreePanel */
 export interface CellEditingTreePanel {
-  on(event: string, fn: (...args: unknown[]) => void): void;
+  on(event: string, fn: (...args: any[]) => void): void;
   getView(): { getNode(record: NodeInterface): HTMLElement | null };
 }
 

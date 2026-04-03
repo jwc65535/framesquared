@@ -26,14 +26,16 @@ export class RowSelectionModel {
   private mode: string;
   private checkboxSelect: boolean;
   private selected = new Set<GridRecord>();
-  private listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private listeners: Record<string, ((...args: any[]) => void)[]> = {};
 
   constructor(config: RowSelectionModelConfig = {}) {
     this.mode = config.mode ?? 'SINGLE';
     this.checkboxSelect = config.checkboxSelect ?? false;
   }
 
-  on(event: string, fn: (...args: unknown[]) => void): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  on(event: string, fn: (...args: any[]) => void): void {
     (this.listeners[event] ??= []).push(fn);
   }
 

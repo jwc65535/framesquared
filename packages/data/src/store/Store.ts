@@ -277,7 +277,8 @@ export class Store extends Base {
     return this.data.last();
   }
 
-  each(fn: (record: Model, index: number) => boolean | undefined): void {
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  each(fn: (record: Model, index: number) => boolean | void): void {
     this.data.each(fn);
   }
 

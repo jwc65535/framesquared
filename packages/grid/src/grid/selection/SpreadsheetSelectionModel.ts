@@ -17,9 +17,10 @@ export interface SelectionRange {
 export class SpreadsheetSelectionModel {
   private grid: any = null;
   private range: SelectionRange | null = null;
-  private listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
 
-  on(event: string, fn: (...args: unknown[]) => void): void {
+  private listeners: Record<string, ((...args: any[]) => void)[]> = {};
+
+  on(event: string, fn: (...args: any[]) => void): void {
     (this.listeners[event] ??= []).push(fn);
   }
 

@@ -235,7 +235,8 @@ export const Observable: typeof Base = define('Ext.mixin.Observable', {
     handlerOrScope?: Function | object,
     scope?: object,
     options?: ListenerOptions,
-  ): Destroyable | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  ): Destroyable | void {
     // Map overload: on({ click: fn, hover: fn }, scope)
     if (typeof eventNameOrMap === 'object' && eventNameOrMap !== null) {
       const map = eventNameOrMap as Record<string, Function>;
@@ -283,7 +284,8 @@ export const Observable: typeof Base = define('Ext.mixin.Observable', {
   },
 
   // ----- aliases -----
-  addListener(this: any, ...args: unknown[]): Destroyable | undefined {
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  addListener(this: any, ...args: unknown[]): Destroyable | void {
     return this.on(...args);
   },
 
@@ -451,7 +453,8 @@ function installDestroyHook(inst: Base): void {
 }
 
 const origOn = obsProto.on;
-obsProto.on = function (this: Base, ...args: any[]): Destroyable | undefined {
+// eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+obsProto.on = function (this: Base, ...args: any[]): Destroyable | void {
   installDestroyHook(this);
   return origOn.apply(this, args);
 };
