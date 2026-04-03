@@ -19,7 +19,7 @@ export interface CardLayoutConfig extends LayoutConfig {
 
 export class CardLayout extends Layout {
   private activeIndex = 0;
-  private listeners = new Map<string, Set<Function>>();
+  private listeners = new Map<string, Set<(...args: unknown[]) => void>>();
 
   constructor(config: CardLayoutConfig = {}) {
     super({ ...config, type: 'card' });
@@ -27,7 +27,7 @@ export class CardLayout extends Layout {
   }
 
   /** Subscribe to events. */
-  on(event: string, fn: Function): void {
+  on(event: string, fn: (...args: unknown[]) => void): void {
     let set = this.listeners.get(event);
     if (!set) {
       set = new Set();
@@ -37,7 +37,7 @@ export class CardLayout extends Layout {
   }
 
   /** Unsubscribe. */
-  un(event: string, fn: Function): void {
+  un(event: string, fn: (...args: unknown[]) => void): void {
     this.listeners.get(event)?.delete(fn);
   }
 

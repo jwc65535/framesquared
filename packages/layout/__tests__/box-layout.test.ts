@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Component, Container } from '@framesquared/component';
 import { HBoxLayout } from '../src/box/HBoxLayout.js';
@@ -6,12 +8,12 @@ import { LayoutContext } from '../src/LayoutContext.js';
 
 // ResizeObserver mock
 class MockRO {
-  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
 }
 beforeEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (globalThis as any).ResizeObserver = MockRO;
 });
 afterEach(() => {
@@ -30,6 +32,7 @@ function hboxContainer(
   const c = new Container({ renderTo: document.body });
   const layout = new HBoxLayout(layoutCfg);
   layout.setOwner(c);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (c as any)._layoutInstance = layout;
   // Apply flex layout to body element
   layout.configureContainer(c.getBodyEl());
@@ -47,6 +50,7 @@ function vboxContainer(
   const c = new Container({ renderTo: document.body });
   const layout = new VBoxLayout(layoutCfg);
   layout.setOwner(c);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (c as any)._layoutInstance = layout;
   layout.configureContainer(c.getBodyEl());
   for (const item of items) {

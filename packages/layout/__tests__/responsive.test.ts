@@ -1,4 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Component, Container } from '@framesquared/component';
 import { ResponsivePlugin } from '../src/ResponsivePlugin.js';
 import { ResponsiveColumnLayout } from '../src/ResponsiveColumnLayout.js';
@@ -34,9 +35,9 @@ class MockRO {
 interface MockMQL {
   matches: boolean;
   media: string;
-  listeners: Set<Function>;
-  addEventListener: (type: string, fn: Function) => void;
-  removeEventListener: (type: string, fn: Function) => void;
+  listeners: Set<(...args: unknown[]) => unknown>;
+  addEventListener: (type: string, fn: (...args: unknown[]) => unknown) => void;
+  removeEventListener: (type: string, fn: (...args: unknown[]) => unknown) => void;
 }
 
 const mediaQueries = new Map<string, MockMQL>();
@@ -49,10 +50,10 @@ function createMockMatchMedia() {
         matches: false,
         media: query,
         listeners: new Set(),
-        addEventListener(_type: string, fn: Function) {
+        addEventListener(_type: string, fn: (...args: unknown[]) => unknown) {
           this.listeners.add(fn);
         },
-        removeEventListener(_type: string, fn: Function) {
+        removeEventListener(_type: string, fn: (...args: unknown[]) => unknown) {
           this.listeners.delete(fn);
         },
       };
@@ -74,8 +75,10 @@ function setMediaMatch(query: string, matches: boolean) {
 
 beforeEach(() => {
   MockRO.instances = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (globalThis as any).ResizeObserver = MockRO;
   mediaQueries.clear();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (globalThis as any).matchMedia = createMockMatchMedia();
 });
 
@@ -125,6 +128,7 @@ describe('ResponsivePlugin', () => {
     });
 
     // Set the narrow query to match before init
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).matchMedia = (query: string) => {
       const mql = createMockMatchMedia()(query);
       const m = mediaQueries.get(query)!;
@@ -192,6 +196,7 @@ describe('ResponsivePlugin', () => {
       },
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).matchMedia = (query: string) => {
       const mql = createMockMatchMedia()(query);
       mediaQueries.get(query)!.matches = true;
@@ -211,6 +216,7 @@ describe('ResponsivePlugin', () => {
       },
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).matchMedia = (query: string) => {
       const mql = createMockMatchMedia()(query);
       mediaQueries.get(query)!.matches = true;
@@ -287,6 +293,7 @@ describe('ResponsivePlugin', () => {
     const owner = new Component({ renderTo: document.body });
 
     // Start with match
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).matchMedia = (query: string) => {
       const mql = createMockMatchMedia()(query);
       mediaQueries.get(query)!.matches = true;
@@ -306,6 +313,7 @@ describe('ResponsivePlugin', () => {
 
   it('applyConfig sets disabled', () => {
     const owner = new Component({ renderTo: document.body });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).matchMedia = (query: string) => {
       const mql = createMockMatchMedia()(query);
       mediaQueries.get(query)!.matches = true;
@@ -320,6 +328,7 @@ describe('ResponsivePlugin', () => {
 
   it('applyConfig sets arbitrary config property', () => {
     const owner = new Component({ renderTo: document.body });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).matchMedia = (query: string) => {
       const mql = createMockMatchMedia()(query);
       mediaQueries.get(query)!.matches = true;
@@ -329,6 +338,7 @@ describe('ResponsivePlugin', () => {
       responsiveConfig: { '(max-width: 599px)': { columns: 1 } },
     });
     plugin.init(owner);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((owner as any)._config.columns).toBe(1);
   });
 });

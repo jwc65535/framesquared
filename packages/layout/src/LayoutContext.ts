@@ -50,6 +50,7 @@ export class LayoutContext {
     }
 
     if (cache.has(name)) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return cache.get(name)!;
     }
 

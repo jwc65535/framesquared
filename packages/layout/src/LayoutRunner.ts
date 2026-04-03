@@ -41,6 +41,7 @@ export class LayoutRunner {
   /** Component → ResizeObserver for cleanup. */
   private componentObservers = new Map<Component, { observer: ResizeObserver; element: Element }>();
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private constructor() {}
 
   static getInstance(): LayoutRunner {

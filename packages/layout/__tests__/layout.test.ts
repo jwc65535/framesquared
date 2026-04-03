@@ -1,19 +1,20 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Component, Container } from '@framesquared/component';
 import { Layout } from '../src/Layout.js';
 import { AutoLayout } from '../src/AutoLayout.js';
 import { LayoutContext } from '../src/LayoutContext.js';
 import { LayoutRunner } from '../src/LayoutRunner.js';
-import type { SizePolicy } from '../src/Layout.js';
 
 // ResizeObserver mock
 class MockRO {
-  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
 }
 beforeEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (globalThis as any).ResizeObserver = MockRO;
 });
 afterEach(() => {
@@ -225,6 +226,7 @@ describe('LayoutRunner', () => {
     const c = ct();
     const layout = new TrackLayout({ type: 'track' });
     layout.setOwner(c);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (c as any)._layoutInstance = layout;
 
     runner.invalidate(c);
@@ -248,6 +250,7 @@ describe('LayoutRunner', () => {
     const c = ct();
     const layout = new CountLayout({ type: 'count' });
     layout.setOwner(c);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (c as any)._layoutInstance = layout;
 
     runner.invalidate(c);
@@ -277,6 +280,7 @@ describe('LayoutRunner', () => {
     const c = ct();
     const layout = new CycleLayout({ type: 'cycle' });
     layout.setOwner(c);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (c as any)._layoutInstance = layout;
 
     runner.invalidate(c);

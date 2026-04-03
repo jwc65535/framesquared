@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Component, Container } from '@framesquared/component';
 import { FitLayout } from '../src/FitLayout.js';
@@ -11,12 +13,12 @@ import { AccordionLayout } from '../src/AccordionLayout.js';
 
 // ResizeObserver mock
 class MockRO {
-  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
 }
 beforeEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (globalThis as any).ResizeObserver = MockRO;
 });
 afterEach(() => {
@@ -35,6 +37,7 @@ function withLayout<
     setOwner(o: Component): void;
   },
 >(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   LayoutCls: new (...a: any[]) => T,
   layoutCfg: Record<string, unknown> = {},
   items: Component[] = [],
@@ -42,10 +45,13 @@ function withLayout<
   const ct = new Container({ renderTo: document.body });
   const layout = new LayoutCls(layoutCfg) as T;
   layout.setOwner(ct);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (ct as any)._layoutInstance = layout;
   layout.configureContainer(ct.getBodyEl());
   for (const item of items) ct.add(item);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (typeof (layout as any).applyItemStyles === 'function') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (layout as any).applyItemStyles(ct.getItems(), ct.getBodyEl());
   }
   return { ct, layout };
@@ -95,7 +101,7 @@ describe('CardLayout', () => {
   });
 
   it('only active item is visible', () => {
-    const { ct, layout } = withLayout(CardLayout, {}, [
+    const { ct, layout: _layout } = withLayout(CardLayout, {}, [
       cmp({ html: 'A' }),
       cmp({ html: 'B' }),
       cmp({ html: 'C' }),
@@ -159,8 +165,10 @@ describe('CardLayout', () => {
   it('fires activate/deactivate events', () => {
     const activateSpy = vi.fn();
     const deactivateSpy = vi.fn();
-    const { ct, layout } = withLayout(CardLayout, {}, [cmp(), cmp()]);
+    const { ct: _ct, layout } = withLayout(CardLayout, {}, [cmp(), cmp()]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (layout as any).on('activate', activateSpy);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (layout as any).on('deactivate', deactivateSpy);
     layout.setActiveItem(1);
     expect(activateSpy).toHaveBeenCalled();
@@ -350,6 +358,7 @@ describe('TableLayout', () => {
 
   it('defaults to 1 column', () => {
     const layout = new TableLayout({});
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((layout as any).columns).toBe(1);
   });
 });
@@ -456,7 +465,7 @@ describe('AccordionLayout', () => {
   });
 
   it('fill:true gives expanded item flex:1', () => {
-    const { ct, layout } = withLayout(AccordionLayout, { fill: true }, [
+    const { ct, layout: _layout } = withLayout(AccordionLayout, { fill: true }, [
       cmp({ title: 'A' }),
       cmp({ title: 'B' }),
     ]);
@@ -465,7 +474,7 @@ describe('AccordionLayout', () => {
   });
 
   it('collapsed items have zero flex and overflow hidden', () => {
-    const { ct, layout } = withLayout(AccordionLayout, { fill: true }, [
+    const { ct, layout: _layout } = withLayout(AccordionLayout, { fill: true }, [
       cmp({ title: 'A' }),
       cmp({ title: 'B' }),
     ]);
