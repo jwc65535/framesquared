@@ -215,7 +215,7 @@ describe('Loops', () => {
 
   it('for "." iterates root array', () => {
     const tpl = new XTemplate('<tpl for=".">{name} </tpl>');
-    expect(tpl.apply([{ name: 'X' }, { name: 'Y' }] as any)).toBe('X Y ');
+    expect(tpl.apply([{ name: 'X' }, { name: 'Y' }] as unknown[])).toBe('X Y ');
   });
 
   it('{[xindex]} gives 1-based index', () => {

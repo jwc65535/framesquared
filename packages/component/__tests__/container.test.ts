@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Component } from '../src/Component.js';
 import { Container } from '../src/Container.js';
-import { ComponentQuery } from '../src/ComponentQuery.js';
 
 // ResizeObserver mock
 class MockResizeObserver {
@@ -11,14 +11,17 @@ class MockResizeObserver {
     this.callback = cb;
     MockResizeObserver.instances.push(this);
   }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   observe() {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   unobserve() {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   disconnect() {}
 }
 
 beforeEach(() => {
   MockResizeObserver.instances = [];
-  (globalThis as any).ResizeObserver = MockResizeObserver;
+  (globalThis as Record<string, unknown>).ResizeObserver = MockResizeObserver;
 });
 
 afterEach(() => {
@@ -262,6 +265,7 @@ describe('Container events', () => {
 
   it('"beforeadd" returning false cancels the add', () => {
     const c = ct();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (c as any).on('beforeadd', () => false);
     c.add(cmp());
     expect(c.getCount()).toBe(0);
@@ -271,6 +275,7 @@ describe('Container events', () => {
     const c = ct();
     const child = cmp();
     c.add(child);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (c as any).on('beforeremove', () => false);
     c.remove(child);
     expect(c.getCount()).toBe(1);
@@ -358,6 +363,7 @@ describe('Component Query', () => {
     c.add(typedCmp('panel'), typedCmp('button'));
     const found = c.down('button');
     expect(found).toBeDefined();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((found as any)._config.xtype).toBe('button');
   });
 
@@ -389,6 +395,7 @@ describe('Component Query', () => {
     const c = ct();
     c.add(cmp({ width: 100 }), cmp({ width: 200 }), cmp({ width: 300 }));
     const big = c.queryBy((item) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const w = (item as any)._config.width;
       return typeof w === 'number' && w >= 200;
     });

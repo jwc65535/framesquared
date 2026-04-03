@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Component } from '../src/Component.js';
 import { Template } from '../src/Template.js';
@@ -34,7 +35,7 @@ class MockResizeObserver {
 
 beforeEach(() => {
   MockResizeObserver.instances = [];
-  (globalThis as any).ResizeObserver = MockResizeObserver;
+  (globalThis as Record<string, unknown>).ResizeObserver = MockResizeObserver;
 });
 
 afterEach(() => {

@@ -266,6 +266,7 @@ export class CQParser {
   // selectorList = combinatorExpr ( ',' combinatorExpr )*
   private parseSelectorList(): SelectorNode {
     const first = this.parseCombinatorExpr();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (!this.peek() || this.peek()!.type !== 'comma') return first;
 
     const items: SelectorNode[] = [first];
@@ -283,6 +284,7 @@ export class CQParser {
     let left: SelectorNode = this.parseCompound();
 
     while (this.peek()) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const tok = this.peek()!;
 
       if (tok.type === 'combinator') {
@@ -310,6 +312,7 @@ export class CQParser {
     const selectors: SimpleSelectorNode[] = [];
 
     while (this.peek()) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const tok = this.peek()!;
 
       if (tok.type === 'ident') {

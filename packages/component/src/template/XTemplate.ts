@@ -390,6 +390,7 @@ function splitBranches(inner: string): BranchSplit {
         p + 1 < parts.length ? findTplTagBefore(inner, parts[p + 1].start) : inner.length;
       const body = inner.slice(part.start, bodyEnd);
       if (part.type === 'elseif') {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         result.elseifs.push({ condition: part.condition!, body });
       } else {
         result.elseBody = body;
@@ -428,7 +429,7 @@ function evaluate(
   parentData: any,
   xindex: number,
   xcount: number,
-  memberFns: Record<string, Function>,
+  memberFns: Record<string, (...args: unknown[]) => unknown>,
 ): string {
   let result = '';
   for (const node of nodes) {
@@ -508,7 +509,7 @@ function evalExpr(
   _parentData: any,
   xindex: number,
   xcount: number,
-  memberFns: Record<string, Function>,
+  memberFns: Record<string, (...args: unknown[]) => unknown>,
 ): string {
   try {
     // Create a scope with `values`, `xindex`, `xcount`, and `this` bound to memberFns
@@ -530,7 +531,7 @@ function evalIf(
   parentData: any,
   xindex: number,
   xcount: number,
-  memberFns: Record<string, Function>,
+  memberFns: Record<string, (...args: unknown[]) => unknown>,
 ): string {
   if (evalCondition(node.condition, data)) {
     return evaluate(node.body, data, parentData, xindex, xcount, memberFns);
@@ -565,7 +566,7 @@ function evalFor(
   _parentData: any,
   _xindex: number,
   _xcount: number,
-  memberFns: Record<string, Function>,
+  memberFns: Record<string, (...args: unknown[]) => unknown>,
 ): string {
   let arr: any[];
   if (node.field === '.') {
@@ -610,10 +611,10 @@ class PrimitiveScope {
 
 export class XTemplate {
   private source: string;
-  private memberFns: Record<string, Function>;
+  private memberFns: Record<string, (...args: unknown[]) => unknown>;
   private ast: AstNode[] | null = null;
 
-  constructor(source: string, memberFns?: Record<string, Function>) {
+  constructor(source: string, memberFns?: Record<string, (...args: unknown[]) => unknown>) {
     this.source = source;
     this.memberFns = memberFns ?? {};
   }
@@ -632,6 +633,7 @@ export class XTemplate {
    */
   apply(data: any): string {
     this.compile();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return evaluate(this.ast!, data, null, 0, 0, this.memberFns);
   }
 
