@@ -117,6 +117,7 @@ export class Grouping {
     for (const rec of records) {
       const val = String(rec.get(this.groupField));
       if (!groups.has(val)) groups.set(val, []);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       groups.get(val)!.push(rec);
     }
     return groups;

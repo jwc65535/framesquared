@@ -5,8 +5,6 @@
  * Manages row rendering, striping, cell content, and item events.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { Column } from './column/Column.js';
 import { ActionColumn } from './column/Column.js';
 import { HeaderContainer } from './HeaderContainer.js';

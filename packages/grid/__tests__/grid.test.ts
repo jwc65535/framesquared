@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Grid } from '../src/grid/Grid.js';
 import {
@@ -5,20 +7,17 @@ import {
   NumberColumn,
   DateColumn,
   BooleanColumn,
-  CheckColumn,
-  ActionColumn,
-  RowNumbererColumn,
 } from '../src/grid/column/Column.js';
 import { GridView } from '../src/grid/GridView.js';
 import { HeaderContainer } from '../src/grid/HeaderContainer.js';
 
 class MockRO {
-  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
 }
 beforeEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (globalThis as any).ResizeObserver = MockRO;
 });
 afterEach(() => {
@@ -31,13 +30,15 @@ function mockStore(data: Record<string, unknown>[] = []) {
     id: d.id ?? i,
     data: d,
     get(f: string) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return (d as any)[f];
     },
     set(f: string, v: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (d as any)[f] = v;
     },
   }));
-  let listeners: Record<string, Function[]> = {};
+  const listeners: Record<string, ((...args: unknown[]) => unknown)[]> = {};
   return {
     data: { items: records },
     getRange: () => records,
@@ -45,13 +46,13 @@ function mockStore(data: Record<string, unknown>[] = []) {
     getAt: (i: number) => records[i],
     findRecord: (f: string, v: unknown) => records.find((r) => r.get(f) === v),
     sort: vi.fn(),
-    on: (evt: string, fn: Function) => {
+    on: (evt: string, fn: (...args: unknown[]) => unknown) => {
       (listeners[evt] ??= []).push(fn);
     },
     fireEvent: (evt: string, ...args: unknown[]) => {
       (listeners[evt] ?? []).forEach((fn) => fn(...args));
     },
-    each: (fn: Function) => records.forEach(fn),
+    each: (fn: (...args: unknown[]) => unknown) => records.forEach(fn),
     getTotalCount: () => records.length,
     isLoading: () => false,
   };
@@ -169,6 +170,7 @@ describe('Grid — sorting', () => {
     const g = grid({ sortableColumns: true });
     const th = g.el!.querySelector('th') as HTMLElement;
     th.click();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (g as any)._store;
     expect(store.sort).toHaveBeenCalled();
   });
@@ -226,8 +228,10 @@ describe('Grid — store binding', () => {
     store.data.items.push({
       id: 2,
       data: { id: 2, name: 'B', age: 2, active: false },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       get: (f: string) => (({ id: 2, name: 'B', age: 2, active: false }) as any)[f],
       set: vi.fn(),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
     store.fireEvent('datachanged');
 
@@ -418,6 +422,7 @@ describe('GridView', () => {
       data: { name: 'B' },
       get: (f: string) => (f === 'name' ? 'B' : null),
       set: vi.fn(),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
     view.refresh();
     expect(table.querySelectorAll('tbody tr').length).toBe(2);
@@ -462,11 +467,13 @@ describe('Column', () => {
   it('getCellValue extracts from record', () => {
     const c = new Column({ text: 'X', dataIndex: 'x' });
     const rec = { get: (f: string) => (f === 'x' ? 42 : null) };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(c.getCellValue(rec as any)).toBe(42);
   });
 
   it('renderer overrides cell content', () => {
     const c = new Column({ text: 'X', dataIndex: 'x', renderer: (v: unknown) => `$${v}` });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(c.renderCell(100, {} as any, {} as any, 0, 0)).toBe('$100');
   });
 });

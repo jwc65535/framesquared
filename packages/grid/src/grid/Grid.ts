@@ -6,8 +6,6 @@
  * row striping, and item events.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Panel } from '@framesquared/ui';
 import type { PanelConfig } from '@framesquared/ui';
 import { Column, createColumn } from './column/Column.js';
@@ -61,6 +59,7 @@ export class Grid extends Panel {
   protected override afterRender(): void {
     super.afterRender();
     const cfg = this._config as GridConfig;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-grid');
 
     // Create the grid view (requires a store)
@@ -103,6 +102,7 @@ export class Grid extends Panel {
   // -----------------------------------------------------------------------
 
   private setupSortableHeaders(): void {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const ths = this._gridView!.headerContainer.getThElements();
     for (let i = 0; i < ths.length; i++) {
       const col = this._columns[i];
@@ -127,6 +127,7 @@ export class Grid extends Panel {
       this._sortColumnIndex = colIndex;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this._gridView!.headerContainer.setSortIndicator(colIndex, this._sortDirection);
 
     if (this._store?.sort) {

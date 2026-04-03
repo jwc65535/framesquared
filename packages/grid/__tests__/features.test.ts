@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Grid } from '../src/grid/Grid.js';
-import { Column } from '../src/grid/column/Column.js';
 import { Grouping } from '../src/grid/feature/Grouping.js';
 import { Summary } from '../src/grid/feature/Summary.js';
 import { GroupingSummary } from '../src/grid/feature/GroupingSummary.js';
@@ -12,12 +13,12 @@ import { GridClipboard } from '../src/grid/plugin/Clipboard.js';
 import { GridDragDrop } from '../src/grid/plugin/DragDrop.js';
 
 class MockRO {
-  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
 }
 beforeEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (globalThis as any).ResizeObserver = MockRO;
 });
 afterEach(() => {
@@ -31,26 +32,28 @@ function mockStore(data: Record<string, unknown>[] = []) {
     id: d.id ?? i,
     data: d,
     get(f: string) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return (d as any)[f];
     },
     set(f: string, v: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (d as any)[f] = v;
     },
   }));
-  const listeners: Record<string, Function[]> = {};
+  const listeners: Record<string, ((...args: unknown[]) => unknown)[]> = {};
   return {
     data: { items: records },
     getRange: () => records,
     getCount: () => records.length,
     getAt: (i: number) => records[i],
     sort: vi.fn(),
-    on: (evt: string, fn: Function) => {
+    on: (evt: string, fn: (...args: unknown[]) => unknown) => {
       (listeners[evt] ??= []).push(fn);
     },
     fireEvent: (evt: string, ...args: unknown[]) => {
       (listeners[evt] ?? []).forEach((fn) => fn(...args));
     },
-    each: (fn: Function) => records.forEach(fn),
+    each: (fn: (...args: unknown[]) => unknown) => records.forEach(fn),
     getTotalCount: () => records.length,
     isLoading: () => false,
   };
@@ -219,6 +222,7 @@ describe('Summary', () => {
   it('custom summary function', () => {
     const g = testGrid();
     const summary = new Summary({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       summaryTypes: { salary: (records: any[]) => records.length * 1000 },
     });
     summary.init(g);
@@ -265,6 +269,7 @@ describe('RowBody', () => {
   it('adds expandable body row below each data row', () => {
     const g = testGrid();
     const rb = new RowBody({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       getAdditionalData: (_data: any, _idx: number, record: any) => ({
         rowBody: `Details for ${record.get('name')}`,
       }),
@@ -318,6 +323,7 @@ describe('CellEditing', () => {
     const input = g.el!.querySelector('.x-grid-cell-editor input') as HTMLInputElement;
     input.value = 'Alicia';
     ce.completeEdit();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (g as any)._store;
     expect(store.getAt(0).get('name')).toBe('Alicia');
   });
@@ -414,6 +420,7 @@ describe('RowEditing', () => {
     ) as NodeListOf<HTMLInputElement>;
     inputs[0].value = 'Updated';
     re.completeEdit();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((g as any)._store.getAt(0).get('name')).toBe('Updated');
   });
 
@@ -435,6 +442,7 @@ describe('RowExpander', () => {
   it('adds expander column', () => {
     const g = testGrid();
     const exp = new RowExpander({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       rowBodyTpl: (record: any) => `<div>Details: ${record.get('name')}</div>`,
     });
     exp.init(g);
@@ -445,6 +453,7 @@ describe('RowExpander', () => {
   it('clicking expander shows body content', () => {
     const g = testGrid();
     const exp = new RowExpander({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       rowBodyTpl: (record: any) => `Info: ${record.get('name')}`,
     });
     exp.init(g);
@@ -458,6 +467,7 @@ describe('RowExpander', () => {
   it('clicking again collapses', () => {
     const g = testGrid();
     const exp = new RowExpander({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       rowBodyTpl: (record: any) => `Info: ${record.get('name')}`,
     });
     exp.init(g);
@@ -471,6 +481,7 @@ describe('RowExpander', () => {
   it('singleExpand collapses others when expanding', () => {
     const g = testGrid();
     const exp = new RowExpander({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       rowBodyTpl: (record: any) => record.get('name'),
       singleExpand: true,
     });
@@ -529,6 +540,7 @@ describe('GridDragDrop', () => {
     const dd = new GridDragDrop();
     dd.init(g);
     dd.moveRow(0, 2); // Move Alice from 0 to 2
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (g as any)._store;
     expect(store.getAt(0).get('name')).toBe('Bob');
   });

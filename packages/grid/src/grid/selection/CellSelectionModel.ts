@@ -21,11 +21,11 @@ interface CellSelectableGrid extends SelectableGrid {
 export class CellSelectionModel {
   private grid: CellSelectableGrid | null = null;
   private position: CellPosition | null = null;
-  private listeners: Record<string, Function[]> = {};
+  private listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
   private maxRow = 0;
   private maxCol = 0;
 
-  on(event: string, fn: Function): void {
+  on(event: string, fn: (...args: unknown[]) => void): void {
     (this.listeners[event] ??= []).push(fn);
   }
 
@@ -95,8 +95,11 @@ export class CellSelectionModel {
     });
 
     // Keyboard navigation
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (this.grid!.el) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.grid!.el.setAttribute('tabindex', '0');
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.grid!.el.addEventListener('keydown', (e: KeyboardEvent) => {
         if (!this.position) return;
         let { row, column } = this.position;

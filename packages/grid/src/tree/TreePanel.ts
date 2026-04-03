@@ -6,8 +6,6 @@
  * folder/leaf icons, and optional checkboxes with cascade behavior.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Panel } from '@framesquared/ui';
 import type { PanelConfig } from '@framesquared/ui';
 import type { TreeStore, TreeNode } from './TreeStore.js';
@@ -61,8 +59,11 @@ export class TreePanel extends Panel {
   protected override afterRender(): void {
     super.afterRender();
     const cfg = this._config as TreePanelConfig;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-treepanel');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (cfg.useArrows) this.el!.classList.add('x-tree-arrows');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (cfg.lines) this.el!.classList.add('x-tree-lines');
 
     this._treeBody = document.createElement('div');

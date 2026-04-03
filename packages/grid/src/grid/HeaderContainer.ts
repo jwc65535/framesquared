@@ -5,8 +5,6 @@
  * Applies width, hidden state, and sort indicator classes.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { Column } from './column/Column.js';
 
 export interface HeaderContainerConfig {

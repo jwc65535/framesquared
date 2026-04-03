@@ -33,7 +33,8 @@ export interface GridStore {
   /** Sort by field name and direction. */
   sort(field: string, direction?: 'ASC' | 'DESC'): void;
   /** Subscribe to store events. */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   on(event: string, fn: Function, ...args: any[]): any;
   /** Iterate all records. */
-  each?(fn: (record: GridRecord, index: number) => boolean | void): void;
+  each?(fn: (record: GridRecord, index: number) => boolean | undefined): void;
 }

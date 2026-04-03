@@ -11,8 +11,8 @@ export class RowEditing {
   private grid: any = null;
   private activeRowIndex = -1;
   private editorRow: HTMLElement | null = null;
-  private inputs: Map<string, HTMLInputElement> = new Map();
-  private originalValues: Map<string, string> = new Map();
+  private inputs = new Map<string, HTMLInputElement>();
+  private originalValues = new Map<string, string>();
 
   init(grid: any): void {
     this.grid = grid;
