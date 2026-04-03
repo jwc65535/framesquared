@@ -7,6 +7,7 @@
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 
 // ---------------------------------------------------------------------------
 // Types
@@ -80,6 +81,7 @@ class ConfiguratorImpl {
       const md = getClassMetadata(cur);
       if (md) {
         const map = (md as any)[CONFIG_META_KEY] as Map<string, ConfigMeta> | undefined;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if (map?.has(configName)) return map.get(configName)!;
       }
       cur = Object.getPrototypeOf(cur) as Function | null;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { describe, it, expect, vi } from 'vitest';
 import { Base, define, ClassManager } from '../src/class/index.js';
 import { config, observable, alias, mixin, override } from '../src/class/decorators.js';
@@ -74,7 +75,7 @@ describe('@config basic', () => {
         spy(newVal, oldVal);
       }
     }
-    const w = new Widget({ score: 10 });
+    const _w = new Widget({ score: 10 });
     expect(spy).toHaveBeenCalledWith(10, 0);
   });
 
@@ -329,6 +330,7 @@ describe('@observable', () => {
     }
     const meta = Configurator.getConfigMeta(Widget, 'title');
     expect(meta).toBeDefined();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(meta!.observable).toBe(true);
   });
 
@@ -381,7 +383,9 @@ describe('@mixin class decorator', () => {
     @mixin(Serializable)
     class Widget extends Base {}
     const w = new Widget();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(typeof (w as any).serialize).toBe('function');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((w as any).serialize()).toBe('serialized');
     expect(w.hasMixin(Serializable)).toBe(true);
   });
@@ -401,7 +405,9 @@ describe('@mixin class decorator', () => {
     @mixin(M2)
     class Widget extends Base {}
     const w = new Widget();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((w as any).m1()).toBe('m1');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((w as any).m2()).toBe('m2');
   });
 
@@ -457,6 +463,7 @@ describe('@override class decorator', () => {
       }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((new Original() as any).extra()).toBe('added');
   });
 
@@ -495,6 +502,7 @@ describe('Configurator', () => {
       }
       const meta = Configurator.getConfigMeta(Widget, 'title');
       expect(meta).toBeDefined();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       expect(meta!.name).toBe('title');
     });
 
@@ -651,10 +659,12 @@ describe('Combined decorators', () => {
 
     // Mixin works
     expect(sp.hasMixin(Loggable)).toBe(true);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((sp as any).log('hi')).toBe('[LOG] hi');
 
     // Observable metadata
     const meta = Configurator.getConfigMeta(SuperPanel, 'theme');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(meta!.observable).toBe(true);
   });
 
@@ -667,6 +677,7 @@ describe('Combined decorators', () => {
       @config accessor decProp: string = 'from-decorator';
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(new (DefClass as any)().getDefProp()).toBe('from-define');
     expect(new DecClass().getDecProp()).toBe('from-decorator');
   });

@@ -9,7 +9,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-function-type */
 
-import { Base } from '../class/Base.js';
+import type { Base } from '../class/Base.js';
 import { define } from '../class/ClassManager.js';
 
 // ---------------------------------------------------------------------------
@@ -235,7 +235,7 @@ export const Observable: typeof Base = define('Ext.mixin.Observable', {
     handlerOrScope?: Function | object,
     scope?: object,
     options?: ListenerOptions,
-  ): Destroyable | void {
+  ): Destroyable | undefined {
     // Map overload: on({ click: fn, hover: fn }, scope)
     if (typeof eventNameOrMap === 'object' && eventNameOrMap !== null) {
       const map = eventNameOrMap as Record<string, Function>;
@@ -283,7 +283,7 @@ export const Observable: typeof Base = define('Ext.mixin.Observable', {
   },
 
   // ----- aliases -----
-  addListener(this: any, ...args: unknown[]): Destroyable | void {
+  addListener(this: any, ...args: unknown[]): Destroyable | undefined {
     return this.on(...args);
   },
 
@@ -380,6 +380,7 @@ export const Observable: typeof Base = define('Ext.mixin.Observable', {
   // ----- relayEvents -----
   relayEvents(this: Base, origin: Base, events: string[], prefix?: string): Destroyable {
     const handlers: { eventName: string; fn: Function }[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
 
     for (const eventName of events) {
@@ -450,7 +451,7 @@ function installDestroyHook(inst: Base): void {
 }
 
 const origOn = obsProto.on;
-obsProto.on = function (this: Base, ...args: any[]): Destroyable | void {
+obsProto.on = function (this: Base, ...args: any[]): Destroyable | undefined {
   installDestroyHook(this);
   return origOn.apply(this, args);
 };

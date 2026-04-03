@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   identity,
@@ -305,7 +306,6 @@ describe('isString', () => {
   });
 
   it('returns false for String objects', () => {
-    // eslint-disable-next-line no-new-wrappers
     expect(isString(new String('wrapped'))).toBe(false);
   });
 
@@ -365,7 +365,6 @@ describe('isBoolean', () => {
   });
 
   it('returns false for Boolean objects', () => {
-    // eslint-disable-next-line no-new-wrappers
     expect(isBoolean(new Boolean(true))).toBe(false);
   });
 
@@ -818,7 +817,9 @@ describe('generateId', () => {
     const a = generateId('a');
     const b = generateId('b');
     // They differ because the counter is global
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const numA = parseInt(a.split('-').pop()!, 10);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const numB = parseInt(b.split('-').pop()!, 10);
     expect(numB).toBeGreaterThan(numA);
   });
@@ -826,7 +827,9 @@ describe('generateId', () => {
   it('monotonically increases the counter', () => {
     const id1 = generateId();
     const id2 = generateId();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const n1 = parseInt(id1.split('-').pop()!, 10);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const n2 = parseInt(id2.split('-').pop()!, 10);
     expect(n2).toBe(n1 + 1);
   });

@@ -8,7 +8,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Base } from '../class/Base.js';
+import type { Base } from '../class/Base.js';
 import { define } from '../class/ClassManager.js';
 import { Factoryable } from './Factoryable.js';
 import { Plugin } from '../Plugin.js';

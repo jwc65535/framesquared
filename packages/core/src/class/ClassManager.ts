@@ -165,10 +165,7 @@ export function define(className: string, definition: ClassDefinition): typeof B
 
   // 1. Create the subclass dynamically.
   const NewClass = class extends SuperClass {
-    constructor(...args: any[]) {
-      super(...args);
-    }
-  } as unknown as typeof Base & { new (...args: any[]): any };
+  } as unknown as typeof Base & (new (...args: any[]) => any);
 
   // Set class identity.
   NewClass.$className = className;

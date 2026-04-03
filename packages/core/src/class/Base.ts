@@ -53,7 +53,7 @@ export function processClassConfigs(Ctor: typeof Base): void {
 
   const merged: Record<string, unknown> = {};
   for (const cls of chain) {
-    if (cls.hasOwnProperty('$configDefs')) {
+    if (Object.prototype.hasOwnProperty.call(cls, '$configDefs')) {
       Object.assign(merged, cls.$configDefs);
     }
   }
@@ -160,7 +160,7 @@ export class Base {
   $callStack: CallStackEntry[] = [];
 
   /** Tracks which config properties have been explicitly initialized. */
-  $configInitialized: Set<string> = new Set();
+  $configInitialized = new Set<string>();
 
   /**
    * Raw config object passed to the constructor.  Decorator-based configs

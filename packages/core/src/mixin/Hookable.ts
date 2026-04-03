@@ -9,7 +9,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-function-type */
 
-import { Base } from '../class/Base.js';
+import type { Base } from '../class/Base.js';
 import { define } from '../class/ClassManager.js';
 
 interface HookEntry {

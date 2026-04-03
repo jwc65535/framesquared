@@ -8,6 +8,7 @@ import { KeyMap } from '../src/event/KeyMap.js';
 // ---------------------------------------------------------------------------
 function ensurePointerEvent() {
   if (typeof globalThis.PointerEvent === 'undefined') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {
       readonly pointerId: number;
       readonly pointerType: string;
@@ -381,6 +382,7 @@ describe('GestureRecognizer', () => {
 
   describe('swipe', () => {
     it('fires "swipe" with direction "right"', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let detail: any = null;
       div.addEventListener('swipe', ((e: CustomEvent) => {
         detail = e.detail;
@@ -394,6 +396,7 @@ describe('GestureRecognizer', () => {
     });
 
     it('fires "swipe" with direction "left"', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let detail: any = null;
       div.addEventListener('swipe', ((e: CustomEvent) => {
         detail = e.detail;
@@ -406,6 +409,7 @@ describe('GestureRecognizer', () => {
     });
 
     it('fires "swipe" with direction "down"', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let detail: any = null;
       div.addEventListener('swipe', ((e: CustomEvent) => {
         detail = e.detail;
@@ -418,6 +422,7 @@ describe('GestureRecognizer', () => {
     });
 
     it('fires "swipe" with direction "up"', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let detail: any = null;
       div.addEventListener('swipe', ((e: CustomEvent) => {
         detail = e.detail;
@@ -442,6 +447,7 @@ describe('GestureRecognizer', () => {
 
   describe('pinch', () => {
     it('fires "pinch" with scale factor on two-pointer gesture', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let detail: any = null;
       div.addEventListener('pinch', ((e: CustomEvent) => {
         detail = e.detail;
@@ -463,6 +469,7 @@ describe('GestureRecognizer', () => {
 
   describe('rotate', () => {
     it('fires "rotate" with angle delta on two-pointer rotation', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let detail: any = null;
       div.addEventListener('rotate', ((e: CustomEvent) => {
         detail = e.detail;

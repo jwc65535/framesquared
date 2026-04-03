@@ -1,8 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Base, define } from '../src/class/index.js';
+import { define } from '../src/class/index.js';
 import { ExtEvent } from '../src/event/Event.js';
 import { Observable } from '../src/event/Observable.js';
-import type { Destroyable, ListenerOptions } from '../src/event/Observable.js';
 
 // Helper: create a fresh Observable class for each test block
 function createObservableClass(name: string, extra: Record<string, unknown> = {}) {
@@ -287,6 +286,7 @@ describe('Event cancellation', () => {
   it('fireEvent returns true when no listener cancels', () => {
     const Cls = createObservableClass('test.ev.NoCancel');
     const inst = new Cls();
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     inst.on('test', () => {});
     expect(inst.fireEvent('test')).toBe(true);
   });
@@ -419,6 +419,7 @@ describe('hasListener / clearListeners', () => {
     const Cls = createObservableClass('test.ev.HasL');
     const inst = new Cls();
     expect(inst.hasListener('click')).toBe(false);
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     inst.on('click', () => {});
     expect(inst.hasListener('click')).toBe(true);
   });
@@ -426,6 +427,7 @@ describe('hasListener / clearListeners', () => {
   it('hasListener returns false after un', () => {
     const Cls = createObservableClass('test.ev.HasLUn');
     const inst = new Cls();
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const fn = () => {};
     inst.on('click', fn);
     inst.un('click', fn);
@@ -606,6 +608,7 @@ describe('options.destroyable', () => {
     const spy = vi.fn();
     const handle = inst.on('test', spy, undefined, { destroyable: true });
     expect(handle).toBeDefined();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(typeof handle!.destroy).toBe('function');
   });
 
@@ -613,6 +616,7 @@ describe('options.destroyable', () => {
     const Cls = createObservableClass('test.ev.DableRm');
     const inst = new Cls();
     const spy = vi.fn();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const handle = inst.on('test', spy, undefined, { destroyable: true })!;
     handle.destroy();
     inst.fireEvent('test');
@@ -695,7 +699,9 @@ describe('fireEventedAction', () => {
     inst.fireEventedAction(
       'save',
       ['payload'],
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       () => {},
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       () => {},
     );
     expect(beforeSpy).toHaveBeenCalledWith('payload');
@@ -747,11 +753,11 @@ describe('Memory cleanup on destroy', () => {
   it('WeakRef to handler is collectable after destroy', () => {
     const Cls = createObservableClass('test.ev.WeakRef');
     const inst = new Cls();
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     let handler: (() => void) | null = () => {};
-    const ref = new WeakRef(handler);
+    const _ref = new WeakRef(handler);
     inst.on('test', handler);
     inst.destroy();
-    handler = null;
     // We can't force GC, but we can verify the handler is no longer
     // held by the event system by checking hasListener
     expect(inst.hasListener('test')).toBe(false);

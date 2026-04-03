@@ -8,7 +8,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Base } from '../class/Base.js';
+import type { Base } from '../class/Base.js';
 import { define } from '../class/ClassManager.js';
 
 // Per-instance storage for inherited state and parent reference.

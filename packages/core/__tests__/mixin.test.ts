@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { Base, define, ClassManager } from '../src/class/index.js';
+import { Base, define } from '../src/class/index.js';
 import { Identifiable, IdentityMap } from '../src/mixin/Identifiable.js';
 import { Factoryable } from '../src/mixin/Factoryable.js';
 import { Inheritable } from '../src/mixin/Inheritable.js';
@@ -371,6 +371,7 @@ describe('Hookable', () => {
       const spy = vi.fn();
       const Cls = define('test.hook.RemB', {
         mixins: [Hookable],
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         run() {},
       });
       const inst = new Cls();
@@ -384,6 +385,7 @@ describe('Hookable', () => {
       const spy = vi.fn();
       const Cls = define('test.hook.RemA', {
         mixins: [Hookable],
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         run() {},
       });
       const inst = new Cls();
@@ -398,6 +400,7 @@ describe('Hookable', () => {
       const spy2 = vi.fn();
       const Cls = define('test.hook.RemPartial', {
         mixins: [Hookable],
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         run() {},
       });
       const inst = new Cls();
@@ -415,6 +418,7 @@ describe('Hookable', () => {
       const spy = vi.fn();
       const Cls = define('test.hook.PerInst', {
         mixins: [Hookable],
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         run() {},
       });
       const a = new Cls();
@@ -476,7 +480,7 @@ describe('Pluggable', () => {
   describe('plugins config', () => {
     it('instantiates plugins from the plugins config array', () => {
       const initSpy = vi.fn();
-      const TestPlugin = define('test.plug.TestPlugin', {
+      const _TestPlugin = define('test.plug.TestPlugin', {
         extend: Plugin,
         alias: 'plugin.test',
         config: { id: '' },

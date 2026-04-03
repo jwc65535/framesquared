@@ -17,6 +17,8 @@
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-function-type */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import { capitalize } from '../util/String.js';
 import type { Base } from './Base.js';
@@ -109,7 +111,7 @@ function createConfigDecorator(metaOverrides: Partial<ConfigMeta> = {}) {
       // Apply pending config that Base stored during super()
       if (inst.$pendingConfig && name in inst.$pendingConfig) {
         inst[name] = inst.$pendingConfig[name];
-        delete inst.$pendingConfig[name];
+        Reflect.deleteProperty(inst.$pendingConfig, name);
         inst.$configInitialized?.add(name);
       }
 
