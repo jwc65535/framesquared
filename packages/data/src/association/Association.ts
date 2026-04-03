@@ -2,8 +2,6 @@
  * @framesquared/data – Association (base class)
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { Model } from '../Model.js';
 
 export interface AssociationConfig {
@@ -42,6 +40,7 @@ export class Association {
   get associationName(): string {
     if (!this.associatedModel) return '';
     // Derive from classname: 'test.Address' → 'address', 'test.Order' → 'orders'
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const raw = this.associatedModel.$className.split('.').pop()!;
     const lower = raw[0].toLowerCase() + raw.slice(1);
     if (this.type === 'hasMany' || this.type === 'manyToMany') {

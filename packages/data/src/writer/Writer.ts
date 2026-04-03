@@ -4,8 +4,6 @@
  * Serialize Model records for transport to the server.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { Model } from '../Model.js';
 
 // ---------------------------------------------------------------------------
@@ -100,7 +98,9 @@ export class XmlWriter {
   }
 
   write(records: Model[]): string {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const root = this.config.documentRoot!;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const tag = this.config.record!;
     const parts: string[] = [`<${root}>`];
 

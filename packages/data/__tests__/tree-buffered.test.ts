@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Model } from '../src/Model.js';
 import { FieldType } from '../src/field/Field.js';
-import { Operation } from '../src/Operation.js';
+import type { Operation } from '../src/Operation.js';
 import { ResultSet } from '../src/ResultSet.js';
 import { TreeStore } from '../src/store/TreeStore.js';
 import { BufferedStore } from '../src/store/BufferedStore.js';
@@ -437,8 +438,10 @@ describe('TreeStore', () => {
         },
       });
       const spy = vi.fn();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (store as any).on('nodeexpand', spy);
       const a = store.getNodeById(2)!;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       store.expandNode(a as any);
       expect(a.isExpanded()).toBe(true);
       expect(spy).toHaveBeenCalledOnce();
@@ -457,8 +460,10 @@ describe('TreeStore', () => {
         },
       });
       const spy = vi.fn();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (store as any).on('nodecollapse', spy);
       const a = store.getNodeById(2)!;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       store.collapseNode(a as any);
       expect(a.isExpanded()).toBe(false);
       expect(spy).toHaveBeenCalledOnce();
@@ -472,6 +477,7 @@ describe('TreeStore', () => {
         root: { id: 1, text: 'R' },
       });
       const spy = vi.fn();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (store as any).on('nodeappend', spy);
       const child = TreeNode.create({ id: 2, text: 'C' }) as Model & NodeInterface;
       applyNodeInterface(child);
@@ -489,6 +495,7 @@ describe('TreeStore', () => {
         },
       });
       const spy = vi.fn();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (store as any).on('noderemove', spy);
       const root = store.getRoot();
       store.removeChild(root, root.childNodes[0]);
@@ -505,6 +512,7 @@ describe('TreeStore', () => {
         },
       });
       const spy = vi.fn();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (store as any).on('nodeinsert', spy);
       const newNode = TreeNode.create({ id: 3, text: 'B' }) as Model & NodeInterface;
       applyNodeInterface(newNode);
@@ -555,6 +563,7 @@ describe('BufferedStore', () => {
     const store = new BufferedStore({
       model: PagedItem,
       pageSize: 25,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       proxy: proxy as any,
     });
 
@@ -568,10 +577,12 @@ describe('BufferedStore', () => {
     const store = new BufferedStore({
       model: PagedItem,
       pageSize: 25,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       proxy: proxy as any,
     });
 
     const spy = vi.fn();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (store as any).on('guaranteedrange', spy);
     await store.guaranteeRange(0, 24);
     expect(spy).toHaveBeenCalled();
@@ -582,6 +593,7 @@ describe('BufferedStore', () => {
     const store = new BufferedStore({
       model: PagedItem,
       pageSize: 25,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       proxy: proxy as any,
     });
 
@@ -594,6 +606,7 @@ describe('BufferedStore', () => {
     const store = new BufferedStore({
       model: PagedItem,
       pageSize: 25,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       proxy: proxy as any,
     });
 
@@ -608,6 +621,7 @@ describe('BufferedStore', () => {
     const store = new BufferedStore({
       model: PagedItem,
       pageSize: 25,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       proxy: proxy as any,
     });
 
@@ -622,6 +636,7 @@ describe('BufferedStore', () => {
     const store = new BufferedStore({
       model: PagedItem,
       pageSize: 25,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       proxy: proxy as any,
     });
 
@@ -641,6 +656,7 @@ describe('BufferedStore', () => {
     const store = new BufferedStore({
       model: PagedItem,
       pageSize: 25,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       proxy: proxy as any,
       leadingBufferZone: 25,
       trailingBufferZone: 25,
@@ -656,6 +672,7 @@ describe('BufferedStore', () => {
     const store = new BufferedStore({
       model: PagedItem,
       pageSize: 25,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       proxy: proxy as any,
     });
 

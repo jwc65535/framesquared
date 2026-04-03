@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { TreeStore } from '../src/store/TreeStore.js';
 import { TreeModel } from '../src/model/TreeModel.js';

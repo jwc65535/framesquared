@@ -142,6 +142,7 @@ describe('Proxy-based property access', () => {
       static override fields = [{ name: 'name', type: FieldType.STRING }];
     }
     const u = User.create({ name: 'Alice' });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((u as any).name).toBe('Alice');
   });
 
@@ -150,6 +151,7 @@ describe('Proxy-based property access', () => {
       static override fields = [{ name: 'name', type: FieldType.STRING }];
     }
     const u = User.create({ name: 'Alice' });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (u as any).name = 'Bob';
     expect(u.get('name')).toBe('Bob');
   });

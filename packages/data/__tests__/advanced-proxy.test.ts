@@ -5,7 +5,6 @@ import { BatchProxy } from '../src/proxy/BatchProxy.js';
 import { Connection } from '../src/data/Connection.js';
 import { Session } from '../src/data/Session.js';
 import { Operation } from '../src/Operation.js';
-import { ResultSet } from '../src/ResultSet.js';
 import { Model } from '../src/Model.js';
 
 // ---------------------------------------------------------------------------
@@ -26,9 +25,11 @@ class TestModel extends Model {
 let fetchMock: ReturnType<typeof vi.fn>;
 beforeEach(() => {
   fetchMock = vi.fn();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (globalThis as any).fetch = fetchMock;
 });
 afterEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   delete (globalThis as any).fetch;
   Connection.reset();
 });
@@ -55,7 +56,7 @@ describe('GraphQLProxy', () => {
       rootProperty: 'data.users',
     });
     const op = new Operation({ action: 'read' });
-    const result = await proxy.read(op);
+    const _result = await proxy.read(op);
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe('/graphql');
@@ -95,7 +96,7 @@ describe('GraphQLProxy', () => {
     });
     const rec = TestModel.create({ name: 'Charlie' });
     const op = new Operation({ action: 'create', records: [rec] });
-    const result = await proxy.create(op);
+    const _result = await proxy.create(op);
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const body = JSON.parse(fetchMock.mock.calls[0][1].body);
     expect(body.query).toContain('mutation');
@@ -135,22 +136,26 @@ describe('GraphQLProxy', () => {
 
 describe('WebSocketProxy', () => {
   // Mock WebSocket
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let wsMock: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let wsInstances: any[];
 
   beforeEach(() => {
     wsInstances = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).WebSocket = class MockWS {
       url: string;
-      onopen: Function | null = null;
-      onclose: Function | null = null;
-      onerror: Function | null = null;
-      onmessage: Function | null = null;
+      onopen: ((...args: unknown[]) => unknown) | null = null;
+      onclose: ((...args: unknown[]) => unknown) | null = null;
+      onerror: ((...args: unknown[]) => unknown) | null = null;
+      onmessage: ((...args: unknown[]) => unknown) | null = null;
       readyState = 1; // OPEN
       sent: string[] = [];
       constructor(url: string) {
         this.url = url;
         wsInstances.push(this);
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         wsMock = this;
         setTimeout(() => this.onopen?.({ type: 'open' }), 0);
       }
@@ -165,6 +170,7 @@ describe('WebSocketProxy', () => {
   });
 
   afterEach(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     delete (globalThis as any).WebSocket;
   });
 
@@ -322,6 +328,7 @@ describe('Connection', () => {
       return { ...response, transformed: true };
     });
     const result = await Connection.fetch('/api/test');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((result as any).transformed).toBe(true);
   });
 
@@ -337,6 +344,7 @@ describe('Connection', () => {
     fetchMock.mockRejectedValueOnce(new Error('Network error'));
     const errorSpy = vi.fn();
     Connection.setErrorHandler(errorSpy);
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     await Connection.fetch('/api/test').catch(() => {});
     expect(errorSpy).toHaveBeenCalled();
   });

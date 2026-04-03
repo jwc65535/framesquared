@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Model } from '../src/Model.js';
 import { FieldType } from '../src/field/Field.js';
-import { Operation, OperationAction } from '../src/Operation.js';
+import { Operation } from '../src/Operation.js';
 import { ResultSet } from '../src/ResultSet.js';
 import { JsonReader } from '../src/reader/Reader.js';
 import { ArrayReader } from '../src/reader/Reader.js';

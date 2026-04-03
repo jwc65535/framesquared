@@ -11,7 +11,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Base, Observable } from '@framesquared/core';
-import { Field, createField } from './field/Field.js';
+import { type Field, createField } from './field/Field.js';
 import type { FieldDefinition } from './field/Field.js';
 import { Schema } from './Schema.js';
 import type { Association } from './association/Association.js';
@@ -167,7 +167,7 @@ export class Model extends Base {
   modified: Record<string, unknown> = {};
 
   /** Per-instance association storage: assocName → Model | ModelCollection */
-  $associations: Map<string, Model | ModelCollection | ManyToManyCollection> = new Map();
+  $associations = new Map<string, Model | ModelCollection | ManyToManyCollection>();
 
   // -----------------------------------------------------------------------
   // Construction
@@ -447,6 +447,7 @@ function installHasOne(
   assoc: Association,
   rawData: Record<string, unknown>,
 ): void {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const AssocModel = assoc.associatedModel!;
   const name = assoc.associationName;
   const getterName = assoc.getterName;
@@ -497,6 +498,7 @@ function installHasMany(
   assoc: Association,
   rawData: Record<string, unknown>,
 ): void {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const AssocModel = assoc.associatedModel!;
   const name = assoc.associationName;
   const collection = new ModelCollection();
@@ -554,6 +556,7 @@ function installBelongsTo(
   assoc: Association,
   rawData: Record<string, unknown>,
 ): void {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const AssocModel = assoc.associatedModel!;
   const name = assoc.associationName;
   const getterName = assoc.getterName;
@@ -590,6 +593,7 @@ function installManyToMany(
   assoc: Association,
   rawData: Record<string, unknown>,
 ): void {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const AssocModel = assoc.associatedModel!;
   const name = assoc.associationName;
   const collection = new ManyToManyCollection();

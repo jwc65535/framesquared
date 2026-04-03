@@ -10,7 +10,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { Model } from './Model.js';
-import { Association } from './association/Association.js';
+import type { Association } from './association/Association.js';
 import type { AssociationConfig } from './association/Association.js';
 import { HasOne } from './association/HasOne.js';
 import { HasMany } from './association/HasMany.js';
@@ -99,6 +99,7 @@ class SchemaImpl {
     if (!associations.has(ownerName)) {
       associations.set(ownerName, []);
     }
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const list = associations.get(ownerName)!;
 
     for (const config of configs) {
@@ -115,6 +116,7 @@ class SchemaImpl {
           if (!pendingReferences.has(modelRef)) {
             pendingReferences.set(modelRef, []);
           }
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           pendingReferences.get(modelRef)!.push(assoc);
         }
       } else {
