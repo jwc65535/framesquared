@@ -6,8 +6,6 @@
  * DragManager for drop target detection.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { DragManager } from './DragManager.js';
 import type { DragData } from './DragData.js';
 

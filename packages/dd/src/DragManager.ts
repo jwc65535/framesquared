@@ -6,8 +6,6 @@
  * during active drags.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { DragData } from './DragData.js';
 
 export interface DropTarget {
@@ -15,10 +13,10 @@ export interface DropTarget {
   accept: string[];
   disabled: boolean;
   overCls: string;
-  onDragEnter?: (data: DragData) => boolean | void;
+  onDragEnter?: (data: DragData) => boolean | undefined;
   onDragOver?: (data: DragData) => void;
   onDragLeave?: (data: DragData) => void;
-  onDrop?: (data: DragData) => boolean | void;
+  onDrop?: (data: DragData) => boolean | undefined;
 }
 
 let dragging = false;

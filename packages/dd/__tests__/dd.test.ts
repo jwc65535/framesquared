@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { DragManager } from '../src/DragManager.js';
 import { Draggable } from '../src/Draggable.js';
@@ -9,10 +10,12 @@ import { Resizable } from '../src/Resizable.js';
 // PointerEvent polyfill for jsdom
 beforeEach(() => {
   if (typeof PointerEvent === 'undefined') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {
       readonly pointerId: number;
       constructor(type: string, init?: PointerEventInit) {
         super(type, init);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         this.pointerId = (init as any)?.pointerId ?? 0;
       }
     };
@@ -24,6 +27,7 @@ afterEach(() => {
 });
 
 function fire(el: EventTarget, type: string, opts: Record<string, unknown> = {}) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   el.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, ...opts } as any));
 }
 
@@ -40,7 +44,7 @@ describe('DragManager', () => {
   it('tracks active drag', () => {
     const el = document.createElement('div');
     document.body.appendChild(el);
-    const d = new Draggable({ el });
+    const _d = new Draggable({ el });
     fire(el, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 10, clientY: 10 });
     expect(DragManager.isDragging()).toBe(true);
@@ -58,7 +62,7 @@ describe('Draggable — basics', () => {
     const el = document.createElement('div');
     document.body.appendChild(el);
     const spy = vi.fn();
-    const d = new Draggable({ el, threshold: 5, onDragStart: spy });
+    const _d = new Draggable({ el, threshold: 5, onDragStart: spy });
     fire(el, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 2, clientY: 2 });
     expect(spy).not.toHaveBeenCalled(); // below threshold
@@ -71,7 +75,7 @@ describe('Draggable — basics', () => {
     const el = document.createElement('div');
     document.body.appendChild(el);
     const spy = vi.fn();
-    const d = new Draggable({ el, onDragStart: spy });
+    const _d = new Draggable({ el, onDragStart: spy });
     fire(el, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 4, clientY: 0 });
     expect(spy).toHaveBeenCalled();
@@ -82,7 +86,7 @@ describe('Draggable — basics', () => {
     const el = document.createElement('div');
     document.body.appendChild(el);
     const spy = vi.fn();
-    const d = new Draggable({ el, onDrag: spy });
+    const _d = new Draggable({ el, onDrag: spy });
     fire(el, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 10, clientY: 10 });
     fire(document, 'pointermove', { clientX: 20, clientY: 20 });
@@ -94,7 +98,7 @@ describe('Draggable — basics', () => {
     const el = document.createElement('div');
     document.body.appendChild(el);
     const spy = vi.fn();
-    const d = new Draggable({ el, onDragEnd: spy });
+    const _d = new Draggable({ el, onDragEnd: spy });
     fire(el, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 10, clientY: 10 });
     fire(document, 'pointerup');
@@ -108,7 +112,7 @@ describe('Draggable — basics', () => {
     el.appendChild(handle);
     document.body.appendChild(el);
     const spy = vi.fn();
-    const d = new Draggable({ el, handle: '.handle', onDragStart: spy });
+    const _d = new Draggable({ el, handle: '.handle', onDragStart: spy });
     // Click outside handle — no drag
     fire(el, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 10, clientY: 10 });
@@ -125,7 +129,7 @@ describe('Draggable — basics', () => {
     const el = document.createElement('div');
     document.body.appendChild(el);
     const spy = vi.fn();
-    const d = new Draggable({ el, disabled: true, onDragStart: spy });
+    const _d = new Draggable({ el, disabled: true, onDragStart: spy });
     fire(el, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 10, clientY: 10 });
     expect(spy).not.toHaveBeenCalled();
@@ -144,7 +148,7 @@ describe('Draggable — axis lock', () => {
     el.style.left = '0px';
     el.style.top = '0px';
     document.body.appendChild(el);
-    const d = new Draggable({ el, axis: 'x', proxy: false });
+    const _d = new Draggable({ el, axis: 'x', proxy: false });
     fire(el, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 50, clientY: 30 });
     expect(el.style.left).toBe('50px');
@@ -158,7 +162,7 @@ describe('Draggable — axis lock', () => {
     el.style.left = '0px';
     el.style.top = '0px';
     document.body.appendChild(el);
-    const d = new Draggable({ el, axis: 'y', proxy: false });
+    const _d = new Draggable({ el, axis: 'y', proxy: false });
     fire(el, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 50, clientY: 30 });
     expect(el.style.left).toBe('0px');
@@ -178,7 +182,7 @@ describe('Draggable — snap', () => {
     el.style.left = '0px';
     el.style.top = '0px';
     document.body.appendChild(el);
-    const d = new Draggable({ el, snap: { x: 20, y: 20 }, proxy: false });
+    const _d = new Draggable({ el, snap: { x: 20, y: 20 }, proxy: false });
     fire(el, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 13, clientY: 27 });
     expect(el.style.left).toBe('20px');
@@ -217,7 +221,7 @@ describe('Draggable — constrain', () => {
     el.style.height = '50px';
     parent.appendChild(el);
     document.body.appendChild(parent);
-    const d = new Draggable({ el, constrainTo: 'parent', proxy: false });
+    const _d = new Draggable({ el, constrainTo: 'parent', proxy: false });
     fire(el, 'pointerdown', { clientX: 25, clientY: 25 });
     fire(document, 'pointermove', { clientX: 300, clientY: 300 });
     const left = parseInt(el.style.left);
@@ -250,8 +254,8 @@ describe('Droppable', () => {
       toJSON() {},
     });
     const enterSpy = vi.fn();
-    const drag = new Draggable({ el: dragEl, groups: ['test'] });
-    const drop = new Droppable({ el: dropEl, accept: ['test'], onDragEnter: enterSpy });
+    const _drag = new Draggable({ el: dragEl, groups: ['test'] });
+    const _drop = new Droppable({ el: dropEl, accept: ['test'], onDragEnter: enterSpy });
     fire(dragEl, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 150, clientY: 150 });
     expect(enterSpy).toHaveBeenCalled();
@@ -274,8 +278,8 @@ describe('Droppable', () => {
       bottom: 200,
       toJSON() {},
     });
-    const drag = new Draggable({ el: dragEl, groups: ['g1'] });
-    const drop = new Droppable({ el: dropEl, accept: ['g1'], overCls: 'drop-hover' });
+    const _drag = new Draggable({ el: dragEl, groups: ['g1'] });
+    const _drop = new Droppable({ el: dropEl, accept: ['g1'], overCls: 'drop-hover' });
     fire(dragEl, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 150, clientY: 150 });
     expect(dropEl.classList.contains('drop-hover')).toBe(true);
@@ -301,8 +305,8 @@ describe('Droppable', () => {
       toJSON() {},
     });
     const dropSpy = vi.fn();
-    const drag = new Draggable({ el: dragEl, groups: ['g'] });
-    const drop = new Droppable({ el: dropEl, accept: ['g'], onDrop: dropSpy });
+    const _drag = new Draggable({ el: dragEl, groups: ['g'] });
+    const _drop = new Droppable({ el: dropEl, accept: ['g'], onDrop: dropSpy });
     fire(dragEl, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 150, clientY: 150 });
     fire(document, 'pointerup', { clientX: 150, clientY: 150 });
@@ -326,8 +330,8 @@ describe('Droppable', () => {
       toJSON() {},
     });
     const enterSpy = vi.fn();
-    const drag = new Draggable({ el: dragEl, groups: ['alpha'] });
-    const drop = new Droppable({ el: dropEl, accept: ['beta'], onDragEnter: enterSpy });
+    const _drag = new Draggable({ el: dragEl, groups: ['alpha'] });
+    const _drop = new Droppable({ el: dropEl, accept: ['beta'], onDragEnter: enterSpy });
     fire(dragEl, 'pointerdown', { clientX: 0, clientY: 0 });
     fire(document, 'pointermove', { clientX: 150, clientY: 150 });
     expect(enterSpy).not.toHaveBeenCalled();
@@ -351,8 +355,8 @@ describe('Droppable', () => {
       toJSON() {},
     });
     const enterSpy = vi.fn();
-    const drag = new Draggable({ el: dragEl, groups: ['g'] });
-    const drop = new Droppable({
+    const _drag = new Draggable({ el: dragEl, groups: ['g'] });
+    const _drop = new Droppable({
       el: dropEl,
       accept: ['g'],
       disabled: true,
@@ -493,14 +497,14 @@ describe('Resizable', () => {
 
   it('adds resize handles', () => {
     const el = resizableEl();
-    const r = new Resizable({ el, handles: 'se e s' });
+    const _r = new Resizable({ el, handles: 'se e s' });
     const handles = el.querySelectorAll('.x-resizable-handle');
     expect(handles.length).toBe(3);
   });
 
   it('dragging SE handle changes size', () => {
     const el = resizableEl();
-    const r = new Resizable({ el, handles: 'se' });
+    const _r = new Resizable({ el, handles: 'se' });
     const handle = el.querySelector('.x-resizable-handle-se') as HTMLElement;
     fire(handle, 'pointerdown', { clientX: 100, clientY: 80 });
     fire(document, 'pointermove', { clientX: 150, clientY: 120 });
@@ -511,7 +515,7 @@ describe('Resizable', () => {
 
   it('dragging E handle changes only width', () => {
     const el = resizableEl();
-    const r = new Resizable({ el, handles: 'e' });
+    const _r = new Resizable({ el, handles: 'e' });
     const handle = el.querySelector('.x-resizable-handle-e') as HTMLElement;
     fire(handle, 'pointerdown', { clientX: 100, clientY: 40 });
     fire(document, 'pointermove', { clientX: 180, clientY: 60 });
@@ -522,7 +526,7 @@ describe('Resizable', () => {
 
   it('dragging S handle changes only height', () => {
     const el = resizableEl();
-    const r = new Resizable({ el, handles: 's' });
+    const _r = new Resizable({ el, handles: 's' });
     const handle = el.querySelector('.x-resizable-handle-s') as HTMLElement;
     fire(handle, 'pointerdown', { clientX: 50, clientY: 80 });
     fire(document, 'pointermove', { clientX: 50, clientY: 130 });
@@ -533,7 +537,7 @@ describe('Resizable', () => {
 
   it('minWidth/minHeight constraints', () => {
     const el = resizableEl();
-    const r = new Resizable({ el, handles: 'se', minWidth: 50, minHeight: 40 });
+    const _r = new Resizable({ el, handles: 'se', minWidth: 50, minHeight: 40 });
     const handle = el.querySelector('.x-resizable-handle-se') as HTMLElement;
     fire(handle, 'pointerdown', { clientX: 100, clientY: 80 });
     fire(document, 'pointermove', { clientX: 20, clientY: 10 });
@@ -544,7 +548,7 @@ describe('Resizable', () => {
 
   it('maxWidth/maxHeight constraints', () => {
     const el = resizableEl();
-    const r = new Resizable({ el, handles: 'se', maxWidth: 200, maxHeight: 150 });
+    const _r = new Resizable({ el, handles: 'se', maxWidth: 200, maxHeight: 150 });
     const handle = el.querySelector('.x-resizable-handle-se') as HTMLElement;
     fire(handle, 'pointerdown', { clientX: 100, clientY: 80 });
     fire(document, 'pointermove', { clientX: 500, clientY: 500 });
@@ -556,7 +560,7 @@ describe('Resizable', () => {
   it('preserveRatio maintains aspect ratio', () => {
     const el = resizableEl();
     // 100x80 → ratio 1.25
-    const r = new Resizable({ el, handles: 'se', preserveRatio: true });
+    const _r = new Resizable({ el, handles: 'se', preserveRatio: true });
     const handle = el.querySelector('.x-resizable-handle-se') as HTMLElement;
     fire(handle, 'pointerdown', { clientX: 100, clientY: 80 });
     fire(document, 'pointermove', { clientX: 200, clientY: 200 });
@@ -570,7 +574,7 @@ describe('Resizable', () => {
   it('fires resize event', () => {
     const el = resizableEl();
     const spy = vi.fn();
-    const r = new Resizable({ el, handles: 'se', onResize: spy });
+    const _r = new Resizable({ el, handles: 'se', onResize: spy });
     const handle = el.querySelector('.x-resizable-handle-se') as HTMLElement;
     fire(handle, 'pointerdown', { clientX: 100, clientY: 80 });
     fire(document, 'pointermove', { clientX: 150, clientY: 120 });
@@ -580,7 +584,7 @@ describe('Resizable', () => {
 
   it('destroy removes handles', () => {
     const el = resizableEl();
-    const r = new Resizable({ el, handles: 'se e' });
+    const _r = new Resizable({ el, handles: 'se e' });
     expect(el.querySelectorAll('.x-resizable-handle').length).toBe(2);
     r.destroy();
     expect(el.querySelectorAll('.x-resizable-handle').length).toBe(0);
