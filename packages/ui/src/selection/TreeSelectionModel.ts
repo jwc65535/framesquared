@@ -114,11 +114,7 @@ export class TreeSelectionModel {
   }
 
   // Convenience aliases matching Ext-style API
-  selectNode(
-    node: NodeInterface,
-    keepExisting = false,
-    suppressEvent = false,
-  ): void {
+  selectNode(node: NodeInterface, keepExisting = false, suppressEvent = false): void {
     this.select(node, keepExisting, suppressEvent);
   }
 

@@ -205,7 +205,7 @@ describe('Inheritable', () => {
     child.initInheritedState({ size: 'small' }); // override size
 
     expect(child.getInheritedConfig('theme')).toBe('dark'); // from parent
-    expect(child.getInheritedConfig('size')).toBe('small');  // own overrides
+    expect(child.getInheritedConfig('size')).toBe('small'); // own overrides
   });
 
   it('grandchild inherits through multiple levels', () => {
@@ -223,9 +223,9 @@ describe('Inheritable', () => {
     leaf.setInheritedParent(mid);
     leaf.initInheritedState({});
 
-    expect(leaf.getInheritedConfig('a')).toBe(1);   // from root
-    expect(leaf.getInheritedConfig('b')).toBe(20);  // mid overrides root
-    expect(leaf.getInheritedConfig('c')).toBe(30);  // from mid
+    expect(leaf.getInheritedConfig('a')).toBe(1); // from root
+    expect(leaf.getInheritedConfig('b')).toBe(20); // mid overrides root
+    expect(leaf.getInheritedConfig('c')).toBe(30); // from mid
   });
 
   it('getInherited returns merged state from full chain', () => {
@@ -262,7 +262,10 @@ describe('Hookable', () => {
       const order: string[] = [];
       const Cls = define('test.hook.Before', {
         mixins: [Hookable],
-        greet() { order.push('original'); return 'hello'; },
+        greet() {
+          order.push('original');
+          return 'hello';
+        },
       });
       const inst = new Cls();
       inst.addBeforeHook('greet', () => order.push('before'));
@@ -274,7 +277,9 @@ describe('Hookable', () => {
       const order: string[] = [];
       const Cls = define('test.hook.MultiB', {
         mixins: [Hookable],
-        run() { order.push('run'); },
+        run() {
+          order.push('run');
+        },
       });
       const inst = new Cls();
       inst.addBeforeHook('run', () => order.push('b1'));
@@ -287,7 +292,9 @@ describe('Hookable', () => {
       const spy = vi.fn();
       const Cls = define('test.hook.ArgsB', {
         mixins: [Hookable],
-        process(a: number, b: number) { return a + b; },
+        process(a: number, b: number) {
+          return a + b;
+        },
       });
       const inst = new Cls();
       inst.addBeforeHook('process', spy);
@@ -301,7 +308,10 @@ describe('Hookable', () => {
       const order: string[] = [];
       const Cls = define('test.hook.After', {
         mixins: [Hookable],
-        greet() { order.push('original'); return 'hello'; },
+        greet() {
+          order.push('original');
+          return 'hello';
+        },
       });
       const inst = new Cls();
       inst.addAfterHook('greet', () => order.push('after'));
@@ -313,7 +323,9 @@ describe('Hookable', () => {
       const spy = vi.fn();
       const Cls = define('test.hook.ReturnA', {
         mixins: [Hookable],
-        compute() { return 42; },
+        compute() {
+          return 42;
+        },
       });
       const inst = new Cls();
       inst.addAfterHook('compute', spy);
@@ -325,7 +337,9 @@ describe('Hookable', () => {
       const order: string[] = [];
       const Cls = define('test.hook.MultiA', {
         mixins: [Hookable],
-        run() { order.push('run'); },
+        run() {
+          order.push('run');
+        },
       });
       const inst = new Cls();
       inst.addAfterHook('run', () => order.push('a1'));
@@ -340,7 +354,9 @@ describe('Hookable', () => {
       const order: string[] = [];
       const Cls = define('test.hook.Combined', {
         mixins: [Hookable],
-        action() { order.push('action'); },
+        action() {
+          order.push('action');
+        },
       });
       const inst = new Cls();
       inst.addBeforeHook('action', () => order.push('before'));
@@ -556,7 +572,9 @@ describe('Combined mixins', () => {
     const Cls = define('test.combined.All', {
       mixins: [Identifiable, Hookable, Pluggable],
       config: { name: 'default' },
-      greet() { return `Hello from ${this.getName()}`; },
+      greet() {
+        return `Hello from ${this.getName()}`;
+      },
     });
 
     const hook = vi.fn();

@@ -161,9 +161,13 @@ describe('Scope binding', () => {
     const Cls = createObservableClass('test.ev.Scope');
     const inst = new Cls();
     const scope = { name: 'ctx' };
-    inst.on('test', function (this: typeof scope) {
-      expect(this).toBe(scope);
-    }, scope);
+    inst.on(
+      'test',
+      function (this: typeof scope) {
+        expect(this).toBe(scope);
+      },
+      scope,
+    );
     inst.fireEvent('test');
   });
 
@@ -466,10 +470,17 @@ describe('Listener map overload (on with object)', () => {
     const Cls = createObservableClass('test.ev.MapScope');
     const inst = new Cls();
     const scope = { id: 'scope' };
-    inst.on({
-      click(this: typeof scope) { expect(this).toBe(scope); },
-      hover(this: typeof scope) { expect(this).toBe(scope); },
-    }, scope);
+    inst.on(
+      {
+        click(this: typeof scope) {
+          expect(this).toBe(scope);
+        },
+        hover(this: typeof scope) {
+          expect(this).toBe(scope);
+        },
+      },
+      scope,
+    );
     inst.fireEvent('click');
     inst.fireEvent('hover');
   });
@@ -657,12 +668,7 @@ describe('fireEventedAction', () => {
       () => order.push('beforeFn'),
       () => order.push('afterFn'),
     );
-    expect(order).toEqual([
-      'before-listener',
-      'beforeFn',
-      'save-listener',
-      'afterFn',
-    ]);
+    expect(order).toEqual(['before-listener', 'beforeFn', 'save-listener', 'afterFn']);
   });
 
   it('cancellation in before event skips everything', () => {
@@ -686,7 +692,12 @@ describe('fireEventedAction', () => {
     const mainSpy = vi.fn();
     inst.on('beforesave', beforeSpy);
     inst.on('save', mainSpy);
-    inst.fireEventedAction('save', ['payload'], () => {}, () => {});
+    inst.fireEventedAction(
+      'save',
+      ['payload'],
+      () => {},
+      () => {},
+    );
     expect(beforeSpy).toHaveBeenCalledWith('payload');
     expect(mainSpy).toHaveBeenCalledWith('payload');
   });

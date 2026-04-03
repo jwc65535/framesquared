@@ -102,9 +102,7 @@ export class Button extends Component {
     this.applyButtonConfigs(cfg);
 
     // Insert into DOM
-    const target = typeof container === 'string'
-      ? document.querySelector(container)
-      : container;
+    const target = typeof container === 'string' ? document.querySelector(container) : container;
     if (target) {
       if (typeof position === 'number') {
         const ref = target.children[position];
@@ -189,7 +187,10 @@ export class Button extends Component {
     // Toggle group registration
     if (cfg.toggleGroup) {
       let group = toggleGroups.get(cfg.toggleGroup);
-      if (!group) { group = new Set(); toggleGroups.set(cfg.toggleGroup, group); }
+      if (!group) {
+        group = new Set();
+        toggleGroups.set(cfg.toggleGroup, group);
+      }
       group.add(this);
     }
 

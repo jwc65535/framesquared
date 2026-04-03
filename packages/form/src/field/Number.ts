@@ -104,8 +104,12 @@ export class NumberField extends TextField {
   // Constraints
   // -----------------------------------------------------------------------
 
-  setMinValue(value: number): void { this._minValue = value; }
-  setMaxValue(value: number): void { this._maxValue = value; }
+  setMinValue(value: number): void {
+    this._minValue = value;
+  }
+  setMaxValue(value: number): void {
+    this._maxValue = value;
+  }
 
   // -----------------------------------------------------------------------
   // Validation

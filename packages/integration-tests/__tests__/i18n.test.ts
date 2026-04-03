@@ -80,7 +80,9 @@ describe('i18n integration', () => {
     LocaleManager.setLocale('en-US');
 
     expect(LocaleManager.t('grid.page', { page: 3, total: 10 })).toBe('Page 3 of 10');
-    expect(LocaleManager.t('validation.minLength', { min: 5 })).toBe('Minimum length is 5 characters');
+    expect(LocaleManager.t('validation.minLength', { min: 5 })).toBe(
+      'Minimum length is 5 characters',
+    );
   });
 
   it('locale-aware sorting', () => {
@@ -91,11 +93,18 @@ describe('i18n integration', () => {
 
   it('all built-in locales have complete translations', () => {
     const requiredKeys = [
-      'btn.ok', 'btn.cancel', 'btn.yes', 'btn.no',
-      'grid.noData', 'grid.loading',
-      'validation.required', 'validation.email',
-      'datepicker.months.0', 'datepicker.months.11',
-      'datepicker.days.0', 'datepicker.days.6',
+      'btn.ok',
+      'btn.cancel',
+      'btn.yes',
+      'btn.no',
+      'grid.noData',
+      'grid.loading',
+      'validation.required',
+      'validation.email',
+      'datepicker.months.0',
+      'datepicker.months.11',
+      'datepicker.days.0',
+      'datepicker.days.6',
     ];
 
     for (const locale of [enUS, esES, arSA]) {

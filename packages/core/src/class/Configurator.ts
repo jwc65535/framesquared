@@ -49,9 +49,7 @@ export const METADATA_SYMBOL: unique symbol =
 /**
  * Gets or creates the per-class config map inside `context.metadata`.
  */
-export function getOrCreateMetaMap(
-  metadata: DecoratorMetadataObject,
-): Map<string, ConfigMeta> {
+export function getOrCreateMetaMap(metadata: DecoratorMetadataObject): Map<string, ConfigMeta> {
   let map = (metadata as any)[CONFIG_META_KEY] as Map<string, ConfigMeta> | undefined;
   if (!map) {
     map = new Map();

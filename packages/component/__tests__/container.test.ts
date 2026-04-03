@@ -47,10 +47,7 @@ describe('Container child management', () => {
 
   it('items config adds children on construction', () => {
     const c = ct({
-      items: [
-        new Component({ html: 'A' }),
-        new Component({ html: 'B' }),
-      ],
+      items: [new Component({ html: 'A' }), new Component({ html: 'B' })],
     });
     expect(c.getCount()).toBe(2);
   });

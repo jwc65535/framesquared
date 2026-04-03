@@ -37,7 +37,9 @@ describe('NodeInterface.eachChild', () => {
     p.appendChild(c2);
 
     const visited: string[] = [];
-    p.eachChild((n) => { visited.push(n.get('text') as string); });
+    p.eachChild((n) => {
+      visited.push(n.get('text') as string);
+    });
     expect(visited).toEqual(['C1', 'C2']);
   });
 
@@ -66,14 +68,18 @@ describe('NodeInterface.eachChild', () => {
     p.appendChild(c2);
 
     const indices: number[] = [];
-    p.eachChild((_n, i) => { indices.push(i); });
+    p.eachChild((_n, i) => {
+      indices.push(i);
+    });
     expect(indices).toEqual([0, 1]);
   });
 
   it('does nothing on leaf node', () => {
     const leaf = makeNode(1, 'L', true);
     const visited: string[] = [];
-    leaf.eachChild(() => { visited.push('x'); });
+    leaf.eachChild(() => {
+      visited.push('x');
+    });
     expect(visited).toEqual([]);
   });
 });

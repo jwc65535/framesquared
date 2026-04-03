@@ -51,7 +51,7 @@ export class Grid extends Panel {
     super.initialize();
     const cfg = this._config as GridConfig;
     this._store = cfg.store ?? null;
-    this._columns = (cfg.columns ?? []).map(c => c instanceof Column ? c : createColumn(c));
+    this._columns = (cfg.columns ?? []).map((c) => (c instanceof Column ? c : createColumn(c)));
     this._gridView = null;
     this._sortableColumns = cfg.sortableColumns ?? true;
     this._sortDirection = 'ASC';

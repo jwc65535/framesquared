@@ -32,7 +32,7 @@ function hitTest(target: DropTarget, x: number, y: number): boolean {
 
 function groupsMatch(dragGroups: string[], acceptGroups: string[]): boolean {
   if (acceptGroups.length === 0) return true;
-  return dragGroups.some(g => acceptGroups.includes(g));
+  return dragGroups.some((g) => acceptGroups.includes(g));
 }
 
 export const DragManager = {

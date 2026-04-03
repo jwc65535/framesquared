@@ -90,10 +90,7 @@ describe('EventDomain', () => {
       const Widget = createObs('test.dom.Widget', { config: { isWidget: true } });
       const Store = createObs('test.dom.Store', { config: { isStore: true } });
 
-      const widgetDomain = new EventDomain(
-        'widget',
-        (target) => !!(target as any).getIsWidget?.(),
-      );
+      const widgetDomain = new EventDomain('widget', (target) => !!(target as any).getIsWidget?.());
 
       const w = new Widget({ isWidget: true });
       const s = new Store({ isStore: true });
@@ -108,10 +105,7 @@ describe('EventDomain', () => {
       const Widget = createObs('test.dom.ListenWidget', {
         config: { itemId: '', isWidget: true },
       });
-      const widgetDomain = new EventDomain(
-        'widgetListen',
-        (t) => !!(t as any).getIsWidget?.(),
-      );
+      const widgetDomain = new EventDomain('widgetListen', (t) => !!(t as any).getIsWidget?.());
       EventDomain.register('widgetListen', widgetDomain);
 
       const spy = vi.fn();
@@ -133,10 +127,7 @@ describe('EventDomain', () => {
       const Widget = createObs('test.dom.NoMatch', {
         config: { itemId: '', isWidget: true },
       });
-      const domain = new EventDomain(
-        'widgetNoMatch',
-        (t) => !!(t as any).getIsWidget?.(),
-      );
+      const domain = new EventDomain('widgetNoMatch', (t) => !!(t as any).getIsWidget?.());
 
       const spy = vi.fn();
       domain.listen({ '#otherBtn': { click: spy } });
@@ -150,10 +141,7 @@ describe('EventDomain', () => {
       const Widget = createObs('test.dom.ByClass', {
         config: { isWidget: true },
       });
-      const domain = new EventDomain(
-        'widgetByClass',
-        (t) => !!(t as any).getIsWidget?.(),
-      );
+      const domain = new EventDomain('widgetByClass', (t) => !!(t as any).getIsWidget?.());
 
       const spy = vi.fn();
       domain.listen({
@@ -250,9 +238,13 @@ describe('EventBus', () => {
   describe('scope binding', () => {
     it('binds handler to the provided scope', () => {
       const scope = { id: 'myScope' };
-      EventBus.subscribe('test.scope', function (this: typeof scope) {
-        expect(this).toBe(scope);
-      }, scope);
+      EventBus.subscribe(
+        'test.scope',
+        function (this: typeof scope) {
+          expect(this).toBe(scope);
+        },
+        scope,
+      );
       EventBus.publish('test.scope');
       EventBus.unsubscribe('test.scope', () => {});
     });
@@ -416,10 +408,7 @@ describe('EventDomain + Observable integration', () => {
       config: { itemId: '', isWidget: true },
     });
 
-    const domain = new EventDomain(
-      'intgWidget',
-      (t) => !!(t as any).getIsWidget?.(),
-    );
+    const domain = new EventDomain('intgWidget', (t) => !!(t as any).getIsWidget?.());
     EventDomain.register('intgWidget', domain);
 
     const spy = vi.fn();

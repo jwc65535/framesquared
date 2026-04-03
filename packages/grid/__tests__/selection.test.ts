@@ -6,16 +6,31 @@ import { SpreadsheetSelectionModel } from '../src/grid/selection/SpreadsheetSele
 import { Lockable } from '../src/grid/Lockable.js';
 import { GridState } from '../src/grid/state/GridState.js';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; localStorage.clear(); });
+class MockRO {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+  localStorage.clear();
+});
 
 function mockStore(data: Record<string, unknown>[] = []) {
-  const dataCopy = data.map(d => ({ ...d }));
+  const dataCopy = data.map((d) => ({ ...d }));
   const records = dataCopy.map((d, i) => ({
-    id: d.id ?? i, data: d,
-    get(f: string) { return (d as any)[f]; },
-    set(f: string, v: unknown) { (d as any)[f] = v; },
+    id: d.id ?? i,
+    data: d,
+    get(f: string) {
+      return (d as any)[f];
+    },
+    set(f: string, v: unknown) {
+      (d as any)[f] = v;
+    },
   }));
   const listeners: Record<string, Function[]> = {};
   return {
@@ -24,8 +39,12 @@ function mockStore(data: Record<string, unknown>[] = []) {
     getCount: () => records.length,
     getAt: (i: number) => records[i],
     sort: vi.fn(),
-    on: (evt: string, fn: Function) => { (listeners[evt] ??= []).push(fn); },
-    fireEvent: (evt: string, ...args: unknown[]) => { (listeners[evt] ?? []).forEach(fn => fn(...args)); },
+    on: (evt: string, fn: Function) => {
+      (listeners[evt] ??= []).push(fn);
+    },
+    fireEvent: (evt: string, ...args: unknown[]) => {
+      (listeners[evt] ?? []).forEach((fn) => fn(...args));
+    },
     each: (fn: Function) => records.forEach(fn),
     getTotalCount: () => records.length,
     isLoading: () => false,
@@ -341,7 +360,9 @@ describe('SpreadsheetSelectionModel', () => {
     const cells = g.el!.querySelectorAll('tbody td');
     (cells[0] as HTMLElement).click();
     // Shift+click cell at row 2, col 1
-    const targetCell = g.el!.querySelectorAll('tbody tr')[2]?.querySelectorAll('td')[1] as HTMLElement;
+    const targetCell = g
+      .el!.querySelectorAll('tbody tr')[2]
+      ?.querySelectorAll('td')[1] as HTMLElement;
     targetCell?.dispatchEvent(new MouseEvent('click', { shiftKey: true, bubbles: true }));
 
     const range = sm.getSelectedRange();
@@ -442,13 +463,16 @@ describe('GridState', () => {
 
   it('restore applies saved column state', () => {
     // Pre-save a state
-    localStorage.setItem('ext-grid-state-myGrid', JSON.stringify({
-      columns: [
-        { dataIndex: 'name', width: 200, hidden: false },
-        { dataIndex: 'dept', width: 100, hidden: true },
-        { dataIndex: 'salary', width: 150, hidden: false },
-      ],
-    }));
+    localStorage.setItem(
+      'ext-grid-state-myGrid',
+      JSON.stringify({
+        columns: [
+          { dataIndex: 'name', width: 200, hidden: false },
+          { dataIndex: 'dept', width: 100, hidden: true },
+          { dataIndex: 'salary', width: 150, hidden: false },
+        ],
+      }),
+    );
 
     const g = testGrid();
     const state = new GridState({ stateId: 'myGrid' });

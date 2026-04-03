@@ -6,9 +6,18 @@ import { DisplayField } from '../src/field/Display.js';
 import { HiddenField } from '../src/field/Hidden.js';
 import { VTypes } from '../src/field/VTypes.js';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+class MockRO {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 function textField(cfg: Record<string, unknown> = {}): TextField {
   return new TextField({ renderTo: document.body, ...cfg });

@@ -16,7 +16,9 @@ function makeGrid() {
     store: new TreeStore({
       model: TreeModel,
       root: {
-        id: 'root', text: 'Root', expanded: true,
+        id: 'root',
+        text: 'Root',
+        expanded: true,
         children: [
           { id: 'a', text: 'Node A', detail: 'Details for A', leaf: true },
           { id: 'b', text: 'Node B', detail: 'Details for B', leaf: true },
@@ -183,11 +185,16 @@ describe('TreeGridRowExpander — bodyIndent', () => {
       store: new TreeStore({
         model: TreeModel,
         root: {
-          id: 'root', text: 'Root', expanded: true,
+          id: 'root',
+          text: 'Root',
+          expanded: true,
           children: [
-            { id: 'parent', text: 'P', expanded: true, children: [
-              { id: 'child', text: 'C', leaf: true },
-            ]},
+            {
+              id: 'parent',
+              text: 'P',
+              expanded: true,
+              children: [{ id: 'child', text: 'C', leaf: true }],
+            },
           ],
         },
       }),

@@ -51,6 +51,6 @@ export class FieldContainer extends Container {
   isValid(): boolean {
     return this.getItems()
       .filter((item): item is Field => item instanceof Field)
-      .every(f => f.isValid());
+      .every((f) => f.isValid());
   }
 }

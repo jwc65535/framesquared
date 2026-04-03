@@ -14,7 +14,9 @@ function makeStore() {
   return new TreeStore({
     model: TreeModel,
     root: {
-      id: 'root', text: 'Root', expanded: true,
+      id: 'root',
+      text: 'Root',
+      expanded: true,
       children: [
         { id: 'a', text: 'Node A', size: 100, leaf: true },
         { id: 'b', text: 'Node B', size: 200, leaf: true },

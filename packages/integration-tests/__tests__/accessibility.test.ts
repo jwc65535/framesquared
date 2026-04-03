@@ -1,10 +1,28 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { AriaManager, FocusManager } from '@framesquared/core';
-import { Button, Panel, Window as ExtWindow, TabPanel, Toolbar, Menu, MenuItem } from '@framesquared/ui';
+import {
+  Button,
+  Panel,
+  Window as ExtWindow,
+  TabPanel,
+  Toolbar,
+  Menu,
+  MenuItem,
+} from '@framesquared/ui';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; FocusManager.reset(); });
+class MockRO {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+  FocusManager.reset();
+});
 
 describe('Accessibility integration', () => {
   it('AriaManager.announce creates live region', () => {
@@ -40,7 +58,9 @@ describe('Accessibility integration', () => {
 
   it('Modal Window has role=dialog and aria-modal', () => {
     const win = new ExtWindow({
-      title: 'Confirm', modal: true, renderTo: document.body,
+      title: 'Confirm',
+      modal: true,
+      renderTo: document.body,
     });
     expect(win.el!.getAttribute('role')).toBe('dialog');
     expect(win.el!.getAttribute('aria-modal')).toBe('true');
@@ -73,10 +93,7 @@ describe('Accessibility integration', () => {
   it('switching tab updates aria-selected', () => {
     const tp = new TabPanel({
       renderTo: document.body,
-      items: [
-        new Panel({ title: 'X' }),
-        new Panel({ title: 'Y' }),
-      ],
+      items: [new Panel({ title: 'X' }), new Panel({ title: 'Y' })],
     });
 
     const tabs = tp.el!.querySelectorAll('[role="tab"]');
@@ -103,8 +120,10 @@ describe('Accessibility integration', () => {
 
   it('FocusManager traps and releases focus', () => {
     const container = document.createElement('div');
-    const btn1 = document.createElement('button'); btn1.textContent = 'A';
-    const btn2 = document.createElement('button'); btn2.textContent = 'B';
+    const btn1 = document.createElement('button');
+    btn1.textContent = 'A';
+    const btn2 = document.createElement('button');
+    btn2.textContent = 'B';
     container.appendChild(btn1);
     container.appendChild(btn2);
     document.body.appendChild(container);
@@ -142,7 +161,9 @@ describe('Accessibility integration', () => {
 
   it('collapsible Panel has aria-expanded', () => {
     const panel = new Panel({
-      title: 'Collapsible', collapsible: true, renderTo: document.body,
+      title: 'Collapsible',
+      collapsible: true,
+      renderTo: document.body,
     });
     expect(panel.el!.getAttribute('aria-expanded')).toBe('true');
   });

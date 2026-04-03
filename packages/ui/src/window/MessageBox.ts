@@ -51,11 +51,7 @@ export class MessageBox {
   /**
    * Shows an alert dialog with an OK button.
    */
-  static alert(
-    title: string,
-    message: string,
-    callback?: (buttonId: string) => void,
-  ): Window {
+  static alert(title: string, message: string, callback?: (buttonId: string) => void): Window {
     return MessageBox.show({
       title,
       message,
@@ -67,11 +63,7 @@ export class MessageBox {
   /**
    * Shows a confirmation dialog with Yes and No buttons.
    */
-  static confirm(
-    title: string,
-    message: string,
-    callback?: (buttonId: string) => void,
-  ): Window {
+  static confirm(title: string, message: string, callback?: (buttonId: string) => void): Window {
     return MessageBox.show({
       title,
       message,
@@ -102,10 +94,7 @@ export class MessageBox {
   /**
    * Shows a wait/progress dialog (no buttons — must be closed programmatically).
    */
-  static wait(
-    message: string,
-    title?: string,
-  ): Window {
+  static wait(message: string, title?: string): Window {
     return MessageBox.show({
       title: title ?? '',
       message,
@@ -174,7 +163,9 @@ export class MessageBox {
           if (config.fn) {
             if (config.prompt) {
               const inputEl = win.el!.querySelector('.x-msgbox-input') as
-                HTMLInputElement | HTMLTextAreaElement | null;
+                | HTMLInputElement
+                | HTMLTextAreaElement
+                | null;
               config.fn(btnId, inputEl?.value);
             } else {
               config.fn(btnId);

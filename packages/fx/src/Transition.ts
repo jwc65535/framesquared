@@ -14,10 +14,8 @@ export const Transition = {
    * @param easing CSS easing string
    */
   set(el: HTMLElement, property: string, duration: number, easing = 'ease'): void {
-    const props = property.split(',').map(p => p.trim());
-    el.style.transition = props
-      .map(p => `${p} ${duration}ms ${easing}`)
-      .join(', ');
+    const props = property.split(',').map((p) => p.trim());
+    el.style.transition = props.map((p) => `${p} ${duration}ms ${easing}`).join(', ');
   },
 
   /** Remove all transitions from an element. */

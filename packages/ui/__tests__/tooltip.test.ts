@@ -3,7 +3,12 @@ import { Component } from '@framesquared/component';
 import { Tooltip } from '../src/tip/Tooltip.js';
 import { QuickTip } from '../src/tip/QuickTip.js';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
+class MockRO {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
 beforeEach(() => {
   vi.useFakeTimers();
   (globalThis as any).ResizeObserver = MockRO;
@@ -240,7 +245,8 @@ describe('Tooltip — events', () => {
     const showSpy = vi.fn();
     const el = target();
     const t = new Tooltip({
-      target: el, html: 'Evt',
+      target: el,
+      html: 'Evt',
       listeners: { beforeshow: beforeSpy, show: showSpy },
     });
     el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
@@ -255,7 +261,9 @@ describe('Tooltip — events', () => {
     const hideSpy = vi.fn();
     const el = target();
     const t = new Tooltip({
-      target: el, html: 'Evt', hideDelay: 0,
+      target: el,
+      html: 'Evt',
+      hideDelay: 0,
       listeners: { beforehide: beforeSpy, hide: hideSpy },
     });
     el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
@@ -319,7 +327,13 @@ describe('Tooltip — closable', () => {
 
   it('clicking close button hides tooltip', () => {
     const el = target();
-    const t = new Tooltip({ target: el, html: 'Close me', closable: true, autoHide: false, dismissDelay: 0 });
+    const t = new Tooltip({
+      target: el,
+      html: 'Close me',
+      closable: true,
+      autoHide: false,
+      dismissDelay: 0,
+    });
     el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
     vi.advanceTimersByTime(600);
     const closeBtn = t.el!.querySelector('.x-tip-close') as HTMLElement;

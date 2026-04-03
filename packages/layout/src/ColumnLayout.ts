@@ -33,7 +33,7 @@ export class ColumnLayout extends Layout {
       const cw = cfg.columnWidth as number | undefined;
 
       if (cw !== undefined && cw > 0 && cw <= 1) {
-        el.style.width = `${(cw * 100)}%`;
+        el.style.width = `${cw * 100}%`;
         el.style.boxSizing = 'border-box';
       } else if (cfg.width !== undefined) {
         el.style.flexShrink = '0';

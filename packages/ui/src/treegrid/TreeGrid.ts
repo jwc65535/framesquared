@@ -182,14 +182,20 @@ export class TreeGrid extends Panel {
       this.fire('itemcollapse', node);
     });
 
-    (this._store as any).on('nodeappend', (_s: unknown, child: NodeInterface, parent: NodeInterface) => {
-      if (!child || !parent) return;
-      this._view?.onNodeInsert(parent, child);
-    });
+    (this._store as any).on(
+      'nodeappend',
+      (_s: unknown, child: NodeInterface, parent: NodeInterface) => {
+        if (!child || !parent) return;
+        this._view?.onNodeInsert(parent, child);
+      },
+    );
 
-    (this._store as any).on('nodeinsert', (_s: unknown, node: NodeInterface, _ref: NodeInterface, parent: NodeInterface) => {
-      this._view?.onNodeInsert(parent, node);
-    });
+    (this._store as any).on(
+      'nodeinsert',
+      (_s: unknown, node: NodeInterface, _ref: NodeInterface, parent: NodeInterface) => {
+        this._view?.onNodeInsert(parent, node);
+      },
+    );
 
     (this._store as any).on('noderemove', (_s: unknown, child: NodeInterface) => {
       this._selModel.onNodeRemoved(child);
@@ -309,9 +315,7 @@ export class TreeGrid extends Panel {
     }
 
     if (!treeColCreated) {
-      result.unshift(
-        new TreeGridColumn({ dataIndex: this._displayField, text: 'Name', flex: 1 }),
-      );
+      result.unshift(new TreeGridColumn({ dataIndex: this._displayField, text: 'Name', flex: 1 }));
     }
 
     return result;
@@ -384,7 +388,11 @@ export class TreeGrid extends Panel {
     callback?.();
   }
 
-  expandNode(node: NodeInterface, deep = false, callback?: (children: NodeInterface[]) => void): void {
+  expandNode(
+    node: NodeInterface,
+    deep = false,
+    callback?: (children: NodeInterface[]) => void,
+  ): void {
     if (this.fire('beforeitemexpand', node) === false) return;
     this._store.expandNode(node);
     if (deep) {
@@ -557,9 +565,9 @@ export class TreeGrid extends Panel {
     suppressEvent = false,
   ): void {
     const flatData = this._store.flattenNodes() as NodeInterface[];
-    const toSelect = (Array.isArray(nodes) ? nodes : [nodes]).map((n) =>
-      typeof n === 'number' ? flatData[n] : n,
-    ).filter(Boolean) as NodeInterface[];
+    const toSelect = (Array.isArray(nodes) ? nodes : [nodes])
+      .map((n) => (typeof n === 'number' ? flatData[n] : n))
+      .filter(Boolean) as NodeInterface[];
 
     this._selModel.select(toSelect, keepExisting, suppressEvent);
     this._updateSelectionVisuals();
@@ -573,9 +581,9 @@ export class TreeGrid extends Panel {
     suppressEvent = false,
   ): void {
     const flatData = this._store.flattenNodes() as NodeInterface[];
-    const toDeselect = (Array.isArray(nodes) ? nodes : [nodes]).map((n) =>
-      typeof n === 'number' ? flatData[n] : n,
-    ).filter(Boolean) as NodeInterface[];
+    const toDeselect = (Array.isArray(nodes) ? nodes : [nodes])
+      .map((n) => (typeof n === 'number' ? flatData[n] : n))
+      .filter(Boolean) as NodeInterface[];
 
     this._selModel.deselect(toDeselect, suppressEvent);
     this._updateSelectionVisuals();

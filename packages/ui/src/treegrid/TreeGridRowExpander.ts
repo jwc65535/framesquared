@@ -135,7 +135,9 @@ export class TreeGridRowExpander {
 
     const tpl = this.config.rowBodyTpl;
     const content = tpl
-      ? typeof tpl === 'function' ? tpl(record) : this._renderTpl(tpl, record)
+      ? typeof tpl === 'function'
+        ? tpl(record)
+        : this._renderTpl(tpl, record)
       : '';
     td.innerHTML = content;
 

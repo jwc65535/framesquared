@@ -13,9 +13,18 @@ class Person extends Model {
   ];
 }
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+class MockRO {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 function createStore() {
   return new Store({
@@ -69,7 +78,7 @@ describe('Grid + real Store — rendering', () => {
     const store = createStore();
     const grid = createGrid(store);
     const rows = grid.el!.querySelectorAll('tbody tr');
-    const names = Array.from(rows).map(r => r.querySelector('td')!.textContent);
+    const names = Array.from(rows).map((r) => r.querySelector('td')!.textContent);
     expect(names).toEqual(['Alice', 'Bob', 'Charlie', 'Diana', 'Eve']);
   });
 
@@ -91,7 +100,7 @@ describe('Grid + real Store — sorting', () => {
     const nameHeader = grid.el!.querySelector('th') as HTMLElement;
     nameHeader.click(); // ASC
     const rows = grid.el!.querySelectorAll('tbody tr');
-    const names = Array.from(rows).map(r => r.querySelector('td')!.textContent);
+    const names = Array.from(rows).map((r) => r.querySelector('td')!.textContent);
     expect(names).toEqual(['Alice', 'Bob', 'Charlie', 'Diana', 'Eve']);
   });
 
@@ -102,7 +111,7 @@ describe('Grid + real Store — sorting', () => {
     nameHeader.click(); // ASC
     nameHeader.click(); // DESC
     const rows = grid.el!.querySelectorAll('tbody tr');
-    const names = Array.from(rows).map(r => r.querySelector('td')!.textContent);
+    const names = Array.from(rows).map((r) => r.querySelector('td')!.textContent);
     expect(names).toEqual(['Eve', 'Diana', 'Charlie', 'Bob', 'Alice']);
   });
 
@@ -112,7 +121,7 @@ describe('Grid + real Store — sorting', () => {
     const ageHeader = grid.el!.querySelectorAll('th')[1] as HTMLElement;
     ageHeader.click(); // ASC by age
     const rows = grid.el!.querySelectorAll('tbody tr');
-    const ages = Array.from(rows).map(r => r.querySelectorAll('td')[1].textContent);
+    const ages = Array.from(rows).map((r) => r.querySelectorAll('td')[1].textContent);
     expect(ages).toEqual(['22', '25', '28', '30', '35']);
   });
 });
@@ -128,7 +137,9 @@ describe('Grid + real Store — mutations', () => {
     expect(grid.el!.querySelectorAll('tbody tr').length).toBe(5);
     store.add(Person.create({ id: 6, name: 'Frank', age: 40, dept: 'Finance' }));
     expect(grid.el!.querySelectorAll('tbody tr').length).toBe(6);
-    const names = Array.from(grid.el!.querySelectorAll('tbody tr')).map(r => r.querySelector('td')!.textContent);
+    const names = Array.from(grid.el!.querySelectorAll('tbody tr')).map(
+      (r) => r.querySelector('td')!.textContent,
+    );
     expect(names).toContain('Frank');
   });
 
@@ -138,7 +149,9 @@ describe('Grid + real Store — mutations', () => {
     const alice = store.getAt(0)!;
     store.remove(alice);
     expect(grid.el!.querySelectorAll('tbody tr').length).toBe(4);
-    const names = Array.from(grid.el!.querySelectorAll('tbody tr')).map(r => r.querySelector('td')!.textContent);
+    const names = Array.from(grid.el!.querySelectorAll('tbody tr')).map(
+      (r) => r.querySelector('td')!.textContent,
+    );
     expect(names).not.toContain('Alice');
   });
 
@@ -200,9 +213,11 @@ describe('Grid + real Store + RowSelectionModel', () => {
     sm.init(grid);
     const rows = grid.el!.querySelectorAll('tbody tr');
     (rows[0] as HTMLElement).click();
-    (rows[2] as HTMLElement).dispatchEvent(new MouseEvent('click', { bubbles: true, ctrlKey: true }));
+    (rows[2] as HTMLElement).dispatchEvent(
+      new MouseEvent('click', { bubbles: true, ctrlKey: true }),
+    );
     expect(sm.getCount()).toBe(2);
-    const names = sm.getSelection().map(r => r.get('name'));
+    const names = sm.getSelection().map((r) => r.get('name'));
     expect(names).toContain('Alice');
     expect(names).toContain('Charlie');
   });
@@ -300,7 +315,9 @@ describe('Grid + real Store — item events', () => {
     const store = createStore();
     const renderer = vi.fn((v: unknown) => `$${v}`);
     const grid = new Grid({
-      renderTo: document.body, title: 'G', store,
+      renderTo: document.body,
+      title: 'G',
+      store,
       columns: [
         { text: 'Name', dataIndex: 'name' },
         { text: 'Age', dataIndex: 'age', renderer },
@@ -361,13 +378,13 @@ describe('End-to-end: Store → Grid → Selection → Modify', () => {
     store.filter('dept', 'Engineering');
     const rows = grid.el!.querySelectorAll('tbody tr');
     expect(rows.length).toBe(3);
-    const filteredNames = Array.from(rows).map(r => r.querySelector('td')!.textContent);
+    const filteredNames = Array.from(rows).map((r) => r.querySelector('td')!.textContent);
     expect(filteredNames).toEqual(['Alice', 'Charlie', 'Frank']);
 
     // Select all visible
     sm.selectAll();
     expect(sm.getCount()).toBe(3);
-    expect(sm.getSelection().every(r => r.get('dept') === 'Engineering')).toBe(true);
+    expect(sm.getSelection().every((r) => r.get('dept') === 'Engineering')).toBe(true);
 
     // Clear filter
     store.clearFilter();

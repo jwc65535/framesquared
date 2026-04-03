@@ -72,7 +72,11 @@ export class GridState {
     if (!raw) return;
 
     let state: SavedState;
-    try { state = JSON.parse(raw); } catch { return; }
+    try {
+      state = JSON.parse(raw);
+    } catch {
+      return;
+    }
 
     const columns = this.grid.getColumns();
 

@@ -79,7 +79,7 @@ export class WebSocketProxy extends Proxy {
     if (!this.ws || this.ws.readyState !== 1) return;
     const message = {
       action: operation.action,
-      records: operation.records.map(r => r.getData()),
+      records: operation.records.map((r) => r.getData()),
       params: operation.params,
     };
     this.ws.send(JSON.stringify(message));
@@ -125,6 +125,6 @@ export class WebSocketProxy extends Proxy {
   }
 
   private fire(event: string, ...args: unknown[]): void {
-    (this.listeners[event] ?? []).forEach(fn => fn(...args));
+    (this.listeners[event] ?? []).forEach((fn) => fn(...args));
   }
 }

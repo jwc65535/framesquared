@@ -247,9 +247,7 @@ describe('flatten', () => {
   });
 
   it('handles mix of elements and arrays', () => {
-    expect(flatten(['a', ['b', 'c'], 'd', ['e']])).toEqual([
-      'a', 'b', 'c', 'd', 'e',
-    ]);
+    expect(flatten(['a', ['b', 'c'], 'd', ['e']])).toEqual(['a', 'b', 'c', 'd', 'e']);
   });
 
   it('handles all-flat input (no nesting)', () => {
@@ -268,7 +266,10 @@ describe('flatten', () => {
 // ---------------------------------------------------------------------------
 describe('pluck', () => {
   it('extracts values by key', () => {
-    const items = [{ name: 'a', v: 1 }, { name: 'b', v: 2 }];
+    const items = [
+      { name: 'a', v: 1 },
+      { name: 'b', v: 2 },
+    ];
     expect(pluck(items, 'name')).toEqual(['a', 'b']);
   });
 
@@ -392,7 +393,10 @@ describe('groupBy', () => {
     ];
     const result = groupBy(items, (i) => i.type);
     expect(result).toEqual({
-      a: [{ type: 'a', v: 1 }, { type: 'a', v: 3 }],
+      a: [
+        { type: 'a', v: 1 },
+        { type: 'a', v: 3 },
+      ],
       b: [{ type: 'b', v: 2 }],
     });
   });
@@ -451,7 +455,10 @@ describe('partition', () => {
 // ---------------------------------------------------------------------------
 describe('chunk', () => {
   it('splits into equal-sized chunks', () => {
-    expect(chunk([1, 2, 3, 4], 2)).toEqual([[1, 2], [3, 4]]);
+    expect(chunk([1, 2, 3, 4], 2)).toEqual([
+      [1, 2],
+      [3, 4],
+    ]);
   });
 
   it('last chunk may be smaller', () => {

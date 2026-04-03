@@ -188,7 +188,12 @@ export class Draggable {
   // Constraint bounds
   // -----------------------------------------------------------------------
 
-  private getConstrainBounds(): { left: number; top: number; right: number; bottom: number } | null {
+  private getConstrainBounds(): {
+    left: number;
+    top: number;
+    right: number;
+    bottom: number;
+  } | null {
     if (this.constrainTo === 'viewport') {
       return { left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight };
     }

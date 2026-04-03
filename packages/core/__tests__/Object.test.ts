@@ -65,7 +65,10 @@ describe('values', () => {
 // ---------------------------------------------------------------------------
 describe('entries', () => {
   it('returns key-value pairs', () => {
-    expect(entries({ a: 1, b: 2 })).toEqual([['a', 1], ['b', 2]]);
+    expect(entries({ a: 1, b: 2 })).toEqual([
+      ['a', 1],
+      ['b', 2],
+    ]);
   });
 
   it('returns empty array for empty object', () => {
@@ -78,7 +81,12 @@ describe('entries', () => {
 // ---------------------------------------------------------------------------
 describe('fromEntries', () => {
   it('creates an object from key-value pairs', () => {
-    expect(fromEntries([['a', 1], ['b', 2]])).toEqual({ a: 1, b: 2 });
+    expect(
+      fromEntries([
+        ['a', 1],
+        ['b', 2],
+      ]),
+    ).toEqual({ a: 1, b: 2 });
   });
 
   it('returns empty object for empty input', () => {
@@ -86,7 +94,12 @@ describe('fromEntries', () => {
   });
 
   it('last entry wins on duplicate keys', () => {
-    expect(fromEntries([['a', 1], ['a', 2]])).toEqual({ a: 2 });
+    expect(
+      fromEntries([
+        ['a', 1],
+        ['a', 2],
+      ]),
+    ).toEqual({ a: 2 });
   });
 
   it('round-trips with entries()', () => {

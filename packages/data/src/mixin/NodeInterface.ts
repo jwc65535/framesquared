@@ -52,7 +52,10 @@ export interface NodeInterface extends Model {
   childCount(): number;
   hasChildNodes(): boolean;
   getChildren(deep?: boolean): NodeInterface[];
-  findChildBy(predicate: (node: NodeInterface) => boolean | void, deep?: boolean): NodeInterface | undefined;
+  findChildBy(
+    predicate: (node: NodeInterface) => boolean | void,
+    deep?: boolean,
+  ): NodeInterface | undefined;
   removeAll(): NodeInterface[];
   copy(deep?: boolean): NodeInterface;
   getDepth(): number;
@@ -184,7 +187,7 @@ export function applyNodeInterface(model: Model, depth = 0): void {
     const parts: string[] = [];
     let current: NodeInterface | null = this;
     while (current) {
-      parts.unshift(current.get('text') as string ?? String(current.getId()));
+      parts.unshift((current.get('text') as string) ?? String(current.getId()));
       current = current.parentNode;
     }
     return separator + parts.join(separator);
@@ -250,9 +253,7 @@ export function applyNodeInterface(model: Model, depth = 0): void {
     return data;
   };
 
-  node.eachChild = function (
-    fn: (child: NodeInterface, index: number) => boolean | void,
-  ): void {
+  node.eachChild = function (fn: (child: NodeInterface, index: number) => boolean | void): void {
     for (let i = 0; i < this.childNodes.length; i++) {
       if (fn(this.childNodes[i], i) === false) return;
     }
@@ -348,11 +349,7 @@ function updateDepthRecursive(node: NodeInterface, depth: number): void {
 /**
  * Recursively copies a node (and optionally its children) with new IDs.
  */
-function copyNodeImpl(
-  node: NodeInterface,
-  deep: boolean,
-  counter: { i: number },
-): NodeInterface {
+function copyNodeImpl(node: NodeInterface, deep: boolean, counter: { i: number }): NodeInterface {
   counter.i += 1;
   const newId = 'copy-' + Date.now() + '-' + counter.i;
   const data = (node as any).getData() as Record<string, unknown>;
@@ -374,10 +371,7 @@ function copyNodeImpl(
 /**
  * Depth-first cascade that returns false if iteration was stopped.
  */
-function cascadeByImpl(
-  node: NodeInterface,
-  fn: (n: NodeInterface) => boolean | void,
-): boolean {
+function cascadeByImpl(node: NodeInterface, fn: (n: NodeInterface) => boolean | void): boolean {
   if (fn(node) === false) return false;
   for (const child of [...node.childNodes]) {
     if (!cascadeByImpl(child, fn)) return false;

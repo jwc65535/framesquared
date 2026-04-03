@@ -19,7 +19,13 @@ import type { LayoutContext } from '../LayoutContext.js';
 // ---------------------------------------------------------------------------
 
 export type BoxAlign = 'start' | 'center' | 'end' | 'stretch' | 'stretchmax';
-export type BoxPack = 'start' | 'center' | 'end' | 'space-between' | 'space-around' | 'space-evenly';
+export type BoxPack =
+  | 'start'
+  | 'center'
+  | 'end'
+  | 'space-between'
+  | 'space-around'
+  | 'space-evenly';
 export type BoxOverflow = 'visible' | 'hidden' | 'scroll' | 'wrap';
 
 export interface BoxLayoutConfig extends LayoutConfig {
@@ -94,9 +100,7 @@ export abstract class BoxLayout extends Layout {
     el.style.display = 'flex';
 
     const dir = this.getDirection();
-    el.style.flexDirection = this.reverse
-      ? `${dir}-reverse` as any
-      : dir;
+    el.style.flexDirection = this.reverse ? (`${dir}-reverse` as any) : dir;
 
     el.style.alignItems = ALIGN_MAP[this.align];
     el.style.justifyContent = PACK_MAP[this.pack];
@@ -179,9 +183,12 @@ export abstract class BoxLayout extends Layout {
     const cfg = (item as any)._config ?? {};
     const primaryProp = this.getPrimaryAxisProp();
 
-    const primaryPolicy = cfg.flex !== undefined
-      ? 'shrinkWrap'
-      : (cfg[primaryProp] !== undefined ? 'configured' : 'natural');
+    const primaryPolicy =
+      cfg.flex !== undefined
+        ? 'shrinkWrap'
+        : cfg[primaryProp] !== undefined
+          ? 'configured'
+          : 'natural';
 
     const crossProp = primaryProp === 'width' ? 'height' : 'width';
     const crossPolicy = cfg[crossProp] !== undefined ? 'configured' : 'natural';

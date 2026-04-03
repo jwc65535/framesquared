@@ -127,7 +127,7 @@ export class ViewModel {
   }
 
   private fire(event: string, ...args: unknown[]): void {
-    (this._listeners[event] ?? []).forEach(fn => fn(...args));
+    (this._listeners[event] ?? []).forEach((fn) => fn(...args));
   }
 
   // -----------------------------------------------------------------------

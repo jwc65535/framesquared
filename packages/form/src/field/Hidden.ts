@@ -19,7 +19,9 @@ export class HiddenField extends Field {
 
   protected override afterRender(): void {
     // Skip label rendering — call Component afterRender only
-    const ComponentProto = Object.getPrototypeOf(Object.getPrototypeOf(Object.getPrototypeOf(this)));
+    const ComponentProto = Object.getPrototypeOf(
+      Object.getPrototypeOf(Object.getPrototypeOf(this)),
+    );
     ComponentProto.afterRender?.call(this);
 
     this.el!.classList.add('x-field', 'x-hidden-field');

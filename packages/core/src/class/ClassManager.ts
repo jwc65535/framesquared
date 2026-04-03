@@ -30,13 +30,7 @@ export interface ClassDefinition {
 }
 
 // Reserved keys that are NOT copied to the prototype as methods.
-const RESERVED_DEF_KEYS = new Set([
-  'extend',
-  'mixins',
-  'alias',
-  'config',
-  'statics',
-]);
+const RESERVED_DEF_KEYS = new Set(['extend', 'mixins', 'alias', 'config', 'statics']);
 
 // ---------------------------------------------------------------------------
 // ClassManager singleton
@@ -107,10 +101,7 @@ export const ClassManager = new ClassManagerImpl();
 // Mixin application
 // ---------------------------------------------------------------------------
 
-function applyMixins(
-  targetClass: typeof Base,
-  mixins: (typeof Base)[],
-): void {
+function applyMixins(targetClass: typeof Base, mixins: (typeof Base)[]): void {
   if (!targetClass.$mixins) {
     targetClass.$mixins = new Set();
   }
@@ -169,10 +160,7 @@ function applyMixins(
  * });
  * ```
  */
-export function define(
-  className: string,
-  definition: ClassDefinition,
-): typeof Base {
+export function define(className: string, definition: ClassDefinition): typeof Base {
   const SuperClass = definition.extend || Base;
 
   // 1. Create the subclass dynamically.
@@ -237,9 +225,7 @@ export function define(
 
   // 8. Aliases.
   if (definition.alias) {
-    const aliases = Array.isArray(definition.alias)
-      ? definition.alias
-      : [definition.alias];
+    const aliases = Array.isArray(definition.alias) ? definition.alias : [definition.alias];
     for (const a of aliases) {
       ClassManager.registerAlias(a, NewClass);
     }

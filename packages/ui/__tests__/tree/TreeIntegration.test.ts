@@ -37,10 +37,7 @@ function makeStore(data?: Record<string, unknown>): TreeStore {
   });
 }
 
-function makePanel(
-  store: TreeStore,
-  extra: Record<string, unknown> = {},
-): TreePanel {
+function makePanel(store: TreeStore, extra: Record<string, unknown> = {}): TreePanel {
   return new TreePanel({ renderTo: document.body, store, ...extra } as any);
 }
 
@@ -60,8 +57,8 @@ describe('Full render', () => {
   it('node text appears in DOM', () => {
     const store = makeStore();
     const p = makePanel(store);
-    const texts = Array.from(p.el!.querySelectorAll('.x-tree-node-text')).map(
-      (el) => el.textContent?.trim(),
+    const texts = Array.from(p.el!.querySelectorAll('.x-tree-node-text')).map((el) =>
+      el.textContent?.trim(),
     );
     expect(texts).toContain('Node A');
     expect(texts).toContain('Node B');
@@ -237,8 +234,8 @@ describe('Programmatic tree changes', () => {
     const p = makePanel(store);
     const root = store.getRootNode();
     store.appendChild(root, (TreeModel as any).create({ id: 'c', text: 'Node C', leaf: true }));
-    const texts = Array.from(p.el!.querySelectorAll('.x-tree-node-text')).map(
-      (el) => el.textContent?.trim(),
+    const texts = Array.from(p.el!.querySelectorAll('.x-tree-node-text')).map((el) =>
+      el.textContent?.trim(),
     );
     expect(texts).toContain('Node C');
   });
@@ -249,8 +246,8 @@ describe('Programmatic tree changes', () => {
     const root = store.getRootNode();
     const nodeB = store.getNodeById('b') as NodeInterface;
     store.removeChild(root, nodeB);
-    const texts = Array.from(p.el!.querySelectorAll('.x-tree-node-text')).map(
-      (el) => el.textContent?.trim(),
+    const texts = Array.from(p.el!.querySelectorAll('.x-tree-node-text')).map((el) =>
+      el.textContent?.trim(),
     );
     expect(texts).not.toContain('Node B');
   });

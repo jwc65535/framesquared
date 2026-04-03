@@ -88,7 +88,7 @@ describe('Stub', () => {
 
   it('FormulaStub tracks dependencies', () => {
     const dep = new ValueStub('price', 10);
-    const formula = new FormulaStub('total', () => dep.getValue() as number * 2);
+    const formula = new FormulaStub('total', () => (dep.getValue() as number) * 2);
     formula.addDependency(dep);
     expect(formula.getDependencies()).toContain(dep);
   });
@@ -152,7 +152,10 @@ describe('ViewModel — auto dependency tracking', () => {
     const vm = new ViewModel({
       data: { a: 1, b: 2, unrelated: 'x' },
       formulas: {
-        sum: (get) => { computeCount++; return (get('a') as number) + (get('b') as number); },
+        sum: (get) => {
+          computeCount++;
+          return (get('a') as number) + (get('b') as number);
+        },
       },
     });
     vm.get('sum'); // initial compute

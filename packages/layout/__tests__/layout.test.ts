@@ -13,8 +13,12 @@ class MockRO {
   unobserve() {}
   disconnect() {}
 }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 // Helpers
 function cmp(cfg: Record<string, unknown> = {}): Component {
@@ -342,10 +346,7 @@ describe('AutoLayout', () => {
 
   it('works as Container layout integration', () => {
     const c = ct({
-      items: [
-        new Component({ html: 'A', width: 50 }),
-        new Component({ html: 'B', width: 100 }),
-      ],
+      items: [new Component({ html: 'A', width: 50 }), new Component({ html: 'B', width: 100 })],
     });
 
     const body = c.getBodyEl();

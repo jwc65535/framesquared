@@ -55,12 +55,10 @@ export class ResponsiveColumnLayout extends Layout {
 
     if (this.maxColumns) {
       // With maxColumns: use repeat(maxColumns, minmax(min, 1fr))
-      el.style.gridTemplateColumns =
-        `repeat(auto-fill, minmax(min(${this.minColumnWidth}px, 100%), ${Math.floor(100 / this.maxColumns)}%))`;
+      el.style.gridTemplateColumns = `repeat(auto-fill, minmax(min(${this.minColumnWidth}px, 100%), ${Math.floor(100 / this.maxColumns)}%))`;
     } else {
       // Without maxColumns: use auto-fill with minmax
-      el.style.gridTemplateColumns =
-        `repeat(auto-fill, minmax(${this.minColumnWidth}px, 1fr))`;
+      el.style.gridTemplateColumns = `repeat(auto-fill, minmax(${this.minColumnWidth}px, 1fr))`;
     }
 
     if (this.gap > 0) {

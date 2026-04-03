@@ -60,11 +60,7 @@ export const EventManager = {
   /**
    * Removes a DOM event listener.
    */
-  un(
-    element: Element | Document,
-    eventName: string,
-    handler: EventListener,
-  ): void {
+  un(element: Element | Document, eventName: string, handler: EventListener): void {
     element.removeEventListener(eventName, handler);
     const idx = tracked.findIndex(
       (t) => t.element === element && t.eventName === eventName && t.handler === handler,

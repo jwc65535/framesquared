@@ -132,8 +132,25 @@ export {
 export { Plugin } from './Plugin.js';
 
 // Event system
-export { ExtEvent, Observable, DestroyableUtil, EventDomain, EventBus, EventManager, GestureRecognizer, KeyMap } from './event/index.js';
-export type { ListenerOptions, Destroyable, ListenerConfig, TypedObservable, EventMap, KeyBinding, KeyMapConfig } from './event/index.js';
+export {
+  ExtEvent,
+  Observable,
+  DestroyableUtil,
+  EventDomain,
+  EventBus,
+  EventManager,
+  GestureRecognizer,
+  KeyMap,
+} from './event/index.js';
+export type {
+  ListenerOptions,
+  Destroyable,
+  ListenerConfig,
+  TypedObservable,
+  EventMap,
+  KeyBinding,
+  KeyMapConfig,
+} from './event/index.js';
 
 // ARIA / Accessibility
 export { AriaManager } from './aria/AriaManager.js';

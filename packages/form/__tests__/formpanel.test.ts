@@ -7,13 +7,20 @@ import { BasicForm } from '../src/form/BasicForm.js';
 import { FieldContainer } from '../src/field/FieldContainer.js';
 import * as V from '../src/form/Validators.js';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
+class MockRO {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
 beforeEach(() => {
   (globalThis as any).ResizeObserver = MockRO;
   // Mock fetch
   (globalThis as any).fetch = vi.fn();
 });
-afterEach(() => { document.body.innerHTML = ''; });
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 function tf(cfg: Record<string, unknown> = {}): TextField {
   return new TextField(cfg);
@@ -82,7 +89,7 @@ describe('Validators', () => {
   });
 
   it('custom function validator', () => {
-    const custom = (val: unknown) => val === 'magic' ? true : 'Not magic';
+    const custom = (val: unknown) => (val === 'magic' ? true : 'Not magic');
     expect(V.custom('magic', { fn: custom })).toBe(true);
     expect(V.custom('other', { fn: custom })).toBe('Not magic');
   });
@@ -459,10 +466,7 @@ describe('FieldContainer', () => {
       renderTo: document.body,
       fieldLabel: 'Info',
       combineErrors: true,
-      items: [
-        tf({ name: 'a', allowBlank: false }),
-        tf({ name: 'b', allowBlank: false }),
-      ],
+      items: [tf({ name: 'a', allowBlank: false }), tf({ name: 'b', allowBlank: false })],
     });
     const errors = fc.getErrors();
     expect(errors.length).toBeGreaterThan(0);
@@ -471,9 +475,7 @@ describe('FieldContainer', () => {
   it('isValid checks child fields', () => {
     const fc = new FieldContainer({
       renderTo: document.body,
-      items: [
-        tf({ name: 'a', value: 'ok', allowBlank: false }),
-      ],
+      items: [tf({ name: 'a', value: 'ok', allowBlank: false })],
     });
     expect(fc.isValid()).toBe(true);
   });

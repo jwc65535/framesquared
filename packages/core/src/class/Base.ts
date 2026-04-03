@@ -122,11 +122,7 @@ function generateAccessors(proto: object, configName: string): void {
  * Wraps a method so it pushes / pops from the instance's `$callStack`,
  * enabling `callParent()` to locate the correct super-method.
  */
-export function wrapMethod(
-  fn: Function,
-  methodName: string,
-  ownerClass: typeof Base,
-): Function {
+export function wrapMethod(fn: Function, methodName: string, ownerClass: typeof Base): Function {
   const wrapped = function (this: Base, ...args: unknown[]) {
     this.$callStack.push({ methodName, owner: ownerClass });
     try {

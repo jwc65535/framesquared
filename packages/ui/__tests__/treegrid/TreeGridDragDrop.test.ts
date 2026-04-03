@@ -14,12 +14,19 @@ function makeStore() {
   return new TreeStore({
     model: TreeModel,
     root: {
-      id: 'root', text: 'Root', expanded: true,
+      id: 'root',
+      text: 'Root',
+      expanded: true,
       children: [
-        { id: 'folder1', text: 'Folder 1', expanded: true, children: [
-          { id: 'file1', text: 'File 1', leaf: true },
-          { id: 'file2', text: 'File 2', leaf: true },
-        ]},
+        {
+          id: 'folder1',
+          text: 'Folder 1',
+          expanded: true,
+          children: [
+            { id: 'file1', text: 'File 1', leaf: true },
+            { id: 'file2', text: 'File 2', leaf: true },
+          ],
+        },
         { id: 'folder2', text: 'Folder 2', children: [] },
       ],
     },
@@ -38,7 +45,9 @@ beforeEach(() => {
   (globalThis as any).ResizeObserver = MockRO;
   if (typeof (globalThis as any).PointerEvent === 'undefined') {
     (globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {
-      constructor(type: string, init?: PointerEventInit) { super(type, init); }
+      constructor(type: string, init?: PointerEventInit) {
+        super(type, init);
+      }
     };
   }
 });

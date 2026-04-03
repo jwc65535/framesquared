@@ -14,7 +14,12 @@ export type { LayoutConfig } from './Layout.js';
 
 // New CQ engine
 export { CQParser } from './query/CQParser.js';
-export type { SelectorNode, CompoundSelectorNode, CombinatorNode, SelectorListNode } from './query/CQParser.js';
+export type {
+  SelectorNode,
+  CompoundSelectorNode,
+  CombinatorNode,
+  SelectorListNode,
+} from './query/CQParser.js';
 export { CQMatcher } from './query/CQMatcher.js';
 export { CQ } from './query/ComponentQuery.js';
 

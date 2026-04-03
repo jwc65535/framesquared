@@ -36,7 +36,7 @@ export interface ClassSelectorNode {
 export interface AttributeSelectorNode {
   type: 'attribute';
   name: string;
-  operator?: string;  // '=', '!=', '>', '<', '>=', '<='
+  operator?: string; // '=', '!=', '>', '<', '>=', '<='
   value?: string;
 }
 
@@ -76,18 +76,23 @@ export type SimpleSelectorNode =
   | PseudoSelectorNode
   | MethodSelectorNode;
 
-export type SelectorNode =
-  | CompoundSelectorNode
-  | CombinatorNode
-  | SelectorListNode;
+export type SelectorNode = CompoundSelectorNode | CombinatorNode | SelectorListNode;
 
 // ---------------------------------------------------------------------------
 // Tokenizer
 // ---------------------------------------------------------------------------
 
 interface Token {
-  type: 'ident' | 'hash' | 'dot' | 'bracket' | 'colon' | 'brace' |
-        'combinator' | 'comma' | 'whitespace';
+  type:
+    | 'ident'
+    | 'hash'
+    | 'dot'
+    | 'bracket'
+    | 'colon'
+    | 'brace'
+    | 'combinator'
+    | 'comma'
+    | 'whitespace';
   value: string;
 }
 
@@ -338,8 +343,10 @@ export class CQParser {
     if (opMatch) {
       let val = opMatch[3].trim();
       // Strip quotes
-      if ((val.startsWith('"') && val.endsWith('"')) ||
-          (val.startsWith("'") && val.endsWith("'"))) {
+      if (
+        (val.startsWith('"') && val.endsWith('"')) ||
+        (val.startsWith("'") && val.endsWith("'"))
+      ) {
         val = val.slice(1, -1);
       }
       return { type: 'attribute', name: opMatch[1], operator: opMatch[2], value: val };

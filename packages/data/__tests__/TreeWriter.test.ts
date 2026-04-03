@@ -116,8 +116,12 @@ describe('TreeWriter', () => {
   describe('TreeModel integration', () => {
     it('writes TreeModel nodes', () => {
       const writer = new TreeWriter();
-      const root = TreeModel.create({ id: 1, text: 'Root' }) as InstanceType<typeof TreeModel> & NodeInterface;
-      const child = TreeModel.create({ id: 2, text: 'Child', leaf: true }) as InstanceType<typeof TreeModel> & NodeInterface;
+      const root = TreeModel.create({ id: 1, text: 'Root' }) as InstanceType<typeof TreeModel> &
+        NodeInterface;
+      const child = TreeModel.create({ id: 2, text: 'Child', leaf: true }) as InstanceType<
+        typeof TreeModel
+      > &
+        NodeInterface;
       root.appendChild(child);
 
       const result = writer.writeRecords([root]);

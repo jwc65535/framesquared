@@ -113,11 +113,7 @@ function getListeners(state: ObservableState, eventName: string): ListenerEntry[
  * Entries are sorted by priority descending.
  * If prepend=true, insert before existing entries with the same priority.
  */
-function insertListener(
-  list: ListenerEntry[],
-  entry: ListenerEntry,
-  prepend: boolean,
-): void {
+function insertListener(list: ListenerEntry[], entry: ListenerEntry, prepend: boolean): void {
   const p = entry.priority;
   let idx: number;
 
@@ -224,9 +220,7 @@ function findEntry(
   fn: Function,
   scope: object | undefined,
 ): ListenerEntry | undefined {
-  return list.find(
-    (e) => e.fn === fn && e.scope === scope,
-  );
+  return list.find((e) => e.fn === fn && e.scope === scope);
 }
 
 // ---------------------------------------------------------------------------
@@ -289,10 +283,7 @@ export const Observable: typeof Base = define('Ext.mixin.Observable', {
   },
 
   // ----- aliases -----
-  addListener(
-    this: any,
-    ...args: unknown[]
-  ): Destroyable | void {
+  addListener(this: any, ...args: unknown[]): Destroyable | void {
     return this.on(...args);
   },
 
@@ -387,12 +378,7 @@ export const Observable: typeof Base = define('Ext.mixin.Observable', {
   },
 
   // ----- relayEvents -----
-  relayEvents(
-    this: Base,
-    origin: Base,
-    events: string[],
-    prefix?: string,
-  ): Destroyable {
+  relayEvents(this: Base, origin: Base, events: string[], prefix?: string): Destroyable {
     const handlers: { eventName: string; fn: Function }[] = [];
     const self = this;
 
@@ -416,25 +402,14 @@ export const Observable: typeof Base = define('Ext.mixin.Observable', {
   },
 
   // ----- mon (managed listener) -----
-  mon(
-    this: Base,
-    target: Base,
-    eventName: string,
-    handler: Function,
-    scope?: object,
-  ): void {
+  mon(this: Base, target: Base, eventName: string, handler: Function, scope?: object): void {
     const state = getState(this);
     (target as any).on(eventName, handler, scope);
     state.managedListeners.push({ target, eventName, fn: handler, scope });
   },
 
   // ----- mun (remove managed listener) -----
-  mun(
-    this: Base,
-    target: Base,
-    eventName: string,
-    handler: Function,
-  ): void {
+  mun(this: Base, target: Base, eventName: string, handler: Function): void {
     const state = getState(this);
     (target as any).un(eventName, handler);
     state.managedListeners = state.managedListeners.filter(
@@ -475,19 +450,13 @@ function installDestroyHook(inst: Base): void {
 }
 
 const origOn = obsProto.on;
-obsProto.on = function (
-  this: Base,
-  ...args: any[]
-): Destroyable | void {
+obsProto.on = function (this: Base, ...args: any[]): Destroyable | void {
   installDestroyHook(this);
   return origOn.apply(this, args);
 };
 
 const origMon = obsProto.mon;
-obsProto.mon = function (
-  this: Base,
-  ...args: any[]
-): void {
+obsProto.mon = function (this: Base, ...args: any[]): void {
   installDestroyHook(this);
   return origMon.apply(this, args);
 };

@@ -28,9 +28,11 @@ describe('Basic interpolation', () => {
 
   it('supports nested dot paths', () => {
     const tpl = new XTemplate('{user.name} lives in {user.address.city}');
-    expect(tpl.apply({
-      user: { name: 'Alice', address: { city: 'NYC' } },
-    })).toBe('Alice lives in NYC');
+    expect(
+      tpl.apply({
+        user: { name: 'Alice', address: { city: 'NYC' } },
+      }),
+    ).toBe('Alice lives in NYC');
   });
 
   it('numeric values are converted to string', () => {
@@ -148,20 +150,20 @@ describe('Conditionals', () => {
   });
 
   it('tpl if/else', () => {
-    const tpl = new XTemplate(
-      '<tpl if="active">Active<tpl else>Inactive</tpl>',
-    );
+    const tpl = new XTemplate('<tpl if="active">Active<tpl else>Inactive</tpl>');
     expect(tpl.apply({ active: true })).toBe('Active');
     expect(tpl.apply({ active: false })).toBe('Inactive');
   });
 
   it('tpl if/elseif/else', () => {
-    const tpl = new XTemplate([
-      '<tpl if="age >= 18">Adult',
-      '<tpl elseif="age >= 13">Teen',
-      '<tpl else>Child',
-      '</tpl>',
-    ].join(''));
+    const tpl = new XTemplate(
+      [
+        '<tpl if="age >= 18">Adult',
+        '<tpl elseif="age >= 13">Teen',
+        '<tpl else>Child',
+        '</tpl>',
+      ].join(''),
+    );
     expect(tpl.apply({ age: 25 })).toBe('Adult');
     expect(tpl.apply({ age: 15 })).toBe('Teen');
     expect(tpl.apply({ age: 5 })).toBe('Child');
@@ -198,26 +200,22 @@ describe('Conditionals', () => {
 describe('Loops', () => {
   it('tpl for iterates array field', () => {
     const tpl = new XTemplate('<tpl for="items">{name} </tpl>');
-    expect(tpl.apply({ items: [{ name: 'A' }, { name: 'B' }, { name: 'C' }] }))
-      .toBe('A B C ');
+    expect(tpl.apply({ items: [{ name: 'A' }, { name: 'B' }, { name: 'C' }] })).toBe('A B C ');
   });
 
   it('{.} refers to current value in simple array', () => {
     const tpl = new XTemplate('<tpl for="tags">{.} </tpl>');
-    expect(tpl.apply({ tags: ['red', 'green', 'blue'] }))
-      .toBe('red green blue ');
+    expect(tpl.apply({ tags: ['red', 'green', 'blue'] })).toBe('red green blue ');
   });
 
   it('{#} gives 1-based index', () => {
     const tpl = new XTemplate('<tpl for="items">{#}:{name} </tpl>');
-    expect(tpl.apply({ items: [{ name: 'A' }, { name: 'B' }] }))
-      .toBe('1:A 2:B ');
+    expect(tpl.apply({ items: [{ name: 'A' }, { name: 'B' }] })).toBe('1:A 2:B ');
   });
 
   it('for "." iterates root array', () => {
     const tpl = new XTemplate('<tpl for=".">{name} </tpl>');
-    expect(tpl.apply([{ name: 'X' }, { name: 'Y' }] as any))
-      .toBe('X Y ');
+    expect(tpl.apply([{ name: 'X' }, { name: 'Y' }] as any)).toBe('X Y ');
   });
 
   it('{[xindex]} gives 1-based index', () => {
@@ -234,12 +232,14 @@ describe('Loops', () => {
     const tpl = new XTemplate(
       '<tpl for="groups">{name}:<tpl for="items">{parent.name}/{.} </tpl></tpl>',
     );
-    expect(tpl.apply({
-      groups: [
-        { name: 'G1', items: ['a', 'b'] },
-        { name: 'G2', items: ['c'] },
-      ],
-    })).toBe('G1:G1/a G1/b G2:G2/c ');
+    expect(
+      tpl.apply({
+        groups: [
+          { name: 'G1', items: ['a', 'b'] },
+          { name: 'G2', items: ['c'] },
+        ],
+      }),
+    ).toBe('G1:G1/a G1/b G2:G2/c ');
   });
 
   it('empty array produces no output', () => {
@@ -441,16 +441,12 @@ describe('Additional XTemplate branches', () => {
   });
 
   it('elseif branch with condition', () => {
-    const tpl = new XTemplate(
-      '<tpl if="x == 1">one<tpl elseif="x == 2">two<tpl else>other</tpl>',
-    );
+    const tpl = new XTemplate('<tpl if="x == 1">one<tpl elseif="x == 2">two<tpl else>other</tpl>');
     expect(tpl.apply({ x: 2 })).toBe('two');
   });
 
   it('nested tpl for inside tpl if', () => {
-    const tpl = new XTemplate(
-      '<tpl if="show"><tpl for="list">{.} </tpl></tpl>',
-    );
+    const tpl = new XTemplate('<tpl if="show"><tpl for="list">{.} </tpl></tpl>');
     expect(tpl.apply({ show: true, list: ['a', 'b'] })).toBe('a b ');
   });
 
@@ -466,24 +462,21 @@ describe('Additional XTemplate branches', () => {
 
   it('htmlDecode all entities', () => {
     const tpl = new XTemplate('{t:htmlDecode}');
-    expect(tpl.apply({ t: '&amp;&lt;&gt;&quot;&#39;' })).toBe('&<>"\'' );
+    expect(tpl.apply({ t: '&amp;&lt;&gt;&quot;&#39;' })).toBe('&<>"\'');
   });
 
   it('condition with single-quoted string', () => {
-    const tpl = new XTemplate("<tpl if=\"status == 'ok'\">OK</tpl>");
+    const tpl = new XTemplate('<tpl if="status == \'ok\'">OK</tpl>');
     expect(tpl.apply({ status: 'ok' })).toBe('OK');
   });
 
   it('loop inside loop with expressions', () => {
-    const tpl = new XTemplate(
-      '<tpl for="rows"><tpl for="cells">{[values.v]} </tpl></tpl>',
-    );
-    expect(tpl.apply({
-      rows: [
-        { cells: [{ v: 1 }, { v: 2 }] },
-        { cells: [{ v: 3 }] },
-      ],
-    })).toBe('1 2 3 ');
+    const tpl = new XTemplate('<tpl for="rows"><tpl for="cells">{[values.v]} </tpl></tpl>');
+    expect(
+      tpl.apply({
+        rows: [{ cells: [{ v: 1 }, { v: 2 }] }, { cells: [{ v: 3 }] }],
+      }),
+    ).toBe('1 2 3 ');
   });
 
   it('unclosed tpl tag is handled gracefully', () => {
@@ -499,9 +492,7 @@ describe('Additional XTemplate branches', () => {
   });
 
   it('PrimitiveScope resolves nested parent path', () => {
-    const tpl = new XTemplate(
-      '<tpl for="items">{parent.title}: {.} </tpl>',
-    );
+    const tpl = new XTemplate('<tpl for="items">{parent.title}: {.} </tpl>');
     expect(tpl.apply({ title: 'List', items: [1, 2] })).toBe('List: 1 List: 2 ');
   });
 });
@@ -512,49 +503,47 @@ describe('Additional XTemplate branches', () => {
 
 describe('Complex templates', () => {
   it('loop with conditional inside', () => {
-    const tpl = new XTemplate(
-      '<tpl for="items"><tpl if="active">{name} </tpl></tpl>',
-    );
-    expect(tpl.apply({
-      items: [
-        { name: 'A', active: true },
-        { name: 'B', active: false },
-        { name: 'C', active: true },
-      ],
-    })).toBe('A C ');
+    const tpl = new XTemplate('<tpl for="items"><tpl if="active">{name} </tpl></tpl>');
+    expect(
+      tpl.apply({
+        items: [
+          { name: 'A', active: true },
+          { name: 'B', active: false },
+          { name: 'C', active: true },
+        ],
+      }),
+    ).toBe('A C ');
   });
 
   it('conditional with loop inside', () => {
-    const tpl = new XTemplate(
-      '<tpl if="showList"><tpl for="items">{.} </tpl></tpl>',
-    );
+    const tpl = new XTemplate('<tpl if="showList"><tpl for="items">{.} </tpl></tpl>');
     expect(tpl.apply({ showList: true, items: ['x', 'y'] })).toBe('x y ');
     expect(tpl.apply({ showList: false, items: ['x', 'y'] })).toBe('');
   });
 
   it('format function with loop', () => {
-    const tpl = new XTemplate(
-      '<tpl for="names">{.:uppercase} </tpl>',
-    );
+    const tpl = new XTemplate('<tpl for="names">{.:uppercase} </tpl>');
     expect(tpl.apply({ names: ['alice', 'bob'] })).toBe('ALICE BOB ');
   });
 
   it('full real-world template', () => {
-    const tpl = new XTemplate([
-      '<div class="user-card">',
-      '  <h2>{name:htmlEncode}</h2>',
-      '  <tpl if="email">',
-      '    <p>{email}</p>',
-      '  </tpl>',
-      '  <tpl if="items.length > 0">',
-      '    <ul>',
-      '    <tpl for="items">',
-      '      <li>{#}. {title:htmlEncode} - {[values.price.toFixed(2)]}</li>',
-      '    </tpl>',
-      '    </ul>',
-      '  </tpl>',
-      '</div>',
-    ].join(''));
+    const tpl = new XTemplate(
+      [
+        '<div class="user-card">',
+        '  <h2>{name:htmlEncode}</h2>',
+        '  <tpl if="email">',
+        '    <p>{email}</p>',
+        '  </tpl>',
+        '  <tpl if="items.length > 0">',
+        '    <ul>',
+        '    <tpl for="items">',
+        '      <li>{#}. {title:htmlEncode} - {[values.price.toFixed(2)]}</li>',
+        '    </tpl>',
+        '    </ul>',
+        '  </tpl>',
+        '</div>',
+      ].join(''),
+    );
 
     const result = tpl.apply({
       name: 'Alice & Bob',

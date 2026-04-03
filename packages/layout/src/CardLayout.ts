@@ -29,7 +29,10 @@ export class CardLayout extends Layout {
   /** Subscribe to events. */
   on(event: string, fn: Function): void {
     let set = this.listeners.get(event);
-    if (!set) { set = new Set(); this.listeners.set(event, set); }
+    if (!set) {
+      set = new Set();
+      this.listeners.set(event, set);
+    }
     set.add(fn);
   }
 

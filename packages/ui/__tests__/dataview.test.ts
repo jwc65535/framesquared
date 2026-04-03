@@ -2,16 +2,30 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { DataView } from '../src/view/DataView.js';
 import { ListView } from '../src/view/ListView.js';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+class MockRO {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 function mockStore(data: Record<string, unknown>[] = []) {
-  const dataCopy = data.map(d => ({ ...d }));
+  const dataCopy = data.map((d) => ({ ...d }));
   const records = dataCopy.map((d, i) => ({
-    id: d.id ?? i, data: d,
-    get(f: string) { return (d as any)[f]; },
-    set(f: string, v: unknown) { (d as any)[f] = v; },
+    id: d.id ?? i,
+    data: d,
+    get(f: string) {
+      return (d as any)[f];
+    },
+    set(f: string, v: unknown) {
+      (d as any)[f] = v;
+    },
   }));
   const listeners: Record<string, Function[]> = {};
   return {
@@ -19,20 +33,31 @@ function mockStore(data: Record<string, unknown>[] = []) {
     getRange: () => records,
     getCount: () => records.length,
     getAt: (i: number) => records[i],
-    on: (evt: string, fn: Function) => { (listeners[evt] ??= []).push(fn); },
-    fireEvent: (evt: string, ...args: unknown[]) => { (listeners[evt] ?? []).forEach(fn => fn(...args)); },
+    on: (evt: string, fn: Function) => {
+      (listeners[evt] ??= []).push(fn);
+    },
+    fireEvent: (evt: string, ...args: unknown[]) => {
+      (listeners[evt] ?? []).forEach((fn) => fn(...args));
+    },
     each: (fn: Function) => records.forEach(fn),
     isLoading: () => false,
     add: (rec: Record<string, unknown>) => {
-      const r = { id: records.length, data: rec, get: (f: string) => (rec as any)[f], set: (f: string, v: unknown) => { (rec as any)[f] = v; } };
+      const r = {
+        id: records.length,
+        data: rec,
+        get: (f: string) => (rec as any)[f],
+        set: (f: string, v: unknown) => {
+          (rec as any)[f] = v;
+        },
+      };
       records.push(r as any);
-      (listeners['add'] ?? []).forEach(fn => fn(r));
-      (listeners['datachanged'] ?? []).forEach(fn => fn());
+      (listeners['add'] ?? []).forEach((fn) => fn(r));
+      (listeners['datachanged'] ?? []).forEach((fn) => fn());
     },
     removeAt: (idx: number) => {
       records.splice(idx, 1);
-      (listeners['remove'] ?? []).forEach(fn => fn());
-      (listeners['datachanged'] ?? []).forEach(fn => fn());
+      (listeners['remove'] ?? []).forEach((fn) => fn());
+      (listeners['datachanged'] ?? []).forEach((fn) => fn());
     },
   };
 }
@@ -115,7 +140,8 @@ describe('DataView — item events', () => {
     return new DataView({
       renderTo: document.body,
       store: mockStore(SAMPLE),
-      itemTpl: (record: any) => `<div class="item" data-idx="${record.id}">${record.get('name')}</div>`,
+      itemTpl: (record: any) =>
+        `<div class="item" data-idx="${record.id}">${record.get('name')}</div>`,
       itemSelector: '.item',
       ...cfg,
     });

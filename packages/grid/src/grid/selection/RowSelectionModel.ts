@@ -38,7 +38,7 @@ export class RowSelectionModel {
   }
 
   private fire(event: string, ...args: unknown[]): void {
-    (this.listeners[event] ?? []).forEach(fn => fn(...args));
+    (this.listeners[event] ?? []).forEach((fn) => fn(...args));
   }
 
   init(grid: SelectableGrid): void {

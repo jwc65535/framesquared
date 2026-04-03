@@ -6,12 +6,19 @@ import { MessageBox } from '../src/window/MessageBox.js';
 import { ZIndexManager } from '../src/ZIndexManager.js';
 
 // ResizeObserver mock
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
+class MockRO {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
 beforeEach(() => {
   (globalThis as any).ResizeObserver = MockRO;
   ZIndexManager.getInstance().clear();
 });
-afterEach(() => { document.body.innerHTML = ''; });
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 function win(cfg: Record<string, unknown> = {}): Window {
   return new Window({ title: 'Test', autoShow: true, ...cfg });
@@ -205,9 +212,13 @@ describe('Window — dragging', () => {
     const header = w.el!.querySelector('.x-panel-header') as HTMLElement;
 
     // Simulate drag start
-    header.dispatchEvent(new MouseEvent('pointerdown', { clientX: 110, clientY: 105, bubbles: true }));
+    header.dispatchEvent(
+      new MouseEvent('pointerdown', { clientX: 110, clientY: 105, bubbles: true }),
+    );
     // Simulate drag move
-    document.dispatchEvent(new MouseEvent('pointermove', { clientX: 160, clientY: 155, bubbles: true }));
+    document.dispatchEvent(
+      new MouseEvent('pointermove', { clientX: 160, clientY: 155, bubbles: true }),
+    );
     // Simulate drag end
     document.dispatchEvent(new MouseEvent('pointerup', { bubbles: true }));
 
@@ -226,8 +237,12 @@ describe('Window — dragging', () => {
     const spy = vi.fn();
     const w = win({ x: 0, y: 0, listeners: { move: spy } });
     const header = w.el!.querySelector('.x-panel-header') as HTMLElement;
-    header.dispatchEvent(new MouseEvent('pointerdown', { clientX: 10, clientY: 10, bubbles: true }));
-    document.dispatchEvent(new MouseEvent('pointermove', { clientX: 20, clientY: 20, bubbles: true }));
+    header.dispatchEvent(
+      new MouseEvent('pointerdown', { clientX: 10, clientY: 10, bubbles: true }),
+    );
+    document.dispatchEvent(
+      new MouseEvent('pointermove', { clientX: 20, clientY: 20, bubbles: true }),
+    );
     document.dispatchEvent(new MouseEvent('pointerup', { bubbles: true }));
     expect(spy).toHaveBeenCalled();
   });
@@ -297,7 +312,9 @@ describe('ZIndexManager', () => {
     mgr.register(w2);
 
     const order: string[] = [];
-    mgr.eachTopDown((c) => { order.push((c as any).getTitle()); });
+    mgr.eachTopDown((c) => {
+      order.push((c as any).getTitle());
+    });
     expect(order[0]).toBe('W2'); // last registered is top
     expect(order[1]).toBe('W1');
   });

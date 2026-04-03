@@ -38,7 +38,7 @@ export class Sortable {
   }
 
   getOrder(): string[] {
-    return this.getItems().map(el => el.textContent ?? '');
+    return this.getItems().map((el) => el.textContent ?? '');
   }
 
   moveItem(fromIndex: number, toIndex: number): void {

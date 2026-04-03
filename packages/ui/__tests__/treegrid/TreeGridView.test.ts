@@ -36,7 +36,10 @@ function makeColumns() {
   ];
 }
 
-function makeView(store: TreeStore, extra: Partial<ConstructorParameters<typeof TreeGridView>[0]> = {}) {
+function makeView(
+  store: TreeStore,
+  extra: Partial<ConstructorParameters<typeof TreeGridView>[0]> = {},
+) {
   const view = new TreeGridView({
     store,
     columns: makeColumns(),
@@ -384,7 +387,9 @@ describe('TreeGridView — events', () => {
 
     const node = store.getNodeById('folder2') as NodeInterface;
     const row = view.getNodeRow(node)!;
-    const expander = row.querySelector('.x-treegrid-expander:not(.x-treegrid-expander-leaf)') as HTMLElement;
+    const expander = row.querySelector(
+      '.x-treegrid-expander:not(.x-treegrid-expander-leaf)',
+    ) as HTMLElement;
     if (expander) {
       expander.click();
       expect(spy).toHaveBeenCalled();

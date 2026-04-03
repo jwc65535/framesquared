@@ -34,7 +34,9 @@ describe('TreeReader', () => {
       const reader = new TreeReader({ model: TreeModel });
       const data = [
         {
-          id: 1, text: 'Root', children: [
+          id: 1,
+          text: 'Root',
+          children: [
             { id: 2, text: 'Child1', leaf: true },
             { id: 3, text: 'Child2', leaf: true },
           ],
@@ -49,11 +51,13 @@ describe('TreeReader', () => {
       const reader = new TreeReader({ model: TreeModel });
       const data = [
         {
-          id: 1, text: 'L1', children: [
+          id: 1,
+          text: 'L1',
+          children: [
             {
-              id: 2, text: 'L2', children: [
-                { id: 3, text: 'L3', leaf: true },
-              ],
+              id: 2,
+              text: 'L2',
+              children: [{ id: 3, text: 'L3', leaf: true }],
             },
           ],
         },
@@ -73,9 +77,7 @@ describe('TreeReader', () => {
 
     it('empty children array = leaf node (no nested records)', () => {
       const reader = new TreeReader({ model: TreeModel });
-      const data = [
-        { id: 1, text: 'Empty', children: [] },
-      ];
+      const data = [{ id: 1, text: 'Empty', children: [] }];
       const resultSet = reader.read(data);
       expect(resultSet.records).toHaveLength(1);
     });
@@ -86,9 +88,9 @@ describe('TreeReader', () => {
       const reader = new TreeReader({ model: TreeModel, childrenProperty: 'nodes' });
       const data = [
         {
-          id: 1, text: 'Root', nodes: [
-            { id: 2, text: 'Child', leaf: true },
-          ],
+          id: 1,
+          text: 'Root',
+          nodes: [{ id: 2, text: 'Child', leaf: true }],
         },
       ];
       const resultSet = reader.read(data);
@@ -119,7 +121,9 @@ describe('TreeReader', () => {
     it('returns root record and flat records array', () => {
       const reader = new TreeReader({ model: TreeModel });
       const data = {
-        id: 1, text: 'Root', children: [
+        id: 1,
+        text: 'Root',
+        children: [
           { id: 2, text: 'A', leaf: true },
           { id: 3, text: 'B', leaf: true },
         ],
@@ -133,11 +137,13 @@ describe('TreeReader', () => {
     it('readTree with deeply nested data', () => {
       const reader = new TreeReader({ model: TreeModel });
       const data = {
-        id: 1, text: 'Root', children: [
+        id: 1,
+        text: 'Root',
+        children: [
           {
-            id: 2, text: 'Branch', children: [
-              { id: 3, text: 'Leaf', leaf: true },
-            ],
+            id: 2,
+            text: 'Branch',
+            children: [{ id: 3, text: 'Leaf', leaf: true }],
           },
         ],
       };

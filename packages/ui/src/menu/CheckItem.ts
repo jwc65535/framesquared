@@ -70,7 +70,10 @@ export class CheckItem extends Component {
     // Group registration
     if (cfg.group) {
       let grp = checkGroups.get(cfg.group);
-      if (!grp) { grp = new Set(); checkGroups.set(cfg.group, grp); }
+      if (!grp) {
+        grp = new Set();
+        checkGroups.set(cfg.group, grp);
+      }
       grp.add(this);
     }
 

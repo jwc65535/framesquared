@@ -64,7 +64,7 @@ export const arSA = new Locale({
     'messagebox.confirm.title': 'تأكيد',
     'messagebox.prompt.title': 'إدخال',
 
-    'loading': 'جاري التحميل...',
-    'error': 'خطأ',
+    loading: 'جاري التحميل...',
+    error: 'خطأ',
   },
 });

@@ -7,26 +7,48 @@ import { CheckboxGroup } from '../src/field/CheckboxGroup.js';
 import { RadioGroup } from '../src/field/RadioGroup.js';
 import { BoundList } from '../src/BoundList.js';
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+class MockRO {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 // Minimal mock store
 function mockStore(data: Record<string, unknown>[] = []) {
-  const records = data.map((d, i) => ({ id: i, data: d, get(f: string) { return (d as any)[f]; } }));
+  const records = data.map((d, i) => ({
+    id: i,
+    data: d,
+    get(f: string) {
+      return (d as any)[f];
+    },
+  }));
   let filtered = [...records];
   return {
     data: { items: filtered, length: filtered.length },
     getRange: () => filtered,
     getCount: () => filtered.length,
     filter: vi.fn((field: string, value: string) => {
-      filtered = records.filter(r => String(r.get(field)).toLowerCase().includes(value.toLowerCase()));
+      filtered = records.filter((r) =>
+        String(r.get(field)).toLowerCase().includes(value.toLowerCase()),
+      );
     }),
-    clearFilter: vi.fn(() => { filtered = [...records]; }),
+    clearFilter: vi.fn(() => {
+      filtered = [...records];
+    }),
     loadPage: vi.fn(),
     load: vi.fn(),
-    findRecord: (field: string, value: unknown) => records.find(r => r.get(field) === value) ?? null,
-    each: (fn: Function) => { for (const r of filtered) fn(r); },
+    findRecord: (field: string, value: unknown) =>
+      records.find((r) => r.get(field) === value) ?? null,
+    each: (fn: Function) => {
+      for (const r of filtered) fn(r);
+    },
   };
 }
 
@@ -52,7 +74,12 @@ describe('BoundList', () => {
   it('itemclick event fires on click', () => {
     const spy = vi.fn();
     const store = mockStore([{ name: 'A' }]);
-    const bl = new BoundList({ renderTo: document.body, store, displayField: 'name', listeners: { itemclick: spy } });
+    const bl = new BoundList({
+      renderTo: document.body,
+      store,
+      displayField: 'name',
+      listeners: { itemclick: spy },
+    });
     (bl.el!.querySelector('.x-boundlist-item') as HTMLElement).click();
     expect(spy).toHaveBeenCalled();
   });
@@ -78,7 +105,12 @@ describe('BoundList', () => {
   it('keyboard: Enter selects highlighted item', () => {
     const spy = vi.fn();
     const store = mockStore([{ name: 'A' }, { name: 'B' }]);
-    const bl = new BoundList({ renderTo: document.body, store, displayField: 'name', listeners: { select: spy } });
+    const bl = new BoundList({
+      renderTo: document.body,
+      store,
+      displayField: 'name',
+      listeners: { select: spy },
+    });
     bl.el!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
     bl.el!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
     expect(spy).toHaveBeenCalled();
@@ -192,8 +224,12 @@ describe('ComboBox — multiSelect', () => {
     ]);
     return new ComboBox({
       renderTo: document.body,
-      store, displayField: 'name', valueField: 'id',
-      queryMode: 'local', multiSelect: true, delimiter: ', ',
+      store,
+      displayField: 'name',
+      valueField: 'id',
+      queryMode: 'local',
+      multiSelect: true,
+      delimiter: ', ',
       ...cfg,
     });
   }
@@ -239,7 +275,9 @@ describe('TagField', () => {
     ]);
     return new TagField({
       renderTo: document.body,
-      store, displayField: 'name', valueField: 'id',
+      store,
+      displayField: 'name',
+      valueField: 'id',
       ...cfg,
     });
   }

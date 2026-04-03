@@ -16,12 +16,16 @@ class MockRO {
     this.callback = cb;
     MockRO.instances.push(this);
   }
-  observe(el: Element) { this.observed.push(el); }
+  observe(el: Element) {
+    this.observed.push(el);
+  }
   unobserve(el: Element) {
     const i = this.observed.indexOf(el);
     if (i !== -1) this.observed.splice(i, 1);
   }
-  disconnect() { this.observed.length = 0; }
+  disconnect() {
+    this.observed.length = 0;
+  }
   trigger(entries: Partial<ResizeObserverEntry>[]) {
     this.callback(entries as ResizeObserverEntry[], this as unknown as ResizeObserver);
   }
@@ -45,8 +49,12 @@ function createMockMatchMedia() {
         matches: false,
         media: query,
         listeners: new Set(),
-        addEventListener(_type: string, fn: Function) { this.listeners.add(fn); },
-        removeEventListener(_type: string, fn: Function) { this.listeners.delete(fn); },
+        addEventListener(_type: string, fn: Function) {
+          this.listeners.add(fn);
+        },
+        removeEventListener(_type: string, fn: Function) {
+          this.listeners.delete(fn);
+        },
       };
       mediaQueries.set(query, mql);
     }
@@ -76,7 +84,9 @@ afterEach(() => {
   LayoutRunner.getInstance().clear();
 });
 
-function cmp(cfg: Record<string, unknown> = {}): Component { return new Component(cfg); }
+function cmp(cfg: Record<string, unknown> = {}): Component {
+  return new Component(cfg);
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // ResponsivePlugin

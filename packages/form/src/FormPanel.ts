@@ -45,7 +45,7 @@ export class FormPanel extends Panel {
   constructor(config: FormPanelConfig = {}) {
     // Apply fieldDefaults to items
     if (config.fieldDefaults && config.items) {
-      config.items = (config.items as any[]).map(item => {
+      config.items = (config.items as any[]).map((item) => {
         if (item instanceof Component) {
           const cfg = (item as any)._config;
           for (const [k, v] of Object.entries(config.fieldDefaults!)) {
@@ -150,7 +150,9 @@ export class FormPanel extends Panel {
   // Submit
   // -----------------------------------------------------------------------
 
-  async submit(options: SubmitOptions & { clientValidation?: boolean } = {}): Promise<SubmitResult> {
+  async submit(
+    options: SubmitOptions & { clientValidation?: boolean } = {},
+  ): Promise<SubmitResult> {
     // Client validation
     if (options.clientValidation !== false && options.clientValidation !== undefined) {
       if (!this.isValid()) {

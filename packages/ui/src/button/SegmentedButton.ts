@@ -104,7 +104,7 @@ export class SegmentedButton extends Container {
   getValue(): string | string[] {
     const pressed = this.getItems()
       .filter((item): item is Button => item instanceof Button && item.isPressed())
-      .map(b => b.getValue());
+      .map((b) => b.getValue());
 
     if (this._allowMultiple) return pressed;
     return pressed[0] ?? '';

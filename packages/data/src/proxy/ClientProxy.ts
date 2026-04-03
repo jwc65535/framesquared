@@ -37,13 +37,20 @@ export class MemoryProxy extends Proxy {
           const fieldVal = raw[f.property];
           const op = f.operator ?? '=';
           switch (op) {
-            case '=': return fieldVal === f.value;
-            case '!=': return fieldVal !== f.value;
-            case '<': return (fieldVal as number) < f.value;
-            case '<=': return (fieldVal as number) <= f.value;
-            case '>': return (fieldVal as number) > f.value;
-            case '>=': return (fieldVal as number) >= f.value;
-            default: return true;
+            case '=':
+              return fieldVal === f.value;
+            case '!=':
+              return fieldVal !== f.value;
+            case '<':
+              return (fieldVal as number) < f.value;
+            case '<=':
+              return (fieldVal as number) <= f.value;
+            case '>':
+              return (fieldVal as number) > f.value;
+            case '>=':
+              return (fieldVal as number) >= f.value;
+            default:
+              return true;
           }
         });
       });

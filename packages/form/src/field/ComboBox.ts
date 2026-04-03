@@ -47,7 +47,13 @@ export class ComboBox extends TextField {
 
   constructor(config: ComboBoxConfig = {}) {
     const triggers = [
-      { type: 'expand', handler: (_f: any) => { if (this._expanded) this.collapse(); else this.expand(); } },
+      {
+        type: 'expand',
+        handler: (_f: any) => {
+          if (this._expanded) this.collapse();
+          else this.expand();
+        },
+      },
       ...(config.triggers ?? []),
     ];
     super({ xtype: 'combobox', ...config, triggers });
@@ -158,7 +164,9 @@ export class ComboBox extends TextField {
       this.updateMultiDisplay();
     } else {
       this._selection = [record];
-      const display = record.get ? record.get(this._displayField) : (record[this._displayField] ?? '');
+      const display = record.get
+        ? record.get(this._displayField)
+        : (record[this._displayField] ?? '');
       const value = record.get ? record.get(this._valueField) : (record[this._valueField] ?? '');
       this.getInputEl().value = display;
       this._selectedValue = value;
@@ -183,10 +191,12 @@ export class ComboBox extends TextField {
 
   private updateMultiDisplay(): void {
     const display = this._selection
-      .map(r => r.get ? r.get(this._displayField) : (r[this._displayField] ?? ''))
+      .map((r) => (r.get ? r.get(this._displayField) : (r[this._displayField] ?? '')))
       .join(this._delimiter);
     this.getInputEl().value = display;
-    this._value = this._selection.map(r => r.get ? r.get(this._valueField) : (r[this._valueField] ?? null));
+    this._value = this._selection.map((r) =>
+      r.get ? r.get(this._valueField) : (r[this._valueField] ?? null),
+    );
   }
 
   // -----------------------------------------------------------------------
@@ -217,7 +227,9 @@ export class ComboBox extends TextField {
 
   override getValue(): any {
     if (this._multiSelect) {
-      return this._selection.map(r => r.get ? r.get(this._valueField) : (r[this._valueField] ?? null));
+      return this._selection.map((r) =>
+        r.get ? r.get(this._valueField) : (r[this._valueField] ?? null),
+      );
     }
     return this._selectedValue ?? super.getValue();
   }

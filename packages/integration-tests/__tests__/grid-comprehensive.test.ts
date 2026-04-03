@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Grid, RowSelectionModel, CellSelectionModel, TreePanel, TreeStore } from '@framesquared/grid';
+import {
+  Grid,
+  RowSelectionModel,
+  CellSelectionModel,
+  TreePanel,
+  TreeStore,
+} from '@framesquared/grid';
 import { Model, Store } from '@framesquared/data';
 
 class Employee extends Model {
@@ -11,9 +17,18 @@ class Employee extends Model {
   ];
 }
 
-class MockRO { constructor() {} observe() {} unobserve() {} disconnect() {} }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+class MockRO {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 function employeeStore() {
   return new Store({
@@ -57,7 +72,7 @@ describe('Grid + real Store integration', () => {
     const th = grid.el!.querySelector('th') as HTMLElement;
     th.click(); // sort by Name ASC
     const rows = grid.el!.querySelectorAll('tbody tr');
-    const names = Array.from(rows).map(r => r.querySelector('td')!.textContent);
+    const names = Array.from(rows).map((r) => r.querySelector('td')!.textContent);
     expect(names).toEqual(['Alice', 'Bob', 'Charlie', 'Diana', 'Eve']);
   });
 
@@ -131,12 +146,17 @@ describe('TreePanel integration', () => {
   it('renders and expand/collapse works', () => {
     const store = new TreeStore({
       root: {
-        text: 'Root', expanded: true,
+        text: 'Root',
+        expanded: true,
         children: [
-          { id: 'a', text: 'Folder A', children: [
-            { id: 'a1', text: 'File 1', leaf: true },
-            { id: 'a2', text: 'File 2', leaf: true },
-          ]},
+          {
+            id: 'a',
+            text: 'Folder A',
+            children: [
+              { id: 'a1', text: 'File 1', leaf: true },
+              { id: 'a2', text: 'File 2', leaf: true },
+            ],
+          },
           { id: 'b', text: 'Folder B', leaf: true },
         ],
       },
@@ -146,7 +166,7 @@ describe('TreePanel integration', () => {
     expect(tree.el!.querySelectorAll('.x-tree-node').length).toBe(3);
 
     const expander = Array.from(tree.el!.querySelectorAll('.x-tree-node'))
-      .find(n => n.textContent?.includes('Folder A'))
+      .find((n) => n.textContent?.includes('Folder A'))
       ?.querySelector('.x-tree-expander') as HTMLElement;
     expander.click();
     expect(tree.el!.querySelectorAll('.x-tree-node').length).toBe(5);
@@ -157,7 +177,8 @@ describe('TreePanel integration', () => {
   it('expandAll/collapseAll', () => {
     const store = new TreeStore({
       root: {
-        text: 'Root', expanded: true,
+        text: 'Root',
+        expanded: true,
         children: [
           { id: 'a', text: 'A', children: [{ id: 'a1', text: 'A1', leaf: true }] },
           { id: 'b', text: 'B', children: [{ id: 'b1', text: 'B1', leaf: true }] },

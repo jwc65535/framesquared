@@ -13,8 +13,12 @@ class MockRO {
   unobserve() {}
   disconnect() {}
 }
-beforeEach(() => { (globalThis as any).ResizeObserver = MockRO; });
-afterEach(() => { document.body.innerHTML = ''; });
+beforeEach(() => {
+  (globalThis as any).ResizeObserver = MockRO;
+});
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 // Helpers
 function cmp(cfg: Record<string, unknown> = {}): Component {
@@ -59,7 +63,17 @@ function buildTree() {
 
   viewport.add(mainPanel, sidebar, toolbar);
 
-  return { viewport, mainPanel, saveBtn, cancelBtn, sidebar, searchField, toolbar, toolBtn, toolBtn2 };
+  return {
+    viewport,
+    mainPanel,
+    saveBtn,
+    cancelBtn,
+    sidebar,
+    searchField,
+    toolbar,
+    toolBtn,
+    toolBtn2,
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

@@ -227,7 +227,10 @@ describe('clone', () => {
   });
 
   it('clones a Map', () => {
-    const map = new Map<string, number>([['a', 1], ['b', 2]]);
+    const map = new Map<string, number>([
+      ['a', 1],
+      ['b', 2],
+    ]);
     const result = clone(map);
     expect(result).toEqual(map);
     expect(result).not.toBe(map);
@@ -398,7 +401,9 @@ describe('isFunction', () => {
   });
 
   it('returns true for generator functions', () => {
-    function* gen() { yield 1; }
+    function* gen() {
+      yield 1;
+    }
     expect(isFunction(gen)).toBe(true);
   });
 
@@ -562,12 +567,18 @@ describe('isIterable', () => {
   });
 
   it('returns true for generators', () => {
-    function* gen() { yield 1; }
+    function* gen() {
+      yield 1;
+    }
     expect(isIterable(gen())).toBe(true);
   });
 
   it('returns true for custom iterables', () => {
-    const custom = { [Symbol.iterator]: function* () { yield 1; } };
+    const custom = {
+      [Symbol.iterator]: function* () {
+        yield 1;
+      },
+    };
     expect(isIterable(custom)).toBe(true);
   });
 
@@ -776,7 +787,9 @@ describe('now', () => {
   it('returns increasing values on successive calls', () => {
     const a = now();
     // Spin briefly so time passes
-    for (let i = 0; i < 100_000; i++) { /* noop */ }
+    for (let i = 0; i < 100_000; i++) {
+      /* noop */
+    }
     const b = now();
     expect(b).toBeGreaterThanOrEqual(a);
   });

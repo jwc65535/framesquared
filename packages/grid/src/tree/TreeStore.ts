@@ -57,7 +57,7 @@ function buildNode(cfg: TreeNodeConfig, parent: TreeNode | null, depth: number):
     data: { ...cfg },
   };
   if (cfg.children) {
-    node.children = cfg.children.map(c => buildNode(c, node, depth + 1));
+    node.children = cfg.children.map((c) => buildNode(c, node, depth + 1));
   }
   return node;
 }
@@ -93,7 +93,7 @@ export class TreeStore {
     const result: TreeNode[] = [];
     const walk = (node: TreeNode, include: boolean) => {
       if (include) result.push(node);
-      if (node.expanded || node === this.root && !include) {
+      if (node.expanded || (node === this.root && !include)) {
         // If this is the invisible root, still walk children
       }
       if (node.expanded) {
@@ -150,7 +150,7 @@ export class TreeStore {
     // First part should match root
     if (parts[0] !== current.text) return null;
     for (let i = 1; i < parts.length; i++) {
-      const child = current.children.find(c => c.text === parts[i]);
+      const child = current.children.find((c) => c.text === parts[i]);
       if (!child) return null;
       current = child;
     }
@@ -198,12 +198,28 @@ export class TreeStore {
   }
 
   // Store-like interface for Grid compatibility
-  getRange(): any[] { return this.getVisibleNodes(true); }
-  getCount(): number { return this.getRange().length; }
-  getAt(i: number): any { return this.getRange()[i]; }
-  get(field: string): unknown { return (this.root as any)[field]; }
-  on(_evt: string, _fn: Function): void { /* placeholder */ }
-  sort(): void { /* placeholder */ }
-  isLoading(): boolean { return false; }
-  getTotalCount(): number { return this.getCount(); }
+  getRange(): any[] {
+    return this.getVisibleNodes(true);
+  }
+  getCount(): number {
+    return this.getRange().length;
+  }
+  getAt(i: number): any {
+    return this.getRange()[i];
+  }
+  get(field: string): unknown {
+    return (this.root as any)[field];
+  }
+  on(_evt: string, _fn: Function): void {
+    /* placeholder */
+  }
+  sort(): void {
+    /* placeholder */
+  }
+  isLoading(): boolean {
+    return false;
+  }
+  getTotalCount(): number {
+    return this.getCount();
+  }
 }

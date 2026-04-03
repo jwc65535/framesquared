@@ -83,11 +83,7 @@ class EventBusImpl {
    * Subscribes to a channel (exact or wildcard pattern).
    * Returns a {@link Destroyable} handle.
    */
-  subscribe(
-    channel: string,
-    handler: Function,
-    scope?: object,
-  ): Destroyable {
+  subscribe(channel: string, handler: Function, scope?: object): Destroyable {
     const sub: Subscription = { pattern: channel, handler, scope };
     this.subscriptions.push(sub);
 
@@ -103,9 +99,7 @@ class EventBusImpl {
    * Removes a specific subscription by handler reference.
    */
   unsubscribe(channel: string, handler: Function): void {
-    const idx = this.subscriptions.findIndex(
-      (s) => s.pattern === channel && s.handler === handler,
-    );
+    const idx = this.subscriptions.findIndex((s) => s.pattern === channel && s.handler === handler);
     if (idx !== -1) this.subscriptions.splice(idx, 1);
   }
 }

@@ -30,7 +30,7 @@ export class CellSelectionModel {
   }
 
   private fire(event: string, ...args: unknown[]): void {
-    (this.listeners[event] ?? []).forEach(fn => fn(...args));
+    (this.listeners[event] ?? []).forEach((fn) => fn(...args));
   }
 
   init(grid: CellSelectableGrid): void {
@@ -75,7 +75,7 @@ export class CellSelectionModel {
     if (!table) return null;
     const tr = table.querySelector(`tbody tr[data-rowindex="${row}"]`);
     if (!tr) return null;
-    return tr.children[col] as HTMLElement ?? null;
+    return (tr.children[col] as HTMLElement) ?? null;
   }
 
   private attachListeners(): void {
@@ -102,16 +102,25 @@ export class CellSelectionModel {
         let { row, column } = this.position;
 
         switch (e.key) {
-          case 'ArrowRight': column++; break;
-          case 'ArrowLeft': column--; break;
-          case 'ArrowDown': row++; break;
-          case 'ArrowUp': row--; break;
+          case 'ArrowRight':
+            column++;
+            break;
+          case 'ArrowLeft':
+            column--;
+            break;
+          case 'ArrowDown':
+            row++;
+            break;
+          case 'ArrowUp':
+            row--;
+            break;
           case 'Tab':
             e.preventDefault();
             if (e.shiftKey) column--;
             else column++;
             break;
-          default: return;
+          default:
+            return;
         }
 
         this.selectCell(row, column);

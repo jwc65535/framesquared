@@ -33,9 +33,9 @@ export class BatchProxy extends Proxy {
    */
   async sendBatch(operations: Operation[]): Promise<ResultSet[]> {
     const body = {
-      operations: operations.map(op => ({
+      operations: operations.map((op) => ({
         action: op.action,
-        records: op.records.map(r => r.getData()),
+        records: op.records.map((r) => r.getData()),
         params: op.params,
       })),
     };
@@ -53,21 +53,26 @@ export class BatchProxy extends Proxy {
       if (data.results && Array.isArray(data.results)) {
         for (const r of data.results) {
           const records = (r.records ?? []).map((item: any) => this.model.create(item));
-          results.push(new ResultSet({
-            records,
-            success: r.success ?? false,
-            message: r.message,
-          }));
+          results.push(
+            new ResultSet({
+              records,
+              success: r.success ?? false,
+              message: r.message,
+            }),
+          );
         }
       }
 
       return results;
     } catch (err: any) {
-      return operations.map(() => new ResultSet({
-        records: [],
-        success: false,
-        message: err?.message ?? 'Batch request failed',
-      }));
+      return operations.map(
+        () =>
+          new ResultSet({
+            records: [],
+            success: false,
+            message: err?.message ?? 'Batch request failed',
+          }),
+      );
     }
   }
 

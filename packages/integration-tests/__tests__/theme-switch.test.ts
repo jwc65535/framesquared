@@ -1,9 +1,16 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { Theme, ThemeManager, ClassicTheme, ModernTheme, DarkTheme, StyleSheet } from '@framesquared/theme';
+import {
+  Theme,
+  ThemeManager,
+  ClassicTheme,
+  ModernTheme,
+  DarkTheme,
+  StyleSheet,
+} from '@framesquared/theme';
 
 afterEach(() => {
   ThemeManager.reset();
-  document.querySelectorAll('style[data-ext-stylesheet]').forEach(el => el.remove());
+  document.querySelectorAll('style[data-ext-stylesheet]').forEach((el) => el.remove());
 });
 
 describe('Theme switching integration', () => {

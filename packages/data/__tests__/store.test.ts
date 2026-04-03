@@ -123,7 +123,9 @@ describe('Collection', () => {
     c.add(u({ id: 1, name: 'A' }));
     c.add(u({ id: 2, name: 'B' }));
     const names: string[] = [];
-    c.each((r) => { names.push(r.get('name') as string); });
+    c.each((r) => {
+      names.push(r.get('name') as string);
+    });
     expect(names).toEqual(['A', 'B']);
   });
 
@@ -257,7 +259,9 @@ describe('Store CRUD', () => {
 
   it('each iterates all records', () => {
     const names: string[] = [];
-    store.each((r) => { names.push(r.get('name') as string); });
+    store.each((r) => {
+      names.push(r.get('name') as string);
+    });
     expect(names).toEqual(['Alice', 'Bob', 'Carol']);
   });
 
@@ -325,15 +329,17 @@ describe('Store Sorting', () => {
   });
 
   it('custom sorterFn', () => {
-    store.sort([{
-      property: 'name',
-      direction: 'ASC',
-      sorterFn: (a, b) => {
-        const an = a.get('name') as string;
-        const bn = b.get('name') as string;
-        return bn.length - an.length; // sort by name length desc
+    store.sort([
+      {
+        property: 'name',
+        direction: 'ASC',
+        sorterFn: (a, b) => {
+          const an = a.get('name') as string;
+          const bn = b.get('name') as string;
+          return bn.length - an.length; // sort by name length desc
+        },
       },
-    }]);
+    ]);
     expect(store.getAt(0)!.get('name')).toBe('Carol');
   });
 
@@ -414,11 +420,13 @@ describe('Store Filtering', () => {
   });
 
   it('custom filterFn', () => {
-    store.filter([{
-      property: 'name',
-      value: null,
-      filterFn: (record) => (record.get('name') as string).length > 3,
-    }]);
+    store.filter([
+      {
+        property: 'name',
+        value: null,
+        filterFn: (record) => (record.get('name') as string).length > 3,
+      },
+    ]);
     expect(store.getCount()).toBe(3); // Alice, Carol, Dave
   });
 
@@ -520,9 +528,7 @@ describe('Store Events', () => {
   beforeEach(() => {
     store = new Store({
       model: User,
-      data: [
-        { id: 1, name: 'Alice', age: 30, city: 'NYC', active: true },
-      ],
+      data: [{ id: 1, name: 'Alice', age: 30, city: 'NYC', active: true }],
     });
   });
 
