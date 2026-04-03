@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { existsSync, statSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, statSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -131,10 +131,10 @@ describe('Size budgets (uncompressed)', () => {
   };
 
   for (const pkg of PACKAGES) {
-    it(`@framesquared/${pkg}: under ${BUDGETS[pkg]! / 1000}KB budget`, () => {
+    it(`@framesquared/${pkg}: under ${(BUDGETS[pkg] ?? 0) / 1000}KB budget`, () => {
       const jsPath = join(ROOT, 'packages', pkg, 'dist', 'index.js');
       const stat = statSync(jsPath);
-      expect(stat.size).toBeLessThan(BUDGETS[pkg]!);
+      expect(stat.size).toBeLessThan(BUDGETS[pkg] ?? Infinity);
     });
   }
 
