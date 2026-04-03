@@ -29,7 +29,9 @@ function installWAAPIMock() {
   Element.prototype.animate = function (
     keyframes: Keyframe[] | PropertyIndexedKeyframes | null,
     options?: number | KeyframeAnimationOptions,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): any {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     let _resolve: () => void = () => {};
     const finished = new Promise<void>((resolve) => {
       _resolve = resolve;
