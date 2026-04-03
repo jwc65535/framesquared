@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Component } from '@framesquared/component';
 import { Panel } from '../src/panel/Panel.js';
-import type { ToolConfig } from '../src/panel/Panel.js';
 
 // ResizeObserver mock
 class MockRO {
-  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}

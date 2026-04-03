@@ -6,8 +6,6 @@
  * and `'arrowclick'` event independently from the main click.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Button } from './Button.js';
 import type { ButtonConfig } from './Button.js';
 
@@ -39,6 +37,7 @@ export class SplitButton extends Button {
 
   protected override buildInnerDom(cfg: ButtonConfig): void {
     // Build icon + text from parent
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
 
     if (cfg.iconCls || cfg.icon) {

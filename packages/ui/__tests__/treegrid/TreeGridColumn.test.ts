@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { describe, it, expect, beforeEach } from 'vitest';
 import { TreeGridColumn, Column } from '../../src/treegrid/TreeGridColumn.js';
 import { TreeStore, TreeModel } from '@framesquared/data';
 import type { NodeInterface } from '@framesquared/data';

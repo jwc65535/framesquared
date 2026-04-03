@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TabPanel } from '../src/tab/TabPanel.js';
 import { TabBar } from '../src/tab/TabBar.js';
 import { Tab } from '../src/tab/Tab.js';
 import { Panel } from '../src/panel/Panel.js';
-import { Component } from '@framesquared/component';
 
 class MockRO {
-  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}

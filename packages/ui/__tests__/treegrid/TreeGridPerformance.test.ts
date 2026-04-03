@@ -1,7 +1,9 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TreeGrid } from '../../src/treegrid/TreeGrid.js';
-import { TreeStore, TreeModel, applyNodeInterface } from '@framesquared/data';
-import type { NodeInterface } from '@framesquared/data';
+import { TreeStore, TreeModel } from '@framesquared/data';
 
 class MockRO {
   observe() {}

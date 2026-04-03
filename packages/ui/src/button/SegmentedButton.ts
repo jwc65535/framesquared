@@ -43,6 +43,7 @@ export class SegmentedButton extends Container {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-segmented-btn');
 
     // Attach click interceptors to each button

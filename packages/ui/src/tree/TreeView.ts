@@ -31,7 +31,7 @@ export class TreeView {
   private displayField: string;
   private checkable: boolean;
   private column: TreeColumn;
-  private listeners: Map<string, Function[]> = new Map();
+  private listeners = new Map<string, ((...args: unknown[]) => void)[]>();
 
   constructor(config: TreeViewConfig) {
     this.store = config.store;
@@ -44,14 +44,15 @@ export class TreeView {
   // Event system
   // -------------------------------------------------------------------------
 
-  on(event: string, fn: Function): void {
+  on(event: string, fn: (...args: unknown[]) => void): void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, []);
     }
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.listeners.get(event)!.push(fn);
   }
 
-  un(event: string, fn: Function): void {
+  un(event: string, fn: (...args: unknown[]) => void): void {
     const fns = this.listeners.get(event);
     if (!fns) return;
     const idx = fns.indexOf(fn);
@@ -192,6 +193,7 @@ export class TreeView {
     let el: HTMLElement | null = target;
     while (el && el !== this.el) {
       if (el.hasAttribute('data-node-id')) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const id = el.getAttribute('data-node-id')!;
         return (this.store.getNodeById(id) as NodeInterface | null) ?? null;
       }

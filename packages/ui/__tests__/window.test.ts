@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Component } from '@framesquared/component';
 import { Panel } from '../src/panel/Panel.js';
 import { Window } from '../src/window/Window.js';
 import { MessageBox } from '../src/window/MessageBox.js';
@@ -7,7 +9,6 @@ import { ZIndexManager } from '../src/ZIndexManager.js';
 
 // ResizeObserver mock
 class MockRO {
-  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
@@ -93,7 +94,7 @@ describe('Window — positioning', () => {
 
 describe('Window — modal', () => {
   it('modal:true shows a mask element', () => {
-    const w = win({ modal: true });
+    const _w = win({ modal: true });
     const mask = document.querySelector('.x-mask');
     expect(mask).not.toBeNull();
   });
@@ -106,7 +107,7 @@ describe('Window — modal', () => {
   });
 
   it('modal:false shows no mask', () => {
-    const w = win({ modal: false });
+    const _w = win({ modal: false });
     expect(document.querySelector('.x-mask')).toBeNull();
   });
 });

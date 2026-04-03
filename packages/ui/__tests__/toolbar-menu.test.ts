@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Component, Container } from '@framesquared/component';
+import { Component } from '@framesquared/component';
 import { Button } from '../src/button/Button.js';
 import { Toolbar } from '../src/toolbar/Toolbar.js';
 import { PagingToolbar } from '../src/toolbar/Paging.js';

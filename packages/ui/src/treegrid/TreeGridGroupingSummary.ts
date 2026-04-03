@@ -100,6 +100,7 @@ export class TreeGridGroupingSummary {
   }
 
   private _buildGroupSummaryRow(parent: NodeInterface): HTMLElement {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const tg = this.treeGrid!;
     const columns = tg.getColumns();
 

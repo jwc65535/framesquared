@@ -11,8 +11,6 @@
  * All dialogs are modal Windows that close on button click.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Window } from './Window.js';
 import type { WindowConfig } from './Window.js';
 
@@ -162,6 +160,7 @@ export class MessageBox {
 
           if (config.fn) {
             if (config.prompt) {
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               const inputEl = win.el!.querySelector('.x-msgbox-input') as
                 | HTMLInputElement
                 | HTMLTextAreaElement

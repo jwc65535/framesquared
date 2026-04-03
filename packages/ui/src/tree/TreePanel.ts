@@ -45,10 +45,6 @@ export class TreePanel extends Panel {
   declare private _checkable: boolean;
   declare private _cascadeChecks: boolean;
 
-  constructor(config: TreePanelConfig) {
-    super(config);
-  }
-
   // -------------------------------------------------------------------------
   // Lifecycle
   // -------------------------------------------------------------------------
@@ -72,12 +68,15 @@ export class TreePanel extends Panel {
     super.afterRender();
 
     // Add tree panel CSS class
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-tree-panel');
 
     if (this._useArrows) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.el!.classList.add('x-tree-arrows');
     }
     if (this._lines) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.el!.classList.add('x-tree-lines');
     }
 
@@ -219,6 +218,7 @@ export class TreePanel extends Panel {
   // -------------------------------------------------------------------------
 
   getView(): TreeView {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this._treeView!;
   }
 

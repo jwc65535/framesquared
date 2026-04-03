@@ -5,8 +5,6 @@
  * Tree-aware: tracks selected nodes from flatData, supports range selection.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { NodeInterface } from '@framesquared/data';
 
 // ---------------------------------------------------------------------------
@@ -26,8 +24,8 @@ export interface TreeGridSelectionModelConfig {
 
 export class TreeGridSelectionModel {
   private mode: 'SINGLE' | 'SIMPLE' | 'MULTI';
-  private selected: Set<NodeInterface> = new Set();
-  private listeners: Map<string, Function[]> = new Map();
+  private selected = new Set<NodeInterface>();
+  private listeners = new Map<string, ((...args: unknown[]) => void)[]>();
   readonly deselectOnCollapse: boolean;
   readonly pruneRemoved: boolean;
   readonly checkboxSelect: boolean;
@@ -44,12 +42,13 @@ export class TreeGridSelectionModel {
   // Event system
   // -------------------------------------------------------------------------
 
-  on(event: string, fn: Function): void {
+  on(event: string, fn: (...args: unknown[]) => void): void {
     if (!this.listeners.has(event)) this.listeners.set(event, []);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.listeners.get(event)!.push(fn);
   }
 
-  un(event: string, fn: Function): void {
+  un(event: string, fn: (...args: unknown[]) => void): void {
     const fns = this.listeners.get(event);
     if (!fns) return;
     const i = fns.indexOf(fn);

@@ -5,8 +5,6 @@
  * optional icon, optional close button, and active state styling.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Component } from '@framesquared/component';
 import type { ComponentConfig } from '@framesquared/component';
 
@@ -46,6 +44,7 @@ export class Tab extends Component {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
     el.classList.add('x-tab');
     el.style.cursor = 'pointer';

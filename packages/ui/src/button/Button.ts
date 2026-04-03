@@ -106,7 +106,7 @@ export class Button extends Component {
     if (target) {
       if (typeof position === 'number') {
         const ref = target.children[position];
-        ref ? target.insertBefore(this.el, ref) : target.appendChild(this.el);
+        if (ref) { target.insertBefore(this.el, ref); } else { target.appendChild(this.el); }
       } else if (position instanceof Element) {
         target.insertBefore(this.el, position);
       } else {
@@ -128,6 +128,7 @@ export class Button extends Component {
   // -----------------------------------------------------------------------
 
   protected buildInnerDom(cfg: ButtonConfig): void {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
 
     // Icon
@@ -156,6 +157,7 @@ export class Button extends Component {
   }
 
   protected applyButtonConfigs(cfg: ButtonConfig): void {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
 
     // Scale
@@ -214,6 +216,7 @@ export class Button extends Component {
   // -----------------------------------------------------------------------
 
   protected attachEvents(_cfg: ButtonConfig): void {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
 
     el.addEventListener('click', (e: MouseEvent) => {

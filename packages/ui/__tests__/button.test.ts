@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Component, Container } from '@framesquared/component';
 import { Button } from '../src/button/Button.js';
 import { SplitButton } from '../src/button/SplitButton.js';
 import { CycleButton } from '../src/button/CycleButton.js';
 import { SegmentedButton } from '../src/button/SegmentedButton.js';
 
 class MockRO {
-  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}

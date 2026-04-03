@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { DataView } from '../src/view/DataView.js';
 import { ListView } from '../src/view/ListView.js';
 
 class MockRO {
-  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
@@ -27,19 +29,19 @@ function mockStore(data: Record<string, unknown>[] = []) {
       (d as any)[f] = v;
     },
   }));
-  const listeners: Record<string, Function[]> = {};
+  const listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
   return {
     data: { items: records },
     getRange: () => records,
     getCount: () => records.length,
     getAt: (i: number) => records[i],
-    on: (evt: string, fn: Function) => {
+    on: (evt: string, fn: (...args: unknown[]) => void) => {
       (listeners[evt] ??= []).push(fn);
     },
     fireEvent: (evt: string, ...args: unknown[]) => {
       (listeners[evt] ?? []).forEach((fn) => fn(...args));
     },
-    each: (fn: Function) => records.forEach(fn),
+    each: (fn: (...args: unknown[]) => void) => records.forEach(fn),
     isLoading: () => false,
     add: (rec: Record<string, unknown>) => {
       const r = {

@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Viewport } from '../src/container/Viewport.js';
 import { Accordion } from '../src/container/Accordion.js';
 import { CardContainer } from '../src/container/CardContainer.js';
 import { Breadcrumb } from '../src/navigation/Breadcrumb.js';
 import { Panel } from '../src/panel/Panel.js';
-import { Component } from '@framesquared/component';
 
 class MockRO {
-  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
@@ -104,7 +105,7 @@ describe('Viewport', () => {
   });
 
   it('sets body overflow hidden', () => {
-    const _vp = new Viewport({ items: [] });
+    new Viewport({ items: [] });
     expect(document.body.style.overflow).toBe('hidden');
   });
 

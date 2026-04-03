@@ -6,8 +6,6 @@
  * for outside-click dismissal.  Supports keyboard navigation.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Container } from '@framesquared/component';
 import type { ContainerConfig, Component } from '@framesquared/component';
 import { MenuManager } from './MenuManager.js';
@@ -35,6 +33,7 @@ export class Menu extends Container {
   protected override afterRender(): void {
     super.afterRender();
     const cfg = this._config as MenuConfig;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
 
     el.classList.add('x-menu');
@@ -60,8 +59,11 @@ export class Menu extends Container {
     if (!this.rendered) {
       this.render(document.body);
     }
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.style.left = `${x}px`;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.style.top = `${y}px`;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.style.display = '';
     this._isMenuVisible = true;
     MenuManager.getInstance().register(this);

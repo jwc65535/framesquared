@@ -119,6 +119,7 @@ export class TreeGrid extends Panel {
   protected override afterRender(): void {
     super.afterRender();
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-treegrid');
 
     // Create and render the view into panel body
@@ -643,6 +644,7 @@ export class TreeGrid extends Panel {
   // -------------------------------------------------------------------------
 
   getView(): TreeGridView {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this._view!;
   }
 

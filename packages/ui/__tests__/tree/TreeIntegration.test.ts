@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TreePanel } from '../../src/tree/TreePanel.js';
 import { TreeStore, TreeModel } from '@framesquared/data';
@@ -181,7 +184,7 @@ describe('singleExpand integration', () => {
         ],
       },
     });
-    const p = makePanel(store, { singleExpand: true });
+    const _p = makePanel(store, { singleExpand: true });
     const nodeA = store.getNodeById('a') as NodeInterface;
     const nodeB = store.getNodeById('b') as NodeInterface;
     // Expand B — should collapse A

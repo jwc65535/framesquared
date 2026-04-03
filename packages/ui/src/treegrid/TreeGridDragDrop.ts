@@ -147,7 +147,7 @@ export class TreeGridDragDrop {
       (e.target as Element).setPointerCapture(e.pointerId);
       this._captureTarget = e.target as Element;
       this._pointerId = e.pointerId;
-    } catch (_) {
+    } catch (__) {
       /* ignore — older browsers */
     }
 
@@ -176,6 +176,7 @@ export class TreeGridDragDrop {
 
       const isCopy = this.config.copy || ((e.ctrlKey || e.metaKey) && this.config.allowCopy);
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.dragData = { records, source: this.treeGrid!, copy: isCopy, displayText };
       this.dragging = true;
       this._createGhost(displayText, e.clientX, e.clientY);
@@ -421,7 +422,7 @@ export class TreeGridDragDrop {
     if (this._captureTarget !== null && this._pointerId !== null) {
       try {
         this._captureTarget.releasePointerCapture(this._pointerId);
-      } catch (_) {
+      } catch (__) {
         /* ignore */
       }
       this._captureTarget = null;

@@ -4,8 +4,6 @@
  * Drag source for tree nodes.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { NodeInterface } from '@framesquared/data';
 
 // ---------------------------------------------------------------------------
