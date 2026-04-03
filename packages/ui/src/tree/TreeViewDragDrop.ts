@@ -27,7 +27,10 @@ export interface TreeViewDragDropConfig {
 // ---------------------------------------------------------------------------
 
 type FullTreePanel = TreePanelLike & {
-  getStore(): { insertBefore: (...args: unknown[]) => void; appendChild: (...args: unknown[]) => void };
+  getStore(): {
+    insertBefore: (...args: unknown[]) => void;
+    appendChild: (...args: unknown[]) => void;
+  };
 };
 
 export class TreeViewDragDrop {

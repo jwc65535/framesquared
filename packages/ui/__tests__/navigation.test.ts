@@ -118,7 +118,7 @@ describe('Viewport', () => {
 
   it('responds to window resize', () => {
     const spy = vi.fn();
-    const vp = new Viewport({ items: [], listeners: { resize: spy } });
+    const _vp = new Viewport({ items: [], listeners: { resize: spy } });
     window.dispatchEvent(new Event('resize'));
     expect(spy).toHaveBeenCalled();
   });

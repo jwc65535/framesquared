@@ -147,7 +147,7 @@ export class TreeGridDragDrop {
       (e.target as Element).setPointerCapture(e.pointerId);
       this._captureTarget = e.target as Element;
       this._pointerId = e.pointerId;
-    } catch (__) {
+    } catch {
       /* ignore — older browsers */
     }
 
@@ -422,7 +422,7 @@ export class TreeGridDragDrop {
     if (this._captureTarget !== null && this._pointerId !== null) {
       try {
         this._captureTarget.releasePointerCapture(this._pointerId);
-      } catch (__) {
+      } catch {
         /* ignore */
       }
       this._captureTarget = null;

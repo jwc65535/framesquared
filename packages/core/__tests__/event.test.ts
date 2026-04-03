@@ -754,7 +754,7 @@ describe('Memory cleanup on destroy', () => {
     const Cls = createObservableClass('test.ev.WeakRef');
     const inst = new Cls();
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    let handler: (() => void) | null = () => {};
+    const handler: (() => void) | null = () => {};
     const _ref = new WeakRef(handler);
     inst.on('test', handler);
     inst.destroy();

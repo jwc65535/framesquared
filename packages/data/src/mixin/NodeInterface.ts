@@ -255,7 +255,9 @@ export function applyNodeInterface(model: Model, depth = 0): void {
     return data;
   };
 
-  node.eachChild = function (fn: (child: NodeInterface, index: number) => boolean | undefined): void {
+  node.eachChild = function (
+    fn: (child: NodeInterface, index: number) => boolean | undefined,
+  ): void {
     for (let i = 0; i < this.childNodes.length; i++) {
       if (fn(this.childNodes[i], i) === false) return;
     }
@@ -373,7 +375,10 @@ function copyNodeImpl(node: NodeInterface, deep: boolean, counter: { i: number }
 /**
  * Depth-first cascade that returns false if iteration was stopped.
  */
-function cascadeByImpl(node: NodeInterface, fn: (n: NodeInterface) => boolean | undefined): boolean {
+function cascadeByImpl(
+  node: NodeInterface,
+  fn: (n: NodeInterface) => boolean | undefined,
+): boolean {
   if (fn(node) === false) return false;
   for (const child of [...node.childNodes]) {
     if (!cascadeByImpl(child, fn)) return false;

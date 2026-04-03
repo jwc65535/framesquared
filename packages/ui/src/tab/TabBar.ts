@@ -5,9 +5,9 @@
  * strip of tabs.  Supports adding, removing, and overflow.
  */
 
-import type { Component } from '@framesquared/component';
+import { Component } from '@framesquared/component';
 import type { ComponentConfig } from '@framesquared/component';
-import { Tab } from './Tab.js';
+import type { Tab } from './Tab.js';
 
 export interface TabBarConfig extends ComponentConfig {
   position?: 'top' | 'bottom' | 'left' | 'right';

@@ -2,12 +2,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Grid } from '../src/grid/Grid.js';
-import {
-  Column,
-  NumberColumn,
-  DateColumn,
-  BooleanColumn,
-} from '../src/grid/column/Column.js';
+import { Column, NumberColumn, DateColumn, BooleanColumn } from '../src/grid/column/Column.js';
 import { GridView } from '../src/grid/GridView.js';
 import { HeaderContainer } from '../src/grid/HeaderContainer.js';
 
@@ -231,7 +226,7 @@ describe('Grid — store binding', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       get: (f: string) => (({ id: 2, name: 'B', age: 2, active: false }) as any)[f],
       set: vi.fn(),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
     store.fireEvent('datachanged');
 
@@ -422,7 +417,7 @@ describe('GridView', () => {
       data: { name: 'B' },
       get: (f: string) => (f === 'name' ? 'B' : null),
       set: vi.fn(),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
     view.refresh();
     expect(table.querySelectorAll('tbody tr').length).toBe(2);

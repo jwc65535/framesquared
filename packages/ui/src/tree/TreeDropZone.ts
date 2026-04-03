@@ -12,7 +12,12 @@ import type { DragData, TreePanelLike } from './TreeDragZone.js';
 // ---------------------------------------------------------------------------
 
 export class TreeDropZone {
-  private tree: TreePanelLike & { getStore(): { insertBefore: (...args: unknown[]) => void; appendChild: (...args: unknown[]) => void } };
+  private tree: TreePanelLike & {
+    getStore(): {
+      insertBefore: (...args: unknown[]) => void;
+      appendChild: (...args: unknown[]) => void;
+    };
+  };
   ddGroup: string;
   private appendOnly: boolean;
   private indicatorEl: HTMLElement | null = null;
@@ -23,7 +28,12 @@ export class TreeDropZone {
   private boundDrop: (e: DragEvent) => void;
 
   constructor(
-    tree: TreePanelLike & { getStore(): { insertBefore: (...args: unknown[]) => void; appendChild: (...args: unknown[]) => void } },
+    tree: TreePanelLike & {
+      getStore(): {
+        insertBefore: (...args: unknown[]) => void;
+        appendChild: (...args: unknown[]) => void;
+      };
+    },
     config?: {
       ddGroup?: string;
       appendOnly?: boolean;

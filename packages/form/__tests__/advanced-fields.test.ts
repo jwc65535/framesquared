@@ -17,11 +17,7 @@ beforeEach(() => {
   // jsdom doesn't have PointerEvent — polyfill it as MouseEvent subclass
   if (typeof PointerEvent === 'undefined') {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {
-      constructor(type: string, init?: MouseEventInit) {
-        super(type, init);
-      }
-    };
+    (globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {};
   }
 });
 afterEach(() => {

@@ -106,7 +106,11 @@ export class Button extends Component {
     if (target) {
       if (typeof position === 'number') {
         const ref = target.children[position];
-        if (ref) { target.insertBefore(this.el, ref); } else { target.appendChild(this.el); }
+        if (ref) {
+          target.insertBefore(this.el, ref);
+        } else {
+          target.appendChild(this.el);
+        }
       } else if (position instanceof Element) {
         target.insertBefore(this.el, position);
       } else {

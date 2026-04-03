@@ -51,7 +51,7 @@ export interface TypedObservable<Events extends { [K in keyof Events]: unknown[]
     handler: (...args: Events[E]) => false | undefined,
     scope?: object,
     options?: ListenerOptions,
-  ): Destroyable | void;
+  ): Destroyable | undefined;
 
   un<E extends keyof Events & string>(
     eventName: E,
@@ -64,7 +64,7 @@ export interface TypedObservable<Events extends { [K in keyof Events]: unknown[]
     handler: (...args: Events[E]) => false | undefined,
     scope?: object,
     options?: ListenerOptions,
-  ): Destroyable | void;
+  ): Destroyable | undefined;
 
   removeListener<E extends keyof Events & string>(
     eventName: E,

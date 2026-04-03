@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
@@ -46,11 +47,7 @@ function makeGrid(extra: Record<string, unknown> = {}) {
 beforeEach(() => {
   (globalThis as any).ResizeObserver = MockRO;
   if (typeof (globalThis as any).PointerEvent === 'undefined') {
-    (globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {
-      constructor(type: string, init?: PointerEventInit) {
-        super(type, init);
-      }
-    };
+    (globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {};
   }
 });
 
