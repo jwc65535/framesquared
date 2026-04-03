@@ -584,7 +584,7 @@ describe('Resizable', () => {
 
   it('destroy removes handles', () => {
     const el = resizableEl();
-    const _r = new Resizable({ el, handles: 'se e' });
+    const r = new Resizable({ el, handles: 'se e' });
     expect(el.querySelectorAll('.x-resizable-handle').length).toBe(2);
     r.destroy();
     expect(el.querySelectorAll('.x-resizable-handle').length).toBe(0);
