@@ -25,6 +25,7 @@ export class RadioGroup extends Container {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-radio-group');
 
     const cfg = this._config as RadioGroupConfig;

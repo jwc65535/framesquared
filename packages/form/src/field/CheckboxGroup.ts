@@ -25,6 +25,7 @@ export class CheckboxGroup extends Container {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-checkbox-group');
 
     const cfg = this._config as CheckboxGroupConfig;

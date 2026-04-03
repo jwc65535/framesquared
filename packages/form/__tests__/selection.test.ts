@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ComboBox } from '../src/field/ComboBox.js';
 import { TagField } from '../src/field/Tag.js';
@@ -8,12 +10,12 @@ import { RadioGroup } from '../src/field/RadioGroup.js';
 import { BoundList } from '../src/BoundList.js';
 
 class MockRO {
-  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
 }
 beforeEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (globalThis as any).ResizeObserver = MockRO;
 });
 afterEach(() => {
@@ -26,6 +28,7 @@ function mockStore(data: Record<string, unknown>[] = []) {
     id: i,
     data: d,
     get(f: string) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return (d as any)[f];
     },
   }));
@@ -46,7 +49,7 @@ function mockStore(data: Record<string, unknown>[] = []) {
     load: vi.fn(),
     findRecord: (field: string, value: unknown) =>
       records.find((r) => r.get(field) === value) ?? null,
-    each: (fn: Function) => {
+    each: (fn: (...args: unknown[]) => void) => {
       for (const r of filtered) fn(r);
     },
   };
@@ -163,6 +166,7 @@ describe('ComboBox — local mode', () => {
 
   it('select(record) sets value and display', () => {
     const c = combo();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (c as any)._store;
     const rec = store.findRecord('name', 'Banana');
     c.select(rec);
@@ -173,6 +177,7 @@ describe('ComboBox — local mode', () => {
   it('fires "select" event', () => {
     const spy = vi.fn();
     const c = combo({ listeners: { select: spy } });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (c as any)._store;
     c.select(store.findRecord('name', 'Apple'));
     expect(spy).toHaveBeenCalled();
@@ -181,6 +186,7 @@ describe('ComboBox — local mode', () => {
   it('doQuery filters store in local mode', () => {
     const c = combo();
     c.doQuery('an');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (c as any)._store;
     expect(store.filter).toHaveBeenCalled();
   });
@@ -236,6 +242,7 @@ describe('ComboBox — multiSelect', () => {
 
   it('selecting multiple records sets comma-separated display', () => {
     const c = combo();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (c as any)._store;
     c.select(store.findRecord('name', 'Red'));
     c.select(store.findRecord('name', 'Blue'));
@@ -245,6 +252,7 @@ describe('ComboBox — multiSelect', () => {
 
   it('getSelection returns array', () => {
     const c = combo();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (c as any)._store;
     c.select(store.findRecord('name', 'Red'));
     c.select(store.findRecord('name', 'Green'));
@@ -253,6 +261,7 @@ describe('ComboBox — multiSelect', () => {
 
   it('deselect removes from selection', () => {
     const c = combo();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (c as any)._store;
     const red = store.findRecord('name', 'Red');
     c.select(red);
@@ -289,6 +298,7 @@ describe('TagField', () => {
 
   it('selecting adds a tag chip', () => {
     const t = tagField();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (t as any)._store;
     t.select(store.findRecord('name', 'JavaScript'));
     const tags = t.el!.querySelectorAll('.x-tagfield-tag');
@@ -298,6 +308,7 @@ describe('TagField', () => {
 
   it('tag has remove button', () => {
     const t = tagField();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (t as any)._store;
     t.select(store.findRecord('name', 'TypeScript'));
     const removeBtn = t.el!.querySelector('.x-tagfield-tag-close');
@@ -306,6 +317,7 @@ describe('TagField', () => {
 
   it('clicking remove button removes tag', () => {
     const t = tagField();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (t as any)._store;
     t.select(store.findRecord('name', 'Python'));
     const removeBtn = t.el!.querySelector('.x-tagfield-tag-close') as HTMLElement;
@@ -315,6 +327,7 @@ describe('TagField', () => {
 
   it('getValue returns array of selected values', () => {
     const t = tagField();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store = (t as any)._store;
     t.select(store.findRecord('name', 'JavaScript'));
     t.select(store.findRecord('name', 'Python'));
@@ -414,7 +427,7 @@ describe('Radio', () => {
   });
 
   it('radio group: only one selected via name', () => {
-    const a = radio({ name: 'g', inputValue: 'a', checked: true });
+    const _a = radio({ name: 'g', inputValue: 'a', checked: true });
     const b = radio({ name: 'g', inputValue: 'b' });
     // In real browser, clicking b would uncheck a via native radio behavior
     // In jsdom we simulate by testing the Radio class group tracking
@@ -423,7 +436,7 @@ describe('Radio', () => {
   });
 
   it('getGroupValue returns the checked radio value', () => {
-    const a = radio({ name: 'grp', inputValue: 'a' });
+    const _a = radio({ name: 'grp', inputValue: 'a' });
     const b = radio({ name: 'grp', inputValue: 'b', checked: true });
     expect(b.getGroupValue()).toBe('b');
   });

@@ -6,8 +6,6 @@
  * error display.  Subclasses implement the actual input element.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Component } from '@framesquared/component';
 import type { ComponentConfig } from '@framesquared/component';
 
@@ -70,6 +68,7 @@ export class Field extends Component {
   protected override afterRender(): void {
     super.afterRender();
     const cfg = this._config as FieldConfig;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
     el.classList.add('x-field');
 

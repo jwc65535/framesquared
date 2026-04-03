@@ -32,11 +32,13 @@ export class TagField extends ComboBox {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-tagfield');
 
     // Create tag container before the input
     this._tagWrapEl = document.createElement('div');
     this._tagWrapEl.classList.add('x-tagfield-tags');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this._bodyWrapEl!.insertBefore(this._tagWrapEl, this._bodyWrapEl!.firstChild);
   }
 

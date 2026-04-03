@@ -59,8 +59,7 @@ export function formatDate(date: Date, format: string): string {
   const ampm = H < 12 ? 'AM' : 'PM';
 
   let result = '';
-  for (let idx = 0; idx < format.length; idx++) {
-    const ch = format[idx];
+  for (const ch of format) {
     switch (ch) {
       case 'Y':
         result += String(Y);

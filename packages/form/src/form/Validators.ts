@@ -93,6 +93,7 @@ interface ChainEntry {
   [key: string]: unknown;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const VALIDATORS: Record<string, (value: unknown, opts: any) => true | string> = {
   presence: (v) => presence(v),
   length: (v, o) => length(v, o),

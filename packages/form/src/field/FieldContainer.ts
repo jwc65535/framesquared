@@ -5,8 +5,6 @@
  * label.  Optionally combines child validation errors.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Container } from '@framesquared/component';
 import type { ContainerConfig } from '@framesquared/component';
 import { Field } from './Field.js';
@@ -27,6 +25,7 @@ export class FieldContainer extends Container {
   protected override afterRender(): void {
     super.afterRender();
     const cfg = this._config as FieldContainerConfig;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-field-container');
 
     // Label
@@ -34,6 +33,7 @@ export class FieldContainer extends Container {
       const label = document.createElement('label');
       label.classList.add('x-field-label');
       label.textContent = cfg.fieldLabel + (cfg.labelSeparator ?? ':');
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.el!.insertBefore(label, this.el!.firstChild);
     }
   }

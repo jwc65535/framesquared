@@ -6,8 +6,6 @@
  * Fires 'select' when a date is clicked.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Component } from '@framesquared/component';
 import type { ComponentConfig } from '@framesquared/component';
 import { getMonthName, getDaysInMonth } from '../util/DateUtil.js';
@@ -51,6 +49,7 @@ export class DatePicker extends Component {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-datepicker');
     this.buildUI();
   }
@@ -60,6 +59,7 @@ export class DatePicker extends Component {
   // -----------------------------------------------------------------------
 
   private buildUI(): void {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
     el.innerHTML = '';
 

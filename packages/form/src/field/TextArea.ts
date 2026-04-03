@@ -53,6 +53,7 @@ export class TextArea extends TextField {
       this._textareaEl.value = String(this._value);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this._bodyWrapEl!.appendChild(this._textareaEl);
 
     // Reuse TextField's event attachment

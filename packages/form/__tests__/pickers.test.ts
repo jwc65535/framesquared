@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NumberField } from '../src/field/Number.js';
 import { DateField } from '../src/field/Date.js';
@@ -6,12 +8,12 @@ import { ColorPicker } from '../src/picker/ColorPicker.js';
 import * as DateUtil from '../src/util/DateUtil.js';
 
 class MockRO {
-  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
 }
 beforeEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (globalThis as any).ResizeObserver = MockRO;
 });
 afterEach(() => {

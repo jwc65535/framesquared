@@ -6,8 +6,6 @@
  * and full ARIA attributes.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Field } from './Field.js';
 import type { FieldConfig } from './Field.js';
 
@@ -57,6 +55,7 @@ export class Slider extends Field {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
     el.classList.add('x-slider');
     if (this._vertical) el.classList.add('x-slider-vertical');

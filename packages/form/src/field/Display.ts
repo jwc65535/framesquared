@@ -3,8 +3,6 @@
  * Read-only display of a value.  No input element, no form submission.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Field } from './Field.js';
 import type { FieldConfig } from './Field.js';
 
@@ -32,8 +30,10 @@ export class DisplayField extends Field {
     this._displayEl = document.createElement('div');
     this._displayEl.classList.add('x-display-field-value');
     this.updateDisplay();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this._bodyWrapEl!.appendChild(this._displayEl);
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-display-field');
   }
 

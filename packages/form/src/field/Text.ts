@@ -68,6 +68,7 @@ export class TextField extends Field {
       this._inputEl.value = String(this._value);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this._bodyWrapEl!.appendChild(this._inputEl);
 
     // Triggers
@@ -236,6 +237,7 @@ export class TextField extends Field {
       });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this._bodyWrapEl!.appendChild(el);
   }
 }

@@ -4,8 +4,6 @@
  * A grid of color swatches.  Fires 'select' with the hex color string.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Component } from '@framesquared/component';
 import type { ComponentConfig } from '@framesquared/component';
 
@@ -75,11 +73,13 @@ export class ColorPicker extends Component {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-colorpicker');
     this.buildSwatches();
   }
 
   private buildSwatches(): void {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const el = this.el!;
     for (const color of this._colors) {
       const swatch = document.createElement('div');

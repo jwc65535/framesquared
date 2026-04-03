@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Slider } from '../src/field/Slider.js';
 import { FileField } from '../src/field/FileUpload.js';
@@ -5,15 +7,16 @@ import { HtmlEditor } from '../src/field/HtmlEditor.js';
 import { Spinner } from '../src/field/Spinner.js';
 
 class MockRO {
-  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
 }
 beforeEach(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (globalThis as any).ResizeObserver = MockRO;
   // jsdom doesn't have PointerEvent — polyfill it as MouseEvent subclass
   if (typeof PointerEvent === 'undefined') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {
       constructor(type: string, init?: MouseEventInit) {
         super(type, init);

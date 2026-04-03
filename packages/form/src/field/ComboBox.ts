@@ -77,6 +77,7 @@ export class ComboBox extends TextField {
 
   protected override afterRender(): void {
     super.afterRender();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-combobox');
 
     // forceSelection: revert on blur if no match
@@ -105,6 +106,7 @@ export class ComboBox extends TextField {
         displayField: this._displayField,
         renderTo: document.body,
       });
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const listEl = this._boundList.el!;
       listEl.classList.add('x-combobox-list');
       listEl.style.display = 'none';
@@ -129,6 +131,7 @@ export class ComboBox extends TextField {
     // Position below the field element
     const anchor = this.el ?? this.getInputEl();
     const rect = anchor.getBoundingClientRect();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const listEl = this._boundList.el!;
     listEl.style.top = `${rect.bottom}px`;
     listEl.style.left = `${rect.left}px`;
