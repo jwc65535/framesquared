@@ -1,6 +1,6 @@
 # framesquared
 
-A modern, clean-room reimplementation of the Sencha ExtJS framework in TypeScript with native ESM modules.
+A clean-room reimplementation of enterprise-grade UI for the modern web. Built with TypeScript 5.5+, native ESM modules, and a passion for developer experience.
 
 ## Design Principles
 
