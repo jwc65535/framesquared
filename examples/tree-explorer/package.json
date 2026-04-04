@@ -1,14 +1,24 @@
 {
   "name": "@framesquared/example-tree-explorer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
-  "scripts": { "dev": "vite", "build": "vite build" },
-  "dependencies": {
-    "@framesquared/core": "workspace:*", "@framesquared/data": "workspace:*",
-    "@framesquared/component": "workspace:*", "@framesquared/layout": "workspace:*",
-    "@framesquared/ui": "workspace:*", "@framesquared/form": "workspace:*",
-    "@framesquared/grid": "workspace:*", "@framesquared/theme": "workspace:*"
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
   },
-  "devDependencies": { "vite": "^5.0.0", "typescript": "^5.5.0" }
+  "dependencies": {
+    "@framesquared/core": "workspace:*",
+    "@framesquared/data": "workspace:*",
+    "@framesquared/component": "workspace:*",
+    "@framesquared/layout": "workspace:*",
+    "@framesquared/ui": "workspace:*",
+    "@framesquared/form": "workspace:*",
+    "@framesquared/grid": "workspace:*",
+    "@framesquared/theme": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "typescript": "^5.5.0"
+  }
 }
