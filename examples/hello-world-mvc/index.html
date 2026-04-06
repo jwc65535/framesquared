@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared Hello World – MVC</title>
+  <style>
+    body { padding: 32px; background: #f0f2f5; }
+  </style>
+</head>
+<body>
+  <script type="module">
+    import { Application, ViewController, ViewModel } from 'https://esm.sh/@framesquared/app@0.3.0';
+    import { Component }                              from 'https://esm.sh/@framesquared/component@0.3.0';
+    import { Panel, Button }                          from 'https://esm.sh/@framesquared/ui@0.3.0';
+    import { TextField }                              from 'https://esm.sh/@framesquared/form@0.3.0';
+    import { ThemeManager, ModernTheme }              from 'https://esm.sh/@framesquared/theme@0.3.0';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── Controller ───────────────────────────────────────────────────────────
+
+    class GreeterController extends ViewController {
+      constructor() {
+        super({ id: 'greeter' });
+
+        this.vm = new ViewModel({
+          data: { name: '' },
+          formulas: {
+            greeting: (get) => {
+              const name = get('name');
+              return name ? `Hello, ${name}!` : 'Hello, World!';
+            },
+          },
+        });
+      }
+
+      init(view) {
+        super.init(view);
+
+        this.lookupReference('sayBtn').on('click',   () => this.onSayHello());
+        this.lookupReference('resetBtn').on('click', () => this.onReset());
+        this.vm.on('datachange', () => this.syncGreeting());
+      }
+
+      onSayHello() {
+        this.vm.set('name', this.lookupReference('nameField').getValue().trim());
+      }
+
+      onReset() {
+        this.lookupReference('nameField').setValue('');
+        this.vm.set('name', '');
+      }
+
+      syncGreeting() {
+        this.lookupReference('greeting').setHtml(String(this.vm.get('greeting')));
+      }
+    }
+
+    // ── Application ──────────────────────────────────────────────────────────
+
+    const app = new Application({
+      name: 'HelloMVC',
+      launch() {
+        const controller = new GreeterController();
+
+        const panel = new Panel({
+          title: 'Greeter — MVC Example',
+          renderTo: document.body,
+          items: [
+            new Component({ reference: 'greeting', html: 'Hello, World!' }),
+            new TextField({ reference: 'nameField', emptyText: 'Enter your name…', fieldLabel: 'Name' }),
+            new Button({ reference: 'sayBtn',   text: 'Say Hello' }),
+            new Button({ reference: 'resetBtn', text: 'Reset', ui: 'default' }),
+          ],
+        });
+
+        controller.init(panel);
+      },
+    });
+
+    app.start();
+  </script>
+</body>
+</html>
