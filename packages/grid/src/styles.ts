@@ -4,7 +4,7 @@
  * Covers: Grid, GridView, HeaderContainer, TreePanel.
  */
 
-const CSS = `
+const STYLES = `
 /* ── Grid container ──────────────────────────────────────────────────────── */
 .x-grid {
   display: flex;
@@ -200,6 +200,8 @@ const CSS = `
 if (typeof document !== 'undefined' && !document.querySelector('[data-x-grid-styles]')) {
   const el = document.createElement('style');
   el.setAttribute('data-x-grid-styles', '');
-  el.textContent = CSS;
+  el.textContent = STYLES;
   document.head.appendChild(el);
 }
+
+export {};

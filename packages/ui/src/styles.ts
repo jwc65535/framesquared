@@ -6,7 +6,7 @@
  * themes is reflected automatically.
  */
 
-const CSS = `
+const STYLES = `
 /* ── Panel ──────────────────────────────────────────────────────────────── */
 .x-panel {
   display: flex;
@@ -404,6 +404,8 @@ const CSS = `
 if (typeof document !== 'undefined' && !document.querySelector('[data-x-ui-styles]')) {
   const el = document.createElement('style');
   el.setAttribute('data-x-ui-styles', '');
-  el.textContent = CSS;
+  el.textContent = STYLES;
   document.head.appendChild(el);
 }
+
+export {};

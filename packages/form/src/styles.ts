@@ -5,7 +5,7 @@
  * ComboBox, DateField, Slider, Tag field, FormPanel.
  */
 
-const CSS = `
+const STYLES = `
 /* ── FormPanel ───────────────────────────────────────────────────────────── */
 .x-form {
   display: flex;
@@ -373,6 +373,8 @@ textarea.x-field-input {
 if (typeof document !== 'undefined' && !document.querySelector('[data-x-form-styles]')) {
   const el = document.createElement('style');
   el.setAttribute('data-x-form-styles', '');
-  el.textContent = CSS;
+  el.textContent = STYLES;
   document.head.appendChild(el);
 }
+
+export {};

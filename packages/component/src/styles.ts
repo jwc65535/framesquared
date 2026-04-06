@@ -6,7 +6,7 @@
  * so any registered theme is automatically reflected here.
  */
 
-const CSS = `
+const STYLES = `
 /* ── Bridge: convert unitless theme tokens to usable CSS values ─────────── */
 :root {
   --x-sp-xs:  calc(var(--ext-spacing-xs,  4) * 1px);
@@ -60,6 +60,8 @@ const CSS = `
 if (typeof document !== 'undefined' && !document.querySelector('[data-x-component-styles]')) {
   const el = document.createElement('style');
   el.setAttribute('data-x-component-styles', '');
-  el.textContent = CSS;
+  el.textContent = STYLES;
   document.head.appendChild(el);
 }
+
+export {};
