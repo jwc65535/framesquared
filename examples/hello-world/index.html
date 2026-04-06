@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared Hello World</title>
+  <style>
+    body { padding: 32px; background: #f0f2f5; }
+  </style>
+</head>
+<body>
+  <script type="module">
+    import { Application } from 'https://esm.sh/@framesquared/app@0.3.0';
+    import { Component } from 'https://esm.sh/@framesquared/component@0.3.0';
+    import { Panel, Button } from 'https://esm.sh/@framesquared/ui@0.3.0';
+    import { ThemeManager, ModernTheme } from 'https://esm.sh/@framesquared/theme@0.3.0';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    const greeting = new Component({ html: '<p>Click the button to say hello.</p>' });
+
+    let clicked = 0;
+    const messages = [
+      'Hello, World!',
+      'Hello again!',
+      'framesquared is working!',
+    ];
+
+    const btn = new Button({
+      text: 'Say Hello',
+      handler() {
+        greeting.el.querySelector('p').textContent = messages[clicked++ % messages.length];
+      },
+    });
+
+    const app = new Application({
+      name: 'HelloWorld',
+      launch() {
+        new Panel({
+          title: 'Hello, framesquared!',
+          renderTo: document.body,
+          items: [greeting, btn],
+        });
+      },
+    });
+
+    app.start();
+  </script>
+</body>
+</html>

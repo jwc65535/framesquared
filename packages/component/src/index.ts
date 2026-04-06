@@ -3,6 +3,8 @@
  * Component model, lifecycle, and rendering
  */
 
+import './styles.js';
+
 export { Component } from './Component.js';
 export type { ComponentConfig } from './Component.js';
 export { Template } from './Template.js';

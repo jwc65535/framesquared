@@ -3,6 +3,8 @@
  * Grid/table component
  */
 
+import './styles.js';
+
 export { Grid } from './grid/Grid.js';
 export type { GridConfig } from './grid/Grid.js';
 export type { GridStore, GridRecord } from './grid/GridStore.js';

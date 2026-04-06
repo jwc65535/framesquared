@@ -3,6 +3,8 @@
  * UI widgets (panels, buttons, toolbars, etc.)
  */
 
+import './styles.js';
+
 export { Panel } from './panel/Panel.js';
 export type { PanelConfig, ToolConfig } from './panel/Panel.js';
 

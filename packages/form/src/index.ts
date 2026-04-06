@@ -3,6 +3,8 @@
  * Form fields and validation
  */
 
+import './styles.js';
+
 export { Field } from './field/Field.js';
 export type { FieldConfig } from './field/Field.js';
 export { TextField } from './field/Text.js';
