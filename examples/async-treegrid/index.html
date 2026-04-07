@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – Async / Lazy Loading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #212121;
+    }
+
+    /* ── Page header ──────────────────────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #1565c0 0%, #1976d2 60%, #42a5f5 100%);
+      padding: 32px 40px 28px;
+      color: #fff;
+    }
+
+    .page-header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 10px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(4px);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      opacity: 0.85;
+      font-weight: 400;
+      max-width: 540px;
+      line-height: 1.5;
+    }
+
+    /* ── Page body ────────────────────────────────────────────────────────── */
+    .page-body {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 40px 48px;
+    }
+
+    /* ── Toolbar ──────────────────────────────────────────────────────────── */
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .toolbar-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #757575;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* ── Settings strip ───────────────────────────────────────────────────── */
+    .settings-strip {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 10px 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .setting-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .setting-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #616161;
+      white-space: nowrap;
+    }
+
+    .setting-value {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1976d2;
+      min-width: 36px;
+      text-align: right;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 120px;
+      height: 4px;
+      background: #e0e0e0;
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #1976d2;
+      cursor: pointer;
+    }
+
+    .stats-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-left: auto;
+    }
+
+    .stat-item {
+      font-size: 12px;
+      color: #9e9e9e;
+    }
+
+    .stat-item strong {
+      color: #212121;
+      font-weight: 600;
+    }
+
+    /* ── Grid wrapper ─────────────────────────────────────────────────────── */
+    .grid-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .grid-wrapper .x-panel {
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+    }
+
+    /* ── Async row states ─────────────────────────────────────────────────── */
+    .row-loading td {
+      color: #9e9e9e !important;
+      font-style: italic;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+    .row-loading td { animation: pulse 1.2s ease-in-out infinite; }
+
+    .row-error td {
+      color: #c62828 !important;
+      cursor: pointer;
+    }
+    .row-error:hover td { background: #fce8e8 !important; }
+
+    /* ── File type badges ─────────────────────────────────────────────────── */
+    .type-badge {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .type-pdf  { background: #fde8e8; color: #c62828; }
+    .type-xlsx { background: #e6f4ea; color: #2e7d32; }
+    .type-docx,
+    .type-doc  { background: #e3f0ff; color: #1565c0; }
+    .type-md   { background: #f3e5f5; color: #6a1b9a; }
+    .type-txt  { background: #f5f5f5; color: #616161; }
+    .type-json { background: #fff3e0; color: #e65100; }
+    .type-ts,
+    .type-js   { background: #fff8e1; color: #f57f17; }
+    .type-html { background: #fce4ec; color: #880e4f; }
+    .type-css  { background: #e8eaf6; color: #283593; }
+    .type-jpg,
+    .type-jpeg,
+    .type-png,
+    .type-cr3  { background: #f3e5f5; color: #6a1b9a; }
+    .type-flac,
+    .type-mp3,
+    .type-m3u  { background: #e8f5e9; color: #1b5e20; }
+    .type-dmg,
+    .type-exe,
+    .type-pkg,
+    .type-zip  { background: #eceff1; color: #37474f; }
+    .type-sh   { background: #e0f2f1; color: #004d40; }
+
+    /* ── Network log ──────────────────────────────────────────────────────── */
+    .network-log-section {
+      margin-top: 16px;
+    }
+
+    .network-log-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .network-log-heading h2 {
+      font-size: 12px;
+      font-weight: 600;
+      color: #757575;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .network-log-clear {
+      font-size: 11px;
+      color: #9e9e9e;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: inherit;
+    }
+    .network-log-clear:hover { background: #f5f5f5; color: #616161; }
+
+    .network-log {
+      background: #1a1d2e;
+      border-radius: 8px;
+      padding: 12px;
+      height: 148px;
+      overflow-y: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #8b9ab4;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.2);
+    }
+
+    .network-log:empty::before {
+      content: 'Expand a folder to see network activity…';
+      color: #3d4461;
+      font-style: italic;
+    }
+
+    .log-entry {
+      display: flex;
+      gap: 10px;
+      padding: 1px 0;
+    }
+    .log-time   { color: #3d4461; min-width: 80px; }
+    .log-method { color: #7eb8f7; }
+    .log-url    { color: #abb2bf; flex: 1; }
+    .log-ok     { color: #98c379; min-width: 44px; text-align: right; }
+    .log-err    { color: #e06c75; min-width: 44px; text-align: right; }
+    .log-dur    { color: #d19a66; min-width: 52px; text-align: right; }
+    .log-count  { color: #56b6c2; }
+
+    /* ── Source block ─────────────────────────────────────────────────────── */
+    .source-section {
+      margin-top: 40px;
+    }
+
+    .source-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .source-heading h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #424242;
+      letter-spacing: 0.02em;
+    }
+
+    .source-heading-line {
+      flex: 1;
+      height: 1px;
+      background: #e0e0e0;
+    }
+
+    .source-wrapper {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .source-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e2433;
+      padding: 10px 16px;
+    }
+
+    .source-dots { display: flex; gap: 6px; }
+    .source-dot  { width: 12px; height: 12px; border-radius: 50%; }
+    .source-dot-red    { background: #ff5f57; }
+    .source-dot-yellow { background: #febc2e; }
+    .source-dot-green  { background: #28c840; }
+
+    .source-filename {
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b9ab4;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+    }
+
+    .source-copy-btn {
+      font-size: 11px;
+      font-weight: 500;
+      color: #8b9ab4;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .source-copy-btn:hover  { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    .source-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
+
+    pre.source-pre {
+      margin: 0;
+      padding: 24px;
+      background: #282c3e;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #abb2bf;
+      tab-size: 2;
+    }
+
+    /* ── Syntax colouring ─────────────────────────────────────────────────── */
+    .tok-keyword { color: #c678dd; }
+    .tok-string  { color: #98c379; }
+    .tok-comment { color: #5c6370; font-style: italic; }
+    .tok-fn      { color: #61afef; }
+    .tok-number  { color: #d19a66; }
+    .tok-url     { color: #56b6c2; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">▦ framesquared</div>
+      <h1 class="page-title">Async / Lazy Loading</h1>
+      <p class="page-subtitle">
+        Children load on demand when a folder is expanded — simulating a REST API
+        with configurable latency and failure rate. Failed loads show a retry option.
+      </p>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="toolbar-row">
+      <span class="toolbar-label">File System — 5 top-level folders</span>
+      <div class="toolbar-actions" id="toolbar"></div>
+    </div>
+
+    <!-- ── Simulation controls ───────────────────────────────────────────── -->
+    <div class="settings-strip">
+      <div class="setting-group">
+        <span class="setting-label">Latency</span>
+        <input type="range" id="latency-slider" min="100" max="3000" step="100" value="800">
+        <span class="setting-value" id="latency-value">800ms</span>
+      </div>
+      <div class="setting-group">
+        <span class="setting-label">Failure rate</span>
+        <input type="range" id="failure-slider" min="0" max="80" step="5" value="0">
+        <span class="setting-value" id="failure-value">0%</span>
+      </div>
+      <div class="stats-group">
+        <span class="stat-item">Requests: <strong id="stat-requests">0</strong></span>
+        <span class="stat-item">Loaded: <strong id="stat-nodes">0</strong></span>
+        <span class="stat-item">Errors: <strong id="stat-errors">0</strong></span>
+      </div>
+    </div>
+
+    <div class="grid-wrapper" id="grid-container"></div>
+
+    <!-- ── Network log ───────────────────────────────────────────────────── -->
+    <div class="network-log-section">
+      <div class="network-log-heading">
+        <h2>Network Activity</h2>
+        <button class="network-log-clear" id="log-clear">Clear</button>
+      </div>
+      <div class="network-log" id="network-log"></div>
+    </div>
+
+    <!-- ── Source block ───────────────────────────────────────────────────── -->
+    <div class="source-section">
+      <div class="source-heading">
+        <h2>Source</h2>
+        <div class="source-heading-line"></div>
+      </div>
+      <div class="source-wrapper">
+        <div class="source-bar">
+          <div class="source-dots">
+            <span class="source-dot source-dot-red"></span>
+            <span class="source-dot source-dot-yellow"></span>
+            <span class="source-dot source-dot-green"></span>
+          </div>
+          <span class="source-filename">async-treegrid.js</span>
+          <button class="source-copy-btn" id="copy-btn">Copy</button>
+        </div>
+        <pre class="source-pre" id="source-pre"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { TreeGrid, TreeGridColumn, Column, Button } from 'https://esm.sh/@framesquared/ui@0.5.0';
+    import { TreeStore, TreeModel, applyNodeInterface } from 'https://esm.sh/@framesquared/data@0.5.0';
+    import { ThemeManager, ModernTheme }               from 'https://esm.sh/@framesquared/theme@0.5.0';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── Simulated REST API data ───────────────────────────────────────────────
+    //
+    // Each key is a node id. Expanding that node fetches its children.
+    // Nodes without an entry here (or with leaf:true) cannot be expanded.
+
+    const API_DATA = {
+      root: [
+        { id: 'documents', text: 'Documents', leaf: false },
+        { id: 'pictures',  text: 'Pictures',  leaf: false },
+        { id: 'projects',  text: 'Projects',  leaf: false },
+        { id: 'music',     text: 'Music',     leaf: false },
+        { id: 'downloads', text: 'Downloads', leaf: false },
+      ],
+      documents: [
+        { id: 'doc-reports',  text: 'Reports',   leaf: false },
+        { id: 'doc-invoices', text: 'Invoices',  leaf: false },
+        { id: 'doc-readme',   text: 'README.md', leaf: true, size: 2048,  type: 'MD',  modified: '2025-02-14' },
+        { id: 'doc-notes',    text: 'Notes.txt', leaf: true, size: 512,   type: 'TXT', modified: '2025-03-20' },
+      ],
+      'doc-reports': [
+        { id: 'rep-q1', text: 'Q1-Report.pdf',    leaf: true, size: 245760, type: 'PDF',  modified: '2025-01-31' },
+        { id: 'rep-q2', text: 'Q2-Report.pdf',    leaf: true, size: 312000, type: 'PDF',  modified: '2025-04-01' },
+        { id: 'rep-q3', text: 'Q3-Forecast.xlsx', leaf: true, size: 89000,  type: 'XLSX', modified: '2025-03-15' },
+      ],
+      'doc-invoices': [
+        { id: 'inv-jan', text: 'Jan-2025.pdf', leaf: true, size: 45056,  type: 'PDF', modified: '2025-01-05' },
+        { id: 'inv-feb', text: 'Feb-2025.pdf', leaf: true, size: 47104,  type: 'PDF', modified: '2025-02-05' },
+        { id: 'inv-mar', text: 'Mar-2025.pdf', leaf: true, size: 51200,  type: 'PDF', modified: '2025-03-05' },
+      ],
+      pictures: [
+        { id: 'pic-2024', text: '2024', leaf: false },
+        { id: 'pic-2025', text: '2025', leaf: false },
+        { id: 'pic-raw',  text: 'RAW',  leaf: false },
+      ],
+      'pic-2024': [
+        { id: 'pic-beach', text: 'beach-morning.jpg', leaf: true, size: 4194304, type: 'JPG', modified: '2024-07-15' },
+        { id: 'pic-team',  text: 'team-photo.png',    leaf: true, size: 2097152, type: 'PNG', modified: '2024-09-01' },
+        { id: 'pic-conf',  text: 'conference.jpg',    leaf: true, size: 3145728, type: 'JPG', modified: '2024-11-20' },
+      ],
+      'pic-2025': [
+        { id: 'pic-ny',    text: 'new-years.jpg', leaf: true, size: 5242880, type: 'JPG', modified: '2025-01-01' },
+        { id: 'pic-bday',  text: 'birthday.jpg',  leaf: true, size: 3670016, type: 'JPG', modified: '2025-02-14' },
+      ],
+      'pic-raw': [
+        { id: 'raw-1', text: 'IMG_0001.CR3', leaf: true, size: 26214400, type: 'CR3', modified: '2025-03-10' },
+        { id: 'raw-2', text: 'IMG_0002.CR3', leaf: true, size: 25165824, type: 'CR3', modified: '2025-03-10' },
+        { id: 'raw-3', text: 'IMG_0003.CR3', leaf: true, size: 27262976, type: 'CR3', modified: '2025-03-11' },
+      ],
+      projects: [
+        { id: 'proj-fs',      text: 'framesquared', leaf: false },
+        { id: 'proj-website', text: 'website',       leaf: false },
+        { id: 'proj-scripts', text: 'scripts',       leaf: false },
+      ],
+      'proj-fs': [
+        { id: 'fs-src',    text: 'src',           leaf: false },
+        { id: 'fs-pkg',    text: 'package.json',  leaf: true, size: 2048, type: 'JSON', modified: '2025-04-01' },
+        { id: 'fs-tsconf', text: 'tsconfig.json', leaf: true, size: 512,  type: 'JSON', modified: '2025-03-15' },
+        { id: 'fs-readme', text: 'README.md',     leaf: true, size: 8192, type: 'MD',   modified: '2025-03-28' },
+      ],
+      'fs-src': [
+        { id: 'src-comp',  text: 'components', leaf: false },
+        { id: 'src-utils', text: 'utils',       leaf: false },
+        { id: 'src-index', text: 'index.ts',    leaf: true, size: 1024, type: 'TS', modified: '2025-04-01' },
+      ],
+      'src-comp': [
+        { id: 'comp-grid',  text: 'TreeGrid.ts',     leaf: true, size: 15360, type: 'TS', modified: '2025-04-01' },
+        { id: 'comp-store', text: 'TreeStore.ts',     leaf: true, size: 12288, type: 'TS', modified: '2025-03-30' },
+        { id: 'comp-view',  text: 'TreeGridView.ts',  leaf: true, size: 20480, type: 'TS', modified: '2025-04-01' },
+      ],
+      'src-utils': [
+        { id: 'util-fmt', text: 'formatters.ts', leaf: true, size: 2048, type: 'TS', modified: '2025-03-20' },
+        { id: 'util-dom', text: 'dom.ts',         leaf: true, size: 3072, type: 'TS', modified: '2025-03-22' },
+      ],
+      'proj-website': [
+        { id: 'web-html', text: 'index.html', leaf: true, size: 8192, type: 'HTML', modified: '2025-03-28' },
+        { id: 'web-css',  text: 'styles.css', leaf: true, size: 4096, type: 'CSS',  modified: '2025-03-27' },
+        { id: 'web-js',   text: 'app.js',     leaf: true, size: 6144, type: 'JS',   modified: '2025-03-29' },
+      ],
+      'proj-scripts': [
+        { id: 'scr-build',  text: 'build.sh',  leaf: true, size: 512, type: 'SH', modified: '2025-02-01' },
+        { id: 'scr-deploy', text: 'deploy.sh', leaf: true, size: 768, type: 'SH', modified: '2025-03-01' },
+      ],
+      music: [
+        { id: 'mus-jazz',      text: 'Jazz',      leaf: false },
+        { id: 'mus-classical', text: 'Classical', leaf: false },
+        { id: 'mus-playlists', text: 'Playlists', leaf: false },
+      ],
+      'mus-jazz': [
+        { id: 'jazz-1', text: 'Kind of Blue.flac',  leaf: true, size: 524288000, type: 'FLAC', modified: '2024-01-15' },
+        { id: 'jazz-2', text: 'A Love Supreme.flac', leaf: true, size: 419430400, type: 'FLAC', modified: '2024-01-15' },
+        { id: 'jazz-3', text: 'Head Hunters.mp3',    leaf: true, size: 52428800,  type: 'MP3',  modified: '2024-02-01' },
+      ],
+      'mus-classical': [
+        { id: 'cls-1', text: 'Goldberg Variations.flac', leaf: true, size: 943718400, type: 'FLAC', modified: '2024-03-10' },
+        { id: 'cls-2', text: 'The Four Seasons.flac',    leaf: true, size: 734003200, type: 'FLAC', modified: '2024-03-10' },
+      ],
+      'mus-playlists': [
+        { id: 'pl-1', text: 'Morning Mix.m3u', leaf: true, size: 1024, type: 'M3U', modified: '2025-01-01' },
+        { id: 'pl-2', text: 'Evening.m3u',     leaf: true, size: 2048, type: 'M3U', modified: '2025-02-14' },
+      ],
+      downloads: [
+        { id: 'dl-chrome', text: 'Chrome.dmg',      leaf: true, size: 104857600, type: 'DMG', modified: '2025-03-01' },
+        { id: 'dl-figma',  text: 'Figma-Setup.exe', leaf: true, size: 73400320,  type: 'EXE', modified: '2025-03-10' },
+        { id: 'dl-zoom',   text: 'Zoom.pkg',         leaf: true, size: 52428800,  type: 'PKG', modified: '2025-02-20' },
+        { id: 'dl-vscode', text: 'VSCode.zip',        leaf: true, size: 89128960,  type: 'ZIP', modified: '2025-04-01' },
+      ],
+    };
+
+    // ── Simulation config ─────────────────────────────────────────────────────
+
+    let latencyMs   = 800;
+    let failureRate = 0;   // 0–80
+
+    // Simulate a REST call: GET /api/tree/:nodeId
+    function simulateRequest(nodeId) {
+      const delay = latencyMs * 0.4 + Math.random() * latencyMs * 0.6;
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (Math.random() * 100 < failureRate) {
+            reject(new Error('Network error (simulated)'));
+          } else {
+            resolve({ children: API_DATA[nodeId] ?? [], duration: Math.round(delay) });
+          }
+        }, delay);
+      });
+    }
+
+    // ── Renderers ─────────────────────────────────────────────────────────────
+
+    function renderSize(v) {
+      if (!v) return '<span style="color:#bdbdbd">—</span>';
+      if (v < 1024)              return `${v} B`;
+      if (v < 1024 * 1024)      return `${(v / 1024).toFixed(1)} KB`;
+      if (v < 1024 ** 3)        return `${(v / 1024 ** 2).toFixed(1)} MB`;
+      return `${(v / 1024 ** 3).toFixed(1)} GB`;
+    }
+
+    function renderDate(v) {
+      if (!v) return '<span style="color:#bdbdbd">—</span>';
+      return new Date(v).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function renderType(v) {
+      if (!v) return '<span style="color:#bdbdbd">—</span>';
+      return `<span class="type-badge type-${v.toLowerCase()}">${v}</span>`;
+    }
+
+    // ── Node factory ──────────────────────────────────────────────────────────
+    //
+    // TreeStore requires proper NodeInterface objects — plain data objects will
+    // fail when the view tries to call isLeaf(), get(), etc. We create them via
+    // TreeModel.create() + applyNodeInterface() before passing to store.appendChild().
+
+    function buildNode(data, depth) {
+      const model = TreeModel.create(data);
+      applyNodeInterface(model, depth ?? 0);
+      return model;
+    }
+
+    // ── TreeGrid ──────────────────────────────────────────────────────────────
+    //
+    // Start with the five top-level folders but no children loaded.
+    // Each folder has leaf:false so the expander is shown.
+
+    const grid = new TreeGrid({
+      title: 'File Browser',
+      store: API_DATA.root,   // array shorthand — TreeGrid wraps this in a TreeStore
+      rootVisible: false,
+      useArrows: true,
+      columns: [
+        new TreeGridColumn({ text: 'Name',     dataIndex: 'text',     flex: 2 }),
+        new Column({         text: 'Size',     dataIndex: 'size',     width: 100, renderer: renderSize }),
+        new Column({         text: 'Modified', dataIndex: 'modified', width: 150, renderer: renderDate }),
+        new Column({         text: 'Type',     dataIndex: 'type',     width: 70,  renderer: renderType }),
+      ],
+      height: 460,
+    });
+
+    grid.render(document.getElementById('grid-container'));
+
+    const store = grid.getStore();
+
+    // ── Load-state tracking ───────────────────────────────────────────────────
+
+    const loadedNodes  = new Set();  // ids of nodes whose children have been fetched
+    const loadingNodes = new Set();  // ids of nodes currently being fetched
+
+    let statRequests = 0;
+    let statNodes    = 0;
+    let statErrors   = 0;
+
+    function updateStats() {
+      document.getElementById('stat-requests').textContent = statRequests;
+      document.getElementById('stat-nodes').textContent    = statNodes;
+      document.getElementById('stat-errors').textContent   = statErrors;
+    }
+
+    // ── Network log ───────────────────────────────────────────────────────────
+
+    const logEl = document.getElementById('network-log');
+
+    function addLogEntry(nodeId, status, duration, count, isError) {
+      const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      const statusHtml = isError
+        ? `<span class="log-err">${status}</span>`
+        : `<span class="log-ok">${status}</span>`;
+      const countHtml = isError ? '' : ` <span class="log-count">(${count} items)</span>`;
+      entry.innerHTML =
+        `<span class="log-time">[${time}]</span>` +
+        `<span class="log-method">GET</span>` +
+        `<span class="log-url">/api/tree/${nodeId}</span>` +
+        `${statusHtml}` +
+        `<span class="log-dur">${duration}ms</span>` +
+        `${countHtml}`;
+      logEl.appendChild(entry);
+      logEl.scrollTop = logEl.scrollHeight;
+      // Keep the log bounded
+      while (logEl.children.length > 100) logEl.removeChild(logEl.firstChild);
+    }
+
+    // ── Async load children ───────────────────────────────────────────────────
+
+    async function loadChildren(node) {
+      const nodeId = String(node.getId?.() ?? node.id ?? '');
+      if (loadedNodes.has(nodeId) || loadingNodes.has(nodeId)) return;
+
+      loadingNodes.add(nodeId);
+      statRequests++;
+      updateStats();
+
+      // Insert a loading placeholder so the user sees immediate feedback
+      const placeholder = buildNode(
+        { id: nodeId + '__loading__', text: '⏳ Loading…', leaf: true },
+        node.depth + 1,
+      );
+      placeholder._isPlaceholder = true;
+      placeholder._placeholderFor = nodeId;
+      store.appendChild(node, placeholder);
+
+      // Style the placeholder row (DOM is updated synchronously by store.appendChild)
+      grid.getNodeRow(placeholder)?.classList.add('row-loading');
+
+      const t0 = Date.now();
+
+      try {
+        const { children, duration } = await simulateRequest(nodeId);
+
+        // Remove the loading placeholder
+        store.removeChild(node, placeholder);
+
+        // Append real children — each store.appendChild fires 'nodeappend' which
+        // the TreeGrid handles by inserting a row (no manual refresh needed)
+        for (const childData of children) {
+          const childNode = buildNode(childData, node.depth + 1);
+          store.appendChild(node, childNode);
+        }
+
+        loadedNodes.add(nodeId);
+        statNodes += children.length;
+        addLogEntry(nodeId, '200 OK', duration, children.length, false);
+
+      } catch (err) {
+        // Replace loading placeholder with an error node
+        store.removeChild(node, placeholder);
+        const errorNode = buildNode(
+          { id: nodeId + '__error__', text: '✕ Failed to load — click to retry', leaf: true },
+          node.depth + 1,
+        );
+        errorNode._isError   = true;
+        errorNode._errorFor  = nodeId;
+        errorNode._errorNode = node;
+        store.appendChild(node, errorNode);
+        grid.getNodeRow(errorNode)?.classList.add('row-error');
+
+        statErrors++;
+        addLogEntry(nodeId, '500 ERR', Date.now() - t0, 0, true);
+      }
+
+      loadingNodes.delete(nodeId);
+      updateStats();
+    }
+
+    // ── Wire expand events ────────────────────────────────────────────────────
+    //
+    // 'nodeexpand' fires when the user clicks an expander. The TreeGrid has
+    // already marked the node as expanded and shown its (currently empty)
+    // children. We trigger a fetch here if this node hasn't been loaded yet.
+
+    store.on('nodeexpand', (s, node) => {
+      if (!node || node.isRoot()) return;
+      const nodeId = String(node.getId?.() ?? '');
+      if (!loadedNodes.has(nodeId) && !loadingNodes.has(nodeId)) {
+        loadChildren(node);
+      }
+    });
+
+    // ── Retry on error node click ─────────────────────────────────────────────
+
+    grid.on('itemclick', (view, node) => {
+      if (!node._isError) return;
+      const parentNode = node._errorNode;
+      const retryId    = node._errorFor;
+      // Remove the error placeholder
+      store.removeChild(parentNode, node);
+      // Clear cached state so the load is retried
+      loadingNodes.delete(retryId);
+      loadedNodes.delete(retryId);
+      loadChildren(parentNode);
+    });
+
+    // ── Controls ──────────────────────────────────────────────────────────────
+
+    const toolbar = document.getElementById('toolbar');
+    new Button({
+      text: 'Reset Tree',
+      ui: 'default',
+      handler: () => {
+        loadedNodes.clear();
+        loadingNodes.clear();
+        statRequests = 0; statNodes = 0; statErrors = 0;
+        updateStats();
+        logEl.innerHTML = '';
+        // Rebuild the store with just the top-level folders
+        store.setRoot({
+          id: '__root__',
+          text: 'Root',
+          expanded: true,
+          children: API_DATA.root,
+        });
+        grid.getView().refresh();
+      },
+    }).render(toolbar);
+
+    // ── Simulation controls ───────────────────────────────────────────────────
+
+    const latencySlider = document.getElementById('latency-slider');
+    const latencyValue  = document.getElementById('latency-value');
+    latencySlider.addEventListener('input', () => {
+      latencyMs = Number(latencySlider.value);
+      latencyValue.textContent = `${latencyMs}ms`;
+    });
+
+    const failureSlider = document.getElementById('failure-slider');
+    const failureValue  = document.getElementById('failure-value');
+    failureSlider.addEventListener('input', () => {
+      failureRate = Number(failureSlider.value);
+      failureValue.textContent = `${failureRate}%`;
+    });
+
+    document.getElementById('log-clear').addEventListener('click', () => {
+      logEl.innerHTML = '';
+    });
+
+    // ── Source viewer ─────────────────────────────────────────────────────────
+
+    (function buildSourceBlock() {
+      const scripts = document.querySelectorAll('script[type="module"]');
+      const raw = scripts[scripts.length - 1].textContent ?? '';
+
+      const lines = raw.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+      const indent = lines.reduce((min, l) => {
+        const m = l.match(/^(\s+)/);
+        return (m && l.trim()) ? Math.min(min, m[1].length) : min;
+      }, Infinity);
+      const dedented = lines.map(l => l.slice(indent === Infinity ? 0 : indent)).join('\n');
+
+      function esc(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function highlight(src) {
+        return src.split('\n').map(line => {
+          let out = '';
+          let i = 0;
+          while (i < line.length) {
+            if (line[i] === '/' && line[i+1] === '/') {
+              out += `<span class="tok-comment">${esc(line.slice(i))}</span>`;
+              i = line.length;
+              continue;
+            }
+            if (line[i] === '`' || line[i] === '"' || line[i] === "'") {
+              const q = line[i];
+              let j = i + 1;
+              while (j < line.length) {
+                if (line[j] === '\\') { j += 2; continue; }
+                if (line[j] === q)    { j++; break; }
+                j++;
+              }
+              const tok = line.slice(i, j);
+              const inner = esc(tok).replace(
+                /(https?:\/\/[^\s'"`,]+)/g,
+                '<span class="tok-url">$1</span>'
+              );
+              out += `<span class="tok-string">${inner}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[0-9]/.test(line[i]) && (i === 0 || /[\s,(:=\[!<>+\-*\/]/.test(line[i-1]))) {
+              let j = i;
+              while (j < line.length && /[0-9_.]/.test(line[j])) j++;
+              out += `<span class="tok-number">${esc(line.slice(i, j))}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[a-zA-Z_$]/.test(line[i])) {
+              let j = i;
+              while (j < line.length && /[a-zA-Z0-9_$]/.test(line[j])) j++;
+              const word = line.slice(i, j);
+              const KEYWORDS = new Set([
+                'import','from','export','const','let','var','function','return',
+                'new','if','else','for','of','in','while','class','extends',
+                'async','await','try','catch','true','false','null','undefined','=>',
+              ]);
+              if (KEYWORDS.has(word)) {
+                out += `<span class="tok-keyword">${esc(word)}</span>`;
+              } else if (j < line.length && line[j] === '(') {
+                out += `<span class="tok-fn">${esc(word)}</span>`;
+              } else {
+                out += esc(word);
+              }
+              i = j;
+              continue;
+            }
+            out += esc(line[i]);
+            i++;
+          }
+          return out;
+        }).join('\n');
+      }
+
+      document.getElementById('source-pre').innerHTML = highlight(dedented);
+
+      document.getElementById('copy-btn').addEventListener('click', function() {
+        navigator.clipboard.writeText(dedented).then(() => {
+          this.textContent = 'Copied!';
+          this.classList.add('copied');
+          setTimeout(() => { this.textContent = 'Copy'; this.classList.remove('copied'); }, 2000);
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
