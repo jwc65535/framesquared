@@ -119,7 +119,7 @@ describe('Size budgets (uncompressed)', () => {
   const BUDGETS: Record<string, number> = {
     core: 150_000, // < 150KB uncompressed (~30KB gzip)
     data: 100_000, // < 100KB (~20KB gzip)
-    component: 50_000, // < 50KB
+    component: 60_000, // < 60KB (includes injected base styles)
     layout: 80_000, // < 80KB
     ui: 300_000, // < 300KB (~60KB gzip)
     form: 150_000, // < 150KB

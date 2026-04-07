@@ -1,5 +1,18 @@
 # @framesquared/app
 
+## 0.4.0
+
+### Minor Changes
+
+- TreeGrid CSS changes
+
+### Patch Changes
+
+- Changes CSS for TreeGrid
+- Updated dependencies
+- Updated dependencies
+  - @framesquared/core@0.4.0
+
 ## 0.2.0
 
 ### Minor Changes

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – Basic TreeGrid</title>
+  <style>
+    body { padding: 32px; background: #f0f2f5; }
+    .toolbar { display: flex; gap: 8px; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  <div class="toolbar" id="toolbar"></div>
+
+  <script type="module">
+    import { TreeGrid, TreeGridColumn, Column, Button } from 'https://esm.sh/@framesquared/ui@0.3.0';
+    import { ThemeManager, ModernTheme }               from 'https://esm.sh/@framesquared/theme@0.3.0';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── Data ─────────────────────────────────────────────────────────────────
+    //
+    // Pass tree data directly to TreeGrid's `store` config — it normalises
+    // plain arrays and objects internally. Do NOT import and construct
+    // TreeStore separately: on a CDN the class identity check inside TreeGrid
+    // will fail (two different module instances) and the store will be rebuilt
+    // incorrectly, producing no rows.
+    //
+    // Passing an array treats each element as a top-level node.
+    // Set expanded: true on a node to have it open on load.
+    // Any extra fields (size, type, modified) are available to renderers.
+
+    const treeData = [
+      {
+        text: 'Documents',
+        expanded: true,
+        children: [
+          { text: 'Q3-Report.pdf',      size: 245760,  type: 'PDF',   modified: '2025-03-01' },
+          { text: 'Meeting-Notes.docx', size: 32768,   type: 'Word',  modified: '2025-03-10' },
+          { text: 'Budget-2025.xlsx',   size: 180224,  type: 'Excel', modified: '2025-02-20' },
+        ],
+      },
+      {
+        text: 'Pictures',
+        children: [
+          { text: 'beach-morning.jpg',  size: 4194304, type: 'JPEG',  modified: '2024-07-15' },
+          { text: 'team-photo.png',     size: 2097152, type: 'PNG',   modified: '2025-01-05' },
+        ],
+      },
+      {
+        text: 'Projects',
+        children: [
+          {
+            text: 'framesquared',
+            expanded: true,
+            children: [
+              { text: 'package.json',  size: 1024, type: 'JSON', modified: '2025-04-01' },
+              { text: 'tsconfig.json', size: 512,  type: 'JSON', modified: '2025-03-15' },
+            ],
+          },
+          {
+            text: 'website',
+            children: [
+              { text: 'index.html', size: 8192, type: 'HTML', modified: '2025-03-28' },
+              { text: 'styles.css', size: 4096, type: 'CSS',  modified: '2025-03-27' },
+            ],
+          },
+        ],
+      },
+    ];
+
+    // ── Renderers ─────────────────────────────────────────────────────────────
+
+    function formatSize(bytes) {
+      if (!bytes) return '—';
+      if (bytes < 1024)        return `${bytes} B`;
+      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '—';
+      return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    // ── TreeGrid ──────────────────────────────────────────────────────────────
+    //
+    // The first column must be a TreeGridColumn — it renders the tree chrome
+    // (indentation, expand/collapse arrow, folder/file icon) plus the field value.
+    //
+    // Subsequent columns are plain Column instances. Use `renderer` to format
+    // a cell's raw value into display HTML.
+    //
+    // `flex` distributes remaining width proportionally.
+    // `width` sets a fixed pixel width.
+
+    const grid = new TreeGrid({
+      title: 'File Browser',
+      store: treeData,
+      rootVisible: false,   // hide the synthetic root; show top-level folders directly
+      useArrows: true,      // ▶/▼ triangle expanders
+      columns: [
+        new TreeGridColumn({ text: 'Name',     dataIndex: 'text',     flex: 1 }),
+        new Column({         text: 'Type',     dataIndex: 'type',     width: 70 }),
+        new Column({         text: 'Size',     dataIndex: 'size',     width: 100,
+          renderer: (v) => formatSize(v) }),
+        new Column({         text: 'Modified', dataIndex: 'modified', width: 150,
+          renderer: (v) => formatDate(v) }),
+      ],
+      height: 420,
+    });
+
+    grid.render(document.body);
+
+    // ── Controls ──────────────────────────────────────────────────────────────
+
+    const toolbar = document.getElementById('toolbar');
+
+    new Button({ text: 'Expand All',   handler: () => grid.expandAll()   }).render(toolbar);
+    new Button({ text: 'Collapse All', handler: () => grid.collapseAll(), ui: 'default' }).render(toolbar);
+  </script>
+</body>
+</html>

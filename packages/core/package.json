@@ -1,6 +1,6 @@
 {
   "name": "@framesquared/core",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Class system, events, and utilities",
   "type": "module",
   "main": "./dist/index.js",
