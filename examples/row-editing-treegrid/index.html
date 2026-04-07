@@ -146,13 +146,12 @@
       border: none !important;
     }
 
-    /* Slide-down panel */
+    /* Slide-down animation wrapper */
     .row-editor-panel {
       overflow: hidden;
       max-height: 0;
       opacity: 0;
-      transition: max-height 0.25s ease, opacity 0.2s ease, padding 0.25s ease;
-      padding: 0 16px;
+      transition: max-height 0.28s ease, opacity 0.22s ease;
       background: #f0f7ff;
       border-left: 3px solid #1976d2;
       border-top: 1px solid #bbdefb;
@@ -160,23 +159,22 @@
     }
 
     .row-editor-panel.open {
-      max-height: 260px;
+      max-height: 320px;
       opacity: 1;
-      padding: 14px 16px;
     }
 
+    /* Title bar above the framesquared FormPanel */
     .row-editor-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
+      padding: 10px 16px 0;
     }
 
     .row-editor-title {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       color: #1565c0;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
     }
 
@@ -184,90 +182,52 @@
       text-transform: none;
       font-size: 13px;
       color: #0d47a1;
+      font-weight: 700;
     }
 
-    /* Field grid: 3 columns × 2 rows */
-    .row-editor-fields {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px 16px;
-      margin-bottom: 12px;
+    /* Strip the FormPanel's own chrome so it blends with the row-editor-panel */
+    .row-editor-panel .x-panel {
+      background: transparent !important;
+      box-shadow: none !important;
+      border: none !important;
     }
 
-    .field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
+    .row-editor-panel .x-panel-body {
+      background: transparent !important;
     }
 
-    .field-label {
+    /* Compact field labels and inputs for the inline editor context */
+    .row-editor-panel .x-field {
+      margin: 0;
+    }
+
+    .row-editor-panel .x-field-label {
       font-size: 11px;
       font-weight: 600;
       color: #546e7a;
       letter-spacing: 0.03em;
       text-transform: uppercase;
+      margin-bottom: 3px;
     }
 
-    .field-input {
+    .row-editor-panel .x-field-input {
       height: 30px;
-      padding: 0 8px;
-      border: 1px solid #cfd8dc;
-      border-radius: 5px;
       font-size: 13px;
-      font-family: inherit;
-      color: #212121;
-      background: #fff;
-      outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
+      border-radius: 5px;
+      border-color: #cfd8dc;
     }
 
-    .field-input:focus {
+    .row-editor-panel .x-field-input:focus {
       border-color: #1976d2;
       box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.15);
     }
 
-    .field-input.has-error {
-      border-color: #d32f2f;
-    }
-
-    .field-error {
-      font-size: 11px;
-      color: #d32f2f;
-      min-height: 14px;
-      line-height: 1.3;
-    }
-
-    /* Editor footer */
+    /* Footer with Save / Cancel buttons */
     .row-editor-footer {
       display: flex;
       gap: 8px;
-      align-items: center;
+      padding: 8px 16px 14px;
     }
-
-    .re-btn {
-      height: 30px;
-      padding: 0 14px;
-      border-radius: 5px;
-      font-size: 12px;
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-    }
-
-    .re-save {
-      background: #1976d2;
-      color: #fff;
-      border: 1px solid #1565c0;
-    }
-    .re-save:hover { background: #1565c0; }
-
-    .re-cancel {
-      background: #fff;
-      color: #616161;
-      border: 1px solid #bdbdbd;
-    }
-    .re-cancel:hover { background: #f5f5f5; color: #424242; }
 
     /* ── Department / type badges ─────────────────────────────────────────── */
     .badge {
@@ -442,8 +402,8 @@
       <div class="page-badge">▦ framesquared</div>
       <h1 class="page-title">Row Editing</h1>
       <p class="page-subtitle">
-        Click any employee row to open a full inline form. Edit all fields at once,
-        then save or cancel. Includes field-level validation and an edit history log.
+        Click any employee row to open a full inline form built with framesquared
+        form fields. Edit all fields at once, then save or cancel.
       </p>
     </div>
   </header>
@@ -497,14 +457,15 @@
     import { TreeGrid, TreeGridColumn, Column, Button } from 'https://esm.sh/@framesquared/ui@0.5.0';
     import { TreeModel, applyNodeInterface }            from 'https://esm.sh/@framesquared/data@0.5.0';
     import { ThemeManager, ModernTheme }                from 'https://esm.sh/@framesquared/theme@0.5.0';
+    import { FormPanel, TextField, NumberField, ComboBox } from 'https://esm.sh/@framesquared/form@0.5.0';
 
     ThemeManager.register(ModernTheme);
     ThemeManager.setTheme('modern');
 
     // ── Constants ─────────────────────────────────────────────────────────────
 
-    const DEPARTMENTS = ['Engineering', 'Design', 'Product'];
-    const EMP_TYPES   = ['Full-time', 'Part-time', 'Contract'];
+    const DEPARTMENTS  = ['Engineering', 'Design', 'Product'];
+    const EMP_TYPES    = ['Full-time', 'Part-time', 'Contract'];
     const COLUMN_COUNT = 6;
 
     const FIELD_LABELS = {
@@ -522,24 +483,24 @@
       {
         id: 'dept-eng', text: 'Engineering', leaf: false, expanded: true,
         children: [
-          { id: 'e1', text: 'Alice Chen',    title: 'Senior Engineer',  department: 'Engineering', empType: 'Full-time', salary: 145000, startDate: '2021-03-15', leaf: true },
-          { id: 'e2', text: 'Marcus Webb',   title: 'Staff Engineer',   department: 'Engineering', empType: 'Full-time', salary: 175000, startDate: '2019-08-01', leaf: true },
-          { id: 'e3', text: 'Priya Sharma',  title: 'Junior Engineer',  department: 'Engineering', empType: 'Full-time', salary: 98000,  startDate: '2023-06-12', leaf: true },
+          { id: 'e1', text: 'Alice Chen',   title: 'Senior Engineer',  department: 'Engineering', empType: 'Full-time', salary: 145000, startDate: '2021-03-15', leaf: true },
+          { id: 'e2', text: 'Marcus Webb',  title: 'Staff Engineer',   department: 'Engineering', empType: 'Full-time', salary: 175000, startDate: '2019-08-01', leaf: true },
+          { id: 'e3', text: 'Priya Sharma', title: 'Junior Engineer',  department: 'Engineering', empType: 'Full-time', salary: 98000,  startDate: '2023-06-12', leaf: true },
         ],
       },
       {
         id: 'dept-design', text: 'Design', leaf: false, expanded: false,
         children: [
-          { id: 'e4', text: 'Jordan Kim',    title: 'Lead Designer',    department: 'Design', empType: 'Full-time', salary: 128000, startDate: '2020-11-05', leaf: true },
-          { id: 'e5', text: 'Sofia Reyes',   title: 'UX Researcher',    department: 'Design', empType: 'Contract',  salary: 95000,  startDate: '2022-02-20', leaf: true },
+          { id: 'e4', text: 'Jordan Kim',   title: 'Lead Designer',    department: 'Design', empType: 'Full-time', salary: 128000, startDate: '2020-11-05', leaf: true },
+          { id: 'e5', text: 'Sofia Reyes',  title: 'UX Researcher',    department: 'Design', empType: 'Contract',  salary: 95000,  startDate: '2022-02-20', leaf: true },
         ],
       },
       {
         id: 'dept-product', text: 'Product', leaf: false, expanded: false,
         children: [
-          { id: 'e6', text: 'Daniel Park',   title: 'Product Manager',  department: 'Product', empType: 'Full-time', salary: 152000, startDate: '2020-05-18', leaf: true },
-          { id: 'e7', text: 'Ava Thompson',  title: 'Product Analyst',  department: 'Product', empType: 'Full-time', salary: 112000, startDate: '2022-09-01', leaf: true },
-          { id: 'e8', text: 'Leo Martinez',  title: 'Associate PM',     department: 'Product', empType: 'Part-time', salary: 72000,  startDate: '2023-11-15', leaf: true },
+          { id: 'e6', text: 'Daniel Park',  title: 'Product Manager',  department: 'Product', empType: 'Full-time', salary: 152000, startDate: '2020-05-18', leaf: true },
+          { id: 'e7', text: 'Ava Thompson', title: 'Product Analyst',  department: 'Product', empType: 'Full-time', salary: 112000, startDate: '2022-09-01', leaf: true },
+          { id: 'e8', text: 'Leo Martinez', title: 'Associate PM',     department: 'Product', empType: 'Part-time', salary: 72000,  startDate: '2023-11-15', leaf: true },
         ],
       },
     ];
@@ -577,12 +538,12 @@
       rootVisible: false,
       useArrows: true,
       columns: [
-        new TreeGridColumn({ text: 'Name',       dataIndex: 'text',       width: 200 }),
-        new Column({         text: 'Title',       dataIndex: 'title',      width: 180 }),
-        new Column({         text: 'Department',  dataIndex: 'department', width: 120, renderer: renderDept }),
-        new Column({         text: 'Type',        dataIndex: 'empType',    width: 100, renderer: renderType }),
-        new Column({         text: 'Salary',      dataIndex: 'salary',     width: 110, renderer: renderSalary }),
-        new Column({         text: 'Start Date',  dataIndex: 'startDate',  width: 110, renderer: renderDate }),
+        new TreeGridColumn({ text: 'Name',        dataIndex: 'text',       width: 200 }),
+        new Column({         text: 'Title',        dataIndex: 'title',      width: 180 }),
+        new Column({         text: 'Department',   dataIndex: 'department', width: 120, renderer: renderDept }),
+        new Column({         text: 'Type',         dataIndex: 'empType',    width: 100, renderer: renderType }),
+        new Column({         text: 'Salary',       dataIndex: 'salary',     width: 110, renderer: renderSalary }),
+        new Column({         text: 'Start Date',   dataIndex: 'startDate',  width: 110, renderer: renderDate }),
       ],
       height: 460,
     });
@@ -592,130 +553,197 @@
     // ── Row editor state ──────────────────────────────────────────────────────
 
     let editorTr       = null;   // the <tr> inserted below the edited row
-    let editingNode    = null;   // the node being edited
+    let editorFormPanel = null;  // the framesquared FormPanel instance
+    let editingNode    = null;   // the node currently being edited
     let outsideHandler = null;   // document mousedown handler for click-outside
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
+    // ── Helper ────────────────────────────────────────────────────────────────
 
     function escHtml(s) {
       return String(s ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
     // ── openEditor ────────────────────────────────────────────────────────────
     //
-    // Inserts a <tr> with a full-width inline form below the clicked row.
-    // The form is animated open via max-height transition.
+    // Inserts a <tr> below the clicked row containing a framesquared FormPanel
+    // with TextField, ComboBox, NumberField, and TextField (date) fields.
+    // The panel slides open via a CSS max-height transition.
 
     function openEditor(node) {
-      if (node === editingNode) return;  // already editing this row
-      closeEditor();                     // close any current editor without saving
+      if (node === editingNode) return;
+      closeEditor();
 
       editingNode = node;
-
       const row = grid.getNodeRow(node);
       if (!row) return;
 
       row.classList.add('row-editing');
 
-      // Build the editor <tr>
+      // ── Insert the editor <tr> ────────────────────────────────────────────
+
       editorTr = document.createElement('tr');
       editorTr.className = 'row-editor-tr';
 
       const td = document.createElement('td');
       td.colSpan = COLUMN_COUNT;
       td.className = 'row-editor-td';
-
-      td.innerHTML = `
-        <div class="row-editor-panel" id="row-editor-panel">
-          <div class="row-editor-header">
-            <span class="row-editor-title">Editing: <strong>${escHtml(node.get('text'))}</strong></span>
-          </div>
-          <div class="row-editor-fields">
-            <div class="field-group">
-              <label class="field-label">Name</label>
-              <input class="field-input" id="re-name" type="text"
-                     value="${escHtml(node.get('text') ?? '')}">
-              <div class="field-error" id="re-name-err"></div>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Title</label>
-              <input class="field-input" id="re-title" type="text"
-                     value="${escHtml(node.get('title') ?? '')}">
-              <div class="field-error" id="re-title-err"></div>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Department</label>
-              <select class="field-input" id="re-dept">
-                ${DEPARTMENTS.map(d => `<option value="${escHtml(d)}"${d === node.get('department') ? ' selected' : ''}>${escHtml(d)}</option>`).join('')}
-              </select>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Employment Type</label>
-              <select class="field-input" id="re-type">
-                ${EMP_TYPES.map(t => `<option value="${escHtml(t)}"${t === node.get('empType') ? ' selected' : ''}>${escHtml(t)}</option>`).join('')}
-              </select>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Salary (USD)</label>
-              <input class="field-input" id="re-salary" type="number"
-                     min="20000" max="1000000" step="1000"
-                     value="${escHtml(String(node.get('salary') ?? ''))}">
-              <div class="field-error" id="re-salary-err"></div>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Start Date</label>
-              <input class="field-input" id="re-start" type="date"
-                     value="${escHtml(node.get('startDate') ?? '')}">
-              <div class="field-error" id="re-start-err"></div>
-            </div>
-          </div>
-          <div class="row-editor-footer">
-            <button class="re-btn re-save"   id="re-save">Save Changes</button>
-            <button class="re-btn re-cancel" id="re-cancel">Cancel</button>
-          </div>
-        </div>
-      `;
-
       editorTr.appendChild(td);
+
       row.parentNode.insertBefore(editorTr, row.nextSibling);
 
-      // Trigger slide-down after the browser has painted the initial state
+      // ── Slide-down wrapper ────────────────────────────────────────────────
+
+      const editorWrapper = document.createElement('div');
+      editorWrapper.className = 'row-editor-panel';
+      td.appendChild(editorWrapper);
+
+      // ── Title bar ─────────────────────────────────────────────────────────
+
+      const headerDiv = document.createElement('div');
+      headerDiv.className = 'row-editor-header';
+      headerDiv.innerHTML =
+        `<span class="row-editor-title">Editing: <strong>${escHtml(node.get('text'))}</strong></span>`;
+      editorWrapper.appendChild(headerDiv);
+
+      // ── Build framesquared form fields ───────────────────────────────────
+      //
+      // TextField with allowBlank:false — validates "required + minLength"
+      // ComboBox with a plain-object store — displayField:'text', valueField:'id'
+      // NumberField — validates minValue/maxValue
+      // TextField with inputType:'date' — native date picker; getValue() returns YYYY-MM-DD
+      //
+      // All fields use labelAlign:'top' so they stack cleanly in a 3-column grid.
+      // validateOnBlur:true gives feedback as the user tabs between fields.
+
+      const nameField = new TextField({
+        name:           'text',
+        fieldLabel:     'Name',
+        value:          node.get('text') ?? '',
+        allowBlank:     false,
+        minLength:      2,
+        validateOnBlur: true,
+        msgTarget:      'under',
+        labelAlign:     'top',
+      });
+
+      const titleField = new TextField({
+        name:           'title',
+        fieldLabel:     'Title',
+        value:          node.get('title') ?? '',
+        allowBlank:     false,
+        validateOnBlur: true,
+        msgTarget:      'under',
+        labelAlign:     'top',
+      });
+
+      const deptField = new ComboBox({
+        name:           'department',
+        fieldLabel:     'Department',
+        store:          DEPARTMENTS.map(d => ({ id: d, text: d })),
+        value:          node.get('department') ?? '',
+        validateOnBlur: true,
+        msgTarget:      'under',
+        labelAlign:     'top',
+      });
+
+      const typeField = new ComboBox({
+        name:           'empType',
+        fieldLabel:     'Employment Type',
+        store:          EMP_TYPES.map(t => ({ id: t, text: t })),
+        value:          node.get('empType') ?? '',
+        validateOnBlur: true,
+        msgTarget:      'under',
+        labelAlign:     'top',
+      });
+
+      const salaryField = new NumberField({
+        name:           'salary',
+        fieldLabel:     'Salary (USD)',
+        value:          node.get('salary') ?? '',
+        allowBlank:     false,
+        minValue:       20000,
+        maxValue:       1000000,
+        step:           1000,
+        allowDecimals:  false,
+        validateOnBlur: true,
+        msgTarget:      'under',
+        labelAlign:     'top',
+      });
+
+      // DateField's picker is a placeholder stub, so we use a plain TextField
+      // with inputType:'date' to get the browser's native date picker widget.
+      const startField = new TextField({
+        name:           'startDate',
+        fieldLabel:     'Start Date',
+        value:          node.get('startDate') ?? '',
+        inputType:      'date',
+        allowBlank:     false,
+        validateOnBlur: true,
+        msgTarget:      'under',
+        labelAlign:     'top',
+      });
+
+      // ── FormPanel ─────────────────────────────────────────────────────────
+      //
+      // header:false   — suppress the panel title bar (we render our own above)
+      // border:false   — adds x-panel-noborder; CSS overrides strip remaining chrome
+      // bodyStyle      — CSS grid: 3 columns × 2 rows for the 6 fields
+      //
+      // After render, getValues() returns { text, title, department, empType,
+      // salary, startDate } keyed by each field's `name` config.
+      // isFormValid() / getFields().forEach(f => f.validate()) drive validation.
+
+      editorFormPanel = new FormPanel({
+        header:    false,
+        border:    false,
+        bodyStyle: 'display:grid;grid-template-columns:repeat(3,1fr);gap:10px 16px;padding:10px 16px 6px;',
+        items:     [nameField, titleField, deptField, typeField, salaryField, startField],
+      });
+      editorFormPanel.render(editorWrapper);
+
+      // ── Save / Cancel buttons ─────────────────────────────────────────────
+
+      const footerDiv = document.createElement('div');
+      footerDiv.className = 'row-editor-footer';
+      editorWrapper.appendChild(footerDiv);
+
+      new Button({ text: 'Save Changes', handler: saveEditor }).render(footerDiv);
+      new Button({ text: 'Cancel',       handler: closeEditor }).render(footerDiv);
+
+      // ── Animate open ──────────────────────────────────────────────────────
+
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          document.getElementById('row-editor-panel')?.classList.add('open');
+          editorWrapper.classList.add('open');
         });
       });
 
-      // Focus the first field
-      setTimeout(() => document.getElementById('re-name')?.focus(), 60);
+      // Focus the first input after the slide animation starts
+      setTimeout(() => nameField.getInputEl?.()?.focus(), 60);
 
-      // Button handlers
-      document.getElementById('re-save').addEventListener('click', saveEditor);
-      document.getElementById('re-cancel').addEventListener('click', closeEditor);
+      // ── Keyboard ──────────────────────────────────────────────────────────
 
-      // Keyboard: Escape cancels, Enter saves (except in <select>)
       editorTr.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           e.stopPropagation();
           closeEditor();
-        } else if (e.key === 'Enter' && e.target.tagName !== 'SELECT') {
+        } else if (e.key === 'Enter') {
           e.preventDefault();
           saveEditor();
         }
       });
 
-      // Click-outside: cancel if the user clicks outside both the editor and the source row
+      // ── Click-outside ─────────────────────────────────────────────────────
+
       setTimeout(() => {
         outsideHandler = (e) => {
           if (!editorTr) return;
           const sourceRow = grid.getNodeRow(editingNode);
-          const insideEditor = editorTr.contains(e.target);
-          const insideRow    = sourceRow?.contains(e.target) ?? false;
-          if (!insideEditor && !insideRow) closeEditor();
+          if (!editorTr.contains(e.target) && !sourceRow?.contains(e.target)) {
+            closeEditor();
+          }
         };
         document.addEventListener('mousedown', outsideHandler);
       }, 100);
@@ -723,14 +751,20 @@
 
     // ── closeEditor ───────────────────────────────────────────────────────────
     //
-    // Removes the editor <tr>, clears the row highlight, and detaches the
-    // click-outside handler. Does NOT save — call saveEditor() for that.
+    // Destroys the FormPanel (which cleans up BoundList dropdowns and listeners),
+    // removes the editor <tr>, clears the row highlight, and detaches the
+    // click-outside handler.
 
     function closeEditor() {
       if (!editingNode) return;
 
       const row = grid.getNodeRow(editingNode);
       if (row) row.classList.remove('row-editing');
+
+      if (editorFormPanel) {
+        editorFormPanel.destroy();
+        editorFormPanel = null;
+      }
 
       if (editorTr?.parentNode) editorTr.parentNode.removeChild(editorTr);
       editorTr    = null;
@@ -742,106 +776,56 @@
       }
     }
 
-    // ── validateEditor ────────────────────────────────────────────────────────
-    //
-    // Checks all fields and populates inline error messages.
-    // Returns true if all fields pass.
-
-    function validateEditor() {
-      let valid = true;
-
-      const nameInput  = document.getElementById('re-name');
-      const nameErr    = document.getElementById('re-name-err');
-      const name       = nameInput.value.trim();
-      if (name.length < 2) {
-        nameErr.textContent = 'Name must be at least 2 characters.';
-        nameInput.classList.add('has-error');
-        valid = false;
-      } else {
-        nameErr.textContent = '';
-        nameInput.classList.remove('has-error');
-      }
-
-      const titleInput = document.getElementById('re-title');
-      const titleErr   = document.getElementById('re-title-err');
-      const title      = titleInput.value.trim();
-      if (!title) {
-        titleErr.textContent = 'Title is required.';
-        titleInput.classList.add('has-error');
-        valid = false;
-      } else {
-        titleErr.textContent = '';
-        titleInput.classList.remove('has-error');
-      }
-
-      const salaryInput = document.getElementById('re-salary');
-      const salaryErr   = document.getElementById('re-salary-err');
-      const salary      = Number(salaryInput.value);
-      if (isNaN(salary) || salary < 20000 || salary > 1000000) {
-        salaryErr.textContent = 'Salary must be between $20,000 and $1,000,000.';
-        salaryInput.classList.add('has-error');
-        valid = false;
-      } else {
-        salaryErr.textContent = '';
-        salaryInput.classList.remove('has-error');
-      }
-
-      const startInput = document.getElementById('re-start');
-      const startErr   = document.getElementById('re-start-err');
-      if (!startInput.value) {
-        startErr.textContent = 'Start date is required.';
-        startInput.classList.add('has-error');
-        valid = false;
-      } else {
-        startErr.textContent = '';
-        startInput.classList.remove('has-error');
-      }
-
-      return valid;
-    }
-
     // ── saveEditor ────────────────────────────────────────────────────────────
     //
-    // Validates, collects changed fields, closes the editor, applies changes
-    // via node.set(), then refreshes the row with getView().refreshNode().
+    // 1. Calls field.validate() on every field — marks invalid ones with their
+    //    built-in error display (msgTarget:'under').
+    // 2. If all valid, reads values via formPanel.getValues() and diffs against
+    //    the node's current data.
+    // 3. Closes the editor, then applies changes with node.set() and
+    //    refreshes the row with getView().refreshNode().
 
     function saveEditor() {
       if (!editingNode) return;
-      if (!validateEditor()) return;
+
+      // Validate every field; collect results
+      const fields = editorFormPanel.getFields();
+      let allValid = true;
+      for (const field of fields) {
+        if (!field.validate()) allValid = false;
+      }
+      if (!allValid) return;
 
       const node = editingNode;
+      const raw  = editorFormPanel.getValues();
 
-      // Collect only what actually changed
+      // Normalise values — salary is stored as a number, everything else as string
       const newValues = {
-        text:       document.getElementById('re-name').value.trim(),
-        title:      document.getElementById('re-title').value.trim(),
-        department: document.getElementById('re-dept').value,
-        empType:    document.getElementById('re-type').value,
-        salary:     Number(document.getElementById('re-salary').value),
-        startDate:  document.getElementById('re-start').value,
+        text:       String(raw.text ?? '').trim(),
+        title:      String(raw.title ?? '').trim(),
+        department: String(raw.department ?? ''),
+        empType:    String(raw.empType ?? ''),
+        salary:     Number(raw.salary ?? 0),
+        startDate:  String(raw.startDate ?? ''),
       };
 
+      // Diff against what the node currently holds
       const changes = {};
       for (const [field, newVal] of Object.entries(newValues)) {
         const oldVal = node.get(field);
-        // Use loose comparison so 145000 === '145000' doesn't flag a change
         if (String(oldVal ?? '') !== String(newVal ?? '')) {
           changes[field] = { oldVal, newVal };
         }
       }
 
-      // Close editor first so refreshNode() can repaint the DOM row cleanly
-      closeEditor();
+      closeEditor(); // close before refreshNode so the DOM row is intact
 
-      // Apply changes
       for (const [field, { newVal }] of Object.entries(changes)) {
         node.set(field, newVal);
       }
 
-      // Refresh the single row in-place
       grid.getView().refreshNode(node);
 
-      // Log
       if (Object.keys(changes).length === 0) {
         logInfo(node, 'saved — no changes');
       } else {
@@ -851,16 +835,10 @@
       }
     }
 
-    // ── Wire grid itemclick ───────────────────────────────────────────────────
-    //
-    // Only leaf nodes (employees) open the row editor.
-    // Clicking a department row (non-leaf) closes any open editor.
+    // ── Wire grid events ──────────────────────────────────────────────────────
 
     grid.on('itemclick', (view, node) => {
-      if (!node.isLeaf()) {
-        closeEditor();
-        return;
-      }
+      if (!node.isLeaf()) { closeEditor(); return; }
       openEditor(node);
     });
 
@@ -910,19 +888,15 @@
     new Button({
       text: '+ Add Employee',
       handler: () => {
-        // Resolve the target department from the current selection
         const selection = grid.getSelection();
         const store = grid.getStore();
 
         let parent = store.getRootNode().childNodes[0]; // default: Engineering
         if (selection.length > 0) {
           const sel = selection[0];
-          parent = sel.isLeaf()
-            ? (sel.parentNode ?? parent)
-            : sel;
+          parent = sel.isLeaf() ? (sel.parentNode ?? parent) : sel;
         }
 
-        // Create a new employee node with placeholder values
         const newNode = TreeModel.create({
           id:         `emp-${Date.now()}`,
           text:       'New Employee',
@@ -936,7 +910,6 @@
         applyNodeInterface(newNode, parent.depth + 1);
         store.appendChild(parent, newNode);
 
-        // Expand the department so the new row is visible, then open its editor
         if (!parent.isExpanded()) grid.expandNode(parent);
         setTimeout(() => openEditor(newNode), 80);
       },
@@ -948,9 +921,9 @@
       handler: () => {
         const selection = grid.getSelection();
         if (selection.length === 0) return;
-        const node   = selection[0];
+        const node = selection[0];
         if (!node.isLeaf()) return;
-        const name   = node.get('text') ?? 'this employee';
+        const name = node.get('text') ?? 'this employee';
         if (!confirm(`Delete "${name}"?`)) return;
         if (editingNode === node) closeEditor();
         const parent = node.parentNode ?? grid.getStore().getRootNode();
