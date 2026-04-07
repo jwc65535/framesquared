@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – Multi-Column TreeGrid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #212121;
+    }
+
+    /* ── Page header ──────────────────────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #1565c0 0%, #1976d2 60%, #42a5f5 100%);
+      padding: 32px 40px 28px;
+      color: #fff;
+    }
+
+    .page-header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 10px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(4px);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      opacity: 0.85;
+      font-weight: 400;
+      max-width: 580px;
+      line-height: 1.5;
+    }
+
+    /* ── Page body ────────────────────────────────────────────────────────── */
+    .page-body {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 40px 48px;
+    }
+
+    /* ── Toolbar ──────────────────────────────────────────────────────────── */
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .toolbar-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #757575;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .sort-indicator {
+      font-size: 12px;
+      color: #1976d2;
+      font-weight: 500;
+      background: #e3f0ff;
+      border: 1px solid #90caf9;
+      border-radius: 4px;
+      padding: 3px 10px;
+      display: none;
+    }
+    .sort-indicator.visible { display: inline-block; }
+
+    /* ── Header sort + resize ─────────────────────────────────────────────── */
+    .x-treegrid-column-header {
+      position: relative; /* needed for resize handle positioning */
+    }
+    .x-treegrid-column-header.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+    .x-treegrid-column-header.sortable:hover { background: rgba(0,0,0,0.04); }
+    .x-treegrid-column-header.sort-asc::after  { content: ' ↑'; color: #1976d2; }
+    .x-treegrid-column-header.sort-desc::after { content: ' ↓'; color: #1976d2; }
+
+    .col-resize-handle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 6px;
+      height: 100%;
+      cursor: col-resize;
+      z-index: 1;
+    }
+    .col-resize-handle:hover,
+    .col-resize-handle.active {
+      background: rgba(25, 118, 210, 0.25);
+    }
+
+    /* ── Grid wrapper ─────────────────────────────────────────────────────── */
+    .grid-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .grid-wrapper .x-panel {
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+    }
+
+    /* ── Hint strip ───────────────────────────────────────────────────────── */
+    .hint-strip {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #9e9e9e;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .hint-strip span::before {
+      content: '→ ';
+      color: #bdbdbd;
+    }
+
+    /* ── Status badges ────────────────────────────────────────────────────── */
+    .status-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+    .status-not-started { background: #f5f5f5;  color: #757575; }
+    .status-in-progress { background: #e3f0ff;  color: #1565c0; }
+    .status-completed   { background: #e6f4ea;  color: #2e7d32; }
+    .status-blocked     { background: #fce8e8;  color: #c62828; }
+    .status-review      { background: #fff8e1;  color: #f57f17; }
+
+    /* ── Priority dots ────────────────────────────────────────────────────── */
+    .priority-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+    }
+    .priority-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .pri-critical { background: #d32f2f; }
+    .pri-high     { background: #f57c00; }
+    .pri-medium   { background: #fbc02d; }
+    .pri-low      { background: #43a047; }
+
+    /* ── Progress bar ─────────────────────────────────────────────────────── */
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .progress-track {
+      flex: 1;
+      height: 6px;
+      background: #e0e0e0;
+      border-radius: 3px;
+      overflow: hidden;
+      min-width: 50px;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.2s;
+    }
+    .prog-0  { background: #e0e0e0; }
+    .prog-lo { background: #ef9a9a; }
+    .prog-md { background: #ffcc80; }
+    .prog-hi { background: #a5d6a7; }
+    .prog-done { background: #43a047; }
+    .progress-label {
+      font-size: 11px;
+      color: #757575;
+      white-space: nowrap;
+      min-width: 28px;
+    }
+
+    /* ── Source block ─────────────────────────────────────────────────────── */
+    .source-section {
+      margin-top: 40px;
+    }
+
+    .source-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .source-heading h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #424242;
+      letter-spacing: 0.02em;
+    }
+
+    .source-heading-line {
+      flex: 1;
+      height: 1px;
+      background: #e0e0e0;
+    }
+
+    .source-wrapper {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .source-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e2433;
+      padding: 10px 16px;
+    }
+
+    .source-dots { display: flex; gap: 6px; }
+    .source-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .source-dot-red    { background: #ff5f57; }
+    .source-dot-yellow { background: #febc2e; }
+    .source-dot-green  { background: #28c840; }
+
+    .source-filename {
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b9ab4;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+    }
+
+    .source-copy-btn {
+      font-size: 11px;
+      font-weight: 500;
+      color: #8b9ab4;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .source-copy-btn:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    .source-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
+
+    pre.source-pre {
+      margin: 0;
+      padding: 24px;
+      background: #282c3e;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #abb2bf;
+      tab-size: 2;
+    }
+
+    /* ── Syntax colouring ─────────────────────────────────────────────────── */
+    .tok-keyword  { color: #c678dd; }
+    .tok-string   { color: #98c379; }
+    .tok-comment  { color: #5c6370; font-style: italic; }
+    .tok-fn       { color: #61afef; }
+    .tok-number   { color: #d19a66; }
+    .tok-punct    { color: #abb2bf; }
+    .tok-url      { color: #56b6c2; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">▦ framesquared</div>
+      <h1 class="page-title">Multi-Column TreeGrid</h1>
+      <p class="page-subtitle">
+        Multiple data columns alongside the tree column — status badges, priority indicators,
+        progress bars, and dates. Click any column header to sort; click again to reverse.
+      </p>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="toolbar-row">
+      <span class="toolbar-label">Software Project — 3 phases, 11 tasks</span>
+      <div class="toolbar-actions">
+        <span class="sort-indicator" id="sort-indicator"></span>
+        <div id="toolbar"></div>
+      </div>
+    </div>
+
+    <div class="grid-wrapper" id="grid-container"></div>
+
+    <div class="hint-strip">
+      <span>Click a column header to sort ascending</span>
+      <span>Click again to reverse sort direction</span>
+      <span>Folders always group before their tasks</span>
+      <span>Drag column edges to resize</span>
+    </div>
+
+    <!-- ── Source block ───────────────────────────────────────────────────── -->
+    <div class="source-section">
+      <div class="source-heading">
+        <h2>Source</h2>
+        <div class="source-heading-line"></div>
+      </div>
+      <div class="source-wrapper">
+        <div class="source-bar">
+          <div class="source-dots">
+            <span class="source-dot source-dot-red"></span>
+            <span class="source-dot source-dot-yellow"></span>
+            <span class="source-dot source-dot-green"></span>
+          </div>
+          <span class="source-filename">multi-column-treegrid.js</span>
+          <button class="source-copy-btn" id="copy-btn">Copy</button>
+        </div>
+        <pre class="source-pre" id="source-pre"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { TreeGrid, TreeGridColumn, Column, Button } from 'https://esm.sh/@framesquared/ui@0.5.0';
+    import { ThemeManager, ModernTheme }               from 'https://esm.sh/@framesquared/theme@0.5.0';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── Data ─────────────────────────────────────────────────────────────────
+
+    const projectData = [
+      {
+        text: 'Phase 1 — Planning',
+        expanded: true,
+        children: [
+          { text: 'Define requirements',    assignee: 'Alice', status: 'Completed',   priority: 'High',     estimatedHours: 8,  percentComplete: 100, startDate: '2025-03-01', endDate: '2025-03-03', leaf: true },
+          { text: 'Create wireframes',      assignee: 'Bob',   status: 'Completed',   priority: 'Medium',   estimatedHours: 12, percentComplete: 100, startDate: '2025-03-04', endDate: '2025-03-07', leaf: true },
+          { text: 'Technical architecture', assignee: 'Carol', status: 'In Progress', priority: 'Critical', estimatedHours: 16, percentComplete: 80,  startDate: '2025-03-05', endDate: '2025-03-10', leaf: true },
+        ],
+      },
+      {
+        text: 'Phase 2 — Development',
+        expanded: true,
+        children: [
+          { text: 'API design',           assignee: 'Alice', status: 'In Progress', priority: 'High',     estimatedHours: 20, percentComplete: 60,  startDate: '2025-03-10', endDate: '2025-03-17', leaf: true },
+          { text: 'Database schema',      assignee: 'Dave',  status: 'Completed',   priority: 'High',     estimatedHours: 10, percentComplete: 100, startDate: '2025-03-08', endDate: '2025-03-12', leaf: true },
+          { text: 'Frontend components',  assignee: 'Bob',   status: 'In Progress', priority: 'Medium',   estimatedHours: 40, percentComplete: 45,  startDate: '2025-03-11', endDate: '2025-03-25', leaf: true },
+          { text: 'Authentication',       assignee: 'Carol', status: 'Not Started', priority: 'Critical', estimatedHours: 24, percentComplete: 0,   startDate: '2025-03-18', endDate: '2025-03-22', leaf: true },
+          { text: 'Unit tests',           assignee: 'Eve',   status: 'In Progress', priority: 'Medium',   estimatedHours: 30, percentComplete: 30,  startDate: '2025-03-12', endDate: '2025-03-26', leaf: true },
+        ],
+      },
+      {
+        text: 'Phase 3 — Release',
+        children: [
+          { text: 'QA testing',    assignee: 'Dave',  status: 'Not Started', priority: 'High',     estimatedHours: 20, percentComplete: 0, startDate: '2025-03-27', endDate: '2025-04-04', leaf: true },
+          { text: 'Documentation', assignee: 'Eve',   status: 'Not Started', priority: 'Medium',   estimatedHours: 16, percentComplete: 0, startDate: '2025-03-28', endDate: '2025-04-03', leaf: true },
+          { text: 'Deployment',    assignee: 'Alice', status: 'Not Started', priority: 'Critical', estimatedHours: 8,  percentComplete: 0, startDate: '2025-04-05', endDate: '2025-04-07', leaf: true },
+        ],
+      },
+    ];
+
+    // ── Renderers ─────────────────────────────────────────────────────────────
+
+    const STATUS_CLASS = {
+      'Not Started': 'status-not-started',
+      'In Progress':  'status-in-progress',
+      'Completed':    'status-completed',
+      'Blocked':      'status-blocked',
+      'Review':       'status-review',
+    };
+
+    function renderStatus(v) {
+      const cls = STATUS_CLASS[v] ?? 'status-not-started';
+      return `<span class="status-badge ${cls}">${v ?? '—'}</span>`;
+    }
+
+    const PRIORITY_DOT = {
+      Critical: 'pri-critical',
+      High:     'pri-high',
+      Medium:   'pri-medium',
+      Low:      'pri-low',
+    };
+
+    function renderPriority(v) {
+      if (!v) return '<span style="color:#bdbdbd">—</span>';
+      const dot = PRIORITY_DOT[v] ?? '';
+      return `<span class="priority-cell"><span class="priority-dot ${dot}"></span>${v}</span>`;
+    }
+
+    function renderProgress(v) {
+      const pct = Number(v ?? 0);
+      let fillCls = 'prog-0';
+      if (pct >= 100)     fillCls = 'prog-done';
+      else if (pct >= 67) fillCls = 'prog-hi';
+      else if (pct >= 34) fillCls = 'prog-md';
+      else if (pct > 0)   fillCls = 'prog-lo';
+      return `<div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill ${fillCls}" style="width:${pct}%"></div></div>
+        <span class="progress-label">${pct}%</span>
+      </div>`;
+    }
+
+    function renderDate(v) {
+      if (!v) return '<span style="color:#bdbdbd">—</span>';
+      return new Date(v).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    function renderHours(v) {
+      return v != null ? `${v}h` : '<span style="color:#bdbdbd">—</span>';
+    }
+
+    // ── Column definitions (kept for header wiring below) ─────────────────────
+
+    const columns = [
+      new TreeGridColumn({ text: 'Task',     dataIndex: 'text',            flex: 2, minWidth: 180 }),
+      new Column({         text: 'Assignee', dataIndex: 'assignee',        width: 110 }),
+      new Column({         text: 'Status',   dataIndex: 'status',          width: 120, renderer: renderStatus }),
+      new Column({         text: 'Priority', dataIndex: 'priority',        width: 100, renderer: renderPriority }),
+      new Column({         text: 'Est. Hrs', dataIndex: 'estimatedHours',  width: 80,  renderer: renderHours }),
+      new Column({         text: 'Progress', dataIndex: 'percentComplete', width: 150, renderer: renderProgress }),
+      new Column({         text: 'Start',    dataIndex: 'startDate',       width: 85,  renderer: renderDate }),
+      new Column({         text: 'End',      dataIndex: 'endDate',         width: 85,  renderer: renderDate }),
+    ];
+
+    // ── TreeGrid ──────────────────────────────────────────────────────────────
+
+    const grid = new TreeGrid({
+      title: 'Software Project',
+      store: projectData,
+      rootVisible: false,
+      useArrows: true,
+      columns,
+      height: 500,
+    });
+
+    grid.render(document.getElementById('grid-container'));
+
+    // ── Client-side sorting ───────────────────────────────────────────────────
+    //
+    // TreeGrid does not wire header clicks — we do it here.
+    // Sorting works by re-ordering each node's childNodes in-place,
+    // then calling view.refresh() to re-render the flattened list.
+    //
+    // Folders (non-leaf nodes) always sort before their leaf siblings
+    // so phase headings stay anchored at the top of each group.
+
+    const sortEl  = document.getElementById('sort-indicator');
+    const ths     = document.querySelectorAll('#grid-container .x-treegrid-column-header');
+    let sortField = null;
+    let sortDir   = 'ASC';
+
+    function sortTree(field, dir) {
+      const root = grid.getStore().getRootNode();
+      root.cascadeBy((node) => {
+        if (node.childNodes.length === 0) return;
+        node.childNodes.sort((a, b) => {
+          // Folders always before leaves
+          const aLeaf = a.isLeaf();
+          const bLeaf = b.isLeaf();
+          if (aLeaf !== bLeaf) return aLeaf ? 1 : -1;
+          // Then by selected field
+          const va = a.get(field) ?? '';
+          const vb = b.get(field) ?? '';
+          const mul = dir === 'DESC' ? -1 : 1;
+          if (va < vb) return -1 * mul;
+          if (va > vb) return 1 * mul;
+          return 0;
+        });
+      });
+      grid.getView().refresh();
+    }
+
+    ths.forEach((th, i) => {
+      const col = columns[i];
+      if (!col?.dataIndex) return;
+      th.classList.add('sortable');
+      th.addEventListener('click', () => {
+        if (sortField === col.dataIndex) {
+          sortDir = sortDir === 'ASC' ? 'DESC' : 'ASC';
+        } else {
+          sortField = col.dataIndex;
+          sortDir = 'ASC';
+        }
+        // Update header indicators
+        ths.forEach(t => t.classList.remove('sort-asc', 'sort-desc'));
+        th.classList.add(sortDir === 'ASC' ? 'sort-asc' : 'sort-desc');
+        // Update toolbar pill
+        const arrow = sortDir === 'DESC' ? '↓' : '↑';
+        sortEl.textContent = `${col.text} ${arrow}`;
+        sortEl.classList.add('visible');
+        sortTree(sortField, sortDir);
+      });
+    });
+
+    // ── Column resize ─────────────────────────────────────────────────────────
+    //
+    // TreeGrid has no built-in column resize. We inject a drag handle into
+    // each <th> and track pointermove on the document while dragging.
+    // table-layout: fixed means the <th> width directly sets the column width.
+
+    ths.forEach((th) => {
+      const handle = document.createElement('div');
+      handle.className = 'col-resize-handle';
+      th.appendChild(handle);
+
+      let startX = 0;
+      let startWidth = 0;
+
+      handle.addEventListener('pointerdown', (e) => {
+        e.stopPropagation(); // don't trigger the sort click
+        e.preventDefault();
+        startX = e.clientX;
+        startWidth = th.offsetWidth;
+        handle.classList.add('active');
+        handle.setPointerCapture(e.pointerId);
+      });
+
+      handle.addEventListener('pointermove', (e) => {
+        if (!handle.classList.contains('active')) return;
+        const delta = e.clientX - startX;
+        th.style.width = Math.max(60, startWidth + delta) + 'px';
+      });
+
+      handle.addEventListener('pointerup', () => {
+        handle.classList.remove('active');
+      });
+    });
+
+    // ── Controls ──────────────────────────────────────────────────────────────
+
+    const toolbar = document.getElementById('toolbar');
+    new Button({ text: 'Expand All',   handler: () => grid.expandAll()                  }).render(toolbar);
+    new Button({ text: 'Collapse All', handler: () => grid.collapseAll(), ui: 'default' }).render(toolbar);
+
+    // ── Source viewer ─────────────────────────────────────────────────────────
+
+    (function buildSourceBlock() {
+      const scripts = document.querySelectorAll('script[type="module"]');
+      const raw = scripts[scripts.length - 1].textContent ?? '';
+
+      const lines = raw.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+      const indent = lines.reduce((min, l) => {
+        const m = l.match(/^(\s+)/);
+        return (m && l.trim()) ? Math.min(min, m[1].length) : min;
+      }, Infinity);
+      const dedented = lines.map(l => l.slice(indent === Infinity ? 0 : indent)).join('\n');
+
+      function esc(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function highlight(src) {
+        return src.split('\n').map(line => {
+          let out = '';
+          let i = 0;
+          while (i < line.length) {
+            if (line[i] === '/' && line[i+1] === '/') {
+              out += `<span class="tok-comment">${esc(line.slice(i))}</span>`;
+              i = line.length;
+              continue;
+            }
+            if (line[i] === '`' || line[i] === '"' || line[i] === "'") {
+              const q = line[i];
+              let j = i + 1;
+              while (j < line.length) {
+                if (line[j] === '\\') { j += 2; continue; }
+                if (line[j] === q)    { j++; break; }
+                j++;
+              }
+              const tok = line.slice(i, j);
+              const inner = esc(tok).replace(
+                /(https?:\/\/[^\s'"`,]+)/g,
+                '<span class="tok-url">$1</span>'
+              );
+              out += `<span class="tok-string">${inner}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[0-9]/.test(line[i]) && (i === 0 || /[\s,(:=\[!<>+\-*\/]/.test(line[i-1]))) {
+              let j = i;
+              while (j < line.length && /[0-9_.]/.test(line[j])) j++;
+              out += `<span class="tok-number">${esc(line.slice(i, j))}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[a-zA-Z_$]/.test(line[i])) {
+              let j = i;
+              while (j < line.length && /[a-zA-Z0-9_$]/.test(line[j])) j++;
+              const word = line.slice(i, j);
+              const KEYWORDS = new Set([
+                'import','from','export','const','let','var','function','return',
+                'new','if','else','for','of','in','while','class','extends',
+                'this','true','false','null','undefined','async','await','=>',
+              ]);
+              if (KEYWORDS.has(word)) {
+                out += `<span class="tok-keyword">${esc(word)}</span>`;
+              } else if (j < line.length && line[j] === '(') {
+                out += `<span class="tok-fn">${esc(word)}</span>`;
+              } else {
+                out += esc(word);
+              }
+              i = j;
+              continue;
+            }
+            out += esc(line[i]);
+            i++;
+          }
+          return out;
+        }).join('\n');
+      }
+
+      document.getElementById('source-pre').innerHTML = highlight(dedented);
+
+      document.getElementById('copy-btn').addEventListener('click', function() {
+        navigator.clipboard.writeText(dedented).then(() => {
+          this.textContent = 'Copied!';
+          this.classList.add('copied');
+          setTimeout(() => { this.textContent = 'Copy'; this.classList.remove('copied'); }, 2000);
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
