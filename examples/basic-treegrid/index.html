@@ -13,8 +13,8 @@
   <div class="toolbar" id="toolbar"></div>
 
   <script type="module">
-    import { TreeGrid, TreeGridColumn, Column, Button } from 'https://esm.sh/@framesquared/ui@0.3.0';
-    import { ThemeManager, ModernTheme }               from 'https://esm.sh/@framesquared/theme@0.3.0';
+    import { TreeGrid, TreeGridColumn, Column, Button } from 'https://esm.sh/@framesquared/ui@0.4.0';
+    import { ThemeManager, ModernTheme }               from 'https://esm.sh/@framesquared/theme@0.4.0';
 
     ThemeManager.register(ModernTheme);
     ThemeManager.setTheme('modern');
@@ -36,16 +36,16 @@
         text: 'Documents',
         expanded: true,
         children: [
-          { text: 'Q3-Report.pdf',      size: 245760,  type: 'PDF',   modified: '2025-03-01' },
-          { text: 'Meeting-Notes.docx', size: 32768,   type: 'Word',  modified: '2025-03-10' },
-          { text: 'Budget-2025.xlsx',   size: 180224,  type: 'Excel', modified: '2025-02-20' },
+          { text: 'Q3-Report.pdf',      size: 245760,  type: 'PDF',   modified: '2025-03-01', leaf: true },
+          { text: 'Meeting-Notes.docx', size: 32768,   type: 'Word',  modified: '2025-03-10', leaf: true },
+          { text: 'Budget-2025.xlsx',   size: 180224,  type: 'Excel', modified: '2025-02-20', leaf: true },
         ],
       },
       {
         text: 'Pictures',
         children: [
-          { text: 'beach-morning.jpg',  size: 4194304, type: 'JPEG',  modified: '2024-07-15' },
-          { text: 'team-photo.png',     size: 2097152, type: 'PNG',   modified: '2025-01-05' },
+          { text: 'beach-morning.jpg',  size: 4194304, type: 'JPEG',  modified: '2024-07-15', leaf: true },
+          { text: 'team-photo.png',     size: 2097152, type: 'PNG',   modified: '2025-01-05', leaf: true },
         ],
       },
       {
@@ -55,15 +55,15 @@
             text: 'framesquared',
             expanded: true,
             children: [
-              { text: 'package.json',  size: 1024, type: 'JSON', modified: '2025-04-01' },
-              { text: 'tsconfig.json', size: 512,  type: 'JSON', modified: '2025-03-15' },
+              { text: 'package.json',  size: 1024, type: 'JSON', modified: '2025-04-01', leaf: true },
+              { text: 'tsconfig.json', size: 512,  type: 'JSON', modified: '2025-03-15', leaf: true },
             ],
           },
           {
             text: 'website',
             children: [
-              { text: 'index.html', size: 8192, type: 'HTML', modified: '2025-03-28' },
-              { text: 'styles.css', size: 4096, type: 'CSS',  modified: '2025-03-27' },
+              { text: 'index.html', size: 8192, type: 'HTML', modified: '2025-03-28', leaf: true },
+              { text: 'styles.css', size: 4096, type: 'CSS',  modified: '2025-03-27', leaf: true },
             ],
           },
         ],
