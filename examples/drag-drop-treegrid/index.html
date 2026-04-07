@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – Drag & Drop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #212121;
+    }
+
+    /* ── Page header ──────────────────────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #1565c0 0%, #1976d2 60%, #42a5f5 100%);
+      padding: 32px 40px 28px;
+      color: #fff;
+    }
+
+    .page-header-inner {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 10px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(4px);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      opacity: 0.85;
+      font-weight: 400;
+      max-width: 560px;
+      line-height: 1.5;
+    }
+
+    /* ── Page body ────────────────────────────────────────────────────────── */
+    .page-body {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 40px 48px;
+    }
+
+    /* ── Toolbar ──────────────────────────────────────────────────────────── */
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #757575;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* ── Hint strip ───────────────────────────────────────────────────────── */
+    .hint-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 18px;
+      margin-bottom: 10px;
+    }
+
+    .hint-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: #616161;
+    }
+
+    .hint-key {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      font-family: 'Fira Code', 'Cascadia Code', monospace;
+      background: #fff;
+      border: 1px solid #d0d0d0;
+      border-bottom-width: 2px;
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: #424242;
+      line-height: 1.5;
+    }
+
+    /* ── Settings strip ───────────────────────────────────────────────────── */
+    .settings-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      align-items: center;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+    }
+
+    .settings-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #9e9e9e;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-right: 4px;
+    }
+
+    .setting-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #424242;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .setting-chip input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+      accent-color: #1976d2;
+    }
+
+    .setting-note {
+      color: #9e9e9e;
+      font-size: 11px;
+    }
+
+    .settings-sep {
+      width: 1px;
+      height: 16px;
+      background: #e0e0e0;
+    }
+
+    /* ── Grid wrapper ─────────────────────────────────────────────────────── */
+    .grid-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .grid-wrapper .x-panel {
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+    }
+
+    /* ── DnD visual overrides ─────────────────────────────────────────────── */
+
+    /*
+     * The TreeGridDragDrop plugin renders the ghost and indicator as fixed-
+     * position elements appended to document.body with inline styles.
+     * We override via !important so our theme wins over the defaults.
+     */
+
+    /* Ghost: pill label that follows the pointer */
+    .x-treegrid-drag-ghost {
+      background: #1565c0 !important;
+      color: #fff !important;
+      border: none !important;
+      border-radius: 6px !important;
+      padding: 5px 12px !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      font-family: 'Inter', -apple-system, sans-serif !important;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.28) !important;
+      max-width: 260px !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+      letter-spacing: 0.01em !important;
+    }
+
+    /* Drop indicator: 3px line between rows */
+    .x-treegrid-drop-indicator {
+      background: #1976d2 !important;
+      height: 3px !important;
+      border-radius: 2px !important;
+      box-shadow: 0 0 0 1px rgba(25,118,210,0.25) !important;
+    }
+
+    /* Drop highlight: append-into-folder indicator */
+    .x-treegrid-drop-highlight {
+      background-color: rgba(25,118,210,0.07) !important;
+      outline: 2px dashed #1976d2 !important;
+      outline-offset: -2px !important;
+    }
+
+    /* ── Priority / status badges ─────────────────────────────────────────── */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    /* Priority */
+    .pri-high   { background: #fce8e8; color: #c62828; }
+    .pri-medium { background: #fff8e1; color: #e65100; }
+    .pri-low    { background: #e8f5e9; color: #2e7d32; }
+
+    /* Status */
+    .sta-done        { background: #e8f5e9; color: #2e7d32; }
+    .sta-in-progress { background: #e3f2fd; color: #1565c0; }
+    .sta-todo        { background: #f5f5f5; color: #757575; }
+    .sta-blocked     { background: #fce4ec; color: #880e4f; }
+
+    /* ── Drop log ─────────────────────────────────────────────────────────── */
+    .drop-log-section {
+      margin-top: 16px;
+    }
+
+    .drop-log-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .drop-log-heading h2 {
+      font-size: 12px;
+      font-weight: 600;
+      color: #757575;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .drop-log-clear {
+      font-size: 11px;
+      color: #9e9e9e;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: inherit;
+    }
+    .drop-log-clear:hover { background: #f5f5f5; color: #616161; }
+
+    .drop-log {
+      background: #1a1d2e;
+      border-radius: 8px;
+      padding: 12px;
+      height: 120px;
+      overflow-y: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 12px;
+      line-height: 1.65;
+      color: #8b9ab4;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.2);
+    }
+
+    .drop-log:empty::before {
+      content: 'Drag a row to reorder or move it between projects…';
+      color: #3d4461;
+      font-style: italic;
+    }
+
+    .log-entry { display: flex; gap: 10px; padding: 1px 0; flex-wrap: wrap; }
+    .log-time  { color: #3d4461; min-width: 80px; }
+    .log-op    { color: #c678dd; }
+    .log-node  { color: #7eb8f7; }
+    .log-arrow { color: #3d4461; }
+    .log-dest  { color: #98c379; }
+    .log-pos   { color: #d19a66; }
+
+    /* ── Source block ─────────────────────────────────────────────────────── */
+    .source-section {
+      margin-top: 40px;
+    }
+
+    .source-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .source-heading h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #424242;
+      letter-spacing: 0.02em;
+    }
+
+    .source-heading-line {
+      flex: 1;
+      height: 1px;
+      background: #e0e0e0;
+    }
+
+    .source-wrapper {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .source-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e2433;
+      padding: 10px 16px;
+    }
+
+    .source-dots { display: flex; gap: 6px; }
+    .source-dot  { width: 12px; height: 12px; border-radius: 50%; }
+    .source-dot-red    { background: #ff5f57; }
+    .source-dot-yellow { background: #febc2e; }
+    .source-dot-green  { background: #28c840; }
+
+    .source-filename {
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b9ab4;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+    }
+
+    .source-copy-btn {
+      font-size: 11px;
+      font-weight: 500;
+      color: #8b9ab4;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .source-copy-btn:hover  { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    .source-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
+
+    pre.source-pre {
+      margin: 0;
+      padding: 24px;
+      background: #282c3e;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #abb2bf;
+      tab-size: 2;
+    }
+
+    /* ── Syntax colouring ─────────────────────────────────────────────────── */
+    .tok-keyword { color: #c678dd; }
+    .tok-string  { color: #98c379; }
+    .tok-comment { color: #5c6370; font-style: italic; }
+    .tok-fn      { color: #61afef; }
+    .tok-number  { color: #d19a66; }
+    .tok-url     { color: #56b6c2; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">▦ framesquared</div>
+      <h1 class="page-title">Drag & Drop</h1>
+      <p class="page-subtitle">
+        Drag tasks to reorder within a project or move them between projects.
+        Drop onto a collapsed project to expand it automatically.
+      </p>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="toolbar-row">
+      <span class="toolbar-label">Project Board — 4 projects, 17 tasks</span>
+      <div class="toolbar-actions" id="toolbar"></div>
+    </div>
+
+    <div class="hint-strip">
+      <span class="hint-chip"><span class="hint-key">drag</span> move a task</span>
+      <span class="hint-chip"><span class="hint-key">⌘ Ctrl + drag</span> copy</span>
+      <span class="hint-chip"><span class="hint-key">hover collapsed</span> auto-expand</span>
+    </div>
+
+    <!-- ── Settings strip ─────────────────────────────────────────────────── -->
+    <div class="settings-strip">
+      <span class="settings-label">Options</span>
+      <label class="setting-chip" title="When checked, all drags create a copy. When unchecked, hold ⌘ Ctrl to copy.">
+        <input type="checkbox" id="copy-mode"> Copy mode
+        <span class="setting-note">(⌘ Ctrl to move)</span>
+      </label>
+      <div class="settings-sep"></div>
+      <label class="setting-chip" title="When checked, you can only drop into a folder, not before or after rows.">
+        <input type="checkbox" id="append-only"> Folders only
+        <span class="setting-note">(no reordering)</span>
+      </label>
+    </div>
+
+    <div class="grid-wrapper" id="grid-container"></div>
+
+    <!-- ── Drop log ────────────────────────────────────────────────────────── -->
+    <div class="drop-log-section">
+      <div class="drop-log-heading">
+        <h2>Drop History</h2>
+        <button class="drop-log-clear" id="log-clear">Clear</button>
+      </div>
+      <div class="drop-log" id="drop-log"></div>
+    </div>
+
+    <!-- ── Source block ───────────────────────────────────────────────────── -->
+    <div class="source-section">
+      <div class="source-heading">
+        <h2>Source</h2>
+        <div class="source-heading-line"></div>
+      </div>
+      <div class="source-wrapper">
+        <div class="source-bar">
+          <div class="source-dots">
+            <span class="source-dot source-dot-red"></span>
+            <span class="source-dot source-dot-yellow"></span>
+            <span class="source-dot source-dot-green"></span>
+          </div>
+          <span class="source-filename">drag-drop-treegrid.js</span>
+          <button class="source-copy-btn" id="copy-btn">Copy</button>
+        </div>
+        <pre class="source-pre" id="source-pre"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { TreeGrid, TreeGridColumn, Column, Button, TreeGridDragDrop } from 'https://esm.sh/@framesquared/ui@0.5.0';
+    import { ThemeManager, ModernTheme }                                  from 'https://esm.sh/@framesquared/theme@0.5.0';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── Data ─────────────────────────────────────────────────────────────────
+    //
+    // Four projects with tasks that can be freely dragged between them.
+    // The 'priority', 'status', and 'due' fields drive column renderers.
+    // Setting allowDrag:false on a node prevents it from being dragged.
+    // Setting allowDrop:false on a node prevents drops onto it.
+
+    const TASKS = [
+      {
+        id: 'proj-web', text: 'Website Redesign', leaf: false, expanded: true,
+        children: [
+          { id: 't1',  text: 'Wireframe landing page',  priority: 'High',   status: 'Done',        due: '2026-01-20', leaf: true },
+          { id: 't2',  text: 'Design system setup',     priority: 'High',   status: 'In Progress', due: '2026-03-15', leaf: true },
+          { id: 't3',  text: 'Component library',       priority: 'Medium', status: 'In Progress', due: '2026-04-01', leaf: true },
+          { id: 't4',  text: 'Mobile responsiveness',   priority: 'Medium', status: 'Todo',        due: '2026-04-30', leaf: true },
+          { id: 't5',  text: 'Accessibility audit',     priority: 'Low',    status: 'Todo',        due: '2026-05-15', leaf: true },
+        ],
+      },
+      {
+        id: 'proj-app', text: 'Mobile App', leaf: false, expanded: true,
+        children: [
+          { id: 't6',  text: 'Auth flow screens',       priority: 'High',   status: 'Done',        due: '2026-01-15', leaf: true },
+          { id: 't7',  text: 'Dashboard UI',            priority: 'High',   status: 'In Progress', due: '2026-03-01', leaf: true },
+          { id: 't8',  text: 'Push notifications',      priority: 'Medium', status: 'Blocked',     due: '2026-04-10', leaf: true },
+          { id: 't9',  text: 'App Store submission',    priority: 'High',   status: 'Todo',        due: '2026-06-01', leaf: true },
+        ],
+      },
+      {
+        id: 'proj-api', text: 'Backend API', leaf: false, expanded: false,
+        children: [
+          { id: 't10', text: 'Auth service',            priority: 'High',   status: 'Done',        due: '2026-01-10', leaf: true },
+          { id: 't11', text: 'REST endpoints',          priority: 'High',   status: 'In Progress', due: '2026-03-30', leaf: true },
+          { id: 't12', text: 'API documentation',       priority: 'Medium', status: 'Todo',        due: '2026-04-30', leaf: true },
+          { id: 't13', text: 'Rate limiting',           priority: 'Low',    status: 'Todo',        due: '2026-05-30', leaf: true },
+        ],
+      },
+      {
+        id: 'proj-backlog', text: 'Backlog', leaf: false, expanded: false,
+        children: [
+          { id: 't14', text: 'Legacy system migration', priority: 'Medium', status: 'Todo', due: null, leaf: true },
+          { id: 't15', text: 'SEO improvements',        priority: 'Low',    status: 'Todo', due: null, leaf: true },
+          { id: 't16', text: 'Analytics dashboard',     priority: 'Medium', status: 'Todo', due: null, leaf: true },
+          { id: 't17', text: 'Dark mode support',       priority: 'Low',    status: 'Todo', due: null, leaf: true },
+        ],
+      },
+    ];
+
+    // ── Renderers ─────────────────────────────────────────────────────────────
+
+    function renderPriority(v) {
+      if (!v) return '';
+      const cls = 'pri-' + v.toLowerCase();
+      return `<span class="badge ${cls}">${v}</span>`;
+    }
+
+    function renderStatus(v) {
+      if (!v) return '';
+      const cls = 'sta-' + v.toLowerCase().replace(/\s+/g, '-');
+      return `<span class="badge ${cls}">${v}</span>`;
+    }
+
+    function renderDue(v) {
+      if (!v) return '<span style="color:#bdbdbd">—</span>';
+      const d   = new Date(v + 'T00:00:00');
+      const now = new Date();
+      const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const color = d < now ? '#c62828' : '#424242';
+      return `<span style="color:${color}">${label}</span>`;
+    }
+
+    // ── Plugin ────────────────────────────────────────────────────────────────
+    //
+    // TreeGridDragDrop wires pointer events on the view element.  A 5 px
+    // movement threshold prevents accidental drags from clicks.  It:
+    //   • Renders a ghost label that follows the pointer
+    //   • Shows a 3 px indicator line for before/after positions
+    //   • Highlights the row for append-into-folder drops
+    //   • Auto-expands collapsed folders after `expandDelay` ms on hover
+    //   • Supports multi-select: dragging a selected node drags all selected
+    //   • Supports copy: hold ⌘/Ctrl while dragging (when allowCopy:true)
+    //   • Fires 'drop' on the TreeGrid after a successful drop
+    //
+    // The plugin object is kept in a variable so it can be destroyed and
+    // recreated when the settings strip toggles are changed.
+    //
+    // The initial instance is created directly here and passed via plugins:[].
+    // buildPlugin() is only called by the settings toggles, at which point
+    // `grid` is already defined.
+
+    let dndPlugin = new TreeGridDragDrop({
+      copy:        false,
+      allowCopy:   true,
+      appendOnly:  false,
+      expandDelay: 600,
+    });
+
+    function buildPlugin(copyMode, appendOnly) {
+      dndPlugin.destroy();
+      dndPlugin = new TreeGridDragDrop({
+        copy:        copyMode,    // true → every drag is a copy
+        allowCopy:   !copyMode,   // true → ⌘/Ctrl turns a move into a copy
+        appendOnly,               // true → only append-into-folder, no before/after
+        expandDelay: 600,         // ms before a collapsed folder auto-expands on hover
+      });
+      dndPlugin.init(grid);
+    }
+
+    // ── TreeGrid ──────────────────────────────────────────────────────────────
+
+    const grid = new TreeGrid({
+      title: 'Project Board',
+      store: TASKS,
+      rootVisible: false,
+      useArrows: true,
+      plugins: [dndPlugin],
+      columns: [
+        new TreeGridColumn({ text: 'Task',     dataIndex: 'text',     width: 300 }),
+        new Column({         text: 'Priority', dataIndex: 'priority', width: 90,  renderer: renderPriority }),
+        new Column({         text: 'Status',   dataIndex: 'status',   width: 115, renderer: renderStatus }),
+        new Column({         text: 'Due',      dataIndex: 'due',      width: 100, renderer: renderDue }),
+      ],
+      height: 460,
+    });
+
+    grid.render(document.getElementById('grid-container'));
+
+    // ── Drop event ────────────────────────────────────────────────────────────
+    //
+    // Fired by the plugin after a successful drop.
+    // Signature: (dropTarget, dragData, dropTarget, position)
+    //   dropTarget — the node the pointer was over when released
+    //   dragData   — { records, source, copy, displayText }
+    //   position   — 'before' | 'after' | 'append'
+    //
+    // After the drop, records are already at their new location in the tree,
+    // so records[n].parentNode reflects the new parent.
+
+    grid.on('drop', (dropTarget, dragData, _t, position) => {
+      const op      = dragData.copy ? 'Copied' : 'Moved';
+      const names   = dragData.records.map(r => r.get('text'));
+      const newParent = position === 'append'
+        ? dropTarget.get('text')
+        : (dropTarget.parentNode?.get('text') ?? 'root');
+
+      for (const name of names) {
+        logDrop(op, name, newParent, position);
+      }
+    });
+
+    // ── Settings ──────────────────────────────────────────────────────────────
+
+    document.getElementById('copy-mode').addEventListener('change', (e) => {
+      buildPlugin(e.target.checked, document.getElementById('append-only').checked);
+    });
+
+    document.getElementById('append-only').addEventListener('change', (e) => {
+      buildPlugin(document.getElementById('copy-mode').checked, e.target.checked);
+    });
+
+    // ── Toolbar ───────────────────────────────────────────────────────────────
+
+    const toolbar = document.getElementById('toolbar');
+
+    new Button({
+      text: 'Expand All',
+      handler: () => {
+        const store = grid.getStore();
+        const root  = store.getRootNode();
+        for (const child of root.childNodes) {
+          if (!child.isLeaf()) grid.expandNode(child);
+        }
+      },
+    }).render(toolbar);
+
+    new Button({
+      text: 'Collapse All',
+      ui: 'default',
+      handler: () => {
+        const store = grid.getStore();
+        const root  = store.getRootNode();
+        for (const child of root.childNodes) {
+          if (!child.isLeaf()) grid.collapseNode(child);
+        }
+      },
+    }).render(toolbar);
+
+    // ── Drop log ──────────────────────────────────────────────────────────────
+
+    const logEl = document.getElementById('drop-log');
+
+    function logDrop(op, name, newParent, position) {
+      const time  = new Date().toLocaleTimeString('en-US', { hour12: false });
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerHTML =
+        `<span class="log-time">[${time}]</span>` +
+        `<span class="log-op">${op}</span>` +
+        `<span class="log-node">"${escHtml(name)}"</span>` +
+        `<span class="log-arrow">→</span>` +
+        `<span class="log-dest">${escHtml(newParent)}</span>` +
+        `<span class="log-pos">(${position})</span>`;
+      logEl.appendChild(entry);
+      logEl.scrollTop = logEl.scrollHeight;
+      while (logEl.children.length > 60) logEl.removeChild(logEl.firstChild);
+    }
+
+    function escHtml(s) {
+      return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    document.getElementById('log-clear').addEventListener('click', () => {
+      logEl.innerHTML = '';
+    });
+
+    // ── Source viewer ─────────────────────────────────────────────────────────
+
+    (function buildSourceBlock() {
+      const scripts = document.querySelectorAll('script[type="module"]');
+      const raw = scripts[scripts.length - 1].textContent ?? '';
+
+      const lines = raw.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+      const indent = lines.reduce((min, l) => {
+        const m = l.match(/^(\s+)/);
+        return (m && l.trim()) ? Math.min(min, m[1].length) : min;
+      }, Infinity);
+      const dedented = lines.map(l => l.slice(indent === Infinity ? 0 : indent)).join('\n');
+
+      function esc(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function highlight(src) {
+        return src.split('\n').map(line => {
+          let out = '';
+          let i = 0;
+          while (i < line.length) {
+            if (line[i] === '/' && line[i+1] === '/') {
+              out += `<span class="tok-comment">${esc(line.slice(i))}</span>`;
+              i = line.length;
+              continue;
+            }
+            if (line[i] === '`' || line[i] === '"' || line[i] === "'") {
+              const q = line[i];
+              let j = i + 1;
+              while (j < line.length) {
+                if (line[j] === '\\') { j += 2; continue; }
+                if (line[j] === q)    { j++; break; }
+                j++;
+              }
+              const tok = line.slice(i, j);
+              const inner = esc(tok).replace(
+                /(https?:\/\/[^\s'"`,]+)/g,
+                '<span class="tok-url">$1</span>'
+              );
+              out += `<span class="tok-string">${inner}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[0-9]/.test(line[i]) && (i === 0 || /[\s,(:=\[!<>+\-*\/]/.test(line[i-1]))) {
+              let j = i;
+              while (j < line.length && /[0-9_.]/.test(line[j])) j++;
+              out += `<span class="tok-number">${esc(line.slice(i, j))}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[a-zA-Z_$]/.test(line[i])) {
+              let j = i;
+              while (j < line.length && /[a-zA-Z0-9_$]/.test(line[j])) j++;
+              const word = line.slice(i, j);
+              const KEYWORDS = new Set([
+                'import','from','export','const','let','var','function','return',
+                'new','if','else','for','of','in','while','class','extends',
+                'async','await','true','false','null','undefined',
+              ]);
+              if (KEYWORDS.has(word)) {
+                out += `<span class="tok-keyword">${esc(word)}</span>`;
+              } else if (j < line.length && line[j] === '(') {
+                out += `<span class="tok-fn">${esc(word)}</span>`;
+              } else {
+                out += esc(word);
+              }
+              i = j;
+              continue;
+            }
+            out += esc(line[i]);
+            i++;
+          }
+          return out;
+        }).join('\n');
+      }
+
+      document.getElementById('source-pre').innerHTML = highlight(dedented);
+
+      document.getElementById('copy-btn').addEventListener('click', function() {
+        navigator.clipboard.writeText(dedented).then(() => {
+          this.textContent = 'Copied!';
+          this.classList.add('copied');
+          setTimeout(() => { this.textContent = 'Copy'; this.classList.remove('copied'); }, 2000);
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
