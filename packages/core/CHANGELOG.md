@@ -1,5 +1,11 @@
 # @framesquared/core
 
+## 0.5.0
+
+### Minor Changes
+
+- 30424e2: Fix expand/collapse.
+
 ## 0.4.0
 
 ### Minor Changes

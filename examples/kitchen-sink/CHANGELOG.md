@@ -1,5 +1,26 @@
 # @framesquared/example-kitchen-sink
 
+## 0.3.0
+
+### Minor Changes
+
+- 30424e2: Fix expand/collapse.
+
+### Patch Changes
+
+- Updated dependencies [30424e2]
+  - @framesquared/app@0.5.0
+  - @framesquared/component@0.5.0
+  - @framesquared/core@0.5.0
+  - @framesquared/data@0.5.0
+  - @framesquared/dd@0.5.0
+  - @framesquared/form@0.5.0
+  - @framesquared/fx@0.5.0
+  - @framesquared/grid@0.5.0
+  - @framesquared/layout@0.5.0
+  - @framesquared/theme@0.5.0
+  - @framesquared/ui@0.5.0
+
 ## 0.2.0
 
 ### Minor Changes
