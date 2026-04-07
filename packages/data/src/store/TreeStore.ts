@@ -239,12 +239,18 @@ export class TreeStore extends Base {
   // Build tree from nested data
   // -----------------------------------------------------------------------
 
+  private static _nodeCounter = 0;
+
   private buildNode(data: Record<string, unknown>, depth: number): NodeInterface {
     const children = data.children as Record<string, unknown>[] | undefined;
     const expanded = data.expanded as boolean | undefined;
     const nodeData = { ...data };
     delete nodeData.children;
     delete nodeData.expanded;
+
+    if (nodeData.id === undefined || nodeData.id === null || nodeData.id === '') {
+      nodeData.id = `tree-node-${++TreeStore._nodeCounter}`;
+    }
 
     const model = this.ModelClass.create(nodeData);
     applyNodeInterface(model, depth);
