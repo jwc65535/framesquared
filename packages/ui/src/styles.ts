@@ -399,6 +399,180 @@ const STYLES = `
   flex-shrink: 0;
 }
 .x-menu-item-checked .x-menu-item-check::before { content: '✓'; font-weight: bold; }
+
+/* ── TreeGrid ────────────────────────────────────────────────────────────── */
+.x-treegrid {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--ext-color-background, #fff);
+}
+
+.x-treegrid-view {
+  flex: 1;
+  overflow: auto;
+}
+
+.x-treegrid-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  color: var(--ext-color-text-primary, #212121);
+  table-layout: fixed;
+}
+
+/* ── Column headers ──────────────────────────────────────────────────────── */
+.x-treegrid-header-row {
+  background: var(--ext-color-surface, #f5f5f5);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.x-treegrid-column-header {
+  padding: 9px var(--x-sp-md, 16px);
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ext-color-text-secondary, #757575);
+  border-bottom: 2px solid rgba(0,0,0,0.1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Rows ────────────────────────────────────────────────────────────────── */
+.x-treegrid-node {
+  transition: background 0.1s;
+}
+
+.x-treegrid-node:hover td {
+  background: color-mix(in srgb, var(--ext-color-primary, #1976d2) 6%, transparent);
+}
+
+.x-treegrid-selected td {
+  background: color-mix(in srgb, var(--ext-color-primary, #1976d2) 14%, transparent) !important;
+}
+
+.x-treegrid-focused {
+  outline: 2px solid var(--ext-color-primary, #1976d2);
+  outline-offset: -2px;
+}
+
+/* ── Cells ───────────────────────────────────────────────────────────────── */
+.x-treegrid-node td.x-grid-cell {
+  padding: 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  vertical-align: middle;
+  overflow: hidden;
+}
+
+.x-treegrid-node .x-grid-cell-inner {
+  padding: 7px var(--x-sp-md, 16px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Tree cell gets no padding — indentation is handled inline by the column */
+.x-treegrid-node td.x-treegrid-cell .x-grid-cell-inner {
+  padding: 0;
+}
+
+/* ── Tree cell inner (indent + expander + icon + text) ───────────────────── */
+.x-treegrid-cell-inner {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 7px 8px 7px 0;
+  min-width: 0;
+}
+
+/* ── Expander ────────────────────────────────────────────────────────────── */
+.x-treegrid-expander {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border-radius: var(--x-r-sm, 2px);
+  cursor: pointer;
+  color: var(--ext-color-text-secondary, #757575);
+  font-size: 10px;
+  transition: color 0.15s, background 0.15s;
+  user-select: none;
+}
+
+.x-treegrid-expander:hover {
+  background: rgba(0,0,0,0.08);
+  color: var(--ext-color-primary, #1976d2);
+}
+
+.x-treegrid-expander-collapsed::before { content: '▶'; }
+.x-treegrid-expander-expanded::before  { content: '▼'; }
+.x-treegrid-expander-leaf              { cursor: default; visibility: hidden; }
+
+/* ── Icons ───────────────────────────────────────────────────────────────── */
+.x-treegrid-icon {
+  display: inline-flex;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  font-size: 14px;
+}
+.x-treegrid-icon-folder::before      { content: '📁'; }
+.x-treegrid-icon-folder-open::before { content: '📂'; }
+.x-treegrid-icon-leaf::before        { content: '📄'; }
+
+/* ── Node text ───────────────────────────────────────────────────────────── */
+.x-treegrid-node-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Checkbox ────────────────────────────────────────────────────────────── */
+.x-treegrid-checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid rgba(0,0,0,0.3);
+  border-radius: var(--x-r-sm, 2px);
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.x-treegrid-checkbox:hover {
+  border-color: var(--ext-color-primary, #1976d2);
+}
+.x-treegrid-checkbox-checked {
+  background: var(--ext-color-primary, #1976d2);
+  border-color: var(--ext-color-primary, #1976d2);
+}
+.x-treegrid-checkbox-checked::before {
+  content: '✓';
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+}
+.x-treegrid-checkbox-indeterminate {
+  background: var(--ext-color-primary, #1976d2);
+  border-color: var(--ext-color-primary, #1976d2);
+}
+.x-treegrid-checkbox-indeterminate::before {
+  content: '–';
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+}
 `;
 
 if (typeof document !== 'undefined' && !document.querySelector('[data-x-ui-styles]')) {

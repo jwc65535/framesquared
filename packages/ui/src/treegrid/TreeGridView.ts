@@ -88,6 +88,22 @@ export class TreeGridView {
     this.tableEl.className = 'x-treegrid-table';
     this.el.appendChild(this.tableEl);
 
+    // Header
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    headerRow.className = 'x-treegrid-header-row';
+    for (const col of this.columns) {
+      if (col.hidden) continue;
+      const th = document.createElement('th');
+      th.className = 'x-treegrid-column-header';
+      th.textContent = col.text;
+      if (col.width) th.style.width = `${col.width}px`;
+      else if (col.flex) th.style.width = '';
+      thead.appendChild(headerRow);
+      headerRow.appendChild(th);
+    }
+    this.tableEl.appendChild(thead);
+
     this.tbodyEl = document.createElement('tbody');
     this.tableEl.appendChild(this.tbodyEl);
 
