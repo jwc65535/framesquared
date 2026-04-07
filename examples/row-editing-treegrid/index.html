@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – Row Editing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #212121;
+    }
+
+    /* ── Page header ──────────────────────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #1565c0 0%, #1976d2 60%, #42a5f5 100%);
+      padding: 32px 40px 28px;
+      color: #fff;
+    }
+
+    .page-header-inner {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 10px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(4px);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      opacity: 0.85;
+      font-weight: 400;
+      max-width: 560px;
+      line-height: 1.5;
+    }
+
+    /* ── Page body ────────────────────────────────────────────────────────── */
+    .page-body {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 40px 48px;
+    }
+
+    /* ── Toolbar ──────────────────────────────────────────────────────────── */
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #757575;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* ── Hint strip ───────────────────────────────────────────────────────── */
+    .hint-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 18px;
+      margin-bottom: 14px;
+    }
+
+    .hint-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: #616161;
+    }
+
+    .hint-key {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      font-family: 'Fira Code', 'Cascadia Code', monospace;
+      background: #fff;
+      border: 1px solid #d0d0d0;
+      border-bottom-width: 2px;
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: #424242;
+      line-height: 1.5;
+    }
+
+    /* ── Grid wrapper ─────────────────────────────────────────────────────── */
+    .grid-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .grid-wrapper .x-panel {
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+    }
+
+    /* ── Row editor ───────────────────────────────────────────────────────── */
+
+    /* Highlight the row being edited */
+    .row-editing {
+      background: #e3f2fd !important;
+      outline: 2px solid #1976d2;
+      outline-offset: -2px;
+    }
+
+    /* No inner padding on the spanning cell — the panel handles it */
+    .row-editor-td {
+      padding: 0 !important;
+      border: none !important;
+    }
+
+    /* Slide-down panel */
+    .row-editor-panel {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.25s ease, opacity 0.2s ease, padding 0.25s ease;
+      padding: 0 16px;
+      background: #f0f7ff;
+      border-left: 3px solid #1976d2;
+      border-top: 1px solid #bbdefb;
+      border-bottom: 1px solid #bbdefb;
+    }
+
+    .row-editor-panel.open {
+      max-height: 260px;
+      opacity: 1;
+      padding: 14px 16px;
+    }
+
+    .row-editor-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .row-editor-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1565c0;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .row-editor-title strong {
+      text-transform: none;
+      font-size: 13px;
+      color: #0d47a1;
+    }
+
+    /* Field grid: 3 columns × 2 rows */
+    .row-editor-fields {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px 16px;
+      margin-bottom: 12px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .field-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #546e7a;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .field-input {
+      height: 30px;
+      padding: 0 8px;
+      border: 1px solid #cfd8dc;
+      border-radius: 5px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #212121;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .field-input:focus {
+      border-color: #1976d2;
+      box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.15);
+    }
+
+    .field-input.has-error {
+      border-color: #d32f2f;
+    }
+
+    .field-error {
+      font-size: 11px;
+      color: #d32f2f;
+      min-height: 14px;
+      line-height: 1.3;
+    }
+
+    /* Editor footer */
+    .row-editor-footer {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .re-btn {
+      height: 30px;
+      padding: 0 14px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .re-save {
+      background: #1976d2;
+      color: #fff;
+      border: 1px solid #1565c0;
+    }
+    .re-save:hover { background: #1565c0; }
+
+    .re-cancel {
+      background: #fff;
+      color: #616161;
+      border: 1px solid #bdbdbd;
+    }
+    .re-cancel:hover { background: #f5f5f5; color: #424242; }
+
+    /* ── Department / type badges ─────────────────────────────────────────── */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .dept-engineering { background: #e8eaf6; color: #283593; }
+    .dept-design      { background: #fce4ec; color: #880e4f; }
+    .dept-product     { background: #e8f5e9; color: #1b5e20; }
+    .type-full-time   { background: #e3f2fd; color: #0d47a1; }
+    .type-part-time   { background: #fff8e1; color: #e65100; }
+    .type-contract    { background: #f3e5f5; color: #6a1b9a; }
+
+    /* ── Edit log ─────────────────────────────────────────────────────────── */
+    .edit-log-section {
+      margin-top: 16px;
+    }
+
+    .edit-log-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .edit-log-heading h2 {
+      font-size: 12px;
+      font-weight: 600;
+      color: #757575;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .edit-log-clear {
+      font-size: 11px;
+      color: #9e9e9e;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: inherit;
+    }
+    .edit-log-clear:hover { background: #f5f5f5; color: #616161; }
+
+    .edit-log {
+      background: #1a1d2e;
+      border-radius: 8px;
+      padding: 12px;
+      height: 120px;
+      overflow-y: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 12px;
+      line-height: 1.65;
+      color: #8b9ab4;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.2);
+    }
+
+    .edit-log:empty::before {
+      content: 'Click an employee row to open the row editor…';
+      color: #3d4461;
+      font-style: italic;
+    }
+
+    .log-entry { display: flex; gap: 10px; padding: 1px 0; }
+    .log-time  { color: #3d4461; min-width: 80px; }
+    .log-node  { color: #7eb8f7; }
+    .log-field { color: #c678dd; }
+    .log-old   { color: #e06c75; text-decoration: line-through; }
+    .log-arrow { color: #3d4461; }
+    .log-new   { color: #98c379; }
+    .log-info  { color: #61afef; font-style: italic; }
+
+    /* ── Source block ─────────────────────────────────────────────────────── */
+    .source-section {
+      margin-top: 40px;
+    }
+
+    .source-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .source-heading h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #424242;
+      letter-spacing: 0.02em;
+    }
+
+    .source-heading-line {
+      flex: 1;
+      height: 1px;
+      background: #e0e0e0;
+    }
+
+    .source-wrapper {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .source-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e2433;
+      padding: 10px 16px;
+    }
+
+    .source-dots { display: flex; gap: 6px; }
+    .source-dot  { width: 12px; height: 12px; border-radius: 50%; }
+    .source-dot-red    { background: #ff5f57; }
+    .source-dot-yellow { background: #febc2e; }
+    .source-dot-green  { background: #28c840; }
+
+    .source-filename {
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b9ab4;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+    }
+
+    .source-copy-btn {
+      font-size: 11px;
+      font-weight: 500;
+      color: #8b9ab4;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .source-copy-btn:hover  { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    .source-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
+
+    pre.source-pre {
+      margin: 0;
+      padding: 24px;
+      background: #282c3e;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #abb2bf;
+      tab-size: 2;
+    }
+
+    /* ── Syntax colouring ─────────────────────────────────────────────────── */
+    .tok-keyword { color: #c678dd; }
+    .tok-string  { color: #98c379; }
+    .tok-comment { color: #5c6370; font-style: italic; }
+    .tok-fn      { color: #61afef; }
+    .tok-number  { color: #d19a66; }
+    .tok-url     { color: #56b6c2; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">▦ framesquared</div>
+      <h1 class="page-title">Row Editing</h1>
+      <p class="page-subtitle">
+        Click any employee row to open a full inline form. Edit all fields at once,
+        then save or cancel. Includes field-level validation and an edit history log.
+      </p>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="toolbar-row">
+      <span class="toolbar-label">Employee Directory — 3 departments, 8 employees</span>
+      <div class="toolbar-actions" id="toolbar"></div>
+    </div>
+
+    <div class="hint-strip">
+      <span class="hint-chip"><span class="hint-key">click row</span> open editor</span>
+      <span class="hint-chip"><span class="hint-key">Enter</span> save</span>
+      <span class="hint-chip"><span class="hint-key">Esc</span> cancel</span>
+      <span class="hint-chip"><span class="hint-key">click outside</span> cancel</span>
+    </div>
+
+    <div class="grid-wrapper" id="grid-container"></div>
+
+    <!-- ── Edit log ────────────────────────────────────────────────────────── -->
+    <div class="edit-log-section">
+      <div class="edit-log-heading">
+        <h2>Edit History</h2>
+        <button class="edit-log-clear" id="log-clear">Clear</button>
+      </div>
+      <div class="edit-log" id="edit-log"></div>
+    </div>
+
+    <!-- ── Source block ───────────────────────────────────────────────────── -->
+    <div class="source-section">
+      <div class="source-heading">
+        <h2>Source</h2>
+        <div class="source-heading-line"></div>
+      </div>
+      <div class="source-wrapper">
+        <div class="source-bar">
+          <div class="source-dots">
+            <span class="source-dot source-dot-red"></span>
+            <span class="source-dot source-dot-yellow"></span>
+            <span class="source-dot source-dot-green"></span>
+          </div>
+          <span class="source-filename">row-editing-treegrid.js</span>
+          <button class="source-copy-btn" id="copy-btn">Copy</button>
+        </div>
+        <pre class="source-pre" id="source-pre"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { TreeGrid, TreeGridColumn, Column, Button } from 'https://esm.sh/@framesquared/ui@0.5.0';
+    import { TreeModel, applyNodeInterface }            from 'https://esm.sh/@framesquared/data@0.5.0';
+    import { ThemeManager, ModernTheme }                from 'https://esm.sh/@framesquared/theme@0.5.0';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── Constants ─────────────────────────────────────────────────────────────
+
+    const DEPARTMENTS = ['Engineering', 'Design', 'Product'];
+    const EMP_TYPES   = ['Full-time', 'Part-time', 'Contract'];
+    const COLUMN_COUNT = 6;
+
+    const FIELD_LABELS = {
+      text:       'Name',
+      title:      'Title',
+      department: 'Department',
+      empType:    'Type',
+      salary:     'Salary',
+      startDate:  'Start Date',
+    };
+
+    // ── Data ─────────────────────────────────────────────────────────────────
+
+    const EMPLOYEES = [
+      {
+        id: 'dept-eng', text: 'Engineering', leaf: false, expanded: true,
+        children: [
+          { id: 'e1', text: 'Alice Chen',    title: 'Senior Engineer',  department: 'Engineering', empType: 'Full-time', salary: 145000, startDate: '2021-03-15', leaf: true },
+          { id: 'e2', text: 'Marcus Webb',   title: 'Staff Engineer',   department: 'Engineering', empType: 'Full-time', salary: 175000, startDate: '2019-08-01', leaf: true },
+          { id: 'e3', text: 'Priya Sharma',  title: 'Junior Engineer',  department: 'Engineering', empType: 'Full-time', salary: 98000,  startDate: '2023-06-12', leaf: true },
+        ],
+      },
+      {
+        id: 'dept-design', text: 'Design', leaf: false, expanded: false,
+        children: [
+          { id: 'e4', text: 'Jordan Kim',    title: 'Lead Designer',    department: 'Design', empType: 'Full-time', salary: 128000, startDate: '2020-11-05', leaf: true },
+          { id: 'e5', text: 'Sofia Reyes',   title: 'UX Researcher',    department: 'Design', empType: 'Contract',  salary: 95000,  startDate: '2022-02-20', leaf: true },
+        ],
+      },
+      {
+        id: 'dept-product', text: 'Product', leaf: false, expanded: false,
+        children: [
+          { id: 'e6', text: 'Daniel Park',   title: 'Product Manager',  department: 'Product', empType: 'Full-time', salary: 152000, startDate: '2020-05-18', leaf: true },
+          { id: 'e7', text: 'Ava Thompson',  title: 'Product Analyst',  department: 'Product', empType: 'Full-time', salary: 112000, startDate: '2022-09-01', leaf: true },
+          { id: 'e8', text: 'Leo Martinez',  title: 'Associate PM',     department: 'Product', empType: 'Part-time', salary: 72000,  startDate: '2023-11-15', leaf: true },
+        ],
+      },
+    ];
+
+    // ── Renderers ─────────────────────────────────────────────────────────────
+
+    function renderDept(v) {
+      if (!v) return '<span style="color:#bdbdbd">—</span>';
+      const cls = 'dept-' + v.toLowerCase();
+      return `<span class="badge ${cls}">${v}</span>`;
+    }
+
+    function renderType(v) {
+      if (!v) return '<span style="color:#bdbdbd">—</span>';
+      const cls = 'type-' + v.toLowerCase().replace(/\s+/g, '-');
+      return `<span class="badge ${cls}">${v}</span>`;
+    }
+
+    function renderSalary(v) {
+      if (v == null || v === '') return '<span style="color:#bdbdbd">—</span>';
+      return '$' + Number(v).toLocaleString('en-US');
+    }
+
+    function renderDate(v) {
+      if (!v) return '<span style="color:#bdbdbd">—</span>';
+      const d = new Date(v + 'T00:00:00');
+      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    // ── TreeGrid ──────────────────────────────────────────────────────────────
+
+    const grid = new TreeGrid({
+      title: 'Employee Directory',
+      store: EMPLOYEES,
+      rootVisible: false,
+      useArrows: true,
+      columns: [
+        new TreeGridColumn({ text: 'Name',       dataIndex: 'text',       width: 200 }),
+        new Column({         text: 'Title',       dataIndex: 'title',      width: 180 }),
+        new Column({         text: 'Department',  dataIndex: 'department', width: 120, renderer: renderDept }),
+        new Column({         text: 'Type',        dataIndex: 'empType',    width: 100, renderer: renderType }),
+        new Column({         text: 'Salary',      dataIndex: 'salary',     width: 110, renderer: renderSalary }),
+        new Column({         text: 'Start Date',  dataIndex: 'startDate',  width: 110, renderer: renderDate }),
+      ],
+      height: 460,
+    });
+
+    grid.render(document.getElementById('grid-container'));
+
+    // ── Row editor state ──────────────────────────────────────────────────────
+
+    let editorTr       = null;   // the <tr> inserted below the edited row
+    let editingNode    = null;   // the node being edited
+    let outsideHandler = null;   // document mousedown handler for click-outside
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+
+    function escHtml(s) {
+      return String(s ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // ── openEditor ────────────────────────────────────────────────────────────
+    //
+    // Inserts a <tr> with a full-width inline form below the clicked row.
+    // The form is animated open via max-height transition.
+
+    function openEditor(node) {
+      if (node === editingNode) return;  // already editing this row
+      closeEditor();                     // close any current editor without saving
+
+      editingNode = node;
+
+      const row = grid.getNodeRow(node);
+      if (!row) return;
+
+      row.classList.add('row-editing');
+
+      // Build the editor <tr>
+      editorTr = document.createElement('tr');
+      editorTr.className = 'row-editor-tr';
+
+      const td = document.createElement('td');
+      td.colSpan = COLUMN_COUNT;
+      td.className = 'row-editor-td';
+
+      td.innerHTML = `
+        <div class="row-editor-panel" id="row-editor-panel">
+          <div class="row-editor-header">
+            <span class="row-editor-title">Editing: <strong>${escHtml(node.get('text'))}</strong></span>
+          </div>
+          <div class="row-editor-fields">
+            <div class="field-group">
+              <label class="field-label">Name</label>
+              <input class="field-input" id="re-name" type="text"
+                     value="${escHtml(node.get('text') ?? '')}">
+              <div class="field-error" id="re-name-err"></div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Title</label>
+              <input class="field-input" id="re-title" type="text"
+                     value="${escHtml(node.get('title') ?? '')}">
+              <div class="field-error" id="re-title-err"></div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Department</label>
+              <select class="field-input" id="re-dept">
+                ${DEPARTMENTS.map(d => `<option value="${escHtml(d)}"${d === node.get('department') ? ' selected' : ''}>${escHtml(d)}</option>`).join('')}
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Employment Type</label>
+              <select class="field-input" id="re-type">
+                ${EMP_TYPES.map(t => `<option value="${escHtml(t)}"${t === node.get('empType') ? ' selected' : ''}>${escHtml(t)}</option>`).join('')}
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Salary (USD)</label>
+              <input class="field-input" id="re-salary" type="number"
+                     min="20000" max="1000000" step="1000"
+                     value="${escHtml(String(node.get('salary') ?? ''))}">
+              <div class="field-error" id="re-salary-err"></div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Start Date</label>
+              <input class="field-input" id="re-start" type="date"
+                     value="${escHtml(node.get('startDate') ?? '')}">
+              <div class="field-error" id="re-start-err"></div>
+            </div>
+          </div>
+          <div class="row-editor-footer">
+            <button class="re-btn re-save"   id="re-save">Save Changes</button>
+            <button class="re-btn re-cancel" id="re-cancel">Cancel</button>
+          </div>
+        </div>
+      `;
+
+      editorTr.appendChild(td);
+      row.parentNode.insertBefore(editorTr, row.nextSibling);
+
+      // Trigger slide-down after the browser has painted the initial state
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          document.getElementById('row-editor-panel')?.classList.add('open');
+        });
+      });
+
+      // Focus the first field
+      setTimeout(() => document.getElementById('re-name')?.focus(), 60);
+
+      // Button handlers
+      document.getElementById('re-save').addEventListener('click', saveEditor);
+      document.getElementById('re-cancel').addEventListener('click', closeEditor);
+
+      // Keyboard: Escape cancels, Enter saves (except in <select>)
+      editorTr.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          e.stopPropagation();
+          closeEditor();
+        } else if (e.key === 'Enter' && e.target.tagName !== 'SELECT') {
+          e.preventDefault();
+          saveEditor();
+        }
+      });
+
+      // Click-outside: cancel if the user clicks outside both the editor and the source row
+      setTimeout(() => {
+        outsideHandler = (e) => {
+          if (!editorTr) return;
+          const sourceRow = grid.getNodeRow(editingNode);
+          const insideEditor = editorTr.contains(e.target);
+          const insideRow    = sourceRow?.contains(e.target) ?? false;
+          if (!insideEditor && !insideRow) closeEditor();
+        };
+        document.addEventListener('mousedown', outsideHandler);
+      }, 100);
+    }
+
+    // ── closeEditor ───────────────────────────────────────────────────────────
+    //
+    // Removes the editor <tr>, clears the row highlight, and detaches the
+    // click-outside handler. Does NOT save — call saveEditor() for that.
+
+    function closeEditor() {
+      if (!editingNode) return;
+
+      const row = grid.getNodeRow(editingNode);
+      if (row) row.classList.remove('row-editing');
+
+      if (editorTr?.parentNode) editorTr.parentNode.removeChild(editorTr);
+      editorTr    = null;
+      editingNode = null;
+
+      if (outsideHandler) {
+        document.removeEventListener('mousedown', outsideHandler);
+        outsideHandler = null;
+      }
+    }
+
+    // ── validateEditor ────────────────────────────────────────────────────────
+    //
+    // Checks all fields and populates inline error messages.
+    // Returns true if all fields pass.
+
+    function validateEditor() {
+      let valid = true;
+
+      const nameInput  = document.getElementById('re-name');
+      const nameErr    = document.getElementById('re-name-err');
+      const name       = nameInput.value.trim();
+      if (name.length < 2) {
+        nameErr.textContent = 'Name must be at least 2 characters.';
+        nameInput.classList.add('has-error');
+        valid = false;
+      } else {
+        nameErr.textContent = '';
+        nameInput.classList.remove('has-error');
+      }
+
+      const titleInput = document.getElementById('re-title');
+      const titleErr   = document.getElementById('re-title-err');
+      const title      = titleInput.value.trim();
+      if (!title) {
+        titleErr.textContent = 'Title is required.';
+        titleInput.classList.add('has-error');
+        valid = false;
+      } else {
+        titleErr.textContent = '';
+        titleInput.classList.remove('has-error');
+      }
+
+      const salaryInput = document.getElementById('re-salary');
+      const salaryErr   = document.getElementById('re-salary-err');
+      const salary      = Number(salaryInput.value);
+      if (isNaN(salary) || salary < 20000 || salary > 1000000) {
+        salaryErr.textContent = 'Salary must be between $20,000 and $1,000,000.';
+        salaryInput.classList.add('has-error');
+        valid = false;
+      } else {
+        salaryErr.textContent = '';
+        salaryInput.classList.remove('has-error');
+      }
+
+      const startInput = document.getElementById('re-start');
+      const startErr   = document.getElementById('re-start-err');
+      if (!startInput.value) {
+        startErr.textContent = 'Start date is required.';
+        startInput.classList.add('has-error');
+        valid = false;
+      } else {
+        startErr.textContent = '';
+        startInput.classList.remove('has-error');
+      }
+
+      return valid;
+    }
+
+    // ── saveEditor ────────────────────────────────────────────────────────────
+    //
+    // Validates, collects changed fields, closes the editor, applies changes
+    // via node.set(), then refreshes the row with getView().refreshNode().
+
+    function saveEditor() {
+      if (!editingNode) return;
+      if (!validateEditor()) return;
+
+      const node = editingNode;
+
+      // Collect only what actually changed
+      const newValues = {
+        text:       document.getElementById('re-name').value.trim(),
+        title:      document.getElementById('re-title').value.trim(),
+        department: document.getElementById('re-dept').value,
+        empType:    document.getElementById('re-type').value,
+        salary:     Number(document.getElementById('re-salary').value),
+        startDate:  document.getElementById('re-start').value,
+      };
+
+      const changes = {};
+      for (const [field, newVal] of Object.entries(newValues)) {
+        const oldVal = node.get(field);
+        // Use loose comparison so 145000 === '145000' doesn't flag a change
+        if (String(oldVal ?? '') !== String(newVal ?? '')) {
+          changes[field] = { oldVal, newVal };
+        }
+      }
+
+      // Close editor first so refreshNode() can repaint the DOM row cleanly
+      closeEditor();
+
+      // Apply changes
+      for (const [field, { newVal }] of Object.entries(changes)) {
+        node.set(field, newVal);
+      }
+
+      // Refresh the single row in-place
+      grid.getView().refreshNode(node);
+
+      // Log
+      if (Object.keys(changes).length === 0) {
+        logInfo(node, 'saved — no changes');
+      } else {
+        for (const [field, { oldVal, newVal }] of Object.entries(changes)) {
+          logEdit(node, field, oldVal, newVal);
+        }
+      }
+    }
+
+    // ── Wire grid itemclick ───────────────────────────────────────────────────
+    //
+    // Only leaf nodes (employees) open the row editor.
+    // Clicking a department row (non-leaf) closes any open editor.
+
+    grid.on('itemclick', (view, node) => {
+      if (!node.isLeaf()) {
+        closeEditor();
+        return;
+      }
+      openEditor(node);
+    });
+
+    // ── Edit log ──────────────────────────────────────────────────────────────
+
+    const logEl = document.getElementById('edit-log');
+
+    function logEdit(node, field, oldVal, newVal) {
+      const time  = new Date().toLocaleTimeString('en-US', { hour12: false });
+      const name  = node.get('text') ?? '?';
+      const label = FIELD_LABELS[field] ?? field;
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerHTML =
+        `<span class="log-time">[${time}]</span>` +
+        `<span class="log-node">"${escHtml(name)}"</span>` +
+        `<span class="log-field">.${label}</span>` +
+        `<span class="log-old">${escHtml(String(oldVal ?? '—'))}</span>` +
+        `<span class="log-arrow">→</span>` +
+        `<span class="log-new">${escHtml(String(newVal ?? '—'))}</span>`;
+      logEl.appendChild(entry);
+      logEl.scrollTop = logEl.scrollHeight;
+      while (logEl.children.length > 60) logEl.removeChild(logEl.firstChild);
+    }
+
+    function logInfo(node, msg) {
+      const time  = new Date().toLocaleTimeString('en-US', { hour12: false });
+      const name  = node.get('text') ?? '?';
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerHTML =
+        `<span class="log-time">[${time}]</span>` +
+        `<span class="log-node">"${escHtml(name)}"</span>` +
+        `<span class="log-info">${escHtml(msg)}</span>`;
+      logEl.appendChild(entry);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    document.getElementById('log-clear').addEventListener('click', () => {
+      logEl.innerHTML = '';
+    });
+
+    // ── Toolbar ───────────────────────────────────────────────────────────────
+
+    const toolbar = document.getElementById('toolbar');
+
+    new Button({
+      text: '+ Add Employee',
+      handler: () => {
+        // Resolve the target department from the current selection
+        const selection = grid.getSelection();
+        const store = grid.getStore();
+
+        let parent = store.getRootNode().childNodes[0]; // default: Engineering
+        if (selection.length > 0) {
+          const sel = selection[0];
+          parent = sel.isLeaf()
+            ? (sel.parentNode ?? parent)
+            : sel;
+        }
+
+        // Create a new employee node with placeholder values
+        const newNode = TreeModel.create({
+          id:         `emp-${Date.now()}`,
+          text:       'New Employee',
+          title:      '',
+          department: parent.get('text') ?? 'Engineering',
+          empType:    'Full-time',
+          salary:     80000,
+          startDate:  new Date().toISOString().slice(0, 10),
+          leaf:       true,
+        });
+        applyNodeInterface(newNode, parent.depth + 1);
+        store.appendChild(parent, newNode);
+
+        // Expand the department so the new row is visible, then open its editor
+        if (!parent.isExpanded()) grid.expandNode(parent);
+        setTimeout(() => openEditor(newNode), 80);
+      },
+    }).render(toolbar);
+
+    new Button({
+      text: 'Delete Selected',
+      ui: 'default',
+      handler: () => {
+        const selection = grid.getSelection();
+        if (selection.length === 0) return;
+        const node   = selection[0];
+        if (!node.isLeaf()) return;
+        const name   = node.get('text') ?? 'this employee';
+        if (!confirm(`Delete "${name}"?`)) return;
+        if (editingNode === node) closeEditor();
+        const parent = node.parentNode ?? grid.getStore().getRootNode();
+        grid.getStore().removeChild(parent, node);
+      },
+    }).render(toolbar);
+
+    // ── Source viewer ─────────────────────────────────────────────────────────
+
+    (function buildSourceBlock() {
+      const scripts = document.querySelectorAll('script[type="module"]');
+      const raw = scripts[scripts.length - 1].textContent ?? '';
+
+      const lines = raw.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+      const indent = lines.reduce((min, l) => {
+        const m = l.match(/^(\s+)/);
+        return (m && l.trim()) ? Math.min(min, m[1].length) : min;
+      }, Infinity);
+      const dedented = lines.map(l => l.slice(indent === Infinity ? 0 : indent)).join('\n');
+
+      function esc(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function highlight(src) {
+        return src.split('\n').map(line => {
+          let out = '';
+          let i = 0;
+          while (i < line.length) {
+            if (line[i] === '/' && line[i+1] === '/') {
+              out += `<span class="tok-comment">${esc(line.slice(i))}</span>`;
+              i = line.length;
+              continue;
+            }
+            if (line[i] === '`' || line[i] === '"' || line[i] === "'") {
+              const q = line[i];
+              let j = i + 1;
+              while (j < line.length) {
+                if (line[j] === '\\') { j += 2; continue; }
+                if (line[j] === q)    { j++; break; }
+                j++;
+              }
+              const tok = line.slice(i, j);
+              const inner = esc(tok).replace(
+                /(https?:\/\/[^\s'"`,]+)/g,
+                '<span class="tok-url">$1</span>'
+              );
+              out += `<span class="tok-string">${inner}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[0-9]/.test(line[i]) && (i === 0 || /[\s,(:=\[!<>+\-*\/]/.test(line[i-1]))) {
+              let j = i;
+              while (j < line.length && /[0-9_.]/.test(line[j])) j++;
+              out += `<span class="tok-number">${esc(line.slice(i, j))}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[a-zA-Z_$]/.test(line[i])) {
+              let j = i;
+              while (j < line.length && /[a-zA-Z0-9_$]/.test(line[j])) j++;
+              const word = line.slice(i, j);
+              const KEYWORDS = new Set([
+                'import','from','export','const','let','var','function','return',
+                'new','if','else','for','of','in','while','class','extends',
+                'async','await','true','false','null','undefined',
+              ]);
+              if (KEYWORDS.has(word)) {
+                out += `<span class="tok-keyword">${esc(word)}</span>`;
+              } else if (j < line.length && line[j] === '(') {
+                out += `<span class="tok-fn">${esc(word)}</span>`;
+              } else {
+                out += esc(word);
+              }
+              i = j;
+              continue;
+            }
+            out += esc(line[i]);
+            i++;
+          }
+          return out;
+        }).join('\n');
+      }
+
+      document.getElementById('source-pre').innerHTML = highlight(dedented);
+
+      document.getElementById('copy-btn').addEventListener('click', function() {
+        navigator.clipboard.writeText(dedented).then(() => {
+          this.textContent = 'Copied!';
+          this.classList.add('copied');
+          setTimeout(() => { this.textContent = 'Copy'; this.classList.remove('copied'); }, 2000);
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
