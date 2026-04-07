@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – Sorting &amp; Filtering TreeGrid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #212121;
+    }
+
+    /* ── Page header ──────────────────────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #1565c0 0%, #1976d2 60%, #42a5f5 100%);
+      padding: 32px 40px 28px;
+      color: #fff;
+    }
+
+    .page-header-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 10px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(4px);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      opacity: 0.85;
+      font-weight: 400;
+      max-width: 600px;
+      line-height: 1.5;
+    }
+
+    /* ── Page body ────────────────────────────────────────────────────────── */
+    .page-body {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 32px 40px 48px;
+    }
+
+    /* ── Filter bar ───────────────────────────────────────────────────────── */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filter-search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .filter-search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9e9e9e;
+      pointer-events: none;
+      font-size: 14px;
+    }
+
+    .filter-search {
+      width: 100%;
+      padding: 7px 10px 7px 32px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      background: #fff;
+      color: #212121;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .filter-search:focus {
+      border-color: #1976d2;
+      box-shadow: 0 0 0 3px rgba(25,118,210,0.12);
+    }
+    .filter-search::placeholder { color: #bdbdbd; }
+
+    .filter-select {
+      padding: 7px 28px 7px 10px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239e9e9e'/%3E%3C/svg%3E") no-repeat right 10px center;
+      appearance: none;
+      color: #212121;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      min-width: 120px;
+    }
+    .filter-select:focus { border-color: #1976d2; }
+
+    .filter-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #757575;
+      white-space: nowrap;
+    }
+
+    .filter-clear-btn {
+      padding: 7px 14px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: inherit;
+      background: #fff;
+      color: #616161;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .filter-clear-btn:hover {
+      background: #f5f5f5;
+      color: #212121;
+      border-color: #bdbdbd;
+    }
+    .filter-clear-btn.active {
+      border-color: #1976d2;
+      color: #1976d2;
+      background: #e3f0ff;
+    }
+    .filter-clear-btn.active:hover {
+      background: #bbdefb;
+    }
+
+    /* ── Stats strip ──────────────────────────────────────────────────────── */
+    .stats-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      min-height: 22px;
+    }
+
+    .stats-text {
+      font-size: 12px;
+      color: #757575;
+    }
+
+    .stats-text strong {
+      color: #1976d2;
+      font-weight: 600;
+    }
+
+    .sort-hint {
+      font-size: 11px;
+      color: #9e9e9e;
+      font-style: italic;
+    }
+
+    /* ── Grid wrapper ─────────────────────────────────────────────────────── */
+    .grid-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .grid-wrapper .x-panel {
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+    }
+
+    /* Make column headers clickable & show sort indicators */
+    .grid-wrapper th {
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.12s;
+    }
+    .grid-wrapper th:hover {
+      background: rgba(25,118,210,0.06) !important;
+    }
+    .sort-indicator {
+      display: inline-block;
+      margin-left: 4px;
+      font-size: 11px;
+      color: #1976d2;
+      font-weight: 700;
+    }
+
+    /* Search highlight */
+    mark.hl {
+      background: #fff176;
+      color: #212121;
+      border-radius: 2px;
+      padding: 0 1px;
+    }
+
+    /* ── Type badges ──────────────────────────────────────────────────────── */
+    .type-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      font-family: 'Fira Code', 'Cascadia Code', monospace;
+    }
+    .type-tsx  { background: #e3f2fd; color: #1565c0; }
+    .type-ts   { background: #e8eaf6; color: #283593; }
+    .type-test { background: #e8f5e9; color: #2e7d32; }
+    .type-md   { background: #fff8e1; color: #e65100; }
+
+    /* ── Source block ─────────────────────────────────────────────────────── */
+    .source-section { margin-top: 40px; }
+
+    .source-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .source-heading h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #424242;
+      letter-spacing: 0.02em;
+    }
+
+    .source-heading-line {
+      flex: 1;
+      height: 1px;
+      background: #e0e0e0;
+    }
+
+    .source-wrapper {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .source-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e2433;
+      padding: 10px 16px;
+    }
+
+    .source-dots { display: flex; gap: 6px; }
+    .source-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .source-dot-red    { background: #ff5f57; }
+    .source-dot-yellow { background: #febc2e; }
+    .source-dot-green  { background: #28c840; }
+
+    .source-filename {
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b9ab4;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+    }
+
+    .source-copy-btn {
+      font-size: 11px;
+      font-weight: 500;
+      color: #8b9ab4;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .source-copy-btn:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    .source-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
+
+    pre.source-pre {
+      margin: 0;
+      padding: 24px;
+      background: #282c3e;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #abb2bf;
+      tab-size: 2;
+    }
+
+    .tok-keyword { color: #c678dd; }
+    .tok-string  { color: #98c379; }
+    .tok-comment { color: #5c6370; font-style: italic; }
+    .tok-fn      { color: #61afef; }
+    .tok-number  { color: #d19a66; }
+    .tok-url     { color: #56b6c2; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">🌲 framesquared</div>
+      <h1 class="page-title">Sorting &amp; Filtering TreeGrid</h1>
+      <p class="page-subtitle">
+        Click any column header to sort ASC → DESC → off. Type to search with live
+        highlighting. Filter by file type. Folder expand states are saved and restored
+        when the search clears.
+      </p>
+    </div>
+  </header>
+
+  <div class="page-body">
+
+    <!-- ── Filter bar ─────────────────────────────────────────────────────── -->
+    <div class="filter-bar">
+      <div class="filter-search-wrap">
+        <span class="filter-search-icon">⌕</span>
+        <input class="filter-search" id="search-input" type="text" placeholder="Search files and folders…" autocomplete="off">
+      </div>
+      <span class="filter-label">Type:</span>
+      <select class="filter-select" id="type-filter">
+        <option value="all">All types</option>
+        <option value="tsx">.tsx</option>
+        <option value="ts">.ts</option>
+        <option value="test">.test.ts</option>
+        <option value="md">.md</option>
+      </select>
+      <button class="filter-clear-btn" id="clear-btn">Clear filters</button>
+    </div>
+
+    <!-- ── Stats strip ────────────────────────────────────────────────────── -->
+    <div class="stats-strip">
+      <span class="stats-text" id="stats-text"></span>
+      <span class="sort-hint">Click a column header to sort</span>
+    </div>
+
+    <!-- ── Grid ───────────────────────────────────────────────────────────── -->
+    <div class="grid-wrapper" id="grid-container"></div>
+
+    <!-- ── Source block ───────────────────────────────────────────────────── -->
+    <div class="source-section">
+      <div class="source-heading">
+        <h2>Source</h2>
+        <div class="source-heading-line"></div>
+      </div>
+      <div class="source-wrapper">
+        <div class="source-bar">
+          <div class="source-dots">
+            <span class="source-dot source-dot-red"></span>
+            <span class="source-dot source-dot-yellow"></span>
+            <span class="source-dot source-dot-green"></span>
+          </div>
+          <span class="source-filename">sorting-filtering-treegrid.js</span>
+          <button class="source-copy-btn" id="copy-btn">Copy</button>
+        </div>
+        <pre class="source-pre" id="source-pre"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { TreeGrid, TreeGridColumn, Column } from 'https://esm.sh/@framesquared/ui@0.5.0';
+    import { ThemeManager, ModernTheme }        from 'https://esm.sh/@framesquared/theme@0.5.0';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+
+    function escHtml(s) {
+      return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function formatSize(bytes) {
+      if (bytes == null || bytes === 0) return '<span style="color:#bdbdbd">—</span>';
+      if (bytes < 1024)        return `${bytes} B`;
+      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '<span style="color:#bdbdbd">—</span>';
+      return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function formatType(type) {
+      if (!type) return '';
+      return `<span class="type-badge type-${type.toLowerCase()}">.${type.toLowerCase() === 'test' ? 'test.ts' : type.toLowerCase()}</span>`;
+    }
+
+    // ── Dataset ───────────────────────────────────────────────────────────────
+
+    const treeData = [
+      {
+        text: 'src', expanded: true,
+        children: [
+          {
+            text: 'components', expanded: true,
+            children: [
+              { text: 'Button.tsx',    type: 'tsx',  size: 4301,  modified: '2025-03-15', leaf: true },
+              { text: 'Modal.tsx',     type: 'tsx',  size: 8908,  modified: '2025-03-20', leaf: true },
+              { text: 'DataTable.tsx', type: 'tsx',  size: 12698, modified: '2025-04-01', leaf: true },
+              { text: 'Sidebar.tsx',   type: 'tsx',  size: 6246,  modified: '2025-03-28', leaf: true },
+              { text: 'NavBar.tsx',    type: 'tsx',  size: 3891,  modified: '2025-03-10', leaf: true },
+            ],
+          },
+          {
+            text: 'hooks', expanded: false,
+            children: [
+              { text: 'useAuth.ts',     type: 'ts', size: 2355,  modified: '2025-02-14', leaf: true },
+              { text: 'useStore.ts',    type: 'ts', size: 5734,  modified: '2025-03-05', leaf: true },
+              { text: 'useDebounce.ts', type: 'ts', size: 1126,  modified: '2025-01-20', leaf: true },
+              { text: 'useFetch.ts',    type: 'ts', size: 4506,  modified: '2025-03-18', leaf: true },
+            ],
+          },
+          {
+            text: 'utils', expanded: false,
+            children: [
+              { text: 'api.ts',      type: 'ts', size: 9421,  modified: '2025-03-22', leaf: true },
+              { text: 'format.ts',   type: 'ts', size: 3789,  modified: '2025-02-08', leaf: true },
+              { text: 'validate.ts', type: 'ts', size: 5120,  modified: '2025-02-28', leaf: true },
+            ],
+          },
+          {
+            text: 'pages', expanded: false,
+            children: [
+              { text: 'Home.tsx',      type: 'tsx', size: 7475,  modified: '2025-04-02', leaf: true },
+              { text: 'Login.tsx',     type: 'tsx', size: 5018,  modified: '2025-03-30', leaf: true },
+              { text: 'Dashboard.tsx', type: 'tsx', size: 15565, modified: '2025-04-05', leaf: true },
+              { text: 'Profile.tsx',   type: 'tsx', size: 6758,  modified: '2025-03-25', leaf: true },
+            ],
+          },
+        ],
+      },
+      {
+        text: 'tests', expanded: false,
+        children: [
+          { text: 'Button.test.ts',  type: 'test', size: 2867,  modified: '2025-03-16', leaf: true },
+          { text: 'Modal.test.ts',   type: 'test', size: 4198,  modified: '2025-03-21', leaf: true },
+          { text: 'useAuth.test.ts', type: 'test', size: 3584,  modified: '2025-02-15', leaf: true },
+          { text: 'api.test.ts',     type: 'test', size: 7372,  modified: '2025-03-23', leaf: true },
+        ],
+      },
+      {
+        text: 'docs', expanded: false,
+        children: [
+          { text: 'README.md',      type: 'md', size: 8602,  modified: '2025-01-10', leaf: true },
+          { text: 'CONTRIBUTING.md',type: 'md', size: 5222,  modified: '2025-01-15', leaf: true },
+          { text: 'API.md',         type: 'md', size: 13004, modified: '2025-02-20', leaf: true },
+        ],
+      },
+    ];
+
+    // ── View state ────────────────────────────────────────────────────────────
+
+    let sortField        = null;   // 'text' | 'type' | 'size' | 'modified' | null
+    let sortDir          = 'asc';  // 'asc' | 'desc'
+    let filterText       = '';
+    let filterType       = 'all';
+    let savedExpandStates = null;  // Map<nodeId, boolean> — saved before filtering
+
+    // ── TreeGrid ──────────────────────────────────────────────────────────────
+
+    const nameCol = new TreeGridColumn({
+      text: 'Name',
+      dataIndex: 'text',
+      flex: 1,
+      innerRenderer: (value) => {
+        const text = String(value ?? '');
+        const q = filterText.trim();
+        if (!q) return escHtml(text);
+        const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const parts = text.split(new RegExp(`(${escaped})`, 'gi'));
+        return parts.map((part, i) =>
+          i % 2 === 1
+            ? `<mark class="hl">${escHtml(part)}</mark>`
+            : escHtml(part)
+        ).join('');
+      },
+    });
+
+    const grid = new TreeGrid({
+      title: 'Project Files',
+      store: treeData,
+      rootVisible: false,
+      useArrows: true,
+      columns: [
+        nameCol,
+        new Column({ text: 'Type',     dataIndex: 'type',     width: 110, renderer: (v) => formatType(v) }),
+        new Column({ text: 'Size',     dataIndex: 'size',     width: 100, renderer: (v) => formatSize(v) }),
+        new Column({ text: 'Modified', dataIndex: 'modified', width: 160, renderer: (v) => formatDate(v) }),
+      ],
+      height: 520,
+    });
+
+    grid.render(document.getElementById('grid-container'));
+
+    const store = grid.getStore();
+
+    // ── Preserve original child order for sort-reset ──────────────────────────
+
+    const originalOrder = new Map();
+
+    store.getRoot().cascadeBy(node => {
+      if (!node.isLeaf()) {
+        originalOrder.set(node, [...node.childNodes]);
+      }
+    });
+
+    // ── Count all leaf nodes ──────────────────────────────────────────────────
+
+    function countAllLeaves() {
+      let n = 0;
+      store.getRoot().cascadeBy(node => { if (node.isLeaf()) n++; });
+      return n;
+    }
+
+    const TOTAL_LEAVES = countAllLeaves();
+
+    // ── Expand/collapse state helpers ─────────────────────────────────────────
+
+    function captureExpandStates() {
+      const states = new Map();
+      store.getRoot().cascadeBy(node => {
+        if (!node.isLeaf()) states.set(node.id, node.expanded);
+      });
+      return states;
+    }
+
+    function restoreExpandStates(states) {
+      store.getRoot().cascadeBy(node => {
+        if (!node.isLeaf() && states.has(node.id)) {
+          node.expanded = states.get(node.id);
+        }
+      });
+    }
+
+    // ── Sort ──────────────────────────────────────────────────────────────────
+
+    function applySort() {
+      if (!sortField) {
+        // Restore original order
+        store.getRoot().cascadeBy(node => {
+          if (!node.isLeaf() && originalOrder.has(node)) {
+            node.childNodes = [...originalOrder.get(node)];
+          }
+        });
+        return;
+      }
+
+      store.getRoot().cascadeBy(node => {
+        if (node.isLeaf()) return;
+        node.childNodes.sort((a, b) => {
+          // Folders before leaves
+          const aFolder = !a.isLeaf();
+          const bFolder = !b.isLeaf();
+          if (aFolder !== bFolder) return aFolder ? -1 : 1;
+
+          const av = a.get(sortField);
+          const bv = b.get(sortField);
+
+          let cmp;
+          if (sortField === 'size') {
+            cmp = (av ?? 0) - (bv ?? 0);
+          } else {
+            const as = String(av ?? '').toLowerCase();
+            const bs = String(bv ?? '').toLowerCase();
+            cmp = as.localeCompare(bs);
+          }
+          return sortDir === 'asc' ? cmp : -cmp;
+        });
+      });
+    }
+
+    // ── Filter / row visibility ───────────────────────────────────────────────
+
+    function isFiltering() {
+      return filterText.trim() !== '' || filterType !== 'all';
+    }
+
+    function applyRowVisibility() {
+      const q = filterText.trim().toLowerCase();
+      const type = filterType;
+
+      // Build the set of nodes that should be visible (matching leaves + their ancestors)
+      const visible = new Set();
+
+      store.getRoot().cascadeBy(node => {
+        if (!node.isLeaf()) return;
+        const name     = String(node.get('text')     ?? '').toLowerCase();
+        const nodeType = String(node.get('type')     ?? '').toLowerCase();
+        const textOk   = !q    || name.includes(q);
+        const typeOk   = type === 'all' || nodeType === type;
+        if (textOk && typeOk) {
+          visible.add(node);
+          // Ancestors
+          let p = node.parentNode;
+          while (p && !p.isRoot()) {
+            visible.add(p);
+            p = p.parentNode;
+          }
+        }
+      });
+
+      // Show/hide rows
+      let visibleLeaves = 0;
+      const rows = document.querySelectorAll('#grid-container tr[data-record-id]');
+      rows.forEach(tr => {
+        const id   = tr.getAttribute('data-record-id');
+        const node = store.getNodeById(id);
+        if (!node) return;
+        if (visible.has(node)) {
+          tr.style.display = '';
+          if (node.isLeaf()) visibleLeaves++;
+        } else {
+          tr.style.display = 'none';
+        }
+      });
+
+      updateStats(visibleLeaves, TOTAL_LEAVES);
+    }
+
+    // ── Stats strip ───────────────────────────────────────────────────────────
+
+    function updateStats(shown, total) {
+      const el = document.getElementById('stats-text');
+      if (!isFiltering()) {
+        el.innerHTML = `<strong>${total}</strong> files across 3 top-level folders`;
+      } else {
+        el.innerHTML = `Showing <strong>${shown}</strong> of <strong>${total}</strong> files`;
+      }
+    }
+
+    // ── Column header sort indicators ─────────────────────────────────────────
+
+    const COL_FIELDS = ['text', 'type', 'size', 'modified'];
+
+    function decorateHeaders() {
+      const ths = document.querySelectorAll('#grid-container th');
+      ths.forEach((th, i) => {
+        if (i >= COL_FIELDS.length) return;
+        const field = COL_FIELDS[i];
+        // Remove existing indicator
+        th.querySelector('.sort-indicator')?.remove();
+        if (sortField === field) {
+          const span = document.createElement('span');
+          span.className = 'sort-indicator';
+          span.textContent = sortDir === 'asc' ? ' ↑' : ' ↓';
+          th.appendChild(span);
+        }
+        th.onclick = () => {
+          if (sortField === field) {
+            if (sortDir === 'asc') {
+              sortDir = 'desc';
+            } else {
+              sortField = null;
+              sortDir   = 'asc';
+            }
+          } else {
+            sortField = field;
+            sortDir   = 'asc';
+          }
+          decorateHeaders();
+          applyView();
+        };
+      });
+    }
+
+    // ── Main applyView ────────────────────────────────────────────────────────
+
+    function applyView() {
+      const filtering = isFiltering();
+
+      // Save or restore expand states around filter sessions
+      if (filtering && !savedExpandStates) {
+        savedExpandStates = captureExpandStates();
+      }
+      if (!filtering && savedExpandStates) {
+        restoreExpandStates(savedExpandStates);
+        savedExpandStates = null;
+      }
+
+      // Expand everything so filter can see all rows post-render
+      if (filtering) store.expandAll();
+
+      // Apply sort order to childNodes arrays
+      applySort();
+
+      // Re-render the grid
+      grid.getView().refresh();
+
+      // Post-render: hide non-matching rows (filtering) or update stats
+      if (filtering) {
+        applyRowVisibility();
+      } else {
+        updateStats(TOTAL_LEAVES, TOTAL_LEAVES);
+      }
+
+      // Refresh sort indicators (headers are re-rendered by refresh)
+      decorateHeaders();
+    }
+
+    // ── Wire up controls ──────────────────────────────────────────────────────
+
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      filterText = e.target.value;
+      updateClearBtn();
+      applyView();
+    });
+
+    document.getElementById('type-filter').addEventListener('change', (e) => {
+      filterType = e.target.value;
+      updateClearBtn();
+      applyView();
+    });
+
+    document.getElementById('clear-btn').addEventListener('click', () => {
+      filterText = '';
+      filterType = 'all';
+      document.getElementById('search-input').value = '';
+      document.getElementById('type-filter').value  = 'all';
+      updateClearBtn();
+      applyView();
+    });
+
+    function updateClearBtn() {
+      const btn = document.getElementById('clear-btn');
+      btn.classList.toggle('active', isFiltering());
+    }
+
+    // ── Initial render ────────────────────────────────────────────────────────
+
+    decorateHeaders();
+    updateStats(TOTAL_LEAVES, TOTAL_LEAVES);
+
+    // ── Source viewer ─────────────────────────────────────────────────────────
+
+    (function buildSourceBlock() {
+      const scripts = document.querySelectorAll('script[type="module"]');
+      const raw = scripts[scripts.length - 1].textContent ?? '';
+      const lines = raw.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+      const indent = lines.reduce((min, l) => {
+        const m = l.match(/^(\s+)/);
+        return (m && l.trim()) ? Math.min(min, m[1].length) : min;
+      }, Infinity);
+      const dedented = lines.map(l => l.slice(indent === Infinity ? 0 : indent)).join('\n');
+
+      function esc(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function highlight(src) {
+        return src.split('\n').map(line => {
+          let out = '';
+          let i = 0;
+          while (i < line.length) {
+            if (line[i] === '/' && line[i+1] === '/') {
+              out += `<span class="tok-comment">${esc(line.slice(i))}</span>`;
+              i = line.length;
+              continue;
+            }
+            if (line[i] === '`' || line[i] === '"' || line[i] === "'") {
+              const q = line[i];
+              let j = i + 1;
+              while (j < line.length) {
+                if (line[j] === '\\') { j += 2; continue; }
+                if (line[j] === q)    { j++; break; }
+                j++;
+              }
+              const tok = line.slice(i, j);
+              const inner = esc(tok).replace(
+                /(https?:\/\/[^\s'"`,]+)/g,
+                '<span class="tok-url">$1</span>'
+              );
+              out += `<span class="tok-string">${inner}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[0-9]/.test(line[i]) && (i === 0 || /[\s,(:=\[!<>+\-*\/]/.test(line[i-1]))) {
+              let j = i;
+              while (j < line.length && /[0-9_.]/.test(line[j])) j++;
+              out += `<span class="tok-number">${esc(line.slice(i, j))}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[a-zA-Z_$]/.test(line[i])) {
+              let j = i;
+              while (j < line.length && /[a-zA-Z0-9_$]/.test(line[j])) j++;
+              const word = line.slice(i, j);
+              const KEYWORDS = new Set([
+                'import','from','export','const','let','var','function','return',
+                'new','if','else','for','of','in','while','class','extends',
+                'this','true','false','null','undefined','async','await',
+              ]);
+              if (KEYWORDS.has(word)) {
+                out += `<span class="tok-keyword">${esc(word)}</span>`;
+              } else if (j < line.length && line[j] === '(') {
+                out += `<span class="tok-fn">${esc(word)}</span>`;
+              } else {
+                out += esc(word);
+              }
+              i = j;
+              continue;
+            }
+            out += esc(line[i]);
+            i++;
+          }
+          return out;
+        }).join('\n');
+      }
+
+      document.getElementById('source-pre').innerHTML = highlight(dedented);
+
+      document.getElementById('copy-btn').addEventListener('click', function() {
+        navigator.clipboard.writeText(dedented).then(() => {
+          this.textContent = 'Copied!';
+          this.classList.add('copied');
+          setTimeout(() => { this.textContent = 'Copy'; this.classList.remove('copied'); }, 2000);
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
