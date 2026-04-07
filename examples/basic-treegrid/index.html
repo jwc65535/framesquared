@@ -4,32 +4,269 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>framesquared – Basic TreeGrid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
   <style>
-    body { padding: 32px; background: #f0f2f5; }
-    .toolbar { display: flex; gap: 8px; margin-bottom: 16px; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #212121;
+    }
+
+    /* ── Page header ──────────────────────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #1565c0 0%, #1976d2 60%, #42a5f5 100%);
+      padding: 32px 40px 28px;
+      color: #fff;
+    }
+
+    .page-header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 10px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(4px);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      opacity: 0.85;
+      font-weight: 400;
+      max-width: 540px;
+      line-height: 1.5;
+    }
+
+    /* ── Page body ────────────────────────────────────────────────────────── */
+    .page-body {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 40px 48px;
+    }
+
+    /* ── Toolbar ──────────────────────────────────────────────────────────── */
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .toolbar-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #757575;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* ── Grid wrapper ─────────────────────────────────────────────────────── */
+    .grid-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    /* Override x-panel border-radius to match wrapper */
+    .grid-wrapper .x-panel {
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+    }
+
+    /* ── Source block ─────────────────────────────────────────────────────── */
+    .source-section {
+      margin-top: 40px;
+    }
+
+    .source-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .source-heading h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #424242;
+      letter-spacing: 0.02em;
+    }
+
+    .source-heading-line {
+      flex: 1;
+      height: 1px;
+      background: #e0e0e0;
+    }
+
+    .source-wrapper {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .source-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e2433;
+      padding: 10px 16px;
+    }
+
+    .source-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .source-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .source-dot-red    { background: #ff5f57; }
+    .source-dot-yellow { background: #febc2e; }
+    .source-dot-green  { background: #28c840; }
+
+    .source-filename {
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b9ab4;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+    }
+
+    .source-copy-btn {
+      font-size: 11px;
+      font-weight: 500;
+      color: #8b9ab4;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .source-copy-btn:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    .source-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
+
+    pre.source-pre {
+      margin: 0;
+      padding: 24px;
+      background: #282c3e;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #abb2bf;
+      tab-size: 2;
+    }
+
+    /* ── Syntax colouring (regex-applied via JS) ──────────────────────────── */
+    .tok-keyword  { color: #c678dd; }
+    .tok-string   { color: #98c379; }
+    .tok-comment  { color: #5c6370; font-style: italic; }
+    .tok-fn       { color: #61afef; }
+    .tok-number   { color: #d19a66; }
+    .tok-punct    { color: #abb2bf; }
+    .tok-url      { color: #56b6c2; text-decoration: underline; }
+
+    /* ── Type badge for file type column ──────────────────────────────────── */
+    .type-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .type-pdf   { background: #fde8e8; color: #c62828; }
+    .type-word  { background: #e3f0ff; color: #1565c0; }
+    .type-excel { background: #e6f4ea; color: #2e7d32; }
+    .type-json  { background: #fff3e0; color: #e65100; }
+    .type-html  { background: #fce4ec; color: #880e4f; }
+    .type-css   { background: #e8eaf6; color: #283593; }
+    .type-jpeg,
+    .type-png   { background: #f3e5f5; color: #6a1b9a; }
+    .type-other { background: #f5f5f5; color: #616161; }
   </style>
 </head>
 <body>
-  <div class="toolbar" id="toolbar"></div>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">🌲 framesquared</div>
+      <h1 class="page-title">Basic TreeGrid</h1>
+      <p class="page-subtitle">
+        Hierarchical data with expand/collapse, column renderers, and folder/leaf icons.
+        Click a row arrow or double-click a row to expand or collapse it.
+      </p>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="toolbar-row">
+      <span class="toolbar-label">File Browser — 3 top-level folders</span>
+      <div class="toolbar-actions" id="toolbar"></div>
+    </div>
+
+    <div class="grid-wrapper" id="grid-container"></div>
+
+    <!-- ── Source block ───────────────────────────────────────────────────── -->
+    <div class="source-section">
+      <div class="source-heading">
+        <h2>Source</h2>
+        <div class="source-heading-line"></div>
+      </div>
+      <div class="source-wrapper">
+        <div class="source-bar">
+          <div class="source-dots">
+            <span class="source-dot source-dot-red"></span>
+            <span class="source-dot source-dot-yellow"></span>
+            <span class="source-dot source-dot-green"></span>
+          </div>
+          <span class="source-filename">basic-treegrid.js</span>
+          <button class="source-copy-btn" id="copy-btn">Copy</button>
+        </div>
+        <pre class="source-pre" id="source-pre"></pre>
+      </div>
+    </div>
+  </div>
 
   <script type="module">
-    import { TreeGrid, TreeGridColumn, Column, Button } from 'https://esm.sh/@framesquared/ui@0.4.0';
-    import { ThemeManager, ModernTheme }               from 'https://esm.sh/@framesquared/theme@0.4.0';
+    import { TreeGrid, TreeGridColumn, Column, Button } from 'https://esm.sh/@framesquared/ui@0.5.0';
+    import { ThemeManager, ModernTheme }               from 'https://esm.sh/@framesquared/theme@0.5.0';
 
     ThemeManager.register(ModernTheme);
     ThemeManager.setTheme('modern');
 
     // ── Data ─────────────────────────────────────────────────────────────────
-    //
-    // Pass tree data directly to TreeGrid's `store` config — it normalises
-    // plain arrays and objects internally. Do NOT import and construct
-    // TreeStore separately: on a CDN the class identity check inside TreeGrid
-    // will fail (two different module instances) and the store will be rebuilt
-    // incorrectly, producing no rows.
-    //
-    // Passing an array treats each element as a top-level node.
-    // Set expanded: true on a node to have it open on load.
-    // Any extra fields (size, type, modified) are available to renderers.
 
     const treeData = [
       {
@@ -73,52 +310,150 @@
     // ── Renderers ─────────────────────────────────────────────────────────────
 
     function formatSize(bytes) {
-      if (!bytes) return '—';
+      if (!bytes) return '<span style="color:#bdbdbd">—</span>';
       if (bytes < 1024)        return `${bytes} B`;
       if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
       return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
     }
 
     function formatDate(iso) {
-      if (!iso) return '—';
+      if (!iso) return '<span style="color:#bdbdbd">—</span>';
       return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
 
+    function formatType(type) {
+      if (!type) return '<span style="color:#bdbdbd">—</span>';
+      const cls = 'type-' + type.toLowerCase();
+      return `<span class="type-badge ${cls}">${type}</span>`;
+    }
+
     // ── TreeGrid ──────────────────────────────────────────────────────────────
-    //
-    // The first column must be a TreeGridColumn — it renders the tree chrome
-    // (indentation, expand/collapse arrow, folder/file icon) plus the field value.
-    //
-    // Subsequent columns are plain Column instances. Use `renderer` to format
-    // a cell's raw value into display HTML.
-    //
-    // `flex` distributes remaining width proportionally.
-    // `width` sets a fixed pixel width.
 
     const grid = new TreeGrid({
       title: 'File Browser',
       store: treeData,
-      rootVisible: false,   // hide the synthetic root; show top-level folders directly
-      useArrows: true,      // ▶/▼ triangle expanders
+      rootVisible: false,
+      useArrows: true,
       columns: [
         new TreeGridColumn({ text: 'Name',     dataIndex: 'text',     flex: 1 }),
-        new Column({         text: 'Type',     dataIndex: 'type',     width: 70 }),
+        new Column({         text: 'Type',     dataIndex: 'type',     width: 90,
+          renderer: (v) => formatType(v) }),
         new Column({         text: 'Size',     dataIndex: 'size',     width: 100,
           renderer: (v) => formatSize(v) }),
-        new Column({         text: 'Modified', dataIndex: 'modified', width: 150,
+        new Column({         text: 'Modified', dataIndex: 'modified', width: 160,
           renderer: (v) => formatDate(v) }),
       ],
-      height: 420,
+      height: 460,
     });
 
-    grid.render(document.body);
+    grid.render(document.getElementById('grid-container'));
 
     // ── Controls ──────────────────────────────────────────────────────────────
 
     const toolbar = document.getElementById('toolbar');
+    new Button({ text: 'Expand All',   handler: () => grid.expandAll()                   }).render(toolbar);
+    new Button({ text: 'Collapse All', handler: () => grid.collapseAll(), ui: 'default'  }).render(toolbar);
 
-    new Button({ text: 'Expand All',   handler: () => grid.expandAll()   }).render(toolbar);
-    new Button({ text: 'Collapse All', handler: () => grid.collapseAll(), ui: 'default' }).render(toolbar);
+    // ── Source viewer ─────────────────────────────────────────────────────────
+
+    (function buildSourceBlock() {
+      // Extract the text of this <script type="module"> tag
+      const scripts = document.querySelectorAll('script[type="module"]');
+      const raw = scripts[scripts.length - 1].textContent ?? '';
+
+      // Dedent: strip the uniform 4-space indent added by the HTML file
+      const lines = raw.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+      const indent = lines.reduce((min, l) => {
+        const m = l.match(/^(\s+)/);
+        return (m && l.trim()) ? Math.min(min, m[1].length) : min;
+      }, Infinity);
+      const dedented = lines.map(l => l.slice(indent === Infinity ? 0 : indent)).join('\n');
+
+      // HTML-escape helper
+      function esc(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      // Minimal syntax highlighter (order matters — strings before keywords)
+      function highlight(src) {
+        // Tokenise line by line so multi-line strings stay safe
+        return src.split('\n').map(line => {
+          // Preserve existing escapes, then apply token spans
+          let out = '';
+          let i = 0;
+          while (i < line.length) {
+            // Single-line comment
+            if (line[i] === '/' && line[i+1] === '/') {
+              out += `<span class="tok-comment">${esc(line.slice(i))}</span>`;
+              i = line.length;
+              continue;
+            }
+            // Template literal or single/double quoted string
+            if (line[i] === '`' || line[i] === '"' || line[i] === "'") {
+              const q = line[i];
+              let j = i + 1;
+              while (j < line.length) {
+                if (line[j] === '\\') { j += 2; continue; }
+                if (line[j] === q)    { j++; break; }
+                j++;
+              }
+              const tok = line.slice(i, j);
+              // Highlight URLs inside strings
+              const inner = esc(tok).replace(
+                /(https?:\/\/[^\s'"`,]+)/g,
+                '<span class="tok-url">$1</span>'
+              );
+              out += `<span class="tok-string">${inner}</span>`;
+              i = j;
+              continue;
+            }
+            // Number literal (simple)
+            if (/[0-9]/.test(line[i]) && (i === 0 || /[\s,(:=\[!<>+\-*\/]/.test(line[i-1]))) {
+              let j = i;
+              while (j < line.length && /[0-9_.]/.test(line[j])) j++;
+              out += `<span class="tok-number">${esc(line.slice(i, j))}</span>`;
+              i = j;
+              continue;
+            }
+            // Word token — keyword or function name
+            if (/[a-zA-Z_$]/.test(line[i])) {
+              let j = i;
+              while (j < line.length && /[a-zA-Z0-9_$]/.test(line[j])) j++;
+              const word = line.slice(i, j);
+              const KEYWORDS = new Set([
+                'import','from','export','const','let','var','function','return',
+                'new','if','else','for','of','in','while','class','extends',
+                'this','true','false','null','undefined','async','await','=>',
+              ]);
+              if (KEYWORDS.has(word)) {
+                out += `<span class="tok-keyword">${esc(word)}</span>`;
+              } else if (j < line.length && line[j] === '(') {
+                out += `<span class="tok-fn">${esc(word)}</span>`;
+              } else {
+                out += esc(word);
+              }
+              i = j;
+              continue;
+            }
+            out += esc(line[i]);
+            i++;
+          }
+          return out;
+        }).join('\n');
+      }
+
+      document.getElementById('source-pre').innerHTML = highlight(dedented);
+
+      // Copy button
+      document.getElementById('copy-btn').addEventListener('click', function() {
+        navigator.clipboard.writeText(dedented).then(() => {
+          this.textContent = 'Copied!';
+          this.classList.add('copied');
+          setTimeout(() => { this.textContent = 'Copy'; this.classList.remove('copied'); }, 2000);
+        });
+      });
+    })();
   </script>
+
 </body>
 </html>
