@@ -1,5 +1,17 @@
 # @framesquared/layout
 
+## 0.5.0
+
+### Minor Changes
+
+- 30424e2: Fix expand/collapse.
+
+### Patch Changes
+
+- Updated dependencies [30424e2]
+  - @framesquared/component@0.5.0
+  - @framesquared/core@0.5.0
+
 ## 0.4.0
 
 ### Minor Changes
