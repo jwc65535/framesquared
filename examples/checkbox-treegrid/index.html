@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – Tri-State Checkbox Tree</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #212121;
+    }
+
+    /* ── Page header ──────────────────────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #1565c0 0%, #1976d2 60%, #42a5f5 100%);
+      padding: 32px 40px 28px;
+      color: #fff;
+    }
+
+    .page-header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 10px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(4px);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      opacity: 0.85;
+      font-weight: 400;
+      max-width: 560px;
+      line-height: 1.5;
+    }
+
+    /* ── Page body ────────────────────────────────────────────────────────── */
+    .page-body {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 40px 48px;
+    }
+
+    /* ── Toolbar ──────────────────────────────────────────────────────────── */
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #757575;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* ── Settings strip ───────────────────────────────────────────────────── */
+    .settings-strip {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 10px 16px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .setting-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .setting-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #616161;
+      white-space: nowrap;
+    }
+
+    .setting-select {
+      font-size: 12px;
+      font-family: inherit;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 3px 8px;
+      color: #212121;
+      background: #fafafa;
+      cursor: pointer;
+      outline: none;
+    }
+    .setting-select:focus { border-color: #1976d2; }
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #616161;
+      cursor: pointer;
+      user-select: none;
+    }
+    .toggle-label input[type="checkbox"] { cursor: pointer; accent-color: #1976d2; }
+
+    /* ── Summary strip ────────────────────────────────────────────────────── */
+    .summary-strip {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .summary-count {
+      white-space: nowrap;
+    }
+
+    .summary-number {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1565c0;
+      line-height: 1;
+    }
+
+    .summary-of {
+      font-size: 13px;
+      color: #9e9e9e;
+      font-weight: 400;
+    }
+
+    .summary-bar-wrap {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .summary-bar-track {
+      height: 6px;
+      background: #e0e0e0;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .summary-bar-fill {
+      height: 100%;
+      background: #1976d2;
+      border-radius: 3px;
+      transition: width 0.25s ease;
+    }
+
+    .summary-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+    .chip-high   { background: #fce8e8; color: #c62828; }
+    .chip-medium { background: #fff8e1; color: #f57f17; }
+    .chip-low    { background: #e6f4ea; color: #2e7d32; }
+
+    .summary-action {
+      margin-left: auto;
+    }
+
+    /* ── Grid wrapper ─────────────────────────────────────────────────────── */
+    .grid-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .grid-wrapper .x-panel {
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+    }
+
+    /* ── Risk badges ──────────────────────────────────────────────────────── */
+    .risk-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    .risk-low    { background: #e6f4ea; color: #2e7d32; }
+    .risk-medium { background: #fff8e1; color: #f57f17; }
+    .risk-high   { background: #fce8e8; color: #c62828; }
+
+    /* ── Category badges ──────────────────────────────────────────────────── */
+    .cat-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .cat-read   { background: #e3f0ff; color: #1565c0; }
+    .cat-write  { background: #fff3e0; color: #e65100; }
+    .cat-delete { background: #fce8e8; color: #c62828; }
+    .cat-admin  { background: #f3e5f5; color: #6a1b9a; }
+
+    /* ── Hint ─────────────────────────────────────────────────────────────── */
+    .hint-strip {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #9e9e9e;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .hint-strip span::before { content: '→ '; color: #bdbdbd; }
+
+    /* ── Source block ─────────────────────────────────────────────────────── */
+    .source-section {
+      margin-top: 40px;
+    }
+
+    .source-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .source-heading h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #424242;
+      letter-spacing: 0.02em;
+    }
+
+    .source-heading-line {
+      flex: 1;
+      height: 1px;
+      background: #e0e0e0;
+    }
+
+    .source-wrapper {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .source-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e2433;
+      padding: 10px 16px;
+    }
+
+    .source-dots { display: flex; gap: 6px; }
+    .source-dot  { width: 12px; height: 12px; border-radius: 50%; }
+    .source-dot-red    { background: #ff5f57; }
+    .source-dot-yellow { background: #febc2e; }
+    .source-dot-green  { background: #28c840; }
+
+    .source-filename {
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b9ab4;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+    }
+
+    .source-copy-btn {
+      font-size: 11px;
+      font-weight: 500;
+      color: #8b9ab4;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .source-copy-btn:hover  { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    .source-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
+
+    pre.source-pre {
+      margin: 0;
+      padding: 24px;
+      background: #282c3e;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #abb2bf;
+      tab-size: 2;
+    }
+
+    /* ── Syntax colouring ─────────────────────────────────────────────────── */
+    .tok-keyword { color: #c678dd; }
+    .tok-string  { color: #98c379; }
+    .tok-comment { color: #5c6370; font-style: italic; }
+    .tok-fn      { color: #61afef; }
+    .tok-number  { color: #d19a66; }
+    .tok-url     { color: #56b6c2; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">▦ framesquared</div>
+      <h1 class="page-title">Tri-State Checkbox Tree</h1>
+      <p class="page-subtitle">
+        Check a parent to select all its children. Check some children to put the
+        parent into an indeterminate state. Changes propagate up and down the tree.
+      </p>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="toolbar-row">
+      <span class="toolbar-label">API Role Editor — 5 groups, 16 permissions</span>
+      <div class="toolbar-actions" id="toolbar"></div>
+    </div>
+
+    <!-- ── Behaviour controls ────────────────────────────────────────────── -->
+    <div class="settings-strip">
+      <div class="setting-group">
+        <span class="setting-label">Propagation</span>
+        <select class="setting-select" id="propagation-select">
+          <option value="both"  selected>Both directions</option>
+          <option value="down">Down only (parent → children)</option>
+          <option value="up">Up only (children → parent)</option>
+          <option value="none">None</option>
+        </select>
+      </div>
+      <label class="toggle-label">
+        <input type="checkbox" id="leaf-only-toggle">
+        Only leaf checkable
+      </label>
+    </div>
+
+    <!-- ── Live summary ───────────────────────────────────────────────────── -->
+    <div class="summary-strip">
+      <div class="summary-count">
+        <span class="summary-number" id="sum-count">8</span>
+        <span class="summary-of"> / 16 permissions enabled</span>
+      </div>
+      <div class="summary-bar-wrap">
+        <div class="summary-bar-track">
+          <div class="summary-bar-fill" id="sum-bar" style="width:50%"></div>
+        </div>
+      </div>
+      <div class="summary-chips">
+        <span class="chip chip-high"><span id="sum-high">3</span> high risk</span>
+        <span class="chip chip-medium"><span id="sum-medium">2</span> medium</span>
+        <span class="chip chip-low"><span id="sum-low">3</span> low</span>
+      </div>
+      <div class="summary-action" id="save-btn-container"></div>
+    </div>
+
+    <div class="grid-wrapper" id="grid-container"></div>
+
+    <div class="hint-strip">
+      <span>Click a parent checkbox to select all children</span>
+      <span>Partial selection shows the indeterminate (—) state</span>
+      <span>Change propagation mode above to see different behaviours</span>
+    </div>
+
+    <!-- ── Source block ───────────────────────────────────────────────────── -->
+    <div class="source-section">
+      <div class="source-heading">
+        <h2>Source</h2>
+        <div class="source-heading-line"></div>
+      </div>
+      <div class="source-wrapper">
+        <div class="source-bar">
+          <div class="source-dots">
+            <span class="source-dot source-dot-red"></span>
+            <span class="source-dot source-dot-yellow"></span>
+            <span class="source-dot source-dot-green"></span>
+          </div>
+          <span class="source-filename">checkbox-treegrid.js</span>
+          <button class="source-copy-btn" id="copy-btn">Copy</button>
+        </div>
+        <pre class="source-pre" id="source-pre"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { TreeGrid, TreeGridColumn, Column, Button } from 'https://esm.sh/@framesquared/ui@0.5.0';
+    import { ThemeManager, ModernTheme }               from 'https://esm.sh/@framesquared/theme@0.5.0';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── Data ─────────────────────────────────────────────────────────────────
+    //
+    // $checked: true  = checked ✓
+    // $checked: false = unchecked
+    // $checked: null  = indeterminate — (shown when children are partially checked)
+    //
+    // The initial state deliberately shows all three states so the behaviour is
+    // immediately visible without any interaction.
+
+    const PERMISSIONS = [
+      {
+        id: 'users', text: 'User Management', expanded: true, leaf: false,
+        $checked: null,   // indeterminate — 2 of 4 children are checked
+        children: [
+          { id: 'u-read',        text: 'users:read',        description: 'View user profiles and list',          risk: 'Low',    category: 'Read',   leaf: true, $checked: true  },
+          { id: 'u-write',       text: 'users:write',       description: 'Create and update user accounts',      risk: 'Medium', category: 'Write',  leaf: true, $checked: true  },
+          { id: 'u-delete',      text: 'users:delete',      description: 'Permanently delete user accounts',     risk: 'High',   category: 'Delete', leaf: true, $checked: false },
+          { id: 'u-impersonate', text: 'users:impersonate', description: 'Authenticate as another user',          risk: 'High',   category: 'Admin',  leaf: true, $checked: false },
+        ],
+      },
+      {
+        id: 'billing', text: 'Billing', expanded: false, leaf: false,
+        $checked: false,  // none checked
+        children: [
+          { id: 'b-read',   text: 'billing:read',   description: 'View invoices and payment history',     risk: 'Low',  category: 'Read',  leaf: true, $checked: false },
+          { id: 'b-write',  text: 'billing:write',  description: 'Update payment methods and details',    risk: 'High', category: 'Write', leaf: true, $checked: false },
+          { id: 'b-refund', text: 'billing:refund', description: 'Issue refunds and credit adjustments',  risk: 'High', category: 'Write', leaf: true, $checked: false },
+        ],
+      },
+      {
+        id: 'analytics', text: 'Analytics', expanded: false, leaf: false,
+        $checked: null,   // indeterminate — 2 of 3 children are checked
+        children: [
+          { id: 'a-read',   text: 'analytics:read',   description: 'View dashboards and metrics',             risk: 'Low',    category: 'Read',  leaf: true, $checked: true  },
+          { id: 'a-export', text: 'analytics:export', description: 'Export reports as CSV or PDF',           risk: 'Medium', category: 'Read',  leaf: true, $checked: true  },
+          { id: 'a-admin',  text: 'analytics:admin',  description: 'Manage report definitions and schedules', risk: 'Medium', category: 'Admin', leaf: true, $checked: false },
+        ],
+      },
+      {
+        id: 'webhooks', text: 'Webhooks', expanded: false, leaf: false,
+        $checked: null,   // indeterminate — 1 of 3 children are checked
+        children: [
+          { id: 'w-read',   text: 'webhooks:read',   description: 'List and inspect webhook endpoints',     risk: 'Low',    category: 'Read',   leaf: true, $checked: true  },
+          { id: 'w-write',  text: 'webhooks:write',  description: 'Register and update webhook endpoints',  risk: 'Medium', category: 'Write',  leaf: true, $checked: false },
+          { id: 'w-delete', text: 'webhooks:delete', description: 'Remove webhook endpoints',               risk: 'Medium', category: 'Delete', leaf: true, $checked: false },
+        ],
+      },
+      {
+        id: 'admin', text: 'Administration', expanded: false, leaf: false,
+        $checked: true,   // all checked
+        children: [
+          { id: 'adm-users',   text: 'admin:users',   description: 'Full user administration access',      risk: 'High', category: 'Admin', leaf: true, $checked: true },
+          { id: 'adm-billing', text: 'admin:billing', description: 'Full billing administration access',   risk: 'High', category: 'Admin', leaf: true, $checked: true },
+          { id: 'adm-system',  text: 'admin:system',  description: 'System configuration and audit logs',  risk: 'High', category: 'Admin', leaf: true, $checked: true },
+        ],
+      },
+    ];
+
+    const TOTAL_LEAVES = 16;
+
+    // ── Renderers ─────────────────────────────────────────────────────────────
+
+    function renderRisk(v) {
+      const cls = v === 'High' ? 'risk-high' : v === 'Medium' ? 'risk-medium' : 'risk-low';
+      return `<span class="risk-badge ${cls}">${v ?? '—'}</span>`;
+    }
+
+    function renderCategory(v) {
+      const cls = 'cat-' + (v ?? '').toLowerCase();
+      return `<span class="cat-badge ${cls}">${v ?? '—'}</span>`;
+    }
+
+    // ── TreeGrid ──────────────────────────────────────────────────────────────
+    //
+    // checkable: true         — render a checkbox in the tree column for every node
+    // cascadeChecks: true     — propagate check/uncheck state automatically
+    // checkPropagation: 'both'— changes cascade both up (parent) and down (children)
+
+    const grid = new TreeGrid({
+      title: 'API Permissions',
+      store: PERMISSIONS,
+      rootVisible: false,
+      useArrows: true,
+      checkable: true,
+      cascadeChecks: true,
+      checkPropagation: 'both',
+      columns: [
+        new TreeGridColumn({ text: 'Permission', dataIndex: 'text',        flex: 2 }),
+        new Column({         text: 'Description', dataIndex: 'description', flex: 3 }),
+        new Column({         text: 'Risk',        dataIndex: 'risk',        width: 90, renderer: renderRisk     }),
+        new Column({         text: 'Category',    dataIndex: 'category',    width: 80, renderer: renderCategory }),
+      ],
+      height: 440,
+    });
+
+    grid.render(document.getElementById('grid-container'));
+
+    // ── Summary ───────────────────────────────────────────────────────────────
+
+    function updateSummary() {
+      const leaves = grid.getCheckedLeaves();
+      const n      = leaves.length;
+      const high   = leaves.filter(l => l.get('risk') === 'High').length;
+      const med    = leaves.filter(l => l.get('risk') === 'Medium').length;
+      const low    = leaves.filter(l => l.get('risk') === 'Low').length;
+
+      document.getElementById('sum-count').textContent = n;
+      document.getElementById('sum-bar').style.width   = `${(n / TOTAL_LEAVES) * 100}%`;
+      document.getElementById('sum-high').textContent  = high;
+      document.getElementById('sum-medium').textContent = med;
+      document.getElementById('sum-low').textContent   = low;
+    }
+
+    updateSummary();
+
+    // ── Check change ──────────────────────────────────────────────────────────
+    //
+    // setChecked() calls refreshNode() on only the clicked node. Ancestors whose
+    // $checked state was updated by _updateAncestorChecks() won't repaint unless
+    // we force a full view refresh here.
+
+    grid.on('checkchange', () => {
+      grid.getView().refresh();
+      updateSummary();
+    });
+
+    // ── Controls ──────────────────────────────────────────────────────────────
+
+    const toolbar = document.getElementById('toolbar');
+
+    new Button({
+      text: 'Check All',
+      handler: () => { grid.checkAll(); updateSummary(); },
+    }).render(toolbar);
+
+    new Button({
+      text: 'Uncheck All',
+      ui: 'default',
+      handler: () => { grid.uncheckAll(); updateSummary(); },
+    }).render(toolbar);
+
+    // "Save Role" button lives in the summary strip for visual proximity
+    new Button({
+      text: 'Save Role',
+      handler: () => {
+        const names = grid.getCheckedLeaves().map(n => n.get('text')).join('\n  • ');
+        const count = grid.getCheckedLeaves().length;
+        alert(`Role saved with ${count} permission${count !== 1 ? 's' : ''}:\n\n  • ${names || '(none)'}`);
+      },
+    }).render(document.getElementById('save-btn-container'));
+
+    // ── Propagation mode ──────────────────────────────────────────────────────
+
+    document.getElementById('propagation-select').addEventListener('change', (e) => {
+      const mode = e.target.value;
+      // cascadeChecks: false when 'none' so parent clicks don't touch children at all
+      grid._cascadeChecks    = mode !== 'none';
+      grid._checkPropagation = mode;
+    });
+
+    // ── Only-leaf-checkable toggle ────────────────────────────────────────────
+
+    document.getElementById('leaf-only-toggle').addEventListener('change', (e) => {
+      grid._onlyLeafCheckable = e.target.checked;
+      grid.getView().refresh();
+    });
+
+    // ── Source viewer ─────────────────────────────────────────────────────────
+
+    (function buildSourceBlock() {
+      const scripts = document.querySelectorAll('script[type="module"]');
+      const raw = scripts[scripts.length - 1].textContent ?? '';
+
+      const lines = raw.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+      const indent = lines.reduce((min, l) => {
+        const m = l.match(/^(\s+)/);
+        return (m && l.trim()) ? Math.min(min, m[1].length) : min;
+      }, Infinity);
+      const dedented = lines.map(l => l.slice(indent === Infinity ? 0 : indent)).join('\n');
+
+      function esc(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function highlight(src) {
+        return src.split('\n').map(line => {
+          let out = '';
+          let i = 0;
+          while (i < line.length) {
+            if (line[i] === '/' && line[i+1] === '/') {
+              out += `<span class="tok-comment">${esc(line.slice(i))}</span>`;
+              i = line.length;
+              continue;
+            }
+            if (line[i] === '`' || line[i] === '"' || line[i] === "'") {
+              const q = line[i];
+              let j = i + 1;
+              while (j < line.length) {
+                if (line[j] === '\\') { j += 2; continue; }
+                if (line[j] === q)    { j++; break; }
+                j++;
+              }
+              const tok = line.slice(i, j);
+              const inner = esc(tok).replace(
+                /(https?:\/\/[^\s'"`,]+)/g,
+                '<span class="tok-url">$1</span>'
+              );
+              out += `<span class="tok-string">${inner}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[0-9]/.test(line[i]) && (i === 0 || /[\s,(:=\[!<>+\-*\/]/.test(line[i-1]))) {
+              let j = i;
+              while (j < line.length && /[0-9_.]/.test(line[j])) j++;
+              out += `<span class="tok-number">${esc(line.slice(i, j))}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[a-zA-Z_$]/.test(line[i])) {
+              let j = i;
+              while (j < line.length && /[a-zA-Z0-9_$]/.test(line[j])) j++;
+              const word = line.slice(i, j);
+              const KEYWORDS = new Set([
+                'import','from','export','const','let','var','function','return',
+                'new','if','else','for','of','in','while','class','extends',
+                'async','await','true','false','null','undefined','=>',
+              ]);
+              if (KEYWORDS.has(word)) {
+                out += `<span class="tok-keyword">${esc(word)}</span>`;
+              } else if (j < line.length && line[j] === '(') {
+                out += `<span class="tok-fn">${esc(word)}</span>`;
+              } else {
+                out += esc(word);
+              }
+              i = j;
+              continue;
+            }
+            out += esc(line[i]);
+            i++;
+          }
+          return out;
+        }).join('\n');
+      }
+
+      document.getElementById('source-pre').innerHTML = highlight(dedented);
+
+      document.getElementById('copy-btn').addEventListener('click', function() {
+        navigator.clipboard.writeText(dedented).then(() => {
+          this.textContent = 'Copied!';
+          this.classList.add('copied');
+          setTimeout(() => { this.textContent = 'Copy'; this.classList.remove('copied'); }, 2000);
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
