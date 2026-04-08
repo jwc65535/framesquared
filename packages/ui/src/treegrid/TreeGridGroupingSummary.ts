@@ -55,13 +55,19 @@ export class TreeGridGroupingSummary {
   // Render
   // -------------------------------------------------------------------------
 
+  renderGroupSummaries(): void {
+    this._renderGroupSummaries();
+  }
+
   private _renderGroupSummaries(): void {
     if (!this.treeGrid) return;
     const viewEl = this.treeGrid.getView()?.el;
     if (!viewEl) return;
 
-    // Remove existing summary rows
-    viewEl.querySelectorAll(`.${this.config.summaryRowCls}`).forEach((el) => el.remove());
+    // Remove existing group summary rows only (those with [data-summary-for]).
+    // Rows without that attribute (e.g. a grand-total row from TreeGridSummary)
+    // must not be touched.
+    viewEl.querySelectorAll(`.${this.config.summaryRowCls}[data-summary-for]`).forEach((el) => el.remove());
 
     const flatData = (this.treeGrid.getStore().flattenNodes() as NodeInterface[]).filter(
       (n) => !n.isRoot(),
