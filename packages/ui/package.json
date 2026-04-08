@@ -1,6 +1,6 @@
 {
   "name": "@framesquared/ui",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "UI widgets (panels, buttons, toolbars, etc.)",
   "type": "module",
   "main": "./dist/index.js",

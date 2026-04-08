@@ -1,6 +1,6 @@
 {
   "name": "@framesquared/theme",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Theming and CSS-in-JS token system",
   "type": "module",
   "main": "./dist/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "@framesquared/layout",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Layout managers",
   "type": "module",
   "main": "./dist/index.js",

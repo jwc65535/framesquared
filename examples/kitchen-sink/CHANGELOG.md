@@ -1,5 +1,23 @@
 # @framesquared/example-kitchen-sink
 
+## 0.3.3
+
+### Patch Changes
+
+- Formatting changes
+- Updated dependencies
+  - @framesquared/app@0.5.3
+  - @framesquared/component@0.5.3
+  - @framesquared/core@0.5.3
+  - @framesquared/data@0.5.3
+  - @framesquared/dd@0.5.3
+  - @framesquared/form@0.5.3
+  - @framesquared/fx@0.5.3
+  - @framesquared/grid@0.5.3
+  - @framesquared/layout@0.5.3
+  - @framesquared/theme@0.5.3
+  - @framesquared/ui@0.5.3
+
 ## 0.3.2
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @framesquared/app
 
+## 0.5.3
+
+### Patch Changes
+
+- Formatting changes
+- Updated dependencies
+  - @framesquared/core@0.5.3
+
 ## 0.5.2
 
 ### Patch Changes

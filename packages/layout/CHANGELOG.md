@@ -1,5 +1,14 @@
 # @framesquared/layout
 
+## 0.5.3
+
+### Patch Changes
+
+- Formatting changes
+- Updated dependencies
+  - @framesquared/component@0.5.3
+  - @framesquared/core@0.5.3
+
 ## 0.5.2
 
 ### Patch Changes
