@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – Summary Rows</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #212121;
+    }
+
+    /* ── Page header ──────────────────────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 60%, #66bb6a 100%);
+      padding: 32px 40px 28px;
+      color: #fff;
+    }
+
+    .page-header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 10px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(4px);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      opacity: 0.85;
+      font-weight: 400;
+      max-width: 580px;
+      line-height: 1.5;
+    }
+
+    /* ── Page body ────────────────────────────────────────────────────────── */
+    .page-body {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 40px 48px;
+    }
+
+    /* ── Toolbar ──────────────────────────────────────────────────────────── */
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .toolbar-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #757575;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    /* ── Toggle chips ─────────────────────────────────────────────────────── */
+    .toggle-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid #bdbdbd;
+      background: #fff;
+      color: #757575;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .toggle-chip.on {
+      background: #e8f5e9;
+      border-color: #4caf50;
+      color: #2e7d32;
+    }
+    .toggle-chip:hover { filter: brightness(0.95); }
+
+    /* ── Grid wrapper ─────────────────────────────────────────────────────── */
+    .grid-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .grid-wrapper .x-panel {
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+    }
+
+    /* ── Summary row styling ──────────────────────────────────────────────── */
+    .grid-wrapper .x-treegrid-summary-row td {
+      background: #f1f8e9;
+      font-weight: 600;
+      color: #33691e;
+      border-top: 1px solid #aed581;
+    }
+
+    .grid-wrapper .x-treegrid-summary-row[data-summary-for] td {
+      background: #f9fbe7;
+      color: #558b2f;
+      font-weight: 500;
+      border-top: 1px dashed #c5e1a5;
+    }
+
+    /* ── Source block ─────────────────────────────────────────────────────── */
+    .source-section {
+      margin-top: 40px;
+    }
+
+    .source-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .source-heading h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #424242;
+      letter-spacing: 0.02em;
+    }
+
+    .source-heading-line {
+      flex: 1;
+      height: 1px;
+      background: #e0e0e0;
+    }
+
+    .source-wrapper {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .source-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e2433;
+      padding: 10px 16px;
+    }
+
+    .source-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .source-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .source-dot-red    { background: #ff5f57; }
+    .source-dot-yellow { background: #febc2e; }
+    .source-dot-green  { background: #28c840; }
+
+    .source-filename {
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b9ab4;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+    }
+
+    .source-copy-btn {
+      font-size: 11px;
+      font-weight: 500;
+      color: #8b9ab4;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .source-copy-btn:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    .source-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
+
+    pre.source-pre {
+      margin: 0;
+      padding: 24px;
+      background: #282c3e;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #abb2bf;
+      tab-size: 2;
+    }
+
+    /* ── Syntax colouring (regex-applied via JS) ──────────────────────────── */
+    .tok-keyword  { color: #c678dd; }
+    .tok-string   { color: #98c379; }
+    .tok-comment  { color: #5c6370; font-style: italic; }
+    .tok-fn       { color: #61afef; }
+    .tok-number   { color: #d19a66; }
+    .tok-punct    { color: #abb2bf; }
+    .tok-url      { color: #56b6c2; text-decoration: underline; }
+  </style>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "@framesquared/ui":        "../../packages/ui/dist/index.js",
+        "@framesquared/component": "https://esm.sh/@framesquared/component@0.5.1",
+        "@framesquared/core":      "https://esm.sh/@framesquared/core@0.5.1",
+        "@framesquared/theme":     "https://esm.sh/@framesquared/theme@0.5.1"
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">&#x3a3; framesquared</div>
+      <h1 class="page-title">&#x3a3; Summary Rows</h1>
+      <p class="page-subtitle">
+        Aggregate totals, averages, and counts at the bottom of each group and
+        across the full tree — powered by <code>TreeGridSummary</code> and
+        <code>TreeGridGroupingSummary</code>.
+      </p>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="toolbar-row">
+      <span class="toolbar-label">Employee Directory — 4 departments, 15 employees</span>
+      <div class="toolbar-actions" id="toolbar"></div>
+    </div>
+
+    <div class="grid-wrapper" id="grid-container"></div>
+
+    <!-- ── Source block ───────────────────────────────────────────────────── -->
+    <div class="source-section">
+      <div class="source-heading">
+        <h2>Source</h2>
+        <div class="source-heading-line"></div>
+      </div>
+      <div class="source-wrapper">
+        <div class="source-bar">
+          <div class="source-dots">
+            <span class="source-dot source-dot-red"></span>
+            <span class="source-dot source-dot-yellow"></span>
+            <span class="source-dot source-dot-green"></span>
+          </div>
+          <span class="source-filename">summary-treegrid.js</span>
+          <button class="source-copy-btn" id="copy-btn">Copy</button>
+        </div>
+        <pre class="source-pre" id="source-pre"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import {
+      TreeGrid, TreeGridColumn, Column, Button,
+      TreeGridSummary, TreeGridGroupingSummary,
+    } from '@framesquared/ui';
+    import { ThemeManager, ModernTheme } from '@framesquared/theme';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── Data ─────────────────────────────────────────────────────────────────
+
+    const treeData = [
+      {
+        text: 'Engineering', expanded: true,
+        children: [
+          { text: 'Alice Chen',     role: 'Staff Engineer',    salary: 185000, bonus: 25, years: 12, leaf: true },
+          { text: 'Carol Kim',      role: 'Lead Engineer',     salary: 165000, bonus: 22, years:  9, leaf: true },
+          { text: 'Bob Martinez',   role: 'Engineer',          salary: 115000, bonus: 12, years:  3, leaf: true },
+          { text: 'Dave Patel',     role: 'Senior Engineer',   salary: 145000, bonus: 18, years:  6, leaf: true },
+          { text: 'Eve Thompson',   role: 'Junior Engineer',   salary:  95000, bonus:  8, years:  1, leaf: true },
+        ],
+      },
+      {
+        text: 'Design', expanded: true,
+        children: [
+          { text: 'Hannah Park',   role: 'Lead Designer',    salary: 140000, bonus: 18, years: 7, leaf: true },
+          { text: 'Frank Lee',     role: 'Senior Designer',  salary: 125000, bonus: 15, years: 5, leaf: true },
+          { text: 'Grace Nguyen',  role: 'Designer',         salary: 105000, bonus: 10, years: 2, leaf: true },
+        ],
+      },
+      {
+        text: 'Product', expanded: true,
+        children: [
+          { text: 'Lisa Rodriguez', role: 'VP Product',       salary: 195000, bonus: 30, years: 11, leaf: true },
+          { text: 'Julia Wong',     role: 'Senior PM',        salary: 155000, bonus: 24, years:  8, leaf: true },
+          { text: 'Ivan Santos',    role: 'Product Manager',  salary: 135000, bonus: 20, years:  5, leaf: true },
+          { text: 'Ken Williams',   role: 'Product Analyst',  salary: 110000, bonus: 12, years:  3, leaf: true },
+        ],
+      },
+      {
+        text: 'Marketing', expanded: true,
+        children: [
+          { text: 'Olivia Chen',  role: 'Marketing Director', salary: 150000, bonus: 20, years: 7, leaf: true },
+          { text: 'Mike Johnson', role: 'Marketing Manager',  salary: 120000, bonus: 15, years: 4, leaf: true },
+          { text: 'Nancy Davis',  role: 'Content Lead',       salary: 100000, bonus: 10, years: 2, leaf: true },
+        ],
+      },
+    ];
+
+    // ── Formatters ────────────────────────────────────────────────────────────
+
+    function fmtSalary(v) {
+      if (!v || isNaN(v)) return '';
+      return '$' + Number(v).toLocaleString('en-US');
+    }
+
+    function fmtAvgSalary(total, count) {
+      return 'Avg: $' + Math.round(total / count).toLocaleString('en-US');
+    }
+
+    function fmtSumSalary(total) {
+      return 'Total: $' + Math.round(total).toLocaleString('en-US');
+    }
+
+    function fmtBonus(v) {
+      if (!v || isNaN(v)) return '';
+      return v + '%';
+    }
+
+    function fmtAvgBonus(total, count) {
+      return 'Avg: ' + (total / count).toFixed(1) + '%';
+    }
+
+    function fmtYears(v) {
+      if (!v || isNaN(v)) return '';
+      return v === 1 ? '1 yr' : v + ' yrs';
+    }
+
+    function fmtAvgYears(total, count) {
+      return 'Avg: ' + (total / count).toFixed(1) + ' yrs';
+    }
+
+    function fmtCount(_, count) {
+      return count + ' employee' + (count === 1 ? '' : 's');
+    }
+
+    // ── Summary column configs (shared by both plugins) ────────────────────
+
+    const summaryColumns = [
+      {
+        dataIndex: 'salary',
+        summaryType: 'sum',
+        summaryRenderer: fmtSumSalary,
+      },
+      {
+        dataIndex: 'bonus',
+        summaryType: 'average',
+        summaryRenderer: fmtAvgBonus,
+      },
+      {
+        dataIndex: 'years',
+        summaryType: 'average',
+        summaryRenderer: fmtAvgYears,
+      },
+      {
+        dataIndex: 'role',
+        summaryType: 'count',
+        summaryRenderer: fmtCount,
+      },
+    ];
+
+    // ── Plugins ───────────────────────────────────────────────────────────────
+
+    const summary = new TreeGridSummary({
+      position: 'bottom',
+      includeCollapsed: true,
+      treeColumnSummaryText: 'All Departments',
+      summaryColumns,
+    });
+
+    const groupSummary = new TreeGridGroupingSummary({
+      includeDescendants: false,
+      treeColumnSummaryText: 'Subtotal',
+      summaryColumns,
+    });
+
+    // ── TreeGrid ──────────────────────────────────────────────────────────────
+
+    const grid = new TreeGrid({
+      title: 'Employee Directory',
+      store: treeData,
+      rootVisible: false,
+      useArrows: true,
+      plugins: [summary, groupSummary],
+      columns: [
+        new TreeGridColumn({ text: 'Name',    dataIndex: 'text',   flex: 1, minWidth: 160 }),
+        new Column({         text: 'Role',    dataIndex: 'role',   width: 180 }),
+        new Column({         text: 'Salary',  dataIndex: 'salary', width: 130, renderer: fmtSalary }),
+        new Column({         text: 'Bonus',   dataIndex: 'bonus',  width: 90,  renderer: fmtBonus }),
+        new Column({         text: 'Tenure',  dataIndex: 'years',  width: 90,  renderer: fmtYears }),
+      ],
+      height: 520,
+    });
+
+    grid.render(document.getElementById('grid-container'));
+
+    // Both plugins wire store events but don't render on initial load —
+    // call the render methods explicitly after the grid is in the DOM.
+    summary.renderSummary();
+    groupSummary.renderGroupSummaries();
+
+    // ── Controls ──────────────────────────────────────────────────────────────
+
+    const toolbar = document.getElementById('toolbar');
+
+    // Expand / Collapse all
+    new Button({ text: 'Expand All',   handler: () => grid.expandAll()                  }).render(toolbar);
+    new Button({ text: 'Collapse All', handler: () => grid.collapseAll(), ui: 'default' }).render(toolbar);
+
+    // Toggle grand-total row
+    let grandTotalOn = true;
+    const grandTotalChip = document.createElement('span');
+    grandTotalChip.className = 'toggle-chip on';
+
+    function updateGrandTotalChip() {
+      grandTotalChip.className = 'toggle-chip' + (grandTotalOn ? ' on' : '');
+      grandTotalChip.textContent = (grandTotalOn ? '\u2713 ' : '') + 'Grand Total';
+    }
+
+    updateGrandTotalChip();
+    grandTotalChip.addEventListener('click', () => {
+      grandTotalOn = !grandTotalOn;
+      // Grand-total row: .x-treegrid-summary-row without [data-summary-for]
+      const el = grid.getView()?.el;
+      if (el) {
+        el.querySelectorAll('.x-treegrid-summary-row:not([data-summary-for])').forEach(
+          (row) => { row.style.display = grandTotalOn ? '' : 'none'; }
+        );
+      }
+      updateGrandTotalChip();
+    });
+    toolbar.appendChild(grandTotalChip);
+
+    // Toggle group-subtotal rows
+    let groupSubtotalsOn = true;
+    const groupChip = document.createElement('span');
+    groupChip.className = 'toggle-chip on';
+
+    function updateGroupChip() {
+      groupChip.className = 'toggle-chip' + (groupSubtotalsOn ? ' on' : '');
+      groupChip.textContent = (groupSubtotalsOn ? '\u2713 ' : '') + 'Group Subtotals';
+    }
+
+    updateGroupChip();
+    groupChip.addEventListener('click', () => {
+      groupSubtotalsOn = !groupSubtotalsOn;
+      // Group summary rows: .x-treegrid-summary-row with [data-summary-for]
+      const el = grid.getView()?.el;
+      if (el) {
+        el.querySelectorAll('.x-treegrid-summary-row[data-summary-for]').forEach(
+          (row) => { row.style.display = groupSubtotalsOn ? '' : 'none'; }
+        );
+      }
+      updateGroupChip();
+    });
+    toolbar.appendChild(groupChip);
+
+    // ── Source viewer ─────────────────────────────────────────────────────────
+
+    (function buildSourceBlock() {
+      const scripts = document.querySelectorAll('script[type="module"]');
+      const raw = scripts[scripts.length - 1].textContent ?? '';
+
+      const lines = raw.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+      const indent = lines.reduce((min, l) => {
+        const m = l.match(/^(\s+)/);
+        return (m && l.trim()) ? Math.min(min, m[1].length) : min;
+      }, Infinity);
+      const dedented = lines.map(l => l.slice(indent === Infinity ? 0 : indent)).join('\n');
+
+      function esc(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function highlight(src) {
+        return src.split('\n').map(line => {
+          let out = '';
+          let i = 0;
+          while (i < line.length) {
+            if (line[i] === '/' && line[i+1] === '/') {
+              out += `<span class="tok-comment">${esc(line.slice(i))}</span>`;
+              i = line.length;
+              continue;
+            }
+            if (line[i] === '`' || line[i] === '"' || line[i] === "'") {
+              const q = line[i];
+              let j = i + 1;
+              while (j < line.length) {
+                if (line[j] === '\\') { j += 2; continue; }
+                if (line[j] === q)    { j++; break; }
+                j++;
+              }
+              const tok = line.slice(i, j);
+              const inner = esc(tok).replace(
+                /(https?:\/\/[^\s'"`,]+)/g,
+                '<span class="tok-url">$1</span>'
+              );
+              out += `<span class="tok-string">${inner}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[0-9]/.test(line[i]) && (i === 0 || /[\s,(:=\[!<>+\-*\/]/.test(line[i-1]))) {
+              let j = i;
+              while (j < line.length && /[0-9_.]/.test(line[j])) j++;
+              out += `<span class="tok-number">${esc(line.slice(i, j))}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[a-zA-Z_$]/.test(line[i])) {
+              let j = i;
+              while (j < line.length && /[a-zA-Z0-9_$]/.test(line[j])) j++;
+              const word = line.slice(i, j);
+              const KEYWORDS = new Set([
+                'import','from','export','const','let','var','function','return',
+                'new','if','else','for','of','in','while','class','extends',
+                'this','true','false','null','undefined','async','await','=>',
+              ]);
+              if (KEYWORDS.has(word)) {
+                out += `<span class="tok-keyword">${esc(word)}</span>`;
+              } else if (j < line.length && line[j] === '(') {
+                out += `<span class="tok-fn">${esc(word)}</span>`;
+              } else {
+                out += esc(word);
+              }
+              i = j;
+              continue;
+            }
+            out += esc(line[i]);
+            i++;
+          }
+          return out;
+        }).join('\n');
+      }
+
+      document.getElementById('source-pre').innerHTML = highlight(dedented);
+
+      document.getElementById('copy-btn').addEventListener('click', function() {
+        navigator.clipboard.writeText(dedented).then(() => {
+          this.textContent = 'Copied!';
+          this.classList.add('copied');
+          setTimeout(() => { this.textContent = 'Copy'; this.classList.remove('copied'); }, 2000);
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
