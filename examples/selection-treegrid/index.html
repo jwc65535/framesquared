@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – Selection Modes TreeGrid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #212121;
+    }
+
+    /* ── Page header ──────────────────────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #1565c0 0%, #1976d2 60%, #42a5f5 100%);
+      padding: 32px 40px 28px;
+      color: #fff;
+    }
+
+    .page-header-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 10px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(4px);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      opacity: 0.85;
+      font-weight: 400;
+      max-width: 560px;
+      line-height: 1.5;
+    }
+
+    /* ── Page body ────────────────────────────────────────────────────────── */
+    .page-body {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 32px 40px 48px;
+    }
+
+    /* ── Mode bar ─────────────────────────────────────────────────────────── */
+    .mode-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .mode-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #757575;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .mode-pills {
+      display: flex;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .mode-pill {
+      padding: 7px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      background: none;
+      border: none;
+      border-right: 1px solid #e0e0e0;
+      cursor: pointer;
+      color: #616161;
+      transition: background 0.15s, color 0.15s;
+    }
+    .mode-pill:last-child { border-right: none; }
+    .mode-pill:hover { background: #f5f5f5; color: #212121; }
+    .mode-pill.active {
+      background: #1976d2;
+      color: #fff;
+    }
+
+    /* ── Mode description card ────────────────────────────────────────────── */
+    .mode-desc {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-left: 3px solid #1976d2;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #424242;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .mode-desc kbd {
+      display: inline-block;
+      background: #f5f5f5;
+      border: 1px solid #bdbdbd;
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 11px;
+      font-family: 'Fira Code', monospace;
+      color: #424242;
+    }
+
+    /* ── Two-column layout ────────────────────────────────────────────────── */
+    .content-row {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    /* ── Grid wrapper ─────────────────────────────────────────────────────── */
+    .grid-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .grid-wrapper .x-panel {
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+    }
+
+    /* Selection highlight — row */
+    .grid-wrapper .x-treegrid-row-selected {
+      background: #e3f0ff !important;
+    }
+
+    /* ── Selection panel ──────────────────────────────────────────────────── */
+    .sel-panel {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+      overflow: hidden;
+    }
+
+    .sel-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-bottom: 1px solid #f0f0f0;
+      background: #fafafa;
+    }
+
+    .sel-panel-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #424242;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .sel-count-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      background: #1976d2;
+      color: #fff;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .sel-count-badge.empty { background: #e0e0e0; color: #9e9e9e; }
+
+    .sel-panel-body {
+      padding: 12px 14px;
+      min-height: 100px;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+
+    .sel-empty {
+      font-size: 12px;
+      color: #bdbdbd;
+      font-style: italic;
+      text-align: center;
+      padding: 16px 0;
+    }
+
+    .sel-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      border-radius: 5px;
+      margin-bottom: 4px;
+      font-size: 12px;
+      background: #f5f5f5;
+      color: #212121;
+    }
+    .sel-chip:last-child { margin-bottom: 0; }
+
+    .sel-chip-icon {
+      font-size: 14px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .sel-chip-name {
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sel-chip-dept {
+      margin-left: auto;
+      font-size: 10px;
+      color: #9e9e9e;
+      white-space: nowrap;
+    }
+
+    .sel-panel-footer {
+      padding: 8px 14px;
+      border-top: 1px solid #f0f0f0;
+      display: flex;
+      gap: 6px;
+    }
+
+    .sel-action-btn {
+      flex: 1;
+      padding: 5px 0;
+      font-size: 11px;
+      font-weight: 500;
+      font-family: inherit;
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      background: #fff;
+      color: #616161;
+      cursor: pointer;
+      transition: background 0.13s, color 0.13s;
+    }
+    .sel-action-btn:hover { background: #f5f5f5; color: #212121; }
+    .sel-action-btn:disabled { opacity: 0.4; cursor: default; }
+
+    /* ── Source block ─────────────────────────────────────────────────────── */
+    .source-section { margin-top: 40px; }
+
+    .source-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .source-heading h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #424242;
+      letter-spacing: 0.02em;
+    }
+
+    .source-heading-line {
+      flex: 1;
+      height: 1px;
+      background: #e0e0e0;
+    }
+
+    .source-wrapper {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .source-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e2433;
+      padding: 10px 16px;
+    }
+
+    .source-dots { display: flex; gap: 6px; }
+    .source-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .source-dot-red    { background: #ff5f57; }
+    .source-dot-yellow { background: #febc2e; }
+    .source-dot-green  { background: #28c840; }
+
+    .source-filename {
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b9ab4;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+    }
+
+    .source-copy-btn {
+      font-size: 11px;
+      font-weight: 500;
+      color: #8b9ab4;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .source-copy-btn:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    .source-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
+
+    pre.source-pre {
+      margin: 0;
+      padding: 24px;
+      background: #282c3e;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #abb2bf;
+      tab-size: 2;
+    }
+
+    .tok-keyword { color: #c678dd; }
+    .tok-string  { color: #98c379; }
+    .tok-comment { color: #5c6370; font-style: italic; }
+    .tok-fn      { color: #61afef; }
+    .tok-number  { color: #d19a66; }
+    .tok-url     { color: #56b6c2; text-decoration: underline; }
+
+    /* ── Custom folder icons via iconCls ──────────────────────────────────── */
+    .team-icon-eng::before  { content: '🏗️'; font-size: 14px; }
+    .team-icon-des::before  { content: '🎨'; font-size: 14px; }
+    .team-icon-prd::before  { content: '📋'; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">🌲 framesquared</div>
+      <h1 class="page-title">Selection Modes</h1>
+      <p class="page-subtitle">
+        Switch between Single, Simple, and Multi selection. Supports
+        Shift-click range, Ctrl/Cmd-click toggle, and Ctrl+A select-all.
+      </p>
+    </div>
+  </header>
+
+  <div class="page-body">
+
+    <!-- ── Mode bar ───────────────────────────────────────────────────────── -->
+    <div class="mode-bar">
+      <span class="mode-label">Mode:</span>
+      <div class="mode-pills">
+        <button class="mode-pill active" data-mode="SINGLE">Single</button>
+        <button class="mode-pill"        data-mode="SIMPLE">Simple</button>
+        <button class="mode-pill"        data-mode="MULTI" >Multi</button>
+      </div>
+    </div>
+
+    <!-- ── Mode description ───────────────────────────────────────────────── -->
+    <div class="mode-desc" id="mode-desc"></div>
+
+    <!-- ── Grid + selection panel ─────────────────────────────────────────── -->
+    <div class="content-row">
+      <div class="grid-wrapper" id="grid-container"></div>
+
+      <div class="sel-panel">
+        <div class="sel-panel-header">
+          <span class="sel-panel-title">Selection</span>
+          <span class="sel-count-badge empty" id="sel-count">0</span>
+        </div>
+        <div class="sel-panel-body" id="sel-list">
+          <div class="sel-empty">Nothing selected</div>
+        </div>
+        <div class="sel-panel-footer">
+          <button class="sel-action-btn" id="btn-select-all" disabled>Select All</button>
+          <button class="sel-action-btn" id="btn-deselect"   disabled>Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Source block ───────────────────────────────────────────────────── -->
+    <div class="source-section">
+      <div class="source-heading">
+        <h2>Source</h2>
+        <div class="source-heading-line"></div>
+      </div>
+      <div class="source-wrapper">
+        <div class="source-bar">
+          <div class="source-dots">
+            <span class="source-dot source-dot-red"></span>
+            <span class="source-dot source-dot-yellow"></span>
+            <span class="source-dot source-dot-green"></span>
+          </div>
+          <span class="source-filename">selection-treegrid.js</span>
+          <button class="source-copy-btn" id="copy-btn">Copy</button>
+        </div>
+        <pre class="source-pre" id="source-pre"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { TreeGrid, TreeGridColumn, Column } from 'https://esm.sh/@framesquared/ui@0.5.0';
+    import { ThemeManager, ModernTheme }        from 'https://esm.sh/@framesquared/theme@0.5.0';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── Dataset ───────────────────────────────────────────────────────────────
+
+    const treeData = [
+      {
+        text: 'Engineering', iconCls: 'team-icon-eng',
+        expanded: true,
+        children: [
+          { text: 'Alice Chen',     role: 'Staff Engineer',   level: 'L6', leaf: true },
+          { text: 'Bob Müller',     role: 'Senior Engineer',  level: 'L5', leaf: true },
+          { text: 'Carla Santos',   role: 'Engineer II',      level: 'L4', leaf: true },
+          { text: 'David Kim',      role: 'Engineer I',       level: 'L3', leaf: true },
+        ],
+      },
+      {
+        text: 'Design', iconCls: 'team-icon-des',
+        expanded: true,
+        children: [
+          { text: 'Eva Rossi',      role: 'Design Lead',      level: 'L6', leaf: true },
+          { text: 'Frank Osei',     role: 'Senior Designer',  level: 'L5', leaf: true },
+          { text: 'Grace Liu',      role: 'Designer II',      level: 'L4', leaf: true },
+        ],
+      },
+      {
+        text: 'Product', iconCls: 'team-icon-prd',
+        expanded: false,
+        children: [
+          { text: 'Henry Park',     role: 'Principal PM',     level: 'L6', leaf: true },
+          { text: 'Isabel Torres',  role: 'Senior PM',        level: 'L5', leaf: true },
+          { text: 'James Wright',   role: 'Product Manager',  level: 'L4', leaf: true },
+          { text: 'Kira Yamamoto',  role: 'Associate PM',     level: 'L3', leaf: true },
+        ],
+      },
+    ];
+
+    // ── Mode descriptions ─────────────────────────────────────────────────────
+
+    const MODE_DESC = {
+      SINGLE: 'Click any row to select it. Only one row can be selected at a time — clicking another row deselects the previous.',
+      SIMPLE: 'Each click <strong>toggles</strong> that row without clearing others. No modifier keys needed — click to add, click again to remove.',
+      MULTI:  'Click to select one. <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+click to toggle individual rows. <kbd>Shift</kbd>+click to select a range from the last clicked row. <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>A</kbd> to select all visible rows.',
+    };
+
+    // ── TreeGrid ──────────────────────────────────────────────────────────────
+
+    const grid = new TreeGrid({
+      title: 'Organization',
+      store: treeData,
+      rootVisible: false,
+      useArrows: true,
+      selModel: { mode: 'MULTI' }, // always MULTI internally; we enforce constraints ourselves
+      columns: [
+        new TreeGridColumn({
+          text: 'Name',
+          dataIndex: 'text',
+          flex: 1,
+        }),
+        new Column({ text: 'Role',  dataIndex: 'role',  flex: 1 }),
+        new Column({ text: 'Level', dataIndex: 'level', width: 70,
+          renderer: (v) => v ? `<span style="font-size:11px;font-weight:600;color:#1565c0">${v}</span>` : '' }),
+      ],
+      height: 420,
+    });
+
+    grid.render(document.getElementById('grid-container'));
+
+    // ── State ─────────────────────────────────────────────────────────────────
+
+    let currentMode = 'SINGLE';
+    let anchor      = null;   // for MULTI shift-click range
+    let preClickSel = [];     // captured on mousedown, used for SIMPLE toggle
+
+    // ── Capture pre-click selection state ─────────────────────────────────────
+
+    document.getElementById('grid-container').addEventListener('mousedown', (e) => {
+      if (e.target.closest('tr[data-record-id]')) {
+        preClickSel = grid.getSelection();
+      }
+    });
+
+    // ── Click handling ────────────────────────────────────────────────────────
+
+    grid.on('itemclick', (view, node, e) => {
+      switch (currentMode) {
+
+        case 'SINGLE': {
+          // Enforce single selection regardless of any modifier key held.
+          grid.deselectAll(true);   // clear all, suppress event
+          grid.select(node, false); // select only this one, fire event
+          anchor = node;
+          break;
+        }
+
+        case 'SIMPLE': {
+          // Toggle node, keeping all other previously selected rows.
+          const wasSelected = preClickSel.some(n => n === node);
+          const newSel = wasSelected
+            ? preClickSel.filter(n => n !== node)
+            : [...preClickSel, node];
+          if (newSel.length > 0) {
+            grid.select(newSel, false);
+          } else {
+            grid.deselectAll();
+          }
+          anchor = node;
+          break;
+        }
+
+        case 'MULTI': {
+          if (e.shiftKey && anchor) {
+            // Range selection from anchor to this node
+            const flat = grid.getStore().flattenNodes();
+            const ai   = flat.indexOf(anchor);
+            const ni   = flat.indexOf(node);
+            if (ai !== -1 && ni !== -1) {
+              const lo    = Math.min(ai, ni);
+              const hi    = Math.max(ai, ni);
+              const range = flat.slice(lo, hi + 1);
+              grid.select(range, false);
+              // Don't update anchor on shift-click — next shift-click extends from same anchor
+            }
+          } else {
+            // Plain click or Ctrl/Cmd-click — grid already handled it correctly
+            anchor = node;
+          }
+          break;
+        }
+      }
+
+      updateSelectionPanel();
+    });
+
+    // ── Keyboard shortcuts ────────────────────────────────────────────────────
+
+    document.addEventListener('keydown', (e) => {
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+      // Ctrl/Cmd+A: select all visible rows (MULTI only)
+      if ((e.ctrlKey || e.metaKey) && e.key === 'a' && currentMode === 'MULTI') {
+        e.preventDefault();
+        grid.selectAll();
+        anchor = null;
+        updateSelectionPanel();
+      }
+
+      // Escape: clear selection
+      if (e.key === 'Escape') {
+        grid.deselectAll();
+        anchor = null;
+        updateSelectionPanel();
+      }
+    });
+
+    // ── Mode switching ────────────────────────────────────────────────────────
+
+    document.querySelectorAll('.mode-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.mode-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentMode = btn.dataset.mode;
+        anchor      = null;
+        grid.deselectAll();
+        updateModeDesc();
+        updateSelectionPanel();
+        // Show/hide Select All button (MULTI only)
+        document.getElementById('btn-select-all').style.display =
+          currentMode === 'MULTI' ? '' : 'none';
+      });
+    });
+
+    function updateModeDesc() {
+      document.getElementById('mode-desc').innerHTML = MODE_DESC[currentMode];
+    }
+
+    // ── Selection panel ───────────────────────────────────────────────────────
+
+    function updateSelectionPanel() {
+      const sel   = grid.getSelection();
+      const count = sel.length;
+
+      // Badge
+      const badge = document.getElementById('sel-count');
+      badge.textContent = count;
+      badge.classList.toggle('empty', count === 0);
+
+      // List
+      const list = document.getElementById('sel-list');
+      if (count === 0) {
+        list.innerHTML = '<div class="sel-empty">Nothing selected</div>';
+      } else {
+        list.innerHTML = sel.map(node => {
+          const isFolder = !node.isLeaf();
+          const icon     = isFolder ? '📁' : '👤';
+          const dept     = isFolder ? '' : (node.parentNode?.get('text') ?? '');
+          const role     = isFolder ? `${node.childNodes.length} members` : (node.get('role') ?? '');
+          return `
+            <div class="sel-chip">
+              <span class="sel-chip-icon">${icon}</span>
+              <span class="sel-chip-name">${esc(node.get('text') ?? '')}</span>
+              <span class="sel-chip-dept">${esc(dept)}</span>
+            </div>`;
+        }).join('');
+      }
+
+      // Buttons
+      document.getElementById('btn-deselect').disabled   = count === 0;
+      document.getElementById('btn-select-all').disabled = false;
+    }
+
+    function esc(s) {
+      return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // ── Footer buttons ────────────────────────────────────────────────────────
+
+    document.getElementById('btn-select-all').addEventListener('click', () => {
+      grid.selectAll();
+      anchor = null;
+      updateSelectionPanel();
+    });
+    document.getElementById('btn-select-all').style.display = 'none'; // SINGLE by default
+
+    document.getElementById('btn-deselect').addEventListener('click', () => {
+      grid.deselectAll();
+      anchor = null;
+      updateSelectionPanel();
+    });
+
+    // ── Initial render ────────────────────────────────────────────────────────
+
+    updateModeDesc();
+    updateSelectionPanel();
+
+    // ── Source viewer ─────────────────────────────────────────────────────────
+
+    (function buildSourceBlock() {
+      const scripts = document.querySelectorAll('script[type="module"]');
+      const raw = scripts[scripts.length - 1].textContent ?? '';
+      const lines = raw.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+      const indent = lines.reduce((min, l) => {
+        const m = l.match(/^(\s+)/);
+        return (m && l.trim()) ? Math.min(min, m[1].length) : min;
+      }, Infinity);
+      const dedented = lines.map(l => l.slice(indent === Infinity ? 0 : indent)).join('\n');
+      const srcEnd = dedented.lastIndexOf('(function buildSourceBlock()');
+      const display = srcEnd > 0 ? dedented.slice(0, dedented.lastIndexOf('\n', srcEnd)).trimEnd() : dedented;
+
+      function esc2(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function highlight(src) {
+        const KEYWORDS = new Set([
+          'import','from','export','const','let','var','function','return',
+          'new','if','else','for','of','in','while','class','extends',
+          'this','true','false','null','undefined','async','await','try','catch','switch','case','break',
+        ]);
+        const TOKEN = /(\/\/[^\n]*)|(`(?:\\.|[^`\\])*`|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')|\b(\d[\d.]*)\b|([a-zA-Z_$][\w$]*)/g;
+        let out = '', last = 0, m;
+        while ((m = TOKEN.exec(src)) !== null) {
+          out += esc2(src.slice(last, m.index));
+          last = TOKEN.lastIndex;
+          const [full, comment, str, num, word] = m;
+          if (comment) {
+            out += `<span class="tok-comment">${esc2(full)}</span>`;
+          } else if (str) {
+            const inner = esc2(full).replace(/(https?:\/\/\S+)/g, '<span class="tok-url">$1</span>');
+            out += `<span class="tok-string">${inner}</span>`;
+          } else if (num) {
+            out += `<span class="tok-number">${esc2(num)}</span>`;
+          } else if (word) {
+            if (KEYWORDS.has(full))     out += `<span class="tok-keyword">${esc2(full)}</span>`;
+            else if (src[last] === '(') out += `<span class="tok-fn">${esc2(full)}</span>`;
+            else                        out += esc2(full);
+          }
+        }
+        out += esc2(src.slice(last));
+        return out;
+      }
+
+      document.getElementById('source-pre').innerHTML = highlight(display);
+
+      document.getElementById('copy-btn').addEventListener('click', function() {
+        navigator.clipboard.writeText(display).then(() => {
+          this.textContent = 'Copied!';
+          this.classList.add('copied');
+          setTimeout(() => { this.textContent = 'Copy'; this.classList.remove('copied'); }, 2000);
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
