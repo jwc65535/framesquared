@@ -63,8 +63,7 @@ export class TreeGridLockable {
     // auto-created from a config object (or is explicitly locked).
     const hasUserDefinedColumns = columns.some(
       (c) =>
-        !(c instanceof TreeGridColumn) &&
-        (!(c as any)._autoCreated || (c as any).locked === true),
+        !(c instanceof TreeGridColumn) && (!(c as any)._autoCreated || (c as any).locked === true),
     );
     if (!hasUserDefinedColumns) return;
 
@@ -109,9 +108,7 @@ export class TreeGridLockable {
     if (this.lockedView.el) {
       this.lockedView.el.style.cssText = 'flex:1;overflow:visible;';
     }
-    const lockedTable = this.lockedViewEl.querySelector(
-      '.x-treegrid-table',
-    ) as HTMLElement | null;
+    const lockedTable = this.lockedViewEl.querySelector('.x-treegrid-table') as HTMLElement | null;
     if (lockedTable) lockedTable.style.width = lockedW + 'px';
 
     // ── Normal panel ─────────────────────────────────────────────────────────
@@ -134,9 +131,7 @@ export class TreeGridLockable {
     }
     // Fix the table to its natural pixel width so the panel scrolls
     // horizontally when the columns are wider than the viewport.
-    const normalTable = this.normalViewEl.querySelector(
-      '.x-treegrid-table',
-    ) as HTMLElement | null;
+    const normalTable = this.normalViewEl.querySelector('.x-treegrid-table') as HTMLElement | null;
     if (normalTable) normalTable.style.width = normalW + 'px';
 
     // ── DOM assembly ─────────────────────────────────────────────────────────

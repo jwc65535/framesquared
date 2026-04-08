@@ -67,7 +67,9 @@ export class TreeGridGroupingSummary {
     // Remove existing group summary rows only (those with [data-summary-for]).
     // Rows without that attribute (e.g. a grand-total row from TreeGridSummary)
     // must not be touched.
-    viewEl.querySelectorAll(`.${this.config.summaryRowCls}[data-summary-for]`).forEach((el) => el.remove());
+    viewEl
+      .querySelectorAll(`.${this.config.summaryRowCls}[data-summary-for]`)
+      .forEach((el) => el.remove());
 
     const flatData = (this.treeGrid.getStore().flattenNodes() as NodeInterface[]).filter(
       (n) => !n.isRoot(),
