@@ -1,5 +1,13 @@
 # @framesquared/data
 
+## 0.5.1
+
+### Patch Changes
+
+- TreeGridLockable.ts fixes: - Panel body is set to display:flex; flex-direction:row inline (overrides the theme's column default) - Locked panel: display:flex; flex-direction:column; flex:0 0 <W>px; overflow-x:hidden; overflow-y:auto — width computed from col.width sum - Normal panel: display:flex; flex-direction:column; flex:1 1 0; overflow-x:auto; overflow-y:auto - View overflow overridden to visible so the panel element is the scroll container (required for scroll-sync to work) - Table width set to the exact pixel sum of its columns so table-layout:fixed produces real column widths instead of compressing everything to fit - Selection wiring (itemclick → grid.select, selectionchange → markSelected) built into the plugin
+- Updated dependencies
+  - @framesquared/core@0.5.1
+
 ## 0.5.0
 
 ### Minor Changes
