@@ -1,5 +1,15 @@
 # @framesquared/grid
 
+## 0.5.2
+
+### Patch Changes
+
+- c246942: Refine TreeGridGroupingSummary to preserve grand-total rows
+- Updated dependencies [c246942]
+  - @framesquared/component@0.5.2
+  - @framesquared/core@0.5.2
+  - @framesquared/ui@0.5.2
+
 ## 0.5.1
 
 ### Patch Changes

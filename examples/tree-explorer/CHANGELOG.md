@@ -1,5 +1,20 @@
 # @framesquared/example-tree-explorer
 
+## 0.3.2
+
+### Patch Changes
+
+- c246942: Refine TreeGridGroupingSummary to preserve grand-total rows
+- Updated dependencies [c246942]
+  - @framesquared/component@0.5.2
+  - @framesquared/core@0.5.2
+  - @framesquared/data@0.5.2
+  - @framesquared/form@0.5.2
+  - @framesquared/grid@0.5.2
+  - @framesquared/layout@0.5.2
+  - @framesquared/theme@0.5.2
+  - @framesquared/ui@0.5.2
+
 ## 0.3.1
 
 ### Patch Changes
