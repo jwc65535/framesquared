@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – Locked Columns TreeGrid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #212121;
+    }
+
+    /* ── Page header ──────────────────────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #1565c0 0%, #1976d2 60%, #42a5f5 100%);
+      padding: 32px 40px 28px;
+      color: #fff;
+    }
+
+    .page-header-inner { max-width: 1100px; margin: 0 auto; }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 10px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(4px);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      opacity: 0.85;
+      font-weight: 400;
+      max-width: 580px;
+      line-height: 1.5;
+    }
+
+    /* ── Page body ────────────────────────────────────────────────────────── */
+    .page-body {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 40px 48px;
+    }
+
+    /* ── Toolbar row ──────────────────────────────────────────────────────── */
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+
+    .toolbar-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #757575;
+    }
+
+    .toolbar-actions { display: flex; gap: 8px; }
+
+    /* ── Column lock bar ──────────────────────────────────────────────────── */
+    .lock-bar {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .lock-bar-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #757575;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      margin-right: 2px;
+    }
+
+    .lock-divider {
+      width: 1px;
+      height: 20px;
+      background: #e0e0e0;
+      margin: 0 2px;
+    }
+
+    /* ── Column chips ─────────────────────────────────────────────────────── */
+    .col-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1.5px solid;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      line-height: 1;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+
+    .col-chip.locked {
+      background: #e3f0ff;
+      border-color: #1976d2;
+      color: #1565c0;
+    }
+    .col-chip.locked:hover { background: #bbdefb; }
+
+    .col-chip.unlocked {
+      background: #fafafa;
+      border-color: #e0e0e0;
+      color: #757575;
+    }
+    .col-chip.unlocked:hover { background: #f0f0f0; border-color: #bdbdbd; color: #424242; }
+
+    .col-chip.always-locked {
+      background: #f5f5f5;
+      border-color: #e0e0e0;
+      color: #bdbdbd;
+      cursor: default;
+    }
+
+    .chip-icon { font-size: 11px; }
+
+    /* ── Grid wrapper ─────────────────────────────────────────────────────── */
+    .grid-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .grid-wrapper .x-panel {
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+    }
+
+    /* TreeGridLockable sets inline styles on the panel body and both panels.
+       The only override needed here is the freeze-line accent. */
+    .grid-wrapper .x-treegrid-locked-panel {
+      border-right-color: #1976d2 !important;
+      box-shadow: 4px 0 8px rgba(25,118,210,0.08);
+    }
+
+    /* ── Performance badge ────────────────────────────────────────────────── */
+    .perf-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .perf-exceptional { background: #e8f5e9; color: #2e7d32; }
+    .perf-exceeds     { background: #e3f2fd; color: #1565c0; }
+    .perf-meets       { background: #f3e5f5; color: #6a1b9a; }
+    .perf-below       { background: #fff3e0; color: #e65100; }
+
+    /* ── Source block ─────────────────────────────────────────────────────── */
+    .source-section { margin-top: 40px; }
+
+    .source-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .source-heading h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #424242;
+      letter-spacing: 0.02em;
+    }
+    .source-heading-line { flex: 1; height: 1px; background: #e0e0e0; }
+
+    .source-wrapper {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .source-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e2433;
+      padding: 10px 16px;
+    }
+
+    .source-dots { display: flex; gap: 6px; }
+    .source-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .source-dot-red    { background: #ff5f57; }
+    .source-dot-yellow { background: #febc2e; }
+    .source-dot-green  { background: #28c840; }
+
+    .source-filename {
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b9ab4;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+    }
+
+    .source-copy-btn {
+      font-size: 11px;
+      font-weight: 500;
+      color: #8b9ab4;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .source-copy-btn:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    .source-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
+
+    pre.source-pre {
+      margin: 0;
+      padding: 24px;
+      background: #282c3e;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #abb2bf;
+      tab-size: 2;
+    }
+
+    .tok-keyword { color: #c678dd; }
+    .tok-string  { color: #98c379; }
+    .tok-comment { color: #5c6370; font-style: italic; }
+    .tok-fn      { color: #61afef; }
+    .tok-number  { color: #d19a66; }
+    .tok-url     { color: #56b6c2; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">🌲 framesquared</div>
+      <h1 class="page-title">Locked Columns</h1>
+      <p class="page-subtitle">
+        Freeze the tree column and any additional columns to the left while the
+        rest scroll horizontally. Click a column chip below to lock or unlock it
+        at runtime.
+      </p>
+    </div>
+  </header>
+
+  <div class="page-body">
+
+    <!-- ── Toolbar ────────────────────────────────────────────────────────── -->
+    <div class="toolbar-row">
+      <span class="toolbar-label">Employee Directory — 5 departments · 17 employees</span>
+      <div class="toolbar-actions" id="toolbar"></div>
+    </div>
+
+    <!-- ── Column lock bar ───────────────────────────────────────────────── -->
+    <div class="lock-bar" id="lock-bar">
+      <span class="lock-bar-label">Freeze:</span>
+    </div>
+
+    <!-- ── Grid ──────────────────────────────────────────────────────────── -->
+    <div class="grid-wrapper" id="grid-container"></div>
+
+    <!-- ── Source block ───────────────────────────────────────────────────── -->
+    <div class="source-section">
+      <div class="source-heading">
+        <h2>Source</h2>
+        <div class="source-heading-line"></div>
+      </div>
+      <div class="source-wrapper">
+        <div class="source-bar">
+          <div class="source-dots">
+            <span class="source-dot source-dot-red"></span>
+            <span class="source-dot source-dot-yellow"></span>
+            <span class="source-dot source-dot-green"></span>
+          </div>
+          <span class="source-filename">locked-columns-treegrid.js</span>
+          <button class="source-copy-btn" id="copy-btn">Copy</button>
+        </div>
+        <pre class="source-pre" id="source-pre"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "@framesquared/ui":        "https://esm.sh/@framesquared/ui@0.5.1",
+        "@framesquared/component": "https://esm.sh/@framesquared/component@0.5.1",
+        "@framesquared/core":      "https://esm.sh/@framesquared/core@0.5.1",
+        "@framesquared/theme":     "https://esm.sh/@framesquared/theme@0.5.1"
+      }
+    }
+  </script>
+  <script type="module">
+    import { TreeGrid, TreeGridColumn, Column, Button, TreeGridLockable }
+      from '@framesquared/ui';
+    import { ThemeManager, ModernTheme }
+      from '@framesquared/theme';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── Renderers ─────────────────────────────────────────────────────────────
+
+    function fmtSalary(v) {
+      return v ? '$' + Number(v).toLocaleString('en-US') : '';
+    }
+
+    function fmtDate(iso) {
+      if (!iso) return '';
+      return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function fmtPerf(v) {
+      if (!v) return '';
+      const cls = { Exceptional: 'perf-exceptional', Exceeds: 'perf-exceeds', Meets: 'perf-meets', Below: 'perf-below' }[v] ?? '';
+      return `<span class="perf-badge ${cls}">${v}</span>`;
+    }
+
+    function fmtBonus(v) {
+      return v != null ? `<span style="color:#1565c0;font-weight:600">${v}%</span>` : '';
+    }
+
+    // ── Dataset ───────────────────────────────────────────────────────────────
+
+    const treeData = [
+      {
+        text: 'Engineering', expanded: true,
+        children: [
+          { text: 'Alice Chen',    empId: 'E-001', title: 'Staff Engineer',     location: 'San Francisco', startDate: '2018-03-12', salary: 210000, bonus: 18, performance: 'Exceptional', email: 'a.chen@corp.io',     manager: 'Wei Zhang',     leaf: true },
+          { text: 'Bob Müller',    empId: 'E-002', title: 'Senior Engineer',    location: 'Berlin',        startDate: '2020-07-01', salary: 155000, bonus: 15, performance: 'Exceeds',     email: 'b.muller@corp.io',   manager: 'Alice Chen',    leaf: true },
+          { text: 'Carla Santos',  empId: 'E-003', title: 'Engineer II',        location: 'São Paulo',     startDate: '2021-11-15', salary: 120000, bonus: 12, performance: 'Meets',       email: 'c.santos@corp.io',   manager: 'Alice Chen',    leaf: true },
+          { text: 'David Kim',     empId: 'E-004', title: 'Engineer I',         location: 'Seoul',         startDate: '2023-02-20', salary: 98000,  bonus: 10, performance: 'Meets',       email: 'd.kim@corp.io',      manager: 'Bob Müller',    leaf: true },
+        ],
+      },
+      {
+        text: 'Design', expanded: false,
+        children: [
+          { text: 'Eva Rossi',     empId: 'D-001', title: 'Design Lead',        location: 'Milan',         startDate: '2019-05-08', salary: 175000, bonus: 16, performance: 'Exceptional', email: 'e.rossi@corp.io',    manager: 'Wei Zhang',     leaf: true },
+          { text: 'Frank Osei',    empId: 'D-002', title: 'Senior Designer',    location: 'Accra',         startDate: '2021-03-22', salary: 140000, bonus: 14, performance: 'Exceeds',     email: 'f.osei@corp.io',     manager: 'Eva Rossi',     leaf: true },
+          { text: 'Grace Liu',     empId: 'D-003', title: 'Designer II',        location: 'Singapore',     startDate: '2022-09-05', salary: 115000, bonus: 11, performance: 'Meets',       email: 'g.liu@corp.io',      manager: 'Eva Rossi',     leaf: true },
+        ],
+      },
+      {
+        text: 'Product', expanded: false,
+        children: [
+          { text: 'Henry Park',    empId: 'P-001', title: 'Principal PM',       location: 'New York',      startDate: '2017-08-14', salary: 195000, bonus: 17, performance: 'Exceptional', email: 'h.park@corp.io',     manager: 'Wei Zhang',     leaf: true },
+          { text: 'Isabel Torres', empId: 'P-002', title: 'Senior PM',          location: 'Mexico City',   startDate: '2020-01-06', salary: 160000, bonus: 15, performance: 'Exceeds',     email: 'i.torres@corp.io',   manager: 'Henry Park',    leaf: true },
+          { text: 'James Wright',  empId: 'P-003', title: 'Product Manager',    location: 'Chicago',       startDate: '2022-04-18', salary: 135000, bonus: 13, performance: 'Meets',       email: 'j.wright@corp.io',   manager: 'Henry Park',    leaf: true },
+          { text: 'Kira Yamamoto', empId: 'P-004', title: 'Associate PM',       location: 'Tokyo',         startDate: '2023-10-02', salary: 100000, bonus: 10, performance: 'Meets',       email: 'k.yamamoto@corp.io', manager: 'Isabel Torres', leaf: true },
+        ],
+      },
+      {
+        text: 'Marketing', expanded: false,
+        children: [
+          { text: 'Liam Nkosi',   empId: 'M-001', title: 'Marketing Director', location: 'Johannesburg',  startDate: '2016-11-30', salary: 185000, bonus: 17, performance: 'Exceeds',     email: 'l.nkosi@corp.io',    manager: 'Wei Zhang',     leaf: true },
+          { text: 'Maya Patel',   empId: 'M-002', title: 'Sr. Brand Manager',  location: 'London',        startDate: '2020-06-15', salary: 148000, bonus: 14, performance: 'Meets',       email: 'm.patel@corp.io',    manager: 'Liam Nkosi',    leaf: true },
+          { text: 'Noah Fischer', empId: 'M-003', title: 'Growth Analyst',     location: 'Vienna',        startDate: '2022-02-28', salary: 110000, bonus: 11, performance: 'Below',       email: 'n.fischer@corp.io',  manager: 'Liam Nkosi',    leaf: true },
+        ],
+      },
+      {
+        text: 'Data Science', expanded: false,
+        children: [
+          { text: 'Olivia Grant', empId: 'S-001', title: 'Principal Scientist', location: 'Seattle',      startDate: '2019-09-09', salary: 220000, bonus: 20, performance: 'Exceptional', email: 'o.grant@corp.io',    manager: 'Wei Zhang',     leaf: true },
+          { text: 'Pedro Alves',  empId: 'S-002', title: 'Sr. Data Scientist',  location: 'Lisbon',       startDate: '2021-07-19', salary: 165000, bonus: 15, performance: 'Exceeds',     email: 'p.alves@corp.io',    manager: 'Olivia Grant',  leaf: true },
+        ],
+      },
+    ];
+
+    // ── Columns ───────────────────────────────────────────────────────────────
+
+    // The tree column is always in the locked panel.
+    const nameCol = new TreeGridColumn({ text: 'Name', dataIndex: 'text', width: 200 });
+
+    // idCol starts frozen; all others start scrollable.
+    const idCol    = new Column({ text: 'Emp ID',      dataIndex: 'empId',       width: 100 });
+    idCol.locked   = true;
+
+    const titleCol = new Column({ text: 'Job Title',   dataIndex: 'title',       width: 180 });
+    const locCol   = new Column({ text: 'Location',    dataIndex: 'location',    width: 140 });
+    const dateCol  = new Column({ text: 'Start Date',  dataIndex: 'startDate',   width: 130, renderer: (v) => fmtDate(v) });
+    const salCol   = new Column({ text: 'Salary',      dataIndex: 'salary',      width: 120, renderer: (v) => fmtSalary(v) });
+    const bonusCol = new Column({ text: 'Bonus',       dataIndex: 'bonus',       width: 80,  renderer: (v) => fmtBonus(v) });
+    const perfCol  = new Column({ text: 'Performance', dataIndex: 'performance', width: 130, renderer: (v) => fmtPerf(v) });
+    const emailCol = new Column({ text: 'Email',       dataIndex: 'email',       width: 210 });
+    const mgrCol   = new Column({ text: 'Manager',     dataIndex: 'manager',     width: 160 });
+
+    const allColumns = [ nameCol, idCol, titleCol, locCol, dateCol, salCol, bonusCol, perfCol, emailCol, mgrCol ];
+
+    // ── Plugin ────────────────────────────────────────────────────────────────
+
+    const lockable = new TreeGridLockable({ syncScroll: true });
+
+    // ── Grid ──────────────────────────────────────────────────────────────────
+
+    const grid = new TreeGrid({
+      title: 'Employee Directory',
+      store: treeData,
+      rootVisible: false,
+      columns: allColumns,
+      plugins: [ lockable ],
+      height: 480,
+    });
+
+    grid.render(document.getElementById('grid-container'));
+
+    // ── Expand / Collapse ─────────────────────────────────────────────────────
+    // expandAll/collapseAll mutate node state without firing store events, so
+    // both views must be refreshed manually afterward.
+
+    const store = grid.getStore();
+
+    const toolbar = document.getElementById('toolbar');
+    new Button({
+      text: 'Expand All',
+      handler: () => {
+        store.expandAll();
+        lockable.getLockedView()?.refresh();
+        lockable.getNormalView()?.refresh();
+      },
+    }).render(toolbar);
+    new Button({
+      text: 'Collapse All',
+      handler: () => {
+        store.collapseAll();
+        lockable.getLockedView()?.refresh();
+        lockable.getNormalView()?.refresh();
+      },
+      ui: 'default',
+    }).render(toolbar);
+
+    // ── Column lock bar ───────────────────────────────────────────────────────
+
+    const toggleableCols = [
+      { col: idCol,    label: 'Emp ID'      },
+      { col: titleCol, label: 'Job Title'   },
+      { col: locCol,   label: 'Location'    },
+      { col: dateCol,  label: 'Start Date'  },
+      { col: salCol,   label: 'Salary'      },
+      { col: bonusCol, label: 'Bonus'       },
+      { col: perfCol,  label: 'Performance' },
+      { col: emailCol, label: 'Email'       },
+      { col: mgrCol,   label: 'Manager'     },
+    ];
+
+    const lockBar = document.getElementById('lock-bar');
+
+    // Name chip — always locked, not clickable.
+    const treeChip = document.createElement('span');
+    treeChip.className = 'col-chip always-locked';
+    treeChip.innerHTML = '<span class="chip-icon">🔒</span> Name';
+    treeChip.title = 'The tree column is always frozen';
+    lockBar.appendChild(treeChip);
+
+    lockBar.appendChild(Object.assign(document.createElement('span'), { className: 'lock-divider' }));
+
+    // One chip per toggleable column.
+    toggleableCols.forEach(({ col, label }) => {
+      const chip = document.createElement('button');
+
+      function syncChip() {
+        chip.className = 'col-chip ' + (col.locked ? 'locked' : 'unlocked');
+        chip.innerHTML = `<span class="chip-icon">${col.locked ? '🔒' : '🔓'}</span> ${label}`;
+        chip.title = col.locked ? 'Click to unfreeze' : 'Click to freeze';
+      }
+
+      syncChip();
+
+      chip.addEventListener('click', () => {
+        if (col.locked) {
+          lockable.unlockColumn(col);
+        } else {
+          lockable.lockColumn(col);
+        }
+        syncChip();
+      });
+
+      lockBar.appendChild(chip);
+    });
+
+    // ── Source viewer ─────────────────────────────────────────────────────────
+
+    (function buildSourceBlock() {
+      const scripts = document.querySelectorAll('script[type="module"]');
+      const raw = scripts[scripts.length - 1].textContent ?? '';
+      const lines = raw.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+      const indent = lines.reduce((min, l) => {
+        const m = l.match(/^(\s+)/);
+        return (m && l.trim()) ? Math.min(min, m[1].length) : min;
+      }, Infinity);
+      const dedented = lines.map(l => l.slice(indent === Infinity ? 0 : indent)).join('\n');
+      const srcEnd = dedented.lastIndexOf('(function buildSourceBlock()');
+      const display = srcEnd > 0 ? dedented.slice(0, dedented.lastIndexOf('\n', srcEnd)).trimEnd() : dedented;
+
+      function esc(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function highlight(src) {
+        const KEYWORDS = new Set([
+          'import','from','export','const','let','var','function','return',
+          'new','if','else','for','of','in','while','class','extends',
+          'this','true','false','null','undefined','async','await','try','catch',
+        ]);
+        const TOKEN = /(\/\/[^\n]*)|(`(?:\\.|[^`\\])*`|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')|\b(\d[\d.]*)\b|([a-zA-Z_$][\w$]*)/g;
+        let out = '', last = 0, m;
+        while ((m = TOKEN.exec(src)) !== null) {
+          out += esc(src.slice(last, m.index));
+          last = TOKEN.lastIndex;
+          const [full, comment, str, num, word] = m;
+          if (comment) {
+            out += `<span class="tok-comment">${esc(full)}</span>`;
+          } else if (str) {
+            const inner = esc(full).replace(/(https?:\/\/\S+)/g, '<span class="tok-url">$1</span>');
+            out += `<span class="tok-string">${inner}</span>`;
+          } else if (num) {
+            out += `<span class="tok-number">${esc(num)}</span>`;
+          } else if (word) {
+            if (KEYWORDS.has(full))     out += `<span class="tok-keyword">${esc(full)}</span>`;
+            else if (src[last] === '(') out += `<span class="tok-fn">${esc(full)}</span>`;
+            else                        out += esc(full);
+          }
+        }
+        out += esc(src.slice(last));
+        return out;
+      }
+
+      document.getElementById('source-pre').innerHTML = highlight(display);
+
+      document.getElementById('copy-btn').addEventListener('click', function() {
+        navigator.clipboard.writeText(display).then(() => {
+          this.textContent = 'Copied!';
+          this.classList.add('copied');
+          setTimeout(() => { this.textContent = 'Copy'; this.classList.remove('copied'); }, 2000);
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
