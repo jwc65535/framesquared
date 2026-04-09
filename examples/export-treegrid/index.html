@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – Data Export</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #212121;
+    }
+
+    /* ── Page header ──────────────────────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #1a237e 0%, #283593 60%, #5c6bc0 100%);
+      padding: 32px 40px 28px;
+      color: #fff;
+    }
+
+    .page-header-inner { max-width: 960px; margin: 0 auto; }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 10px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(4px);
+    }
+
+    .page-title { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+
+    .page-subtitle {
+      font-size: 15px;
+      opacity: 0.85;
+      font-weight: 400;
+      max-width: 560px;
+      line-height: 1.5;
+    }
+
+    /* ── Page body ────────────────────────────────────────────────────────── */
+    .page-body { max-width: 960px; margin: 0 auto; padding: 32px 40px 48px; }
+
+    /* ── Toolbar ──────────────────────────────────────────────────────────── */
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 180px;
+      max-width: 260px;
+      padding: 6px 12px;
+      border: 1.5px solid #c5cae9;
+      border-radius: 20px;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
+      color: #212121;
+      background: #fff;
+    }
+    .search-input::placeholder { color: #9e9e9e; }
+    .search-input:focus { border-color: #3949ab; }
+
+    .toolbar-sep { width: 1px; height: 20px; background: #e0e0e0; margin: 0 2px; }
+
+    /* ── Chips row ───────────────────────────────────────────────────────── */
+    .chips-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .chips-label { font-size: 12px; font-weight: 500; color: #757575; margin-right: 2px; }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1.5px solid #c5cae9;
+      background: #fff;
+      color: #3949ab;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      user-select: none;
+    }
+    .chip:hover { background: #e8eaf6; border-color: #9fa8da; }
+    .chip.active { background: #3949ab; border-color: #3949ab; color: #fff; }
+
+    /* ── Export buttons ──────────────────────────────────────────────────── */
+    .export-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: filter 0.15s, transform 0.1s;
+    }
+    .export-btn:hover { filter: brightness(1.1); }
+    .export-btn:active { transform: translateY(1px); }
+    .btn-csv  { background: #2e7d32; color: #fff; }
+    .btn-tsv  { background: #1565c0; color: #fff; }
+    .btn-json { background: #e65100; color: #fff; }
+
+    /* ── Grid wrapper ─────────────────────────────────────────────────────── */
+    .grid-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+      margin-bottom: 24px;
+    }
+    .grid-wrapper .x-panel { border-radius: 0; box-shadow: none; border: none; }
+
+    /* ── Status / priority badges ─────────────────────────────────────────── */
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    .s-done       { background: #e8f5e9; color: #2e7d32; }
+    .s-progress   { background: #e3f0ff; color: #1565c0; }
+    .s-todo       { background: #f5f5f5; color: #616161; }
+    .s-hold       { background: #fff3e0; color: #e65100; }
+    .p-high       { background: #fde8e8; color: #c62828; }
+    .p-medium     { background: #fff8e1; color: #e65100; }
+    .p-low        { background: #f5f5f5; color: #757575; }
+
+    /* ── Preview panel ───────────────────────────────────────────────────── */
+    .preview-section { margin-bottom: 40px; }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .preview-title { font-size: 13px; font-weight: 600; color: #424242; }
+
+    .preview-meta { font-size: 12px; color: #9e9e9e; }
+
+    .format-tabs {
+      display: flex;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .format-tab {
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1.5px solid #c5cae9;
+      background: #fff;
+      color: #3949ab;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .format-tab.active { background: #3949ab; border-color: #3949ab; color: #fff; }
+    .format-tab:hover:not(.active) { background: #e8eaf6; }
+
+    .preview-wrapper {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .preview-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e2433;
+      padding: 10px 16px;
+    }
+
+    .preview-dots { display: flex; gap: 6px; }
+    .preview-dot  { width: 12px; height: 12px; border-radius: 50%; }
+    .preview-dot-red    { background: #ff5f57; }
+    .preview-dot-yellow { background: #febc2e; }
+    .preview-dot-green  { background: #28c840; }
+
+    .preview-filename {
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b9ab4;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .preview-copy-btn {
+      font-size: 11px;
+      font-weight: 500;
+      color: #8b9ab4;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 3px 10px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s, color 0.15s;
+    }
+    .preview-copy-btn:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    .preview-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
+
+    pre.preview-pre {
+      margin: 0;
+      padding: 20px;
+      background: #282c3e;
+      overflow: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 12px;
+      line-height: 1.65;
+      color: #abb2bf;
+      max-height: 320px;
+      white-space: pre;
+    }
+    pre.preview-pre .hdr  { color: #61afef; font-weight: 600; }  /* CSV/TSV header row */
+    pre.preview-pre .jk   { color: #61afef; }                    /* JSON key */
+    pre.preview-pre .js   { color: #98c379; }                    /* JSON string */
+    pre.preview-pre .jn   { color: #d19a66; }                    /* JSON number/bool/null */
+    pre.preview-pre .empty { color: #5c6370; font-style: italic; }
+
+    /* ── Source block ─────────────────────────────────────────────────────── */
+    .source-section { margin-top: 8px; }
+
+    .source-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .source-heading h2 { font-size: 14px; font-weight: 600; color: #424242; letter-spacing: 0.02em; }
+    .source-heading-line { flex: 1; height: 1px; background: #e0e0e0; }
+
+    .source-wrapper {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .source-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e2433;
+      padding: 10px 16px;
+    }
+    .source-dots { display: flex; gap: 6px; }
+    .source-dot  { width: 12px; height: 12px; border-radius: 50%; }
+    .source-dot-red    { background: #ff5f57; }
+    .source-dot-yellow { background: #febc2e; }
+    .source-dot-green  { background: #28c840; }
+
+    .source-filename {
+      font-size: 12px; font-weight: 500; color: #8b9ab4;
+      font-family: 'Fira Code', monospace;
+    }
+    .source-copy-btn {
+      font-size: 11px; font-weight: 500; color: #8b9ab4;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px; padding: 3px 10px; cursor: pointer;
+      font-family: inherit; transition: background 0.15s, color 0.15s;
+    }
+    .source-copy-btn:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    .source-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
+
+    pre.source-pre {
+      margin: 0; padding: 24px; background: #282c3e;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px; line-height: 1.7; color: #abb2bf; tab-size: 2;
+    }
+    .tok-keyword { color: #c678dd; }
+    .tok-string  { color: #98c379; }
+    .tok-comment { color: #5c6370; font-style: italic; }
+    .tok-fn      { color: #61afef; }
+    .tok-number  { color: #d19a66; }
+    .tok-url     { color: #56b6c2; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">🌲 framesquared</div>
+      <h1 class="page-title">Data Export</h1>
+      <p class="page-subtitle">
+        Download the tree as CSV, TSV, or JSON. Use the search box to filter rows,
+        toggle column visibility, and choose whether to export all data or only
+        what is currently visible.
+      </p>
+    </div>
+  </header>
+
+  <div class="page-body">
+
+    <!-- ── Toolbar ─────────────────────────────────────────────────────────── -->
+    <div class="toolbar-row">
+      <input class="search-input" id="search-input" type="text" placeholder="🔍 Filter rows…">
+      <div class="toolbar-sep"></div>
+      <button class="export-btn btn-csv"  id="btn-csv" >⬇ CSV</button>
+      <button class="export-btn btn-tsv"  id="btn-tsv" >⬇ TSV</button>
+      <button class="export-btn btn-json" id="btn-json">⬇ JSON</button>
+    </div>
+
+    <!-- ── Options / column visibility ─────────────────────────────────────── -->
+    <div class="chips-row">
+      <span class="chips-label">Options:</span>
+      <button class="chip active" id="chip-headers">Include headers</button>
+      <button class="chip active" id="chip-visible">Visible rows only</button>
+      <button class="chip active" id="chip-indent">Indent hierarchy</button>
+      <div class="toolbar-sep"></div>
+      <span class="chips-label">Columns:</span>
+      <button class="chip active" id="chip-col-owner"    data-col="owner">Owner</button>
+      <button class="chip active" id="chip-col-status"   data-col="status">Status</button>
+      <button class="chip active" id="chip-col-priority" data-col="priority">Priority</button>
+      <button class="chip active" id="chip-col-estimate" data-col="estimate">Estimate</button>
+      <button class="chip active" id="chip-col-due"      data-col="due">Due Date</button>
+    </div>
+
+    <!-- ── Grid ────────────────────────────────────────────────────────────── -->
+    <div class="grid-wrapper" id="grid-container"></div>
+
+    <!-- ── Export preview ──────────────────────────────────────────────────── -->
+    <div class="preview-section">
+      <div class="preview-header">
+        <span class="preview-title">Export Preview</span>
+        <span class="preview-meta" id="preview-meta"></span>
+        <div class="format-tabs">
+          <button class="format-tab active" data-fmt="csv">CSV</button>
+          <button class="format-tab"        data-fmt="tsv">TSV</button>
+          <button class="format-tab"        data-fmt="json">JSON</button>
+        </div>
+      </div>
+      <div class="preview-wrapper">
+        <div class="preview-bar">
+          <div class="preview-dots">
+            <span class="preview-dot preview-dot-red"></span>
+            <span class="preview-dot preview-dot-yellow"></span>
+            <span class="preview-dot preview-dot-green"></span>
+          </div>
+          <span class="preview-filename" id="preview-filename">export.csv</span>
+          <button class="preview-copy-btn" id="preview-copy-btn">Copy</button>
+        </div>
+        <pre class="preview-pre" id="preview-pre"></pre>
+      </div>
+    </div>
+
+    <!-- ── Source block ───────────────────────────────────────────────────── -->
+    <div class="source-section">
+      <div class="source-heading">
+        <h2>Source</h2>
+        <div class="source-heading-line"></div>
+      </div>
+      <div class="source-wrapper">
+        <div class="source-bar">
+          <div class="source-dots">
+            <span class="source-dot source-dot-red"></span>
+            <span class="source-dot source-dot-yellow"></span>
+            <span class="source-dot source-dot-green"></span>
+          </div>
+          <span class="source-filename">export-treegrid.js</span>
+          <button class="source-copy-btn" id="copy-btn">Copy</button>
+        </div>
+        <pre class="source-pre" id="source-pre"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "@framesquared/ui":        "../../packages/ui/dist/index.js",
+        "@framesquared/component": "https://esm.sh/@framesquared/component@0.5.1",
+        "@framesquared/core":      "https://esm.sh/@framesquared/core@0.5.1",
+        "@framesquared/theme":     "https://esm.sh/@framesquared/theme@0.5.1"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import { TreeGrid, TreeGridColumn, Column, TreeGridExporter } from '@framesquared/ui';
+    import { ThemeManager, ModernTheme }                          from '@framesquared/theme';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── Data ──────────────────────────────────────────────────────────────────
+
+    const treeData = [
+      {
+        id: 'proj-alpha', text: 'Project Alpha', owner: 'Sarah Chen',   status: 'Active',   priority: 'High',   estimate: null, due: '2026-06-30',
+        expanded: true,
+        children: [
+          {
+            id: 'mod-auth', text: 'Authentication', owner: 'Sarah Chen', status: 'Active', priority: 'High', estimate: null, due: '2026-03-31',
+            expanded: true,
+            children: [
+              { id: 't-1', text: 'OAuth2 Integration',  owner: 'Alice', status: 'Done',        priority: 'High',   estimate: 16, due: '2026-02-15', leaf: true },
+              { id: 't-2', text: 'JWT Token Refresh',   owner: 'Bob',   status: 'In Progress', priority: 'High',   estimate: 8,  due: '2026-03-01', leaf: true },
+              { id: 't-3', text: 'MFA Setup Flow',      owner: 'Alice', status: 'Todo',        priority: 'Medium', estimate: 12, due: '2026-03-15', leaf: true },
+            ],
+          },
+          {
+            id: 'mod-dash', text: 'Dashboard', owner: 'Bob Kim', status: 'Active', priority: 'Medium', estimate: null, due: '2026-04-30',
+            children: [
+              { id: 't-4', text: 'Metrics Widget',      owner: 'Carol', status: 'In Progress', priority: 'Medium', estimate: 20, due: '2026-03-20', leaf: true },
+              { id: 't-5', text: 'Data Export Panel',   owner: 'Dan',   status: 'Todo',        priority: 'Low',    estimate: 10, due: '2026-04-01', leaf: true },
+              { id: 't-6', text: 'Filter Bar UI',       owner: 'Carol', status: 'Todo',        priority: 'Medium', estimate: 8,  due: '2026-04-15', leaf: true },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'proj-beta', text: 'Project Beta', owner: 'Mike Torres', status: 'Planning', priority: 'Medium', estimate: null, due: '2026-09-30',
+        children: [
+          {
+            id: 'mod-api', text: 'API Layer', owner: 'Mike Torres', status: 'Planning', priority: 'Medium', estimate: null, due: '2026-06-30',
+            children: [
+              { id: 't-7',  text: 'REST Endpoints',     owner: 'Eve',   status: 'Todo', priority: 'High',   estimate: 24, due: '2026-05-01', leaf: true },
+              { id: 't-8',  text: 'GraphQL Schema',     owner: 'Frank', status: 'Todo', priority: 'Medium', estimate: 16, due: '2026-05-15', leaf: true },
+              { id: 't-9',  text: 'Rate Limiting',      owner: 'Eve',   status: 'Todo', priority: 'Low',    estimate: 8,  due: '2026-06-01', leaf: true },
+            ],
+          },
+          {
+            id: 'mod-ui', text: 'UI Components', owner: 'Grace Park', status: 'Planning', priority: 'Low', estimate: null, due: '2026-08-31',
+            children: [
+              { id: 't-10', text: 'Design System',      owner: 'Grace', status: 'Todo', priority: 'High',   estimate: 40, due: '2026-06-30', leaf: true },
+              { id: 't-11', text: 'Component Library',  owner: 'Henry', status: 'Todo', priority: 'Medium', estimate: 32, due: '2026-07-31', leaf: true },
+              { id: 't-12', text: 'Storybook Docs',     owner: 'Grace', status: 'Todo', priority: 'Low',    estimate: 16, due: '2026-08-15', leaf: true },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'proj-gamma', text: 'Project Gamma', owner: 'Lisa Wang', status: 'On Hold', priority: 'Low', estimate: null, due: '2026-12-31',
+        children: [
+          {
+            id: 'mod-infra', text: 'Infrastructure', owner: 'Lisa Wang', status: 'On Hold', priority: 'Low', estimate: null, due: '2026-10-31',
+            children: [
+              { id: 't-13', text: 'CI/CD Pipeline',     owner: 'Ivan',  status: 'Done',        priority: 'High',   estimate: 20, due: '2026-01-15', leaf: true },
+              { id: 't-14', text: 'Docker Containers',  owner: 'Julia', status: 'In Progress', priority: 'Medium', estimate: 16, due: '2026-09-30', leaf: true },
+              { id: 't-15', text: 'K8s Deployment',     owner: 'Ivan',  status: 'Todo',        priority: 'Low',    estimate: 24, due: '2026-10-15', leaf: true },
+            ],
+          },
+        ],
+      },
+    ];
+
+    // ── State ─────────────────────────────────────────────────────────────────
+
+    let previewFormat  = 'csv';  // 'csv' | 'tsv' | 'json'
+    let includeHeaders  = true;
+    let visibleOnly     = true;
+    let indentHierarchy = true;
+    let filterText      = '';
+    const hiddenIds    = new Set(); // node IDs hidden by the current filter
+
+    // ── Renderers ─────────────────────────────────────────────────────────────
+
+    function statusBadge(v) {
+      const cls = { 'Done': 's-done', 'In Progress': 's-progress', 'Todo': 's-todo', 'On Hold': 's-hold' };
+      return `<span class="badge ${cls[v] ?? ''}">${v || '—'}</span>`;
+    }
+
+    function priorityBadge(v) {
+      const cls = { 'High': 'p-high', 'Medium': 'p-medium', 'Low': 'p-low' };
+      return `<span class="badge ${cls[v] ?? ''}">${v || '—'}</span>`;
+    }
+
+    function fmtEst(v) {
+      return v != null ? `${v}h` : '<span style="color:#bdbdbd">—</span>';
+    }
+
+    function fmtDate(v) {
+      if (!v) return '<span style="color:#bdbdbd">—</span>';
+      return new Date(v).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    // ── TreeGrid ──────────────────────────────────────────────────────────────
+
+    const grid = new TreeGrid({
+      title: 'Project Tasks',
+      store: treeData,
+      rootVisible: false,
+      useArrows: true,
+      columns: [
+        new TreeGridColumn({ text: 'Name',     dataIndex: 'text',     flex: 1 }),
+        new Column({         text: 'Owner',    dataIndex: 'owner',    width: 100 }),
+        new Column({         text: 'Status',   dataIndex: 'status',   width: 120, renderer: statusBadge }),
+        new Column({         text: 'Priority', dataIndex: 'priority', width: 90,  renderer: priorityBadge }),
+        new Column({         text: 'Estimate', dataIndex: 'estimate', width: 88,  renderer: fmtEst }),
+        new Column({         text: 'Due Date', dataIndex: 'due',      width: 110, renderer: fmtDate }),
+      ],
+      height: 380,
+    });
+
+    grid.render(document.getElementById('grid-container'));
+
+    // ── Filter ────────────────────────────────────────────────────────────────
+
+    function matchesFilter(node) {
+      if (!filterText) return true;
+      const fields = ['text', 'owner', 'status', 'priority'];
+      return fields.some((f) => String(node.get?.(f) ?? '').toLowerCase().includes(filterText));
+    }
+
+    function applyFilter() {
+      hiddenIds.clear();
+
+      if (filterText) {
+        // Pass 1: collect all IDs of matching nodes and their ancestors
+        const visibleIds = new Set();
+        grid.getRootNode().cascadeBy((node) => {
+          if (node.isRoot()) return;
+          if (matchesFilter(node)) {
+            visibleIds.add(String(node.getId?.() ?? ''));
+            // Mark all ancestors visible
+            let p = node.parentNode;
+            while (p && !p.isRoot()) {
+              visibleIds.add(String(p.getId?.() ?? ''));
+              p = p.parentNode;
+            }
+          }
+        });
+
+        // Pass 2: everything else is hidden
+        grid.getRootNode().cascadeBy((node) => {
+          if (node.isRoot()) return;
+          const id = String(node.getId?.() ?? '');
+          if (!visibleIds.has(id)) hiddenIds.add(id);
+        });
+      }
+
+      grid.getView().refresh();
+
+      // The view doesn't check _filterHidden — apply display:none post-refresh
+      grid.getView().el.querySelectorAll('tr[data-record-id]').forEach((tr) => {
+        tr.style.display = hiddenIds.has(tr.getAttribute('data-record-id')) ? 'none' : '';
+      });
+
+      updatePreview();
+    }
+
+    // ── Export helpers ────────────────────────────────────────────────────────
+
+    function getExportCols() {
+      return grid.getColumns().filter((c) => !c.hidden);
+    }
+
+    function getExportNodes() {
+      const nodes = [];
+      if (visibleOnly) {
+        // Only expanded (visible) nodes, minus filter-hidden ones
+        for (const node of grid.getStore().flattenNodes()) {
+          if (node.isRoot()) continue;
+          if (!hiddenIds.has(String(node.getId?.() ?? ''))) nodes.push(node);
+        }
+      } else {
+        // All nodes regardless of expansion or filter
+        grid.getRootNode().cascadeBy((n) => { if (!n.isRoot()) nodes.push(n); });
+      }
+      return nodes;
+    }
+
+    function csvEscape(val) {
+      const s = val == null ? '' : String(val);
+      return s.includes(',') || s.includes('"') || s.includes('\n')
+        ? '"' + s.replace(/"/g, '""') + '"'
+        : s;
+    }
+
+    function buildCsv() {
+      const cols     = getExportCols();
+      const nodes    = getExportNodes();
+      const treeCol  = grid.getTreeColumn();
+      const minDepth = nodes.reduce((m, n) => Math.min(m, n.depth ?? 0), Infinity);
+      const base     = minDepth === Infinity ? 0 : minDepth;
+      const rows     = [];
+      if (includeHeaders) rows.push(cols.map((c) => csvEscape(c.text)).join(','));
+      for (const node of nodes) {
+        const indent = indentHierarchy ? '  '.repeat((node.depth ?? 0) - base) : '';
+        rows.push(cols.map((c) => {
+          const raw = String(node.get?.(c.dataIndex) ?? '');
+          return csvEscape(c === treeCol ? indent + raw : raw);
+        }).join(','));
+      }
+      return rows.join('\n');
+    }
+
+    function buildTsv() {
+      const cols     = getExportCols();
+      const nodes    = getExportNodes();
+      const treeCol  = grid.getTreeColumn();
+      const minDepth = nodes.reduce((m, n) => Math.min(m, n.depth ?? 0), Infinity);
+      const base     = minDepth === Infinity ? 0 : minDepth;
+      const rows     = [];
+      if (includeHeaders) rows.push(cols.map((c) => c.text).join('\t'));
+      for (const node of nodes) {
+        const indent = indentHierarchy ? '  '.repeat((node.depth ?? 0) - base) : '';
+        rows.push(cols.map((c) => {
+          const raw = String(node.get?.(c.dataIndex) ?? '');
+          return c === treeCol ? indent + raw : raw;
+        }).join('\t'));
+      }
+      return rows.join('\n');
+    }
+
+    function buildJson() {
+      const cols = getExportCols();
+
+      // JSON is always hierarchical. visibleOnly controls which nodes are included:
+      //   - filter-hidden nodes are skipped
+      //   - collapsed branches are skipped when visibleOnly is on
+      function serializeNode(node) {
+        const id = String(node.getId?.() ?? '');
+        if (visibleOnly && hiddenIds.has(id)) return null;
+
+        const obj = {};
+        for (const col of cols) obj[col.dataIndex] = node.get?.(col.dataIndex) ?? null;
+
+        if (node.childNodes?.length) {
+          const skip = visibleOnly && !node.isExpanded();
+          const children = skip ? [] : node.childNodes.map(serializeNode).filter(Boolean);
+          if (children.length) obj.children = children;
+        }
+
+        return obj;
+      }
+
+      const topLevel = grid.getRootNode().childNodes.map(serializeNode).filter(Boolean);
+      return JSON.stringify(topLevel, null, 2);
+    }
+
+    function buildContent() {
+      if (previewFormat === 'csv')  return buildCsv();
+      if (previewFormat === 'tsv')  return buildTsv();
+      return buildJson();
+    }
+
+    // ── Preview ───────────────────────────────────────────────────────────────
+
+    function updatePreview() {
+      const content = buildContent();
+      const nodes   = getExportNodes();
+      const cols    = getExportCols();
+
+      // Update filename
+      const ext = previewFormat;
+      document.getElementById('preview-filename').textContent = `export.${ext}`;
+
+      // Update meta
+      const rowWord = nodes.length === 1 ? 'row' : 'rows';
+      const colWord = cols.length === 1 ? 'column' : 'columns';
+      document.getElementById('preview-meta').textContent =
+        `— ${nodes.length} ${rowWord}, ${cols.length} ${colWord}`;
+
+      // Render with syntax highlighting
+      const pre = document.getElementById('preview-pre');
+      if (!content.trim()) {
+        pre.innerHTML = '<span class="empty">No data to export</span>';
+        return;
+      }
+
+      if (previewFormat === 'json') {
+        pre.innerHTML = colorizeJson(escHtml(content));
+      } else {
+        pre.innerHTML = colorizeDsv(content, previewFormat === 'csv' ? ',' : '\t');
+      }
+    }
+
+    function escHtml(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function colorizeDsv(content, sep) {
+      const lines = content.split('\n');
+      return lines.map((line, idx) => {
+        const escaped = escHtml(line);
+        // First line (header) gets highlight colour
+        if (idx === 0 && includeHeaders) {
+          return `<span class="hdr">${escaped}</span>`;
+        }
+        return escaped;
+      }).join('\n');
+    }
+
+    function colorizeJson(escaped) {
+      return escaped
+        .replace(/"([^"]+)":/g, '<span class="jk">"$1"</span>:')
+        .replace(/: "([^"]*)"/g,   ': <span class="js">"$1"</span>')
+        .replace(/: (true|false|null)/g, ': <span class="jn">$1</span>')
+        .replace(/: (-?\d+(\.\d+)?)/g,  ': <span class="jn">$1</span>');
+    }
+
+    // ── Downloads ─────────────────────────────────────────────────────────────
+
+    document.getElementById('btn-csv').addEventListener('click',  () => TreeGridExporter.download(buildCsv(),  'export.csv',  'text/csv'));
+    document.getElementById('btn-tsv').addEventListener('click',  () => TreeGridExporter.download(buildTsv(),  'export.tsv',  'text/tab-separated-values'));
+    document.getElementById('btn-json').addEventListener('click', () => TreeGridExporter.download(buildJson(), 'export.json', 'application/json'));
+
+    // ── Copy preview ──────────────────────────────────────────────────────────
+
+    document.getElementById('preview-copy-btn').addEventListener('click', function () {
+      navigator.clipboard.writeText(buildContent()).then(() => {
+        this.textContent = 'Copied!';
+        this.classList.add('copied');
+        setTimeout(() => { this.textContent = 'Copy'; this.classList.remove('copied'); }, 2000);
+      });
+    });
+
+    // ── Format tabs ───────────────────────────────────────────────────────────
+
+    document.querySelectorAll('.format-tab').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.format-tab').forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
+        previewFormat = tab.dataset.fmt;
+        updatePreview();
+      });
+    });
+
+    // ── Options chips ─────────────────────────────────────────────────────────
+
+    document.getElementById('chip-headers').addEventListener('click', function () {
+      includeHeaders = !includeHeaders;
+      this.classList.toggle('active', includeHeaders);
+      updatePreview();
+    });
+
+    document.getElementById('chip-visible').addEventListener('click', function () {
+      visibleOnly = !visibleOnly;
+      this.classList.toggle('active', visibleOnly);
+      updatePreview();
+    });
+
+    document.getElementById('chip-indent').addEventListener('click', function () {
+      indentHierarchy = !indentHierarchy;
+      this.classList.toggle('active', indentHierarchy);
+      updatePreview();
+    });
+
+    // ── Column visibility chips ───────────────────────────────────────────────
+
+    document.querySelectorAll('[data-col]').forEach((chip) => {
+      const dataIndex = chip.dataset.col;
+      const col = grid.getColumns().find((c) => c.dataIndex === dataIndex);
+      if (!col) return;
+      chip.addEventListener('click', () => {
+        col.hidden = !col.hidden;
+        chip.classList.toggle('active', !col.hidden);
+        grid.getView().refresh();
+        updatePreview();
+      });
+    });
+
+    // ── Search input ──────────────────────────────────────────────────────────
+
+    document.getElementById('search-input').addEventListener('input', function () {
+      filterText = this.value.toLowerCase().trim();
+      applyFilter();
+    });
+
+    // ── Expand/collapse keeps filter applied ──────────────────────────────────
+    // After any expand/collapse, re-apply filter-hide display styles
+
+    (grid.getStore()).on('nodeexpand',   () => { grid.getView().refresh(); applyFilter(); });
+    (grid.getStore()).on('nodecollapse', () => { grid.getView().refresh(); applyFilter(); });
+
+    // ── Initial preview ───────────────────────────────────────────────────────
+
+    updatePreview();
+
+    // ── Source viewer ─────────────────────────────────────────────────────────
+
+    (function buildSourceBlock() {
+      const scripts = document.querySelectorAll('script[type="module"]');
+      const raw = scripts[scripts.length - 1].textContent ?? '';
+      const lines = raw.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+      const indent = lines.reduce((min, l) => {
+        const m = l.match(/^(\s+)/);
+        return (m && l.trim()) ? Math.min(min, m[1].length) : min;
+      }, Infinity);
+      const dedented = lines.map(l => l.slice(indent === Infinity ? 0 : indent)).join('\n');
+
+      function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+      function highlight(src) {
+        return src.split('\n').map(line => {
+          let out = '';
+          let i = 0;
+          while (i < line.length) {
+            if (line[i] === '/' && line[i+1] === '/') {
+              out += `<span class="tok-comment">${esc(line.slice(i))}</span>`;
+              i = line.length; continue;
+            }
+            if (line[i] === '`' || line[i] === '"' || line[i] === "'") {
+              const q = line[i];
+              let j = i + 1;
+              while (j < line.length) {
+                if (line[j] === '\\') { j += 2; continue; }
+                if (line[j] === q)    { j++; break; }
+                j++;
+              }
+              const inner = esc(line.slice(i, j)).replace(/(https?:\/\/[^\s'"`,]+)/g, '<span class="tok-url">$1</span>');
+              out += `<span class="tok-string">${inner}</span>`;
+              i = j; continue;
+            }
+            if (/[0-9]/.test(line[i]) && (i === 0 || /[\s,(:=\[!<>+\-*\/]/.test(line[i-1]))) {
+              let j = i;
+              while (j < line.length && /[0-9_.]/.test(line[j])) j++;
+              out += `<span class="tok-number">${esc(line.slice(i, j))}</span>`;
+              i = j; continue;
+            }
+            if (/[a-zA-Z_$]/.test(line[i])) {
+              let j = i;
+              while (j < line.length && /[a-zA-Z0-9_$]/.test(line[j])) j++;
+              const word = line.slice(i, j);
+              const KW = new Set(['import','from','export','const','let','var','function','return',
+                'new','if','else','for','of','in','while','class','extends','this','true','false','null','undefined','async','await']);
+              if (KW.has(word))            out += `<span class="tok-keyword">${esc(word)}</span>`;
+              else if (line[j] === '(')    out += `<span class="tok-fn">${esc(word)}</span>`;
+              else                         out += esc(word);
+              i = j; continue;
+            }
+            out += esc(line[i]); i++;
+          }
+          return out;
+        }).join('\n');
+      }
+
+      document.getElementById('source-pre').innerHTML = highlight(dedented);
+
+      document.getElementById('copy-btn').addEventListener('click', function () {
+        navigator.clipboard.writeText(dedented).then(() => {
+          this.textContent = 'Copied!'; this.classList.add('copied');
+          setTimeout(() => { this.textContent = 'Copy'; this.classList.remove('copied'); }, 2000);
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
