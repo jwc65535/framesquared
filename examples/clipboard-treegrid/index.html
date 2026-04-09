@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – Copy &amp; Paste</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #212121;
+    }
+
+    /* ── Page header ──────────────────────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #e65100 0%, #f57c00 60%, #ffb74d 100%);
+      padding: 32px 40px 28px;
+      color: #fff;
+    }
+
+    .page-header-inner { max-width: 960px; margin: 0 auto; }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 20px;
+      padding: 4px 10px;
+      margin-bottom: 14px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      opacity: 0.88;
+      font-weight: 400;
+      max-width: 600px;
+      line-height: 1.5;
+    }
+
+    .page-subtitle kbd {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 3px;
+      padding: 1px 6px;
+      font-size: 13px;
+      font-family: inherit;
+    }
+
+    /* ── Page body ────────────────────────────────────────────────────────── */
+    .page-body {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 40px 48px;
+    }
+
+    /* ── Toolbar ──────────────────────────────────────────────────────────── */
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .toolbar-label { font-size: 13px; font-weight: 500; color: #757575; }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .toolbar-sep {
+      width: 1px;
+      height: 20px;
+      background: #e0e0e0;
+      margin: 0 2px;
+    }
+
+    /* ── Toggle chip ──────────────────────────────────────────────────────── */
+    .toggle-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid #bdbdbd;
+      background: #fff;
+      color: #757575;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .toggle-chip.on  { background: #fff3e0; border-color: #f57c00; color: #e65100; }
+    .toggle-chip:hover { filter: brightness(0.95); }
+
+    /* ── Grid wrapper ─────────────────────────────────────────────────────── */
+    .grid-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .grid-wrapper .x-panel { border-radius: 0; box-shadow: none; border: none; }
+
+    /* ── Status bar ───────────────────────────────────────────────────────── */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+      padding: 0 4px;
+      font-size: 12px;
+      color: #9e9e9e;
+      gap: 16px;
+    }
+
+    .status-bar kbd {
+      display: inline-block;
+      background: #f5f5f5;
+      border: 1px solid #d0d0d0;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 11px;
+      font-family: inherit;
+      color: #424242;
+      box-shadow: 0 1px 0 #bdbdbd;
+    }
+
+    /* ── Clipboard preview ────────────────────────────────────────────────── */
+    .clipboard-section { margin-top: 24px; }
+
+    .clipboard-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .clipboard-heading h2 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #616161;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .clipboard-heading-line { flex: 1; height: 1px; background: #e0e0e0; }
+
+    .clipboard-meta {
+      font-size: 11px;
+      color: #9e9e9e;
+      white-space: nowrap;
+    }
+
+    .clipboard-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .clipboard-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #37474f;
+      padding: 8px 16px;
+    }
+
+    .clipboard-bar-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #90a4ae;
+    }
+
+    .clipboard-row-count { font-size: 11px; color: #546e7a; }
+
+    pre.clipboard-pre {
+      margin: 0;
+      padding: 16px 20px;
+      background: #263238;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 12px;
+      line-height: 1.75;
+      color: #cfd8dc;
+      overflow-x: auto;
+      min-height: 76px;
+      white-space: pre;
+      tab-size: 4;
+    }
+
+    .tsv-header  { color: #80cbc4; font-weight: 600; }
+    .tsv-indent  { color: #ff8a65; }
+    .tsv-empty   { color: #546e7a; font-style: italic; }
+
+    /* ── Badges ───────────────────────────────────────────────────────────── */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .s-done        { background: #e8f5e9; color: #2e7d32; }
+    .s-progress    { background: #e3f2fd; color: #1565c0; }
+    .s-notstarted  { background: #f5f5f5; color: #757575; }
+    .s-blocked     { background: #fce4ec; color: #c62828; }
+    .p-high        { background: #fde8e8; color: #c62828; }
+    .p-medium      { background: #fff3e0; color: #e65100; }
+    .p-low         { background: #f9fbe7; color: #558b2f; }
+
+    /* ── Source block ─────────────────────────────────────────────────────── */
+    .source-section { margin-top: 40px; }
+
+    .source-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .source-heading h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #424242;
+      letter-spacing: 0.02em;
+    }
+
+    .source-heading-line { flex: 1; height: 1px; background: #e0e0e0; }
+
+    .source-wrapper {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .source-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e2433;
+      padding: 10px 16px;
+    }
+
+    .source-dots { display: flex; gap: 6px; }
+    .source-dot  { width: 12px; height: 12px; border-radius: 50%; }
+    .source-dot-red    { background: #ff5f57; }
+    .source-dot-yellow { background: #febc2e; }
+    .source-dot-green  { background: #28c840; }
+
+    .source-filename {
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b9ab4;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+    }
+
+    .source-copy-btn {
+      font-size: 11px;
+      font-weight: 500;
+      color: #8b9ab4;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .source-copy-btn:hover  { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    .source-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
+
+    pre.source-pre {
+      margin: 0;
+      padding: 24px;
+      background: #282c3e;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #abb2bf;
+      tab-size: 2;
+    }
+
+    .tok-keyword { color: #c678dd; }
+    .tok-string  { color: #98c379; }
+    .tok-comment { color: #5c6370; font-style: italic; }
+    .tok-fn      { color: #61afef; }
+    .tok-number  { color: #d19a66; }
+    .tok-url     { color: #56b6c2; text-decoration: underline; }
+  </style>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "@framesquared/ui":        "../../packages/ui/dist/index.js",
+        "@framesquared/component": "https://esm.sh/@framesquared/component@0.5.1",
+        "@framesquared/core":      "https://esm.sh/@framesquared/core@0.5.1",
+        "@framesquared/theme":     "https://esm.sh/@framesquared/theme@0.5.1"
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">&#128203; framesquared</div>
+      <h1 class="page-title">&#128203; Copy &amp; Paste</h1>
+      <p class="page-subtitle">
+        Select rows and press <kbd>Ctrl+C</kbd> to copy as TSV — hierarchy
+        appears as tab indentation. Press <kbd>Ctrl+V</kbd> to paste as children
+        of the selected node. Powered by <code>TreeGridClipboard</code>.
+      </p>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="toolbar-row">
+      <span class="toolbar-label">Software Roadmap — 3 quarters, 6 groups, 18 tasks</span>
+      <div class="toolbar-actions" id="toolbar"></div>
+    </div>
+
+    <div class="grid-wrapper" id="grid-container"></div>
+
+    <div class="status-bar">
+      <span id="sel-status">No rows selected — click a row to select, Ctrl+click to multi-select</span>
+      <span>
+        <kbd>Ctrl+C</kbd> copy &nbsp;·&nbsp;
+        <kbd>Ctrl+V</kbd> paste as child &nbsp;·&nbsp;
+        <kbd>Del</kbd> delete
+      </span>
+    </div>
+
+    <!-- ── Clipboard preview ─────────────────────────────────────────────── -->
+    <div class="clipboard-section">
+      <div class="clipboard-heading">
+        <h2>Clipboard Preview</h2>
+        <span class="clipboard-meta" id="clipboard-meta">— nothing copied yet</span>
+        <div class="clipboard-heading-line"></div>
+      </div>
+      <div class="clipboard-wrapper">
+        <div class="clipboard-bar">
+          <span class="clipboard-bar-label">TSV output</span>
+          <span class="clipboard-row-count" id="clipboard-row-count"></span>
+        </div>
+        <pre class="clipboard-pre" id="clipboard-pre"><span class="tsv-empty">Select rows above then press Ctrl+C or click Copy to see the clipboard content here.</span></pre>
+      </div>
+    </div>
+
+    <!-- ── Source block ───────────────────────────────────────────────────── -->
+    <div class="source-section">
+      <div class="source-heading">
+        <h2>Source</h2>
+        <div class="source-heading-line"></div>
+      </div>
+      <div class="source-wrapper">
+        <div class="source-bar">
+          <div class="source-dots">
+            <span class="source-dot source-dot-red"></span>
+            <span class="source-dot source-dot-yellow"></span>
+            <span class="source-dot source-dot-green"></span>
+          </div>
+          <span class="source-filename">clipboard-treegrid.js</span>
+          <button class="source-copy-btn" id="copy-src-btn">Copy</button>
+        </div>
+        <pre class="source-pre" id="source-pre"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import {
+      TreeGrid, TreeGridColumn, Column, Button, TreeGridClipboard,
+    } from '@framesquared/ui';
+    import { ThemeManager, ModernTheme } from '@framesquared/theme';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── Data ─────────────────────────────────────────────────────────────────
+
+    const treeData = [
+      {
+        text: 'Q1 — Foundation', expanded: true,
+        children: [
+          {
+            text: 'Infrastructure', expanded: true,
+            children: [
+              { text: 'Monorepo setup',    assignee: 'Alice', status: 'Done',        priority: 'High',   due: '2026-01-10', leaf: true },
+              { text: 'CI/CD pipeline',    assignee: 'Bob',   status: 'Done',        priority: 'High',   due: '2026-01-15', leaf: true },
+              { text: 'Docker containers', assignee: 'Alice', status: 'Done',        priority: 'Medium', due: '2026-01-20', leaf: true },
+            ],
+          },
+          {
+            text: 'Design System', expanded: true,
+            children: [
+              { text: 'Color tokens',     assignee: 'Carol', status: 'Done',        priority: 'Medium', due: '2026-01-25', leaf: true },
+              { text: 'Typography scale', assignee: 'Carol', status: 'Done',        priority: 'Low',    due: '2026-01-28', leaf: true },
+              { text: 'Icon library',     assignee: 'Dave',  status: 'Done',        priority: 'Low',    due: '2026-02-05', leaf: true },
+            ],
+          },
+        ],
+      },
+      {
+        text: 'Q2 — Components', expanded: true,
+        children: [
+          {
+            text: 'TreeGrid',
+            children: [
+              { text: 'Core rendering',      assignee: 'Alice', status: 'Done',        priority: 'High',   due: '2026-03-01', leaf: true },
+              { text: 'Keyboard navigation', assignee: 'Bob',   status: 'Done',        priority: 'High',   due: '2026-03-15', leaf: true },
+              { text: 'Plugin API',          assignee: 'Alice', status: 'Done',        priority: 'High',   due: '2026-04-01', leaf: true },
+              { text: 'Copy & Paste plugin', assignee: 'Eve',   status: 'In Progress', priority: 'Medium', due: '2026-04-15', leaf: true },
+            ],
+          },
+          {
+            text: 'Forms',
+            children: [
+              { text: 'Input components', assignee: 'Grace', status: 'In Progress', priority: 'Medium', due: '2026-04-10', leaf: true },
+              { text: 'Form validation',  assignee: 'Grace', status: 'Not Started', priority: 'Medium', due: '2026-04-30', leaf: true },
+              { text: 'File upload',      assignee: 'Frank', status: 'Not Started', priority: 'Low',    due: '2026-05-15', leaf: true },
+            ],
+          },
+        ],
+      },
+      {
+        text: 'Q3 — Release',
+        children: [
+          {
+            text: 'Documentation',
+            children: [
+              { text: 'API reference',   assignee: 'Carol', status: 'Not Started', priority: 'High',   due: '2026-06-01', leaf: true },
+              { text: 'Example gallery', assignee: 'Dave',  status: 'Not Started', priority: 'Medium', due: '2026-06-15', leaf: true },
+              { text: 'Migration guide', assignee: 'Alice', status: 'Not Started', priority: 'Low',    due: '2026-06-30', leaf: true },
+            ],
+          },
+          {
+            text: 'QA & Testing',
+            children: [
+              { text: 'Unit test coverage',     assignee: 'Bob', status: 'In Progress', priority: 'High',   due: '2026-06-01', leaf: true },
+              { text: 'E2E test suite',         assignee: 'Eve', status: 'Not Started', priority: 'High',   due: '2026-06-15', leaf: true },
+              { text: 'Performance benchmarks', assignee: 'Alice',status: 'Not Started', priority: 'Medium', due: '2026-06-30', leaf: true },
+            ],
+          },
+        ],
+      },
+    ];
+
+    // ── Renderers ─────────────────────────────────────────────────────────────
+
+    const STATUS_CLS = {
+      'Done':        's-done',
+      'In Progress': 's-progress',
+      'Not Started': 's-notstarted',
+      'Blocked':     's-blocked',
+    };
+    const PRIORITY_CLS = { High: 'p-high', Medium: 'p-medium', Low: 'p-low' };
+
+    function statusBadge(v)   { const s = String(v||''); return `<span class="badge ${STATUS_CLS[s]??''}">${s||'—'}</span>`; }
+    function priorityBadge(v) { const s = String(v||''); return `<span class="badge ${PRIORITY_CLS[s]??''}">${s||'—'}</span>`; }
+    function fmtDate(v)       { return v ? new Date(String(v)).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—'; }
+
+    // ── Plugin ────────────────────────────────────────────────────────────────
+    //
+    // copyToClipboard() always prepends a header row regardless of config.
+    // The plugin handles Ctrl+C but NOT Ctrl+V — we wire paste manually below.
+
+    const clipboard = new TreeGridClipboard({
+      copyHierarchy:   true,  // prefix tree-column text with tab indentation
+      pasteAsChildren: true,  // paste rows as children of the first selected node
+    });
+
+    // ── TreeGrid ──────────────────────────────────────────────────────────────
+
+    const grid = new TreeGrid({
+      title: 'Software Roadmap',
+      store: treeData,
+      rootVisible: false,
+      useArrows: true,
+      plugins: [clipboard],
+      columns: [
+        new TreeGridColumn({ text: 'Task',     dataIndex: 'text',     flex: 1, minWidth: 180 }),
+        new Column({         text: 'Assignee', dataIndex: 'assignee', width: 100 }),
+        new Column({         text: 'Status',   dataIndex: 'status',   width: 120, renderer: statusBadge }),
+        new Column({         text: 'Priority', dataIndex: 'priority', width: 100, renderer: priorityBadge }),
+        new Column({         text: 'Due',      dataIndex: 'due',      width: 120, renderer: fmtDate }),
+      ],
+      height: 500,
+    });
+
+    grid.render(document.getElementById('grid-container'));
+
+    // ── Clipboard state ───────────────────────────────────────────────────────
+
+    // Last text produced by copyToClipboard() — used by doPaste().
+    let lastCopied = '';
+
+    function doCopy() {
+      lastCopied = clipboard.copyToClipboard();
+      // Also push to the system clipboard so users can paste elsewhere.
+      navigator.clipboard?.writeText?.(lastCopied);
+      renderPreview(lastCopied);
+    }
+
+    function doPaste() {
+      if (!lastCopied) return;
+      // copyToClipboard() always adds a header as the first line.
+      // Strip it before handing the text to pasteFromText().
+      const lines = lastCopied.split('\n').filter(Boolean);
+      const dataOnly = lines.length > 1 ? lines.slice(1).join('\n') : lines.join('\n');
+      clipboard.pasteFromText(dataOnly);
+    }
+
+    // ── Clipboard preview ─────────────────────────────────────────────────────
+
+    function esc(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function renderPreview(text) {
+      const pre  = document.getElementById('clipboard-pre');
+      const meta = document.getElementById('clipboard-meta');
+      const cnt  = document.getElementById('clipboard-row-count');
+
+      if (!text || !text.trim()) {
+        pre.innerHTML = '<span class="tsv-empty">Nothing to display — no rows were selected.</span>';
+        meta.textContent = '— nothing copied yet';
+        cnt.textContent = '';
+        return;
+      }
+
+      const lines = text.split('\n').filter(Boolean);
+      const dataRows = lines.length - 1; // first line is the header
+      const colCount = (lines[0] || '').split('\t').length;
+      meta.textContent = `— ${dataRows} row${dataRows === 1 ? '' : 's'}, ${colCount} columns`;
+      cnt.textContent = `${dataRows} data row${dataRows === 1 ? '' : 's'}`;
+
+      pre.innerHTML = lines.map((line, idx) => {
+        // Separate leading tabs from the rest of the cell text
+        const m    = line.match(/^(\t*)([\s\S]*)$/);
+        const tabs = m ? m[1] : '';
+        const rest = m ? m[2] : line;
+
+        // Render each tab as a tinted arrow so the hierarchy is obvious
+        const indentHtml = tabs
+          ? `<span class="tsv-indent">${'→ '.repeat(tabs.length)}</span>`
+          : '';
+
+        const content = esc(rest);
+        return idx === 0
+          ? `<span class="tsv-header">${indentHtml}${content}</span>`
+          : `${indentHtml}${content}`;
+      }).join('\n');
+    }
+
+    // ── Selection status ──────────────────────────────────────────────────────
+
+    function updateSelStatus() {
+      const sel = grid.getSelection();
+      const el  = document.getElementById('sel-status');
+      if (!sel.length) {
+        el.textContent = 'No rows selected — click a row to select, Ctrl+click to multi-select';
+      } else if (sel.length === 1) {
+        const name = sel[0].get?.('text') ?? sel[0].text ?? '';
+        el.textContent = `1 row selected: "${name}"`;
+      } else {
+        el.textContent = `${sel.length} rows selected`;
+      }
+    }
+
+    grid.on('selectionchange', updateSelStatus);
+
+    // ── Keyboard — add Ctrl+V and Del (the plugin only handles Ctrl+C) ────────
+
+    grid.getView().el.addEventListener('keydown', (e) => {
+      const mod = e.ctrlKey || e.metaKey;
+
+      if (mod && e.key === 'c') {
+        // Plugin has already written to the system clipboard.
+        // Use rAF so this runs after the plugin's own handler.
+        requestAnimationFrame(doCopy);
+        return;
+      }
+
+      if (mod && e.key === 'v') {
+        e.preventDefault();
+        doPaste();
+        return;
+      }
+
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        e.preventDefault();
+        for (const node of grid.getSelection()) {
+          grid.getStore().removeNode(node);
+        }
+        grid.getView().refresh();
+        updateSelStatus();
+      }
+    });
+
+    // ── Controls ──────────────────────────────────────────────────────────────
+
+    const toolbar = document.getElementById('toolbar');
+
+    new Button({ text: 'Expand All',   handler: () => grid.expandAll()                  }).render(toolbar);
+    new Button({ text: 'Collapse All', handler: () => grid.collapseAll(), ui: 'default' }).render(toolbar);
+
+    const sep1 = document.createElement('span'); sep1.className = 'toolbar-sep'; toolbar.appendChild(sep1);
+
+    new Button({ text: 'Copy',  handler: doCopy              }).render(toolbar);
+    new Button({ text: 'Paste', handler: doPaste, ui:'default' }).render(toolbar);
+
+    const sep2 = document.createElement('span'); sep2.className = 'toolbar-sep'; toolbar.appendChild(sep2);
+
+    // "Copy Hierarchy" toggle — controls whether tabs are prepended to tree column text
+    let hierOn = true;
+    const hierChip = document.createElement('span');
+
+    function syncHierChip() {
+      hierChip.className = 'toggle-chip' + (hierOn ? ' on' : '');
+      hierChip.textContent = (hierOn ? '\u2713 ' : '') + 'Copy Hierarchy';
+    }
+
+    syncHierChip();
+    hierChip.addEventListener('click', () => {
+      hierOn = !hierOn;
+      clipboard.config.copyHierarchy = hierOn;
+      syncHierChip();
+    });
+    toolbar.appendChild(hierChip);
+
+    // "Paste as Child" toggle — controls whether paste targets selected node or root
+    let pasteChildOn = true;
+    const pasteChip = document.createElement('span');
+
+    function syncPasteChip() {
+      pasteChip.className = 'toggle-chip' + (pasteChildOn ? ' on' : '');
+      pasteChip.textContent = (pasteChildOn ? '\u2713 ' : '') + 'Paste as Child';
+    }
+
+    syncPasteChip();
+    pasteChip.addEventListener('click', () => {
+      pasteChildOn = !pasteChildOn;
+      clipboard.config.pasteAsChildren = pasteChildOn;
+      syncPasteChip();
+    });
+    toolbar.appendChild(pasteChip);
+
+    // ── Source viewer ─────────────────────────────────────────────────────────
+
+    (function buildSourceBlock() {
+      const scripts = document.querySelectorAll('script[type="module"]');
+      const raw = scripts[scripts.length - 1].textContent ?? '';
+
+      const lines = raw.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+      const indent = lines.reduce((min, l) => {
+        const m = l.match(/^(\s+)/);
+        return (m && l.trim()) ? Math.min(min, m[1].length) : min;
+      }, Infinity);
+      const dedented = lines.map(l => l.slice(indent === Infinity ? 0 : indent)).join('\n');
+
+      function esc(s) {
+        return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      }
+
+      function highlight(src) {
+        return src.split('\n').map(line => {
+          let out = ''; let i = 0;
+          while (i < line.length) {
+            if (line[i] === '/' && line[i+1] === '/') {
+              out += `<span class="tok-comment">${esc(line.slice(i))}</span>`;
+              i = line.length; continue;
+            }
+            if (line[i] === '`' || line[i] === '"' || line[i] === "'") {
+              const q = line[i]; let j = i + 1;
+              while (j < line.length) {
+                if (line[j] === '\\') { j += 2; continue; }
+                if (line[j] === q)   { j++; break; }
+                j++;
+              }
+              const inner = esc(line.slice(i,j)).replace(/(https?:\/\/[^\s'"`,]+)/g,'<span class="tok-url">$1</span>');
+              out += `<span class="tok-string">${inner}</span>`; i = j; continue;
+            }
+            if (/[0-9]/.test(line[i]) && (i === 0 || /[\s,(:=\[!<>+\-*\/]/.test(line[i-1]))) {
+              let j = i;
+              while (j < line.length && /[0-9_.]/.test(line[j])) j++;
+              out += `<span class="tok-number">${esc(line.slice(i,j))}</span>`; i = j; continue;
+            }
+            if (/[a-zA-Z_$]/.test(line[i])) {
+              let j = i;
+              while (j < line.length && /[a-zA-Z0-9_$]/.test(line[j])) j++;
+              const word = line.slice(i, j);
+              const KW = new Set(['import','from','export','const','let','var','function','return',
+                'new','if','else','for','of','in','while','class','extends','this','true','false',
+                'null','undefined','async','await','=>']);
+              if (KW.has(word))                    out += `<span class="tok-keyword">${esc(word)}</span>`;
+              else if (j < line.length && line[j]==='(') out += `<span class="tok-fn">${esc(word)}</span>`;
+              else                                 out += esc(word);
+              i = j; continue;
+            }
+            out += esc(line[i]); i++;
+          }
+          return out;
+        }).join('\n');
+      }
+
+      document.getElementById('source-pre').innerHTML = highlight(dedented);
+
+      document.getElementById('copy-src-btn').addEventListener('click', function() {
+        navigator.clipboard.writeText(dedented).then(() => {
+          this.textContent = 'Copied!'; this.classList.add('copied');
+          setTimeout(() => { this.textContent = 'Copy'; this.classList.remove('copied'); }, 2000);
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
