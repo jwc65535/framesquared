@@ -132,6 +132,9 @@ export class TreeGridClipboard {
     // Seed for unique IDs — incremented per node so rapid pastes stay unique.
     let idSeed = Date.now();
 
+    // Track every node we create so we can fix leaf flags after the loop.
+    const pastedNodes: any[] = [];
+
     for (const line of lines) {
       const parts = line.split('\t');
 
@@ -164,10 +167,21 @@ export class TreeGridClipboard {
         applyNodeInterface(newNode, (parent.depth ?? 0) + 1);
       }
       tg.getStore().appendChild(parent, newNode);
+      pastedNodes.push(newNode);
 
       // This node becomes the parent candidate for the next deeper depth level.
       parentStack[depth + 1] = newNode;
       parentStack.length = depth + 2;
+    }
+
+    // TreeModel defaults leaf to false, so every pasted node would show an
+    // expand arrow.  After the loop we know the final child counts: any node
+    // that received no children is a true leaf and must be flagged explicitly
+    // so the tree column renders the leaf spacer instead of an expander.
+    for (const node of pastedNodes) {
+      if (node.childNodes.length === 0) {
+        node.set('leaf', true);
+      }
     }
 
     tg.getView().refresh();
