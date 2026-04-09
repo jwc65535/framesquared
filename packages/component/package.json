@@ -1,6 +1,6 @@
 {
   "name": "@framesquared/component",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Component model, lifecycle, and rendering",
   "type": "module",
   "main": "./dist/index.js",

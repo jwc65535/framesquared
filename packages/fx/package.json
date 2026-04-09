@@ -1,6 +1,6 @@
 {
   "name": "@framesquared/fx",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Animations and effects",
   "type": "module",
   "main": "./dist/index.js",

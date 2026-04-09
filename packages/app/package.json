@@ -1,6 +1,6 @@
 {
   "name": "@framesquared/app",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Application architecture (MVC/MVVM)",
   "type": "module",
   "main": "./dist/index.js",

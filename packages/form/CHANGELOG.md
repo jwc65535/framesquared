@@ -1,5 +1,15 @@
 # @framesquared/form
 
+## 0.5.4
+
+### Patch Changes
+
+- Add row expander TreeGrid example
+- Updated dependencies
+  - @framesquared/component@0.5.4
+  - @framesquared/core@0.5.4
+  - @framesquared/ui@0.5.4
+
 ## 0.5.3
 
 ### Patch Changes

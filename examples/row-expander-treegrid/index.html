@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – Row Expander</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #212121;
+    }
+
+    /* ── Page header ──────────────────────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 60%, #ab47bc 100%);
+      padding: 32px 40px 28px;
+      color: #fff;
+    }
+
+    .page-header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 10px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(4px);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      opacity: 0.85;
+      font-weight: 400;
+      max-width: 580px;
+      line-height: 1.5;
+    }
+
+    /* ── Page body ────────────────────────────────────────────────────────── */
+    .page-body {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 40px 48px;
+    }
+
+    /* ── Toolbar ──────────────────────────────────────────────────────────── */
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .toolbar-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #757575;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    /* ── Toggle chip ──────────────────────────────────────────────────────── */
+    .toggle-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid #bdbdbd;
+      background: #fff;
+      color: #757575;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .toggle-chip.on {
+      background: #f3e5f5;
+      border-color: #ab47bc;
+      color: #6a1b9a;
+    }
+    .toggle-chip:hover { filter: brightness(0.95); }
+
+    /* ── Grid wrapper ─────────────────────────────────────────────────────── */
+    .grid-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .grid-wrapper .x-panel {
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+    }
+
+    /* ── Expander button column ───────────────────────────────────────────── */
+    .x-treegrid-row-expander-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      font-size: 11px;
+      color: #9e9e9e;
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.15s, background 0.15s;
+      user-select: none;
+      line-height: 1;
+    }
+    .x-treegrid-row-expander-btn:hover {
+      color: #6a1b9a;
+      background: #f3e5f5;
+    }
+
+    /* Rotate the arrow when the body row is open (CSS :has sibling selector) */
+    tr:has(+ .x-treegrid-row-body) .x-treegrid-row-expander-btn {
+      transform: rotate(90deg);
+      color: #6a1b9a;
+    }
+
+    /* ── Row body (detail panel) ──────────────────────────────────────────── */
+    .x-treegrid-row-body-cell {
+      padding: 0 !important;
+    }
+
+    .detail-panel {
+      padding: 16px 20px 16px 24px;
+      background: #faf5ff;
+      border-top: 1px solid #e1bee7;
+      border-bottom: 1px solid #e1bee7;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .detail-panel.dept {
+      background: #f9f9f9;
+      border-color: #e0e0e0;
+    }
+
+    .detail-bio {
+      color: #424242;
+      margin-bottom: 12px;
+      max-width: 640px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px 20px;
+      margin-bottom: 12px;
+    }
+
+    .detail-grid div { color: #616161; }
+    .detail-grid strong { color: #212121; }
+
+    .detail-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 8px;
+    }
+
+    .skill-tag {
+      display: inline-block;
+      padding: 2px 9px;
+      background: #ede7f6;
+      color: #4a148c;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .detail-divider {
+      height: 1px;
+      background: #e1bee7;
+      margin: 10px 0;
+    }
+
+    /* ── Status badge ─────────────────────────────────────────────────────── */
+    .status-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .status-active   { background: #e8f5e9; color: #2e7d32; }
+    .status-remote   { background: #e3f2fd; color: #1565c0; }
+    .status-leave    { background: #fff3e0; color: #e65100; }
+
+    /* ── Source block ─────────────────────────────────────────────────────── */
+    .source-section { margin-top: 40px; }
+
+    .source-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .source-heading h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #424242;
+      letter-spacing: 0.02em;
+    }
+
+    .source-heading-line { flex: 1; height: 1px; background: #e0e0e0; }
+
+    .source-wrapper {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .source-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e2433;
+      padding: 10px 16px;
+    }
+
+    .source-dots { display: flex; gap: 6px; }
+    .source-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .source-dot-red    { background: #ff5f57; }
+    .source-dot-yellow { background: #febc2e; }
+    .source-dot-green  { background: #28c840; }
+
+    .source-filename {
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b9ab4;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+    }
+
+    .source-copy-btn {
+      font-size: 11px;
+      font-weight: 500;
+      color: #8b9ab4;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .source-copy-btn:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    .source-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
+
+    pre.source-pre {
+      margin: 0;
+      padding: 24px;
+      background: #282c3e;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #abb2bf;
+      tab-size: 2;
+    }
+
+    .tok-keyword  { color: #c678dd; }
+    .tok-string   { color: #98c379; }
+    .tok-comment  { color: #5c6370; font-style: italic; }
+    .tok-fn       { color: #61afef; }
+    .tok-number   { color: #d19a66; }
+    .tok-url      { color: #56b6c2; text-decoration: underline; }
+  </style>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "@framesquared/ui":        "../../packages/ui/dist/index.js",
+        "@framesquared/component": "https://esm.sh/@framesquared/component@0.5.1",
+        "@framesquared/core":      "https://esm.sh/@framesquared/core@0.5.1",
+        "@framesquared/theme":     "https://esm.sh/@framesquared/theme@0.5.1"
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">&#9654; framesquared</div>
+      <h1 class="page-title">&#9654; Row Expander</h1>
+      <p class="page-subtitle">
+        Each row has an additional expandable detail panel — independent of tree
+        expand/collapse — powered by <code>TreeGridRowExpander</code>.
+      </p>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="toolbar-row">
+      <span class="toolbar-label">Employee Directory — 4 departments, 15 employees</span>
+      <div class="toolbar-actions" id="toolbar"></div>
+    </div>
+
+    <div class="grid-wrapper" id="grid-container"></div>
+
+    <div class="source-section">
+      <div class="source-heading">
+        <h2>Source</h2>
+        <div class="source-heading-line"></div>
+      </div>
+      <div class="source-wrapper">
+        <div class="source-bar">
+          <div class="source-dots">
+            <span class="source-dot source-dot-red"></span>
+            <span class="source-dot source-dot-yellow"></span>
+            <span class="source-dot source-dot-green"></span>
+          </div>
+          <span class="source-filename">row-expander-treegrid.js</span>
+          <button class="source-copy-btn" id="copy-btn">Copy</button>
+        </div>
+        <pre class="source-pre" id="source-pre"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import {
+      TreeGrid, TreeGridColumn, Column, Button, TreeGridRowExpander,
+    } from '@framesquared/ui';
+    import { ThemeManager, ModernTheme } from '@framesquared/theme';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+
+    // Nodes may be Model instances (use .get()) or plain objects — handle both.
+    function field(node, key) {
+      return node.get?.(key) ?? node[key] ?? '';
+    }
+
+    function fmtDate(iso) {
+      if (!iso) return '—';
+      return new Date(iso).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    }
+
+    function statusBadge(status) {
+      const map = { Active: 'status-active', Remote: 'status-remote', 'On Leave': 'status-leave' };
+      const cls = map[status] ?? 'status-active';
+      return `<span class="status-badge ${cls}">${status || '—'}</span>`;
+    }
+
+    // ── Data ─────────────────────────────────────────────────────────────────
+
+    const treeData = [
+      {
+        text: 'Engineering', expanded: true,
+        description: 'Designs, builds, and operates all software products and infrastructure.',
+        headcount: 5, avgTenure: '6.2 yrs', avgSalary: '$141,000',
+        children: [
+          {
+            text: 'Alice Chen', role: 'Staff Engineer', location: 'San Francisco',
+            startDate: '2019-03-15', status: 'Active',
+            bio: 'Platform architect and technical lead for the core infrastructure team. Pioneered the migration from monolith to microservices in 2022.',
+            email: 'alice.chen@example.com', phone: '+1 (415) 555-0101', manager: 'Carol Kim',
+            skills: ['TypeScript', 'Rust', 'Kubernetes', 'PostgreSQL', 'gRPC'],
+            currentProject: 'Platform v3 Migration',
+            leaf: true,
+          },
+          {
+            text: 'Carol Kim', role: 'Lead Engineer', location: 'Seattle',
+            startDate: '2016-07-01', status: 'Active',
+            bio: 'Engineering lead with a focus on distributed systems reliability and on-call health. Mentor for junior engineers across three teams.',
+            email: 'carol.kim@example.com', phone: '+1 (206) 555-0182', manager: 'VP Engineering',
+            skills: ['Go', 'Kafka', 'AWS', 'Terraform', 'Python'],
+            currentProject: 'Observability Dashboard',
+            leaf: true,
+          },
+          {
+            text: 'Bob Martinez', role: 'Engineer', location: 'Austin',
+            startDate: '2022-01-10', status: 'Remote',
+            bio: 'Full-stack engineer with deep experience in React and Node.js. Previously at two Y-Combinator startups before joining.',
+            email: 'bob.martinez@example.com', phone: '+1 (512) 555-0147', manager: 'Alice Chen',
+            skills: ['React', 'Node.js', 'GraphQL', 'MongoDB'],
+            currentProject: 'Developer Portal',
+            leaf: true,
+          },
+          {
+            text: 'Dave Patel', role: 'Senior Engineer', location: 'New York',
+            startDate: '2020-09-14', status: 'Active',
+            bio: 'Backend specialist focused on data pipelines and real-time analytics. Holds a PhD in Computer Science from Carnegie Mellon.',
+            email: 'dave.patel@example.com', phone: '+1 (212) 555-0193', manager: 'Carol Kim',
+            skills: ['Python', 'Spark', 'Flink', 'Redshift', 'dbt'],
+            currentProject: 'Analytics Pipeline 2.0',
+            leaf: true,
+          },
+          {
+            text: 'Eve Thompson', role: 'Junior Engineer', location: 'Chicago',
+            startDate: '2024-06-03', status: 'Active',
+            bio: 'Recent graduate from University of Illinois. Strong foundation in algorithms and systems programming. Fast learner passionate about developer tooling.',
+            email: 'eve.thompson@example.com', phone: '+1 (312) 555-0165', manager: 'Bob Martinez',
+            skills: ['JavaScript', 'Python', 'Linux', 'Git'],
+            currentProject: 'CLI Tooling',
+            leaf: true,
+          },
+        ],
+      },
+      {
+        text: 'Design', expanded: true,
+        description: 'Owns the product design system, user research, and visual brand identity.',
+        headcount: 3, avgTenure: '4.7 yrs', avgSalary: '$123,000',
+        children: [
+          {
+            text: 'Hannah Park', role: 'Lead Designer', location: 'San Francisco',
+            startDate: '2018-04-22', status: 'Active',
+            bio: 'Design systems expert who built and maintains the framesquared component library. Speaks at major UX conferences annually.',
+            email: 'hannah.park@example.com', phone: '+1 (415) 555-0174', manager: 'VP Design',
+            skills: ['Figma', 'Design Tokens', 'Accessibility', 'Motion Design'],
+            currentProject: 'Design System v2',
+            leaf: true,
+          },
+          {
+            text: 'Frank Lee', role: 'Senior Designer', location: 'Los Angeles',
+            startDate: '2020-11-30', status: 'Remote',
+            bio: 'Product designer with 8 years of experience across fintech and SaaS. Focuses on reducing cognitive load in complex data-heavy UIs.',
+            email: 'frank.lee@example.com', phone: '+1 (310) 555-0129', manager: 'Hannah Park',
+            skills: ['Figma', 'Prototyping', 'User Research', 'Data Viz'],
+            currentProject: 'Grid UX Refresh',
+            leaf: true,
+          },
+          {
+            text: 'Grace Nguyen', role: 'Designer', location: 'Portland',
+            startDate: '2023-03-06', status: 'Active',
+            bio: 'Interaction designer focused on mobile-first experiences and micro-interactions. Previously at Airbnb Design.',
+            email: 'grace.nguyen@example.com', phone: '+1 (503) 555-0138', manager: 'Hannah Park',
+            skills: ['Figma', 'After Effects', 'CSS Animations', 'iOS Guidelines'],
+            currentProject: 'Mobile Component Library',
+            leaf: true,
+          },
+        ],
+      },
+      {
+        text: 'Product', expanded: true,
+        description: 'Defines product strategy, roadmap, and prioritisation across all product lines.',
+        headcount: 4, avgTenure: '6.75 yrs', avgSalary: '$148,750',
+        children: [
+          {
+            text: 'Lisa Rodriguez', role: 'VP Product', location: 'San Francisco',
+            startDate: '2014-08-18', status: 'Active',
+            bio: 'Ten-year company veteran who has led product through three major platform pivots. Former founder of an enterprise SaaS startup acquired in 2013.',
+            email: 'lisa.rodriguez@example.com', phone: '+1 (415) 555-0112', manager: 'CEO',
+            skills: ['Strategy', 'OKRs', 'Roadmapping', 'Pricing', 'Enterprise Sales'],
+            currentProject: 'Q3 Roadmap Review',
+            leaf: true,
+          },
+          {
+            text: 'Julia Wong', role: 'Senior PM', location: 'New York',
+            startDate: '2017-02-14', status: 'Active',
+            bio: 'PM for the core grid and tree-grid feature set. Deep expertise in enterprise data-management workflows and power-user personas.',
+            email: 'julia.wong@example.com', phone: '+1 (212) 555-0156', manager: 'Lisa Rodriguez',
+            skills: ['Jira', 'Product Analytics', 'SQL', 'A/B Testing', 'Enterprise UX'],
+            currentProject: 'Grid Performance Initiative',
+            leaf: true,
+          },
+          {
+            text: 'Ivan Santos', role: 'Product Manager', location: 'Miami',
+            startDate: '2020-05-11', status: 'Remote',
+            bio: 'Growth-focused PM running the developer experience and SDK adoption funnel. Previously a software engineer — brings technical credibility to customer conversations.',
+            email: 'ivan.santos@example.com', phone: '+1 (305) 555-0143', manager: 'Lisa Rodriguez',
+            skills: ['Developer Relations', 'API Design', 'Growth', 'Analytics'],
+            currentProject: 'SDK Onboarding Flow',
+            leaf: true,
+          },
+          {
+            text: 'Ken Williams', role: 'Product Analyst', location: 'Denver',
+            startDate: '2022-10-03', status: 'Active',
+            bio: 'Data-driven analyst who owns the product metrics dashboard and quarterly business reviews. Expert in cohort analysis and retention modelling.',
+            email: 'ken.williams@example.com', phone: '+1 (720) 555-0177', manager: 'Julia Wong',
+            skills: ['SQL', 'Looker', 'Python', 'Statistics', 'dbt'],
+            currentProject: 'Retention Dashboard',
+            leaf: true,
+          },
+        ],
+      },
+      {
+        text: 'Marketing', expanded: true,
+        description: 'Drives brand awareness, demand generation, and developer community growth.',
+        headcount: 3, avgTenure: '4.3 yrs', avgSalary: '$123,333',
+        children: [
+          {
+            text: 'Olivia Chen', role: 'Marketing Director', location: 'San Francisco',
+            startDate: '2018-01-08', status: 'Active',
+            bio: 'Director of Marketing overseeing content, demand gen, and events. Led the rebranding initiative that grew organic traffic by 220% in 18 months.',
+            email: 'olivia.chen@example.com', phone: '+1 (415) 555-0166', manager: 'CMO',
+            skills: ['Brand Strategy', 'SEO', 'Content Marketing', 'HubSpot', 'Event Production'],
+            currentProject: 'Brand Refresh 2026',
+            leaf: true,
+          },
+          {
+            text: 'Mike Johnson', role: 'Marketing Manager', location: 'Boston',
+            startDate: '2022-03-21', status: 'Active',
+            bio: 'Manages paid acquisition, email campaigns, and partner marketing. Certified Google Ads expert with a track record of reducing CAC by 35%.',
+            email: 'mike.johnson@example.com', phone: '+1 (617) 555-0124', manager: 'Olivia Chen',
+            skills: ['Google Ads', 'Email Marketing', 'Pardot', 'Copywriting'],
+            currentProject: 'Q2 Paid Campaign',
+            leaf: true,
+          },
+          {
+            text: 'Nancy Davis', role: 'Content Lead', location: 'Remote',
+            startDate: '2023-09-04', status: 'Remote',
+            bio: 'Leads the technical content strategy: blog, docs, tutorials, and video. Background in developer advocacy and technical writing for API-first products.',
+            email: 'nancy.davis@example.com', phone: '+1 (000) 555-0188', manager: 'Olivia Chen',
+            skills: ['Technical Writing', 'Developer Advocacy', 'Video Production', 'SEO'],
+            currentProject: 'Docs Redesign',
+            leaf: true,
+          },
+        ],
+      },
+    ];
+
+    // ── Detail panel template ─────────────────────────────────────────────────
+
+    function rowBodyTpl(node) {
+      const isLeaf = node.isLeaf?.() ?? field(node, 'leaf');
+
+      // Department detail
+      if (!isLeaf) {
+        const desc    = field(node, 'description');
+        const hc      = field(node, 'headcount');
+        const tenure  = field(node, 'avgTenure');
+        const salary  = field(node, 'avgSalary');
+        return `
+          <div class="detail-panel dept">
+            <div class="detail-bio">${desc}</div>
+            <div class="detail-grid" style="grid-template-columns:repeat(3,auto)">
+              <div><strong>Headcount:</strong> ${hc} employees</div>
+              <div><strong>Avg Tenure:</strong> ${tenure}</div>
+              <div><strong>Avg Salary:</strong> ${salary}</div>
+            </div>
+          </div>`;
+      }
+
+      // Employee detail
+      const bio     = field(node, 'bio');
+      const email   = field(node, 'email');
+      const phone   = field(node, 'phone');
+      const loc     = field(node, 'location');
+      const mgr     = field(node, 'manager');
+      const proj    = field(node, 'currentProject');
+      const joined  = fmtDate(field(node, 'startDate'));
+      const rawSkills = field(node, 'skills');
+      const skills  = Array.isArray(rawSkills)
+        ? rawSkills
+        : String(rawSkills).split(',').map(s => s.trim()).filter(Boolean);
+      const tags    = skills.map(s => `<span class="skill-tag">${s}</span>`).join('');
+
+      return `
+        <div class="detail-panel">
+          <div class="detail-bio">${bio}</div>
+          <div class="detail-divider"></div>
+          <div class="detail-grid">
+            <div><strong>Email:</strong> <a href="mailto:${email}" style="color:#6a1b9a">${email}</a></div>
+            <div><strong>Phone:</strong> ${phone}</div>
+            <div><strong>Location:</strong> ${loc}</div>
+            <div><strong>Manager:</strong> ${mgr}</div>
+            <div><strong>Joined:</strong> ${joined}</div>
+            <div><strong>Project:</strong> ${proj}</div>
+          </div>
+          <div class="detail-skills">${tags}</div>
+        </div>`;
+    }
+
+    // ── Plugin ────────────────────────────────────────────────────────────────
+
+    const expander = new TreeGridRowExpander({
+      rowBodyTpl,
+      expandOnDblClick: true,
+      singleRowExpand: false,
+    });
+
+    // ── TreeGrid ──────────────────────────────────────────────────────────────
+
+    const grid = new TreeGrid({
+      title: 'Employee Directory',
+      store: treeData,
+      rootVisible: false,
+      useArrows: true,
+      plugins: [expander],
+      columns: [
+        // Narrow column that renders the expander toggle button.
+        // The plugin listens for clicks on .x-treegrid-row-expander-btn.
+        new Column({
+          text: '', dataIndex: '', width: 36,
+          renderer: () => '<span class="x-treegrid-row-expander-btn" title="Toggle detail panel">&#9654;</span>',
+        }),
+        new TreeGridColumn({ text: 'Name',     dataIndex: 'text',      flex: 1, minWidth: 160 }),
+        new Column({         text: 'Role',     dataIndex: 'role',      width: 170 }),
+        new Column({         text: 'Location', dataIndex: 'location',  width: 120 }),
+        new Column({         text: 'Joined',   dataIndex: 'startDate', width: 100,
+          renderer: (v) => v ? fmtDate(String(v)) : '—',
+        }),
+        new Column({         text: 'Status',   dataIndex: 'status',    width: 100,
+          renderer: (v) => statusBadge(String(v || '')),
+        }),
+      ],
+      height: 520,
+    });
+
+    grid.render(document.getElementById('grid-container'));
+
+    // ── Controls ──────────────────────────────────────────────────────────────
+
+    const toolbar = document.getElementById('toolbar');
+
+    new Button({ text: 'Expand All',   handler: () => grid.expandAll()                  }).render(toolbar);
+    new Button({ text: 'Collapse All', handler: () => grid.collapseAll(), ui: 'default' }).render(toolbar);
+
+    // Single-expand toggle
+    let singleExpand = false;
+    const singleChip = document.createElement('span');
+    singleChip.className = 'toggle-chip';
+
+    function updateSingleChip() {
+      singleChip.className = 'toggle-chip' + (singleExpand ? ' on' : '');
+      singleChip.textContent = (singleExpand ? '\u2713 ' : '') + 'Single Expand';
+    }
+
+    updateSingleChip();
+    singleChip.addEventListener('click', () => {
+      singleExpand = !singleExpand;
+      expander.config.singleRowExpand = singleExpand;
+      updateSingleChip();
+    });
+    toolbar.appendChild(singleChip);
+
+    // ── Source viewer ─────────────────────────────────────────────────────────
+
+    (function buildSourceBlock() {
+      const scripts = document.querySelectorAll('script[type="module"]');
+      const raw = scripts[scripts.length - 1].textContent ?? '';
+
+      const lines = raw.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+      const indent = lines.reduce((min, l) => {
+        const m = l.match(/^(\s+)/);
+        return (m && l.trim()) ? Math.min(min, m[1].length) : min;
+      }, Infinity);
+      const dedented = lines.map(l => l.slice(indent === Infinity ? 0 : indent)).join('\n');
+
+      function esc(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      function highlight(src) {
+        return src.split('\n').map(line => {
+          let out = '';
+          let i = 0;
+          while (i < line.length) {
+            if (line[i] === '/' && line[i+1] === '/') {
+              out += `<span class="tok-comment">${esc(line.slice(i))}</span>`;
+              i = line.length;
+              continue;
+            }
+            if (line[i] === '`' || line[i] === '"' || line[i] === "'") {
+              const q = line[i];
+              let j = i + 1;
+              while (j < line.length) {
+                if (line[j] === '\\') { j += 2; continue; }
+                if (line[j] === q)    { j++; break; }
+                j++;
+              }
+              const tok = line.slice(i, j);
+              const inner = esc(tok).replace(
+                /(https?:\/\/[^\s'"`,]+)/g,
+                '<span class="tok-url">$1</span>'
+              );
+              out += `<span class="tok-string">${inner}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[0-9]/.test(line[i]) && (i === 0 || /[\s,(:=\[!<>+\-*\/]/.test(line[i-1]))) {
+              let j = i;
+              while (j < line.length && /[0-9_.]/.test(line[j])) j++;
+              out += `<span class="tok-number">${esc(line.slice(i, j))}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[a-zA-Z_$]/.test(line[i])) {
+              let j = i;
+              while (j < line.length && /[a-zA-Z0-9_$]/.test(line[j])) j++;
+              const word = line.slice(i, j);
+              const KEYWORDS = new Set([
+                'import','from','export','const','let','var','function','return',
+                'new','if','else','for','of','in','while','class','extends',
+                'this','true','false','null','undefined','async','await','=>',
+              ]);
+              if (KEYWORDS.has(word)) {
+                out += `<span class="tok-keyword">${esc(word)}</span>`;
+              } else if (j < line.length && line[j] === '(') {
+                out += `<span class="tok-fn">${esc(word)}</span>`;
+              } else {
+                out += esc(word);
+              }
+              i = j;
+              continue;
+            }
+            out += esc(line[i]);
+            i++;
+          }
+          return out;
+        }).join('\n');
+      }
+
+      document.getElementById('source-pre').innerHTML = highlight(dedented);
+
+      document.getElementById('copy-btn').addEventListener('click', function() {
+        navigator.clipboard.writeText(dedented).then(() => {
+          this.textContent = 'Copied!';
+          this.classList.add('copied');
+          setTimeout(() => { this.textContent = 'Copy'; this.classList.remove('copied'); }, 2000);
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

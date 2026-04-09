@@ -1,5 +1,20 @@
 # @framesquared/example-tree-explorer
 
+## 0.3.4
+
+### Patch Changes
+
+- Add row expander TreeGrid example
+- Updated dependencies
+  - @framesquared/component@0.5.4
+  - @framesquared/core@0.5.4
+  - @framesquared/data@0.5.4
+  - @framesquared/form@0.5.4
+  - @framesquared/grid@0.5.4
+  - @framesquared/layout@0.5.4
+  - @framesquared/theme@0.5.4
+  - @framesquared/ui@0.5.4
+
 ## 0.3.3
 
 ### Patch Changes

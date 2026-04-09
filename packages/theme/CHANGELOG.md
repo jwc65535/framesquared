@@ -1,5 +1,13 @@
 # @framesquared/theme
 
+## 0.5.4
+
+### Patch Changes
+
+- Add row expander TreeGrid example
+- Updated dependencies
+  - @framesquared/core@0.5.4
+
 ## 0.5.3
 
 ### Patch Changes
