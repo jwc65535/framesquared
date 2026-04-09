@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – State Persistence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #212121;
+    }
+
+    /* ── Page header ──────────────────────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #00695c 0%, #00897b 60%, #4db6ac 100%);
+      padding: 32px 40px 28px;
+      color: #fff;
+    }
+
+    .page-header-inner {
+      max-width: 1060px;
+      margin: 0 auto;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 10px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(4px);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      opacity: 0.85;
+      font-weight: 400;
+      max-width: 600px;
+      line-height: 1.5;
+    }
+
+    /* ── Page body ────────────────────────────────────────────────────────── */
+    .page-body {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 32px 40px 48px;
+    }
+
+    /* ── Toolbar ──────────────────────────────────────────────────────────── */
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .toolbar-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #757575;
+      margin-right: 4px;
+    }
+
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toolbar-sep {
+      width: 1px;
+      height: 20px;
+      background: #e0e0e0;
+      margin: 0 4px;
+    }
+
+    /* ── Chip toggles ─────────────────────────────────────────────────────── */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1.5px solid #b2dfdb;
+      background: #fff;
+      color: #00695c;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      user-select: none;
+    }
+    .chip:hover { background: #e0f2f1; border-color: #80cbc4; }
+    .chip.active { background: #00897b; border-color: #00897b; color: #fff; }
+    .chip.danger  { border-color: #ffcdd2; color: #c62828; }
+    .chip.danger:hover  { background: #ffebee; border-color: #ef9a9a; }
+    .chip.save   { border-color: #b2dfdb; color: #00695c; font-weight: 600; }
+    .chip.save:hover { background: #e0f2f1; }
+
+    /* ── Layout: grid + state panel ───────────────────────────────────────── */
+    .main-layout {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .grid-area {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .grid-wrapper {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .grid-wrapper .x-panel {
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+    }
+
+    /* ── State panel ──────────────────────────────────────────────────────── */
+    .state-panel {
+      width: 290px;
+      flex-shrink: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .state-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e2433;
+      padding: 10px 14px;
+    }
+
+    .state-panel-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #8b9ab4;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .state-key {
+      font-size: 11px;
+      color: #4db6ac;
+      font-family: 'Fira Code', monospace;
+    }
+
+    pre.state-pre {
+      margin: 0;
+      padding: 16px;
+      background: #282c3e;
+      overflow: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11.5px;
+      line-height: 1.6;
+      color: #abb2bf;
+      min-height: 280px;
+      max-height: 460px;
+      white-space: pre;
+    }
+
+    pre.state-pre .jk { color: #61afef; }   /* JSON key */
+    pre.state-pre .js { color: #98c379; }   /* JSON string */
+    pre.state-pre .jn { color: #d19a66; }   /* JSON number / bool */
+    pre.state-pre .jc { color: #5c6370; }   /* JSON comment */
+    pre.state-pre .empty { color: #5c6370; font-style: italic; }
+
+    .state-status {
+      background: #1e2433;
+      padding: 8px 14px;
+      font-size: 11px;
+      color: #5c6370;
+      border-top: 1px solid #2a3040;
+      font-family: 'Fira Code', monospace;
+    }
+    .state-status.saved { color: #4caf50; }
+    .state-status.cleared { color: #ef5350; }
+
+    /* ── Sort indicator on column headers ─────────────────────────────────── */
+    .x-treegrid-column-header { cursor: pointer; user-select: none; }
+    .x-treegrid-column-header:hover { background: rgba(0,137,123,0.08) !important; }
+    .sort-indicator { color: #00897b; font-size: 11px; margin-left: 4px; }
+
+    /* ── Performance badge ────────────────────────────────────────────────── */
+    .perf-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    .perf-excellent { background: #e8f5e9; color: #2e7d32; }
+    .perf-good      { background: #e3f0ff; color: #1565c0; }
+    .perf-average   { background: #fff8e1; color: #e65100; }
+
+    /* ── Width demo chips ─────────────────────────────────────────────────── */
+    .width-demo {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #757575;
+    }
+
+    /* ── Source block ─────────────────────────────────────────────────────── */
+    .source-section { margin-top: 40px; }
+
+    .source-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .source-heading h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #424242;
+      letter-spacing: 0.02em;
+    }
+    .source-heading-line { flex: 1; height: 1px; background: #e0e0e0; }
+
+    .source-wrapper {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .source-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1e2433;
+      padding: 10px 16px;
+    }
+
+    .source-dots { display: flex; gap: 6px; }
+    .source-dot  { width: 12px; height: 12px; border-radius: 50%; }
+    .source-dot-red    { background: #ff5f57; }
+    .source-dot-yellow { background: #febc2e; }
+    .source-dot-green  { background: #28c840; }
+
+    .source-filename {
+      font-size: 12px;
+      font-weight: 500;
+      color: #8b9ab4;
+      font-family: 'Fira Code', 'Cascadia Code', monospace;
+    }
+
+    .source-copy-btn {
+      font-size: 11px;
+      font-weight: 500;
+      color: #8b9ab4;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .source-copy-btn:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    .source-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
+
+    pre.source-pre {
+      margin: 0;
+      padding: 24px;
+      background: #282c3e;
+      overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #abb2bf;
+      tab-size: 2;
+    }
+
+    .tok-keyword  { color: #c678dd; }
+    .tok-string   { color: #98c379; }
+    .tok-comment  { color: #5c6370; font-style: italic; }
+    .tok-fn       { color: #61afef; }
+    .tok-number   { color: #d19a66; }
+    .tok-url      { color: #56b6c2; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">🌲 framesquared</div>
+      <h1 class="page-title">State Persistence</h1>
+      <p class="page-subtitle">
+        Column widths, sort order, and expanded nodes are saved to localStorage
+        and restored automatically on reload. Click column headers to sort. Use
+        the width buttons to resize columns, then save — your layout survives a
+        page refresh.
+      </p>
+    </div>
+  </header>
+
+  <div class="page-body">
+
+    <div class="toolbar-row">
+      <div class="toolbar-group">
+        <span class="toolbar-label">State:</span>
+        <button class="chip save" id="btn-save">💾 Save State</button>
+        <button class="chip danger" id="btn-clear">🗑 Clear &amp; Reload</button>
+      </div>
+      <div class="toolbar-sep"></div>
+      <div class="toolbar-group">
+        <span class="toolbar-label">Salary col:</span>
+        <button class="chip" id="btn-narrow">Narrow (90px)</button>
+        <button class="chip" id="btn-wide">Wide (160px)</button>
+      </div>
+      <div class="toolbar-sep"></div>
+      <div class="toolbar-group">
+        <button class="chip" id="btn-toggle-perf">Toggle Performance</button>
+        <button class="chip" id="btn-expand-all">Expand All</button>
+        <button class="chip" id="btn-collapse-all">Collapse All</button>
+      </div>
+    </div>
+
+    <div class="main-layout">
+      <div class="grid-area">
+        <div class="grid-wrapper" id="grid-container"></div>
+      </div>
+
+      <div class="state-panel">
+        <div class="state-panel-header">
+          <span class="state-panel-title">localStorage</span>
+          <span class="state-key" id="state-key-label">…</span>
+        </div>
+        <pre class="state-pre" id="state-pre"><span class="empty">No saved state</span></pre>
+        <div class="state-status" id="state-status">awaiting save…</div>
+      </div>
+    </div>
+
+    <!-- ── Source block ───────────────────────────────────────────────────── -->
+    <div class="source-section">
+      <div class="source-heading">
+        <h2>Source</h2>
+        <div class="source-heading-line"></div>
+      </div>
+      <div class="source-wrapper">
+        <div class="source-bar">
+          <div class="source-dots">
+            <span class="source-dot source-dot-red"></span>
+            <span class="source-dot source-dot-yellow"></span>
+            <span class="source-dot source-dot-green"></span>
+          </div>
+          <span class="source-filename">state-persistence-treegrid.js</span>
+          <button class="source-copy-btn" id="copy-btn">Copy</button>
+        </div>
+        <pre class="source-pre" id="source-pre"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "@framesquared/ui":        "../../packages/ui/dist/index.js",
+        "@framesquared/component": "https://esm.sh/@framesquared/component@0.5.1",
+        "@framesquared/core":      "https://esm.sh/@framesquared/core@0.5.1",
+        "@framesquared/theme":     "https://esm.sh/@framesquared/theme@0.5.1"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import { TreeGrid, TreeGridColumn, Column, TreeGridStateMixin } from '@framesquared/ui';
+    import { ThemeManager, ModernTheme }                            from '@framesquared/theme';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── Data — explicit IDs required for reliable state restoration ───────────
+
+    const treeData = [
+      {
+        id: 'dept-eng', text: 'Engineering', expanded: true,
+        children: [
+          { id: 'emp-1',  text: 'Alice Chen',    role: 'Tech Lead',        salary: 145000, startDate: '2019-03-15', perf: 'Excellent', leaf: true },
+          { id: 'emp-2',  text: 'Bob Martinez',  role: 'Senior Engineer',  salary: 130000, startDate: '2020-07-01', perf: 'Good',      leaf: true },
+          { id: 'emp-3',  text: 'Carol Davis',   role: 'Engineer',         salary: 115000, startDate: '2022-01-10', perf: 'Good',      leaf: true },
+          { id: 'emp-4',  text: 'Dan Wilson',    role: 'Junior Engineer',  salary:  95000, startDate: '2023-06-01', perf: 'Average',   leaf: true },
+        ],
+      },
+      {
+        id: 'dept-des', text: 'Design', expanded: true,
+        children: [
+          { id: 'emp-5',  text: 'Eve Johnson',   role: 'Design Lead',      salary: 135000, startDate: '2020-02-01', perf: 'Excellent', leaf: true },
+          { id: 'emp-6',  text: 'Frank Lee',     role: 'UX Designer',      salary: 118000, startDate: '2021-08-15', perf: 'Good',      leaf: true },
+          { id: 'emp-7',  text: 'Grace Kim',     role: 'UI Designer',      salary: 112000, startDate: '2022-04-01', perf: 'Average',   leaf: true },
+        ],
+      },
+      {
+        id: 'dept-ops', text: 'Operations',
+        children: [
+          { id: 'emp-8',  text: 'Henry Brown',   role: 'Operations Lead',  salary: 128000, startDate: '2018-11-01', perf: 'Good',      leaf: true },
+          { id: 'emp-9',  text: 'Iris Taylor',   role: 'Analyst',          salary: 105000, startDate: '2021-03-01', perf: 'Excellent', leaf: true },
+          { id: 'emp-10', text: 'Jack White',    role: 'Coordinator',      salary:  92000, startDate: '2023-09-15', perf: 'Average',   leaf: true },
+        ],
+      },
+    ];
+
+    // ── State keys ────────────────────────────────────────────────────────────
+
+    const STATE_ID   = 'state-persistence-demo';
+    const SORT_KEY   = `treegrid.state.${STATE_ID}.sort`;
+
+    // ── Sort state ────────────────────────────────────────────────────────────
+
+    let sortField = null;  // dataIndex string or null
+    let sortDir   = 'asc'; // 'asc' | 'desc'
+
+    // Preserve original child order for each parent so we can restore it
+    const originalOrder = new Map();
+
+    function captureOriginalOrder(node) {
+      if (!node.isLeaf?.() && node.childNodes?.length) {
+        originalOrder.set(node, [...node.childNodes]);
+        node.childNodes.forEach(captureOriginalOrder);
+      }
+    }
+
+    function applySortToTree() {
+      grid.getRootNode().cascadeBy((node) => {
+        if (node.isRoot() || !node.childNodes?.length) return;
+        if (!sortField) {
+          // Restore original order
+          const orig = originalOrder.get(node);
+          if (orig) node.childNodes.splice(0, node.childNodes.length, ...orig);
+        } else {
+          node.childNodes.sort((a, b) => {
+            const av = a.get(sortField) ?? '';
+            const bv = b.get(sortField) ?? '';
+            const cmp = sortField === 'salary'
+              ? Number(av) - Number(bv)
+              : String(av).localeCompare(String(bv));
+            return sortDir === 'asc' ? cmp : -cmp;
+          });
+        }
+      });
+      grid.getView().refresh();
+      updateSortIndicators();
+    }
+
+    function updateSortIndicators() {
+      const ths = [...grid.getView().el.querySelectorAll('th.x-treegrid-column-header')];
+      grid.getColumns().forEach((col, i) => {
+        const th = ths[i];
+        if (!th) return;
+        th.querySelector('.sort-indicator')?.remove();
+        if (!col.hidden && col.dataIndex === sortField) {
+          const span = document.createElement('span');
+          span.className = 'sort-indicator';
+          span.textContent = sortDir === 'asc' ? '↑' : '↓';
+          th.appendChild(span);
+        }
+      });
+    }
+
+    // ── Renderers ─────────────────────────────────────────────────────────────
+
+    function formatSalary(v) {
+      if (!v) return '<span style="color:#bdbdbd">—</span>';
+      return '$' + Number(v).toLocaleString('en-US');
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '<span style="color:#bdbdbd">—</span>';
+      return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function formatPerf(v) {
+      if (!v) return '';
+      const cls = 'perf-' + v.toLowerCase();
+      return `<span class="perf-badge ${cls}">${v}</span>`;
+    }
+
+    // ── TreeGrid ──────────────────────────────────────────────────────────────
+
+    const stateMixin = new TreeGridStateMixin(STATE_ID);
+
+    const grid = new TreeGrid({
+      title: 'Employee Directory',
+      store: treeData,
+      rootVisible: false,
+      useArrows: true,
+      plugins: [stateMixin],
+      columns: [
+        new TreeGridColumn({ text: 'Name',        dataIndex: 'text',      flex: 1,   minWidth: 140 }),
+        new Column({         text: 'Role',         dataIndex: 'role',      width: 150 }),
+        new Column({         text: 'Salary',       dataIndex: 'salary',    width: 110, renderer: formatSalary }),
+        new Column({         text: 'Start Date',   dataIndex: 'startDate', width: 120, renderer: formatDate }),
+        new Column({         text: 'Performance',  dataIndex: 'perf',      width: 120, renderer: formatPerf }),
+      ],
+      height: 420,
+    });
+
+    grid.render(document.getElementById('grid-container'));
+
+    // Capture original child order before any sort is applied
+    captureOriginalOrder(grid.getRootNode());
+
+    // ── State key label ───────────────────────────────────────────────────────
+
+    document.getElementById('state-key-label').textContent = `treegrid.state.${STATE_ID}`;
+
+    // ── Column header sort clicks ─────────────────────────────────────────────
+
+    function wireHeaderClicks() {
+      const ths = [...grid.getView().el.querySelectorAll('th.x-treegrid-column-header')];
+      grid.getColumns().forEach((col, i) => {
+        const th = ths[i];
+        if (!th || col.hidden) return;
+        // Remove any prior listener by replacing the element clone trick
+        // (addEventListeners stack up; we just guard against double-sort below)
+        th.addEventListener('click', () => {
+          if (sortField === col.dataIndex) {
+            if (sortDir === 'asc') sortDir = 'desc';
+            else { sortField = null; sortDir = 'asc'; }
+          } else {
+            sortField = col.dataIndex;
+            sortDir = 'asc';
+          }
+          applySortToTree();
+        });
+      });
+    }
+
+    wireHeaderClicks();
+
+    // ── Apply saved state on load ─────────────────────────────────────────────
+
+    const savedState = stateMixin.loadState();
+    if (savedState) {
+      stateMixin.applyState(savedState);
+      // applyState() calls view.refresh() (tbody only) — manually sync <th> widths
+      syncHeaderWidths();
+      wireHeaderClicks(); // re-wire after headers rebuild
+
+      // Restore sort
+      const savedSort = (() => {
+        try { return JSON.parse(localStorage.getItem(SORT_KEY) ?? 'null'); } catch { return null; }
+      })();
+      if (savedSort) {
+        sortField = savedSort.field;
+        sortDir   = savedSort.dir;
+        applySortToTree();
+      }
+    }
+
+    refreshStatePreview();
+
+    // ── Sync <th> widths from column objects ──────────────────────────────────
+
+    function syncHeaderWidths() {
+      const ths = [...grid.getView().el.querySelectorAll('th.x-treegrid-column-header')];
+      // ths[i] corresponds to allCols[i] (all columns were visible at render time)
+      grid.getColumns().forEach((col, i) => {
+        const th = ths[i];
+        if (!th) return;
+        th.style.display = col.hidden ? 'none' : '';
+        if (!col.hidden) th.style.width = col.width ? col.width + 'px' : '';
+      });
+    }
+
+    // ── Save state ────────────────────────────────────────────────────────────
+
+    function saveAll() {
+      stateMixin.saveState();
+      // Also persist sort separately (mixin's sorters field is not implemented)
+      const sortPayload = sortField ? { field: sortField, dir: sortDir } : null;
+      try {
+        if (sortPayload) localStorage.setItem(SORT_KEY, JSON.stringify(sortPayload));
+        else             localStorage.removeItem(SORT_KEY);
+      } catch { /* ignore */ }
+      refreshStatePreview();
+      showStatus('saved', '✓ State saved');
+    }
+
+    function clearAll() {
+      stateMixin.clearState();
+      try { localStorage.removeItem(SORT_KEY); } catch { /* ignore */ }
+      refreshStatePreview();
+      showStatus('cleared', '✕ State cleared — reloading…');
+      setTimeout(() => location.reload(), 800);
+    }
+
+    // ── State preview ─────────────────────────────────────────────────────────
+
+    function refreshStatePreview() {
+      const pre = document.getElementById('state-pre');
+      const raw = (() => {
+        try { return localStorage.getItem(`treegrid.state.${STATE_ID}`); } catch { return null; }
+      })();
+      if (!raw) {
+        pre.innerHTML = '<span class="empty">No saved state</span>';
+        return;
+      }
+      try {
+        const obj = JSON.parse(raw);
+        // Augment display with current sort (stored separately)
+        const sortRaw = (() => {
+          try { return JSON.parse(localStorage.getItem(SORT_KEY) ?? 'null'); } catch { return null; }
+        })();
+        if (sortRaw) obj['_sort (separate key)'] = sortRaw;
+        pre.innerHTML = colorizeJson(JSON.stringify(obj, null, 2));
+      } catch {
+        pre.innerHTML = `<span class="empty">${raw}</span>`;
+      }
+    }
+
+    function colorizeJson(src) {
+      function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+      return esc(src)
+        .replace(/"([^"]+)":/g, '<span class="jk">"$1"</span>:')
+        .replace(/: "([^"]*)"/g, ': <span class="js">"$1"</span>')
+        .replace(/: (true|false|null)/g, ': <span class="jn">$1</span>')
+        .replace(/: (-?\d+(\.\d+)?)/g, ': <span class="jn">$1</span>');
+    }
+
+    function showStatus(type, msg) {
+      const el = document.getElementById('state-status');
+      el.textContent = msg;
+      el.className = 'state-status ' + type;
+      setTimeout(() => {
+        el.textContent = 'awaiting save…';
+        el.className = 'state-status';
+      }, 2500);
+    }
+
+    // ── Toolbar wiring ────────────────────────────────────────────────────────
+
+    document.getElementById('btn-save').addEventListener('click', saveAll);
+    document.getElementById('btn-clear').addEventListener('click', clearAll);
+
+    // Narrow / Wide salary column
+    const salaryCol = grid.getColumns().find((c) => c.dataIndex === 'salary');
+    document.getElementById('btn-narrow').addEventListener('click', () => {
+      if (salaryCol) { salaryCol.width = 90; grid.getView().refresh(); syncHeaderWidths(); }
+    });
+    document.getElementById('btn-wide').addEventListener('click', () => {
+      if (salaryCol) { salaryCol.width = 160; grid.getView().refresh(); syncHeaderWidths(); }
+    });
+
+    // Toggle Performance column visibility
+    const perfCol = grid.getColumns().find((c) => c.dataIndex === 'perf');
+    document.getElementById('btn-toggle-perf').addEventListener('click', () => {
+      if (perfCol) {
+        perfCol.hidden = !perfCol.hidden;
+        grid.getView().refresh();
+        syncHeaderWidths();
+        wireHeaderClicks();
+      }
+    });
+
+    document.getElementById('btn-expand-all').addEventListener('click', () => grid.expandAll());
+    document.getElementById('btn-collapse-all').addEventListener('click', () => grid.collapseAll());
+
+    // ── Source viewer ─────────────────────────────────────────────────────────
+
+    (function buildSourceBlock() {
+      const scripts = document.querySelectorAll('script[type="module"]');
+      const raw = scripts[scripts.length - 1].textContent ?? '';
+      const lines = raw.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+      const indent = lines.reduce((min, l) => {
+        const m = l.match(/^(\s+)/);
+        return (m && l.trim()) ? Math.min(min, m[1].length) : min;
+      }, Infinity);
+      const dedented = lines.map(l => l.slice(indent === Infinity ? 0 : indent)).join('\n');
+
+      function esc(s) {
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+      function highlight(src) {
+        return src.split('\n').map(line => {
+          let out = '';
+          let i = 0;
+          while (i < line.length) {
+            if (line[i] === '/' && line[i+1] === '/') {
+              out += `<span class="tok-comment">${esc(line.slice(i))}</span>`;
+              i = line.length;
+              continue;
+            }
+            if (line[i] === '`' || line[i] === '"' || line[i] === "'") {
+              const q = line[i];
+              let j = i + 1;
+              while (j < line.length) {
+                if (line[j] === '\\') { j += 2; continue; }
+                if (line[j] === q)    { j++; break; }
+                j++;
+              }
+              const tok = line.slice(i, j);
+              const inner = esc(tok).replace(/(https?:\/\/[^\s'"`,]+)/g, '<span class="tok-url">$1</span>');
+              out += `<span class="tok-string">${inner}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[0-9]/.test(line[i]) && (i === 0 || /[\s,(:=\[!<>+\-*\/]/.test(line[i-1]))) {
+              let j = i;
+              while (j < line.length && /[0-9_.]/.test(line[j])) j++;
+              out += `<span class="tok-number">${esc(line.slice(i, j))}</span>`;
+              i = j;
+              continue;
+            }
+            if (/[a-zA-Z_$]/.test(line[i])) {
+              let j = i;
+              while (j < line.length && /[a-zA-Z0-9_$]/.test(line[j])) j++;
+              const word = line.slice(i, j);
+              const KEYWORDS = new Set([
+                'import','from','export','const','let','var','function','return',
+                'new','if','else','for','of','in','while','class','extends',
+                'this','true','false','null','undefined','async','await','=>',
+              ]);
+              if (KEYWORDS.has(word)) {
+                out += `<span class="tok-keyword">${esc(word)}</span>`;
+              } else if (j < line.length && line[j] === '(') {
+                out += `<span class="tok-fn">${esc(word)}</span>`;
+              } else {
+                out += esc(word);
+              }
+              i = j;
+              continue;
+            }
+            out += esc(line[i]);
+            i++;
+          }
+          return out;
+        }).join('\n');
+      }
+
+      document.getElementById('source-pre').innerHTML = highlight(dedented);
+
+      document.getElementById('copy-btn').addEventListener('click', function() {
+        navigator.clipboard.writeText(dedented).then(() => {
+          this.textContent = 'Copied!';
+          this.classList.add('copied');
+          setTimeout(() => { this.textContent = 'Copy'; this.classList.remove('copied'); }, 2000);
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
