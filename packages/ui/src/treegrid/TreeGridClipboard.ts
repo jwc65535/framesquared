@@ -63,7 +63,7 @@ export class TreeGridClipboard {
     if (!tg) return '';
     const columns = tg.getColumns();
     const selection = tg.getSelection();
-    const nodes = selection.length > 0 ? selection : [];
+    if (selection.length === 0) return '';
 
     const rows: string[] = [];
 
@@ -71,14 +71,38 @@ export class TreeGridClipboard {
     const headers = columns.filter((c) => !c.hidden).map((c) => c.text);
     rows.push(headers.join('\t'));
 
-    for (const node of nodes) {
+    // When an ancestor and a descendant are both selected, keep only the
+    // ancestor — otherwise the descendant would appear twice (once from
+    // the ancestor's subtree walk and once from its own entry).
+    const selSet = new Set(selection);
+    const roots = selection.filter((node) => {
+      let p = (node as any).parentNode as any;
+      while (p && !p.isRoot?.()) {
+        if (selSet.has(p)) return false;
+        p = p.parentNode;
+      }
+      return true;
+    });
+
+    // Expand each root into its full subtree (node + all descendants).
+    const allNodes: typeof selection = [];
+    for (const root of roots) {
+      (root as any).cascadeBy((n: any) => allNodes.push(n));
+    }
+
+    // Indent relative to the shallowest copied node so the output always
+    // starts at zero tabs regardless of where in the tree the selection sits.
+    const minDepth = allNodes.reduce((m, n) => Math.min(m, (n as any).depth ?? 0), Infinity);
+    const baseDepth = minDepth === Infinity ? 0 : minDepth;
+
+    for (const node of allNodes) {
       const cells: string[] = [];
       for (const col of columns) {
         if (col.hidden) continue;
         let cellValue = String((node as any).get?.(col.dataIndex) ?? '');
         if (this.config.copyHierarchy && col === tg.getTreeColumn()) {
-          const depth = node.depth ?? 0;
-          cellValue = this.config.indentCharacter.repeat(depth) + cellValue;
+          const relDepth = ((node as any).depth ?? 0) - baseDepth;
+          cellValue = this.config.indentCharacter.repeat(relDepth) + cellValue;
         }
         cells.push(cellValue);
       }
@@ -93,22 +117,57 @@ export class TreeGridClipboard {
     if (!tg) return;
 
     const lines = text.split('\n').filter(Boolean);
-    const columns = tg.getColumns().filter((c) => !c.hidden);
+    if (lines.length === 0) return;
+
+    const visibleCols = tg.getColumns().filter((c) => !c.hidden);
     const selection = tg.getSelection();
-    const parent =
+    const pasteRoot =
       selection.length > 0 && this.config.pasteAsChildren ? selection[0] : tg.getRootNode();
 
+    // parentStack[d] is the node that should receive children at relative depth d.
+    // Index 0 is always the paste target; each appended node registers itself
+    // at index depth+1 for the benefit of deeper rows that follow.
+    const parentStack: any[] = [pasteRoot];
+
+    // Seed for unique IDs — incremented per node so rapid pastes stay unique.
+    let idSeed = Date.now();
+
     for (const line of lines) {
-      const values = line.split('\t');
+      const parts = line.split('\t');
+
+      // Count leading empty strings produced by copyHierarchy tab indentation.
+      // Stop one before the end so at least one value remains.
+      let depth = 0;
+      while (depth < parts.length - 1 && parts[depth] === '') depth++;
+
+      // Map remaining parts to visible columns.
+      const values = parts.slice(depth);
       const data: Record<string, unknown> = {};
-      for (let i = 0; i < Math.min(values.length, columns.length); i++) {
-        data[columns[i].dataIndex] = values[i] ?? '';
+      for (let i = 0; i < Math.min(values.length, visibleCols.length); i++) {
+        data[visibleCols[i].dataIndex] = values[i] ?? '';
       }
+
+      // Trim the stack so parentStack[depth] is the correct parent node.
+      while (parentStack.length > depth + 1) parentStack.pop();
+      const parent = parentStack[depth];
+
       const newNode = TreeModel.create(data) as any;
+
+      // Pasted nodes carry no id — assign one before appendChild so that
+      // store.registerRecursive() can index the node and the view's click
+      // handlers (expand arrow, row selection) can look it up via getNodeById.
+      if (!newNode.getId?.()) {
+        newNode.setId?.('paste_' + idSeed++);
+      }
+
       if (newNode && typeof newNode.isRoot !== 'function') {
         applyNodeInterface(newNode, (parent.depth ?? 0) + 1);
       }
       tg.getStore().appendChild(parent, newNode);
+
+      // This node becomes the parent candidate for the next deeper depth level.
+      parentStack[depth + 1] = newNode;
+      parentStack.length = depth + 2;
     }
 
     tg.getView().refresh();
