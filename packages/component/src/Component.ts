@@ -35,6 +35,7 @@ function ensureObservable(instance: any): void {
 
 export interface ComponentConfig {
   xtype?: string;
+  id?: string;
   cls?: string | string[];
   style?: Partial<CSSStyleDeclaration> | string;
   width?: number | string;
@@ -118,7 +119,7 @@ export class Component extends Base {
   constructor(config: ComponentConfig = {}) {
     super();
     this._config = config;
-    this.componentId = generateId('ext-cmp');
+    this.componentId = config.id ?? generateId('ext-cmp');
 
     ensureObservable(this);
 

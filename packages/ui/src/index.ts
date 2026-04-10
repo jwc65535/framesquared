@@ -5,6 +5,9 @@
 
 import './styles.js';
 
+export { Controller } from '@framesquared/component';
+export type { ControllerConfig, EventMap } from '@framesquared/component';
+
 export { Panel } from './panel/Panel.js';
 export type { PanelConfig, ToolConfig } from './panel/Panel.js';
 

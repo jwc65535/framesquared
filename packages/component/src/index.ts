@@ -7,6 +7,8 @@ import './styles.js';
 
 export { Component } from './Component.js';
 export type { ComponentConfig } from './Component.js';
+export { Controller } from './Controller.js';
+export type { ControllerConfig, EventMap } from './Controller.js';
 export { Template } from './Template.js';
 export { Container } from './Container.js';
 export type { ContainerConfig } from './Container.js';
