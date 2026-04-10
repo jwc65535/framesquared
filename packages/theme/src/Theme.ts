@@ -52,14 +52,28 @@ export class Theme {
   // CSS custom properties
   // -----------------------------------------------------------------------
 
-  apply(): void {
-    this._appliedVars = [];
+  /**
+   * Apply all tokens as CSS custom properties.
+   *
+   * - No argument → applies to `:root` (existing behaviour). The applied var
+   *   list is stored internally so that the no-arg `unapply()` can clean up.
+   * - With an element → applies to that element's inline style instead of
+   *   `:root`. Does NOT update the internal `_appliedVars` list. Returns the
+   *   var names applied so the caller (e.g. ThemeScope) can track them.
+   */
+  apply(element?: HTMLElement): string[] {
     const flat = this.flatten();
-    const root = document.documentElement;
+    const target = element ?? document.documentElement;
+    const varNames: string[] = [];
     for (const [varName, value] of flat) {
-      root.style.setProperty(varName, String(value));
-      this._appliedVars.push(varName);
+      target.style.setProperty(varName, String(value));
+      varNames.push(varName);
     }
+    if (!element) {
+      // Track for no-arg unapply() — global :root case only.
+      this._appliedVars = varNames;
+    }
+    return varNames;
   }
 
   unapply(): void {
@@ -72,6 +86,11 @@ export class Theme {
 
   getVariableNames(): string[] {
     return this.flatten().map(([name]) => name);
+  }
+
+  /** Expose flattened [cssVar, value] pairs for inspection / validation. */
+  getFlatTokens(): [string, unknown][] {
+    return this.flatten();
   }
 
   // -----------------------------------------------------------------------
