@@ -128,6 +128,9 @@ export class Panel extends Container {
     // Point Container's body to our panel-body
     (this as any)._bodyEl = this._panelBodyEl;
 
+    // Apply layout CSS (e.g. display:flex for hbox/vbox)
+    this.getLayout().configureContainer(this._panelBodyEl);
+
     // -- Footer --
     if (cfg.footer) {
       this._footerEl = document.createElement('div');

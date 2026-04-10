@@ -13,7 +13,7 @@ export { Template } from './Template.js';
 export { Container } from './Container.js';
 export type { ContainerConfig } from './Container.js';
 export { ComponentQuery, matchesCQ } from './ComponentQuery.js';
-export { Layout, resolveLayout } from './Layout.js';
+export { Layout, resolveLayout, registerLayout } from './Layout.js';
 export type { LayoutConfig } from './Layout.js';
 
 // New CQ engine

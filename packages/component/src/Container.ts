@@ -63,6 +63,9 @@ export class Container extends Component {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.appendChild(this._bodyEl);
 
+    // Apply layout CSS (e.g. display:flex for hbox/vbox)
+    this.getLayout().configureContainer(this._bodyEl);
+
     // Render any items that were added before this container was rendered
     for (const child of this._items) {
       if (!child.rendered) {

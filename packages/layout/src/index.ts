@@ -3,6 +3,29 @@
  * Layout managers
  */
 
+import { registerLayout } from '@framesquared/component';
+import { HBoxLayout } from './box/HBoxLayout.js';
+import { VBoxLayout } from './box/VBoxLayout.js';
+import { FitLayout } from './FitLayout.js';
+import { CardLayout } from './CardLayout.js';
+import { AnchorLayout } from './AnchorLayout.js';
+import { BorderLayout } from './BorderLayout.js';
+import { ColumnLayout } from './ColumnLayout.js';
+import { TableLayout } from './TableLayout.js';
+import { AbsoluteLayout } from './AbsoluteLayout.js';
+import { AccordionLayout } from './AccordionLayout.js';
+
+registerLayout('hbox',     HBoxLayout);
+registerLayout('vbox',     VBoxLayout);
+registerLayout('fit',      FitLayout);
+registerLayout('card',     CardLayout);
+registerLayout('anchor',   AnchorLayout);
+registerLayout('border',   BorderLayout);
+registerLayout('column',   ColumnLayout);
+registerLayout('table',    TableLayout);
+registerLayout('absolute', AbsoluteLayout);
+registerLayout('accordion',AccordionLayout);
+
 export { Layout } from './Layout.js';
 export type { SizePolicy, LayoutConfig } from './Layout.js';
 export { AutoLayout } from './AutoLayout.js';

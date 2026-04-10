@@ -12,6 +12,24 @@ export interface LayoutConfig {
   [key: string]: unknown;
 }
 
+// ---------------------------------------------------------------------------
+// Layout registry
+// ---------------------------------------------------------------------------
+
+const _registry = new Map<string, new (config: LayoutConfig) => Layout>();
+
+/**
+ * Register a Layout subclass under a string alias.
+ * Called by @framesquared/layout at module init time.
+ */
+export function registerLayout(type: string, Cls: new (config: any) => any): void {
+  _registry.set(type, Cls as new (config: LayoutConfig) => Layout);
+}
+
+// ---------------------------------------------------------------------------
+// Base Layout
+// ---------------------------------------------------------------------------
+
 export class Layout {
   readonly type: string;
 
@@ -20,7 +38,13 @@ export class Layout {
   }
 
   /**
-   * Performs layout calculation on the owner container.
+   * Apply CSS to the container's body element.
+   * No-op in the base class; overridden by BoxLayout etc.
+   */
+  configureContainer(_el: HTMLElement): void {}
+
+  /**
+   * Performs layout on the owner container.
    * Override in subclasses.
    */
   doLayout(_owner: any): void {
@@ -30,9 +54,13 @@ export class Layout {
 
 /**
  * Resolves a layout config to a Layout instance.
+ * Uses the registry so that layouts registered by @framesquared/layout
+ * are returned with the correct subclass.
  */
 export function resolveLayout(config: string | LayoutConfig | undefined): Layout {
   if (!config) return new Layout();
-  if (typeof config === 'string') return new Layout({ type: config });
-  return new Layout(config);
+  const cfg = typeof config === 'string' ? { type: config } : config;
+  const type = cfg.type ?? 'auto';
+  const Cls = _registry.get(type);
+  return Cls ? new Cls(cfg) : new Layout(cfg);
 }
