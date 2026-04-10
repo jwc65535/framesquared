@@ -19,7 +19,8 @@ export const DarkTheme = new Theme({
       error: '#e57373',
       background: '#121212',
       surface: '#1e1e1e',
-      text: { primary: '#e0e0e0', secondary: '#aaaaaa', disabled: '#666666' },
+      text: { primary: '#e0e0e0', secondary: '#aaaaaa', disabled: '#666666', onPrimary: '#000000' },
+      border: '#3d3d3d',
     },
     component: {
       panel: { borderColor: '#333333' },

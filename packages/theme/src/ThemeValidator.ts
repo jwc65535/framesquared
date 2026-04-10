@@ -1,10 +1,10 @@
 /**
  * @framesquared/theme – ThemeValidator
  *
- * Opt-in token validation.  Call `new ThemeValidator().validate(theme)` to
- * get a list of type errors in a theme's token values.  Useful in tests and
- * development builds to catch mistakes like putting a shadow string where a
- * color is expected.
+ * Opt-in token validation.  Two entry points:
+ *
+ *   validate(theme)         — checks token value types only (format errors).
+ *   validateComplete(theme) — format errors + missing required token errors.
  *
  * Validation is structural — it checks that token values match the type
  * expected for each well-known token category:
@@ -47,13 +47,59 @@ export interface ValidationResult {
 // ThemeValidator
 // ---------------------------------------------------------------------------
 
+/**
+ * Minimum set of CSS custom property names that every complete theme must
+ * define.  `validate()` reports a missing-token error for any absent entry.
+ */
+const REQUIRED_VARS = new Set([
+  '--ext-color-primary',
+  '--ext-color-background',
+  '--ext-color-surface',
+  '--ext-color-border',
+  '--ext-color-text-primary',
+  '--ext-color-text-secondary',
+  '--ext-color-text-onPrimary',
+  '--ext-color-success',
+  '--ext-color-error',
+  '--ext-shadow-sm',
+  '--ext-shadow-md',
+  '--ext-transition-fast',
+]);
+
 export class ThemeValidator {
+  /**
+   * Check token value types only.  Does NOT check for missing required tokens.
+   * Use `validateComplete()` to also enforce the minimum required token set.
+   */
   validate(theme: Theme): ValidationResult {
     const errors: ValidationError[] = [];
-
     for (const [varName, value] of theme.getFlatTokens()) {
       const err = this._checkToken(varName, value);
       if (err) errors.push({ varName, value, message: err });
+    }
+    return { valid: errors.length === 0, errors };
+  }
+
+  /**
+   * Format checks + required-token completeness check.
+   * Reports a missing-token error for each entry in REQUIRED_VARS that the
+   * theme does not define.  Format errors always appear before missing-token
+   * errors so that `errors[0]` is the most specific problem.
+   */
+  validateComplete(theme: Theme): ValidationResult {
+    const errors: ValidationError[] = [];
+    const presentVars = new Set<string>();
+
+    for (const [varName, value] of theme.getFlatTokens()) {
+      presentVars.add(varName);
+      const err = this._checkToken(varName, value);
+      if (err) errors.push({ varName, value, message: err });
+    }
+
+    for (const req of REQUIRED_VARS) {
+      if (!presentVars.has(req)) {
+        errors.push({ varName: req, value: undefined, message: 'Required token is missing' });
+      }
     }
 
     return { valid: errors.length === 0, errors };

@@ -69,6 +69,22 @@ export class Theme {
       target.style.setProperty(varName, String(value));
       varNames.push(varName);
     }
+    // Emit px-suffixed shorthand aliases for numeric spacing and borderRadius
+    // tokens so that component CSS using --x-sp-* / --x-r-* shorthand vars
+    // receives theme-aware pixel values (e.g. --x-sp-md: 16px from spacing.md: 16).
+    for (const [varName, value] of flat) {
+      if (typeof value !== 'number') continue;
+      let alias: string | null = null;
+      if (varName.startsWith('--ext-spacing-')) {
+        alias = `--x-sp-${varName.slice('--ext-spacing-'.length)}`;
+      } else if (varName.startsWith('--ext-borderRadius-')) {
+        alias = `--x-r-${varName.slice('--ext-borderRadius-'.length)}`;
+      }
+      if (alias) {
+        target.style.setProperty(alias, `${value}px`);
+        varNames.push(alias);
+      }
+    }
     if (!element) {
       // Track for no-arg unapply() — global :root case only.
       this._appliedVars = varNames;

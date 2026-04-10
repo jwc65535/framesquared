@@ -12,7 +12,7 @@ const STYLES = `
   display: flex;
   flex-direction: column;
   background: var(--ext-color-background, #fff);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--ext-color-border, rgba(0,0,0,0.12));
   border-radius: var(--x-r-md, 4px);
   box-shadow: var(--ext-shadow-sm, 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08));
   overflow: hidden;
@@ -33,7 +33,7 @@ const STYLES = `
   gap: var(--x-sp-sm, 8px);
   padding: var(--x-sp-sm, 8px) var(--x-sp-md, 16px);
   background: var(--ext-color-primary, #1976d2);
-  color: #fff;
+  color: var(--ext-color-text-onPrimary, #ffffff);
   user-select: none;
   flex-shrink: 0;
 }
@@ -76,7 +76,7 @@ const STYLES = `
 .x-panel-footer {
   padding: var(--x-sp-sm, 8px) var(--x-sp-md, 16px);
   background: var(--ext-color-surface, #f5f5f5);
-  border-top: 1px solid rgba(0,0,0,0.08);
+  border-top: 1px solid color-mix(in srgb, var(--ext-color-border, rgba(0,0,0,0.1)) 60%, transparent);
   display: flex;
   align-items: center;
   gap: var(--x-sp-sm, 8px);
@@ -97,8 +97,8 @@ const STYLES = `
   border-radius: var(--x-r-sm, 2px);
   cursor: pointer;
   opacity: 0.75;
-  transition: opacity 0.15s, background 0.15s;
-  color: #fff;
+  transition: opacity var(--ext-transition-fast, 0.15s), background var(--ext-transition-fast, 0.15s);
+  color: var(--ext-color-text-onPrimary, #ffffff);
   font-size: 12px;
 }
 
@@ -128,7 +128,7 @@ const STYLES = `
   gap: var(--x-sp-xs, 4px);
   padding: 6px 16px;
   background: var(--ext-color-primary, #1976d2);
-  color: #fff;
+  color: var(--ext-color-text-onPrimary, #ffffff);
   border: 1px solid transparent;
   border-radius: var(--x-r-md, 4px);
   font-family: inherit;
@@ -138,7 +138,7 @@ const STYLES = `
   cursor: pointer;
   text-decoration: none;
   white-space: nowrap;
-  transition: background 0.15s, box-shadow 0.15s, opacity 0.15s;
+  transition: background var(--ext-transition-fast, 0.15s), box-shadow var(--ext-transition-fast, 0.15s), opacity var(--ext-transition-fast, 0.15s);
   outline: none;
   -webkit-appearance: none;
 }
@@ -177,10 +177,10 @@ const STYLES = `
 .x-btn-default {
   background: var(--ext-color-surface, #f5f5f5);
   color: var(--ext-color-text-primary, #212121);
-  border-color: rgba(0,0,0,0.2);
+  border-color: var(--ext-color-border, rgba(0,0,0,0.2));
 }
 .x-btn-default:hover {
-  background: #e8e8e8;
+  background: color-mix(in srgb, var(--ext-color-surface, #f5f5f5) 90%, black);
 }
 
 .x-btn-danger {
@@ -205,6 +205,27 @@ const STYLES = `
 .x-btn-arrow::before { content: '▾'; }
 .x-btn-split { border-left: 1px solid rgba(255,255,255,0.3); padding-left: 6px; }
 
+/* ── SegmentedButton ─────────────────────────────────────────────────────── */
+.x-segmented-btn {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--x-r-md, 4px);
+  border: 1px solid color-mix(in srgb, var(--ext-color-primary, #1976d2) 60%, transparent);
+  overflow: hidden;
+  gap: 0;
+}
+
+.x-segmented-btn .x-btn {
+  border-radius: 0;
+  border: none;
+  border-right: 1px solid color-mix(in srgb, var(--ext-color-primary, #1976d2) 60%, transparent);
+  flex: 1 0 auto;
+}
+
+.x-segmented-btn .x-btn:last-child {
+  border-right: none;
+}
+
 /* ── Toolbar ─────────────────────────────────────────────────────────────── */
 .x-toolbar {
   display: flex;
@@ -212,7 +233,7 @@ const STYLES = `
   gap: var(--x-sp-xs, 4px);
   padding: var(--x-sp-xs, 4px) var(--x-sp-sm, 8px);
   background: var(--ext-color-surface, #f5f5f5);
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+  border-bottom: 1px solid var(--ext-color-border, rgba(0,0,0,0.1));
   flex-shrink: 0;
 }
 
@@ -273,7 +294,7 @@ const STYLES = `
   border-bottom: none;
   border-radius: var(--x-r-md, 4px) var(--x-r-md, 4px) 0 0;
   cursor: pointer;
-  transition: color 0.15s, background 0.15s;
+  transition: color var(--ext-transition-fast, 0.15s), background var(--ext-transition-fast, 0.15s);
   user-select: none;
   white-space: nowrap;
 }
@@ -286,7 +307,7 @@ const STYLES = `
 .x-tab.x-tab-active {
   color: var(--ext-color-primary, #1976d2);
   background: var(--ext-color-background, #fff);
-  border-color: rgba(0,0,0,0.12);
+  border-color: var(--ext-color-border, rgba(0,0,0,0.12));
   margin-bottom: -2px;
   padding-bottom: 10px;
 }
@@ -300,7 +321,7 @@ const STYLES = `
   border-radius: 50%;
   font-size: 10px;
   opacity: 0.5;
-  transition: opacity 0.15s, background 0.15s;
+  transition: opacity var(--ext-transition-fast, 0.15s), background var(--ext-transition-fast, 0.15s);
 }
 .x-tab-close:hover { opacity: 1; background: rgba(0,0,0,0.1); }
 .x-tab-close::before { content: '✕'; }
@@ -319,7 +340,7 @@ const STYLES = `
   border-radius: var(--x-r-lg, 8px);
   box-shadow: var(--ext-shadow-xl, 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22));
   overflow: hidden;
-  z-index: 1000;
+  z-index: var(--ext-zIndex-modal, 1000);
   min-width: 200px;
   min-height: 100px;
 }
@@ -336,7 +357,7 @@ const STYLES = `
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.45);
-  z-index: 999;
+  z-index: calc(var(--ext-zIndex-modal, 1000) - 1);
 }
 
 /* ── Menu ────────────────────────────────────────────────────────────────── */
@@ -344,12 +365,12 @@ const STYLES = `
   display: flex;
   flex-direction: column;
   background: var(--ext-color-background, #fff);
-  border: 1px solid rgba(0,0,0,0.12);
+  border: 1px solid var(--ext-color-border, rgba(0,0,0,0.12));
   border-radius: var(--x-r-md, 4px);
   box-shadow: var(--ext-shadow-md, 0 3px 6px rgba(0,0,0,0.16));
   padding: var(--x-sp-xs, 4px) 0;
   min-width: 160px;
-  z-index: 1100;
+  z-index: var(--ext-zIndex-tooltip, 1100);
 }
 
 .x-menu-item {
@@ -360,7 +381,7 @@ const STYLES = `
   font-size: 14px;
   color: var(--ext-color-text-primary, #212121);
   cursor: pointer;
-  transition: background 0.1s;
+  transition: background var(--ext-transition-fast, 0.1s);
   user-select: none;
 }
 
@@ -386,7 +407,7 @@ const STYLES = `
 
 .x-menu-item-separator {
   height: 1px;
-  background: rgba(0,0,0,0.1);
+  background: var(--ext-color-border, rgba(0,0,0,0.1));
   margin: var(--x-sp-xs, 4px) 0;
 }
 
@@ -437,7 +458,7 @@ const STYLES = `
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ext-color-text-secondary, #757575);
-  border-bottom: 2px solid rgba(0,0,0,0.1);
+  border-bottom: 2px solid var(--ext-color-border, rgba(0,0,0,0.1));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -445,7 +466,7 @@ const STYLES = `
 
 /* ── Rows ────────────────────────────────────────────────────────────────── */
 .x-treegrid-node {
-  transition: background 0.1s;
+  transition: background var(--ext-transition-fast, 0.1s);
 }
 
 .x-treegrid-node:hover td {
@@ -464,7 +485,7 @@ const STYLES = `
 /* ── Cells ───────────────────────────────────────────────────────────────── */
 .x-treegrid-node td.x-grid-cell {
   padding: 0;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid color-mix(in srgb, var(--ext-color-border, rgba(0,0,0,0.1)) 50%, transparent);
   vertical-align: middle;
   overflow: hidden;
 }
@@ -502,7 +523,7 @@ const STYLES = `
   cursor: pointer;
   color: var(--ext-color-text-secondary, #757575);
   font-size: 10px;
-  transition: color 0.15s, background 0.15s;
+  transition: color var(--ext-transition-fast, 0.15s), background var(--ext-transition-fast, 0.15s);
   user-select: none;
 }
 
@@ -544,11 +565,11 @@ const STYLES = `
   justify-content: center;
   width: 16px;
   height: 16px;
-  border: 1.5px solid rgba(0,0,0,0.3);
+  border: 1.5px solid var(--ext-color-text-secondary, rgba(0,0,0,0.3));
   border-radius: var(--x-r-sm, 2px);
   flex-shrink: 0;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color var(--ext-transition-fast, 0.15s), background var(--ext-transition-fast, 0.15s);
 }
 .x-treegrid-checkbox:hover {
   border-color: var(--ext-color-primary, #1976d2);
@@ -559,7 +580,7 @@ const STYLES = `
 }
 .x-treegrid-checkbox-checked::before {
   content: '✓';
-  color: #fff;
+  color: var(--ext-color-text-onPrimary, #ffffff);
   font-size: 11px;
   font-weight: bold;
 }
@@ -569,7 +590,7 @@ const STYLES = `
 }
 .x-treegrid-checkbox-indeterminate::before {
   content: '–';
-  color: #fff;
+  color: var(--ext-color-text-onPrimary, #ffffff);
   font-size: 12px;
   font-weight: bold;
 }

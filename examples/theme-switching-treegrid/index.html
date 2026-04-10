@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – Theme Switching</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--ext-color-background, #f0f2f5);
+      min-height: 100vh;
+      color: var(--ext-color-text-primary, #212121);
+    }
+
+    /* ── Page header — fixed example branding, not a theme colour ─────────── */
+    .page-header {
+      background: linear-gradient(135deg, #4a148c 0%, #7b1fa2 60%, #ce93d8 100%);
+      padding: 32px 40px 28px;
+      color: #fff;
+    }
+    .page-header-inner { max-width: 1180px; margin: 0 auto; }
+    .page-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px; padding: 4px 10px; margin-bottom: 14px; backdrop-filter: blur(4px);
+    }
+    .page-title { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .page-subtitle { font-size: 15px; opacity: 0.85; font-weight: 400; max-width: 560px; line-height: 1.5; }
+    .page-subtitle code {
+      background: rgba(255,255,255,0.18); border-radius: 4px; padding: 1px 5px;
+      font-size: 13px; font-family: 'Fira Code', ui-monospace, monospace;
+    }
+
+    /* ── Page body ────────────────────────────────────────────────────────── */
+    .page-body { max-width: 1180px; margin: 0 auto; padding: 32px 40px 48px; }
+
+    /* ── Layout ───────────────────────────────────────────────────────────── */
+    .layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start; }
+
+    /* ── Toolbar row ──────────────────────────────────────────────────────── */
+    .toolbar-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .toolbar-actions { display: flex; gap: 8px; }
+
+    /* ── Grid wrapper ─────────────────────────────────────────────────────── */
+    .grid-wrapper {
+      border-radius: 8px; overflow: hidden;
+      box-shadow: var(--ext-shadow-md, 0 2px 4px rgba(0,0,0,0.14));
+    }
+    .grid-wrapper .x-panel { border-radius: 0; box-shadow: none; border: none; }
+
+    /* ── Side panel ───────────────────────────────────────────────────────── */
+    .side-panel { display: flex; flex-direction: column; gap: 16px; }
+
+    /* ── Scoped preview — children use vars from the scope element itself ─── */
+    .scope-container { border-radius: 8px; overflow: hidden; border: 2px solid rgba(128,128,128,0.2); }
+    .scope-header {
+      padding: 8px 12px; font-size: 12px; font-weight: 600;
+      background: var(--ext-color-primary);
+      color: var(--ext-color-text-onPrimary);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .scope-body {
+      padding: 10px 12px; font-size: 12px;
+      background: var(--ext-color-surface);
+      color: var(--ext-color-text-primary);
+    }
+    .scope-body-row {
+      display: flex; align-items: center; gap: 8px; padding: 3px 0;
+      border-bottom: 1px solid var(--ext-color-background);
+    }
+    .scope-body-row:last-child { border-bottom: none; }
+    .scope-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ext-color-primary); flex-shrink: 0; }
+
+    /* ── Token list ───────────────────────────────────────────────────────── */
+    .token-list { display: flex; flex-direction: column; gap: 4px; max-height: 200px; overflow-y: auto; }
+    .token-row  { display: flex; align-items: center; gap: 6px; font-size: 10px; min-width: 0; }
+    .token-swatch {
+      width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0;
+      border: 1px solid rgba(128,128,128,0.2);
+    }
+    .token-name {
+      flex: 1; font-family: 'Fira Code', ui-monospace, monospace;
+      color: var(--ext-color-text-secondary, #757575);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+    }
+    .token-value {
+      font-family: 'Fira Code', ui-monospace, monospace;
+      color: var(--ext-color-text-primary, #424242);
+      flex-shrink: 0; max-width: 80px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    /* ── Validation output ────────────────────────────────────────────────── */
+    .validation-result { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; }
+    .validation-icon   { font-size: 16px; }
+    .validation-pass   { color: var(--ext-color-success, #2e7d32); }
+    .validation-fail   { color: var(--ext-color-error, #c62828); }
+    .validation-errors { margin-top: 8px; font-size: 11px; display: flex; flex-direction: column; gap: 3px; }
+    .validation-error-row {
+      font-family: 'Fira Code', ui-monospace, monospace;
+      color: var(--ext-color-error, #c62828);
+      background: var(--ext-color-background, #fce4ec);
+      border-radius: 4px; padding: 3px 6px;
+    }
+
+    /* ── Source block — fixed dark editor ────────────────────────────────── */
+    .source-section { margin-top: 40px; }
+    .source-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .source-heading h2 { font-size: 14px; font-weight: 600; color: var(--ext-color-text-primary, #424242); letter-spacing: 0.02em; }
+    .source-heading-line { flex: 1; height: 1px; background: rgba(128,128,128,0.2); }
+    .source-wrapper { border-radius: 10px; overflow: hidden; box-shadow: var(--ext-shadow-md, 0 2px 8px rgba(0,0,0,0.15)); }
+    .source-bar { display: flex; align-items: center; justify-content: space-between; background: #1e2433; padding: 10px 16px; }
+    .source-dots { display: flex; gap: 6px; }
+    .source-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .source-dot-red    { background: #ff5f57; }
+    .source-dot-yellow { background: #febc2e; }
+    .source-dot-green  { background: #28c840; }
+    .source-filename { font-size: 12px; font-weight: 500; color: #8b9ab4; font-family: 'Fira Code', monospace; }
+    .source-copy-btn {
+      font-size: 11px; font-weight: 500; color: #8b9ab4;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px; padding: 3px 10px; cursor: pointer;
+      transition: background 0.15s, color 0.15s; font-family: inherit;
+    }
+    .source-copy-btn:hover  { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    .source-copy-btn.copied { color: #4caf50; border-color: #4caf50; }
+    pre.source-pre {
+      margin: 0; padding: 24px; background: #282c3e; overflow-x: auto;
+      font-family: 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+      font-size: 13px; line-height: 1.7; color: #abb2bf; tab-size: 2;
+    }
+    .tok-keyword { color: #c678dd; }
+    .tok-string  { color: #98c379; }
+    .tok-comment { color: #5c6370; font-style: italic; }
+    .tok-fn      { color: #61afef; }
+    .tok-number  { color: #d19a66; }
+
+    /* ── Type badge ───────────────────────────────────────────────────────── */
+    .type-badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+    .type-pdf   { background: #fde8e8; color: #c62828; }
+    .type-word  { background: #e3f0ff; color: #1565c0; }
+    .type-excel { background: #e6f4ea; color: #2e7d32; }
+    .type-json  { background: #fff3e0; color: #e65100; }
+    .type-html  { background: #fce4ec; color: #880e4f; }
+    .type-css   { background: #e8eaf6; color: #283593; }
+    .type-jpeg,
+    .type-png   { background: #f3e5f5; color: #6a1b9a; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">🎨 framesquared</div>
+      <h1 class="page-title">Theme Switching</h1>
+      <p class="page-subtitle">
+        Switch between Classic, Modern, and Dark themes at runtime without re-rendering.
+        Uses <code>ThemeManager.setTheme()</code>, <code>setAutoTheme()</code>,
+        <code>createScope()</code>, and <code>ThemeValidator</code>.
+      </p>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="toolbar-row">
+      <div id="active-name"></div>
+      <div class="toolbar-actions" id="toolbar"></div>
+    </div>
+
+    <div class="layout">
+      <div>
+        <div class="grid-wrapper" id="grid-container"></div>
+      </div>
+      <div class="side-panel" id="side-panel"></div>
+    </div>
+
+    <!-- ── Source block ───────────────────────────────────────────────────── -->
+    <div class="source-section">
+      <div class="source-heading">
+        <h2>Source</h2>
+        <div class="source-heading-line"></div>
+      </div>
+      <div class="source-wrapper">
+        <div class="source-bar">
+          <div class="source-dots">
+            <span class="source-dot source-dot-red"></span>
+            <span class="source-dot source-dot-yellow"></span>
+            <span class="source-dot source-dot-green"></span>
+          </div>
+          <span class="source-filename">theme-switching-treegrid.js</span>
+          <button class="source-copy-btn" id="copy-btn">Copy</button>
+        </div>
+        <pre class="source-pre" id="source-pre"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "@framesquared/ui":        "../../packages/ui/dist/index.js",
+      "@framesquared/component": "https://esm.sh/@framesquared/component@0.5.1",
+      "@framesquared/core":      "https://esm.sh/@framesquared/core@0.5.1",
+      "@framesquared/theme":     "../../packages/theme/dist/index.js"
+    }
+  }
+  </script>
+
+  <script type="module">
+    import { TreeGrid, TreeGridColumn, Column, Button, Panel, SegmentedButton } from '@framesquared/ui';
+    import {
+      ThemeManager, ClassicTheme, ModernTheme, DarkTheme, ThemeValidator,
+    } from '@framesquared/theme';
+
+    // ── Register themes ───────────────────────────────────────────────────────
+
+    ThemeManager.register(ClassicTheme);
+    ThemeManager.register(ModernTheme);
+    ThemeManager.register(DarkTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── Data ─────────────────────────────────────────────────────────────────
+
+    const treeData = [
+      {
+        text: 'Documents',
+        expanded: true,
+        children: [
+          { text: 'Q3-Report.pdf',      size: 245760,  type: 'PDF',   modified: '2025-03-01', leaf: true },
+          { text: 'Meeting-Notes.docx', size: 32768,   type: 'Word',  modified: '2025-03-10', leaf: true },
+          { text: 'Budget-2025.xlsx',   size: 180224,  type: 'Excel', modified: '2025-02-20', leaf: true },
+        ],
+      },
+      {
+        text: 'Pictures',
+        children: [
+          { text: 'beach-morning.jpg', size: 4194304, type: 'JPEG', modified: '2024-07-15', leaf: true },
+          { text: 'team-photo.png',    size: 2097152, type: 'PNG',  modified: '2025-01-05', leaf: true },
+        ],
+      },
+      {
+        text: 'Projects',
+        children: [
+          {
+            text: 'framesquared',
+            expanded: true,
+            children: [
+              { text: 'package.json',  size: 1024, type: 'JSON', modified: '2025-04-01', leaf: true },
+              { text: 'tsconfig.json', size: 512,  type: 'JSON', modified: '2025-03-15', leaf: true },
+            ],
+          },
+          {
+            text: 'website',
+            children: [
+              { text: 'index.html', size: 8192, type: 'HTML', modified: '2025-03-28', leaf: true },
+              { text: 'styles.css', size: 4096, type: 'CSS',  modified: '2025-03-27', leaf: true },
+            ],
+          },
+        ],
+      },
+    ];
+
+    // ── Renderers ─────────────────────────────────────────────────────────────
+
+    const dash = `<span style="color:var(--ext-color-text-secondary,#bdbdbd)">—</span>`;
+    function formatSize(bytes) {
+      if (!bytes) return dash;
+      if (bytes < 1024)        return `${bytes} B`;
+      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    }
+    function formatDate(iso) {
+      if (!iso) return dash;
+      return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+    function formatType(type) {
+      if (!type) return dash;
+      return `<span class="type-badge type-${type.toLowerCase()}">${type}</span>`;
+    }
+
+    // ── TreeGrid ──────────────────────────────────────────────────────────────
+
+    const grid = new TreeGrid({
+      title: 'File Browser',
+      store: treeData,
+      rootVisible: false,
+      useArrows: true,
+      columns: [
+        new TreeGridColumn({ text: 'Name',     dataIndex: 'text',     flex: 1 }),
+        new Column({         text: 'Type',     dataIndex: 'type',     width: 90,  renderer: (v) => formatType(v) }),
+        new Column({         text: 'Size',     dataIndex: 'size',     width: 100, renderer: (v) => formatSize(v) }),
+        new Column({         text: 'Modified', dataIndex: 'modified', width: 160, renderer: (v) => formatDate(v) }),
+      ],
+      height: 460,
+    });
+    grid.render(document.getElementById('grid-container'));
+
+    // ── Toolbar: expand / collapse ────────────────────────────────────────────
+
+    const toolbar = document.getElementById('toolbar');
+    new Button({ text: 'Expand All',   handler: () => grid.expandAll()                  }).render(toolbar);
+    new Button({ text: 'Collapse All', handler: () => grid.collapseAll(), ui: 'default' }).render(toolbar);
+
+    // ── Side panel — built entirely from framework components ─────────────────
+
+    const sidePanel = document.getElementById('side-panel');
+
+    // ── Global theme picker — SegmentedButton with radio toggle ──────────────
+
+    const themeSegBtn = new SegmentedButton({
+      items: [
+        new Button({ text: 'Classic', value: 'classic', pressed: false }),
+        new Button({ text: 'Modern',  value: 'modern',  pressed: true  }),
+        new Button({ text: 'Dark',    value: 'dark',    pressed: false }),
+      ],
+    });
+    // 'toggle' fires (segBtn, btn, pressed) on user click only — not on setValue().
+    // Using 'toggle' prevents the themechange handler's setValue() call from looping.
+    themeSegBtn.on('toggle', (_seg, btn, pressed) => {
+      if (!pressed) return;
+      // Manual selection cancels auto-detect mode.
+      autoBtn.toggle(false);
+      ThemeManager.setTheme(btn.getValue());
+    });
+
+    const themePanel = new Panel({ title: 'Global Theme', bodyPadding: 14 });
+    themePanel.add(themeSegBtn);
+    themePanel.render(sidePanel);
+
+    // ── OS auto-detect — toggle Button ────────────────────────────────────────
+
+    const autoBtn = new Button({
+      text: 'Follow OS preference (Modern ↔ Dark)',
+      enableToggle: true,
+      handler: (btn) => {
+        if (btn.isPressed()) {
+          ThemeManager.setAutoTheme('modern', 'dark');
+        } else {
+          // Revert to current theme to cancel auto mode.
+          ThemeManager.setTheme(ThemeManager.getActiveThemeName());
+        }
+      },
+    });
+
+    const autoPanel = new Panel({ title: 'OS Auto-Detect', bodyPadding: 14 });
+    autoPanel.add(autoBtn);
+    autoPanel.render(sidePanel);
+
+    // ── Scoped theme — createScope() ──────────────────────────────────────────
+    //
+    // The scope-container element receives its own --ext-* vars via createScope().
+    // CSS inside .scope-header / .scope-body reads var(--ext-color-primary) etc.
+    // from that element's inline style rather than :root, so it is completely
+    // independent of the global theme selection above.
+
+    const scopeEl   = document.createElement('div');
+    scopeEl.className = 'scope-container';
+    scopeEl.innerHTML = `
+      <div class="scope-header">
+        <span id="scope-label">Classic</span>
+        <span style="opacity:0.7;font-size:10px">scoped</span>
+      </div>
+      <div class="scope-body">
+        <div class="scope-body-row"><span class="scope-dot"></span>Primary from scope</div>
+        <div class="scope-body-row"><span class="scope-dot"></span>Surface from scope</div>
+        <div class="scope-body-row"><span class="scope-dot"></span>Independent of :root</div>
+      </div>`;
+
+    let activeScope = ThemeManager.createScope(scopeEl, 'classic');
+    let scopeTheme  = 'classic';
+
+    const scopeSegBtn = new SegmentedButton({
+      items: [
+        new Button({ text: 'Classic', value: 'classic', pressed: true  }),
+        new Button({ text: 'Modern',  value: 'modern',  pressed: false }),
+        new Button({ text: 'Dark',    value: 'dark',    pressed: false }),
+      ],
+    });
+    scopeSegBtn.on('toggle', (_seg, btn, pressed) => {
+      if (!pressed) return;
+      const name = btn.getValue();
+      activeScope.update(name);
+      scopeTheme = name;
+      document.getElementById('scope-label').textContent =
+        name.charAt(0).toUpperCase() + name.slice(1);
+    });
+
+    // Render the panel first — getBodyEl() returns null until afterRender runs.
+    const scopePanel = new Panel({ title: 'Scoped Theme — createScope()', bodyPadding: 14 });
+    scopePanel.render(sidePanel);
+    scopePanel.getBodyEl().appendChild(scopeEl);
+    scopePanel.add(scopeSegBtn);
+
+    // ── Token inspector ───────────────────────────────────────────────────────
+
+    const tokenPanel = new Panel({ title: 'CSS Tokens', bodyPadding: '10px 12px' });
+    tokenPanel.render(sidePanel);
+
+    function isColor(v) {
+      return /^(#[0-9a-fA-F]{3,8}|rgba?\(|hsla?\(|transparent|currentColor)/.test(v.trim());
+    }
+
+    function renderTokens() {
+      const body    = tokenPanel.getBodyEl();
+      const el      = document.documentElement;
+      const vars    = [];
+      for (let i = 0; i < el.style.length; i++) {
+        const prop = el.style.item(i);
+        if (prop.startsWith('--ext-')) vars.push(prop);
+      }
+      vars.sort();
+      const computed = getComputedStyle(el);
+      body.innerHTML = `<div class="token-list">${
+        vars.map((prop) => {
+          const val    = computed.getPropertyValue(prop).trim();
+          const swatch = isColor(val)
+            ? `style="background:${val}"`
+            : `style="background:rgba(128,128,128,0.2)"`;
+          return `<div class="token-row">
+            <span class="token-swatch" ${swatch}></span>
+            <span class="token-name"  title="${prop}">${prop}</span>
+            <span class="token-value" title="${val}">${val}</span>
+          </div>`;
+        }).join('')
+      }</div>`;
+    }
+
+    // ── ThemeValidator ────────────────────────────────────────────────────────
+
+    const validPanel = new Panel({ title: 'Token Validation — ThemeValidator', bodyPadding: 14 });
+    validPanel.render(sidePanel);
+
+    function runValidation(theme) {
+      const result = new ThemeValidator().validate(theme);
+      const name   = theme.getName();
+      const count  = theme.getFlatTokens().length;
+      if (result.valid) {
+        validPanel.getBodyEl().innerHTML = `
+          <div class="validation-result validation-pass">
+            <span class="validation-icon">✓</span>
+            <span><strong>${name}</strong> — all ${count} tokens valid</span>
+          </div>`;
+      } else {
+        const rows = result.errors
+          .map((e) => `<div class="validation-error-row">${e.varName}: ${e.message}</div>`)
+          .join('');
+        validPanel.getBodyEl().innerHTML = `
+          <div class="validation-result validation-fail">
+            <span class="validation-icon">✗</span>
+            <span><strong>${name}</strong> — ${result.errors.length} error(s)</span>
+          </div>
+          <div class="validation-errors">${rows}</div>`;
+      }
+    }
+
+    // ── Active theme label ────────────────────────────────────────────────────
+
+    function updateActiveLabel(name) {
+      const auto  = ThemeManager.isAutoTheme() ? ' · auto' : '';
+      document.getElementById('active-name').textContent =
+        name.charAt(0).toUpperCase() + name.slice(1) + auto;
+    }
+
+    // ── React to theme changes ────────────────────────────────────────────────
+
+    ThemeManager.on('themechange', (theme, name) => {
+      // Keep the SegmentedButton in sync when auto-detect fires a switch.
+      themeSegBtn.setValue(name);
+      autoBtn.toggle(ThemeManager.isAutoTheme());
+      updateActiveLabel(name);
+      renderTokens();
+      runValidation(theme);
+    });
+
+    // ── Initial render ────────────────────────────────────────────────────────
+
+    updateActiveLabel(ThemeManager.getActiveThemeName());
+    renderTokens();
+    runValidation(ThemeManager.getTheme());
+
+    // ── Source viewer ─────────────────────────────────────────────────────────
+
+    (function buildSourceBlock() {
+      const scripts = document.querySelectorAll('script[type="module"]');
+      const raw = scripts[scripts.length - 1].textContent ?? '';
+      const lines = raw.replace(/^\n/, '').replace(/\n\s*$/, '').split('\n');
+      const indent = lines.reduce((min, l) => {
+        const m = l.match(/^(\s+)/);
+        return (m && l.trim()) ? Math.min(min, m[1].length) : min;
+      }, Infinity);
+      const dedented = lines.map(l => l.slice(indent === Infinity ? 0 : indent)).join('\n');
+
+      function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+      function highlight(src) {
+        return src.split('\n').map(line => {
+          let out = '', i = 0;
+          while (i < line.length) {
+            if (line[i] === '/' && line[i+1] === '/') {
+              out += `<span class="tok-comment">${esc(line.slice(i))}</span>`; i = line.length; continue;
+            }
+            if (line[i] === '`' || line[i] === '"' || line[i] === "'") {
+              const q = line[i]; let j = i + 1;
+              while (j < line.length) { if (line[j] === '\\') { j += 2; continue; } if (line[j] === q) { j++; break; } j++; }
+              out += `<span class="tok-string">${esc(line.slice(i, j))}</span>`; i = j; continue;
+            }
+            if (/[0-9]/.test(line[i]) && (i === 0 || /[\s,(:=\[!<>+\-*\/]/.test(line[i-1]))) {
+              let j = i; while (j < line.length && /[0-9_.]/.test(line[j])) j++;
+              out += `<span class="tok-number">${esc(line.slice(i, j))}</span>`; i = j; continue;
+            }
+            if (/[a-zA-Z_$]/.test(line[i])) {
+              let j = i; while (j < line.length && /[a-zA-Z0-9_$]/.test(line[j])) j++;
+              const word = line.slice(i, j);
+              const KW = new Set(['import','from','export','const','let','var','function','return',
+                'new','if','else','for','of','in','while','class','extends','this','true','false',
+                'null','undefined','async','await']);
+              if (KW.has(word)) out += `<span class="tok-keyword">${esc(word)}</span>`;
+              else if (j < line.length && line[j] === '(') out += `<span class="tok-fn">${esc(word)}</span>`;
+              else out += esc(word);
+              i = j; continue;
+            }
+            out += esc(line[i]); i++;
+          }
+          return out;
+        }).join('\n');
+      }
+
+      document.getElementById('source-pre').innerHTML = highlight(dedented);
+      document.getElementById('copy-btn').addEventListener('click', function () {
+        navigator.clipboard?.writeText?.(dedented);
+        this.textContent = 'Copied!'; this.classList.add('copied');
+        setTimeout(() => { this.textContent = 'Copy'; this.classList.remove('copied'); }, 2000);
+      });
+    })();
+  </script>
+</body>
+</html>

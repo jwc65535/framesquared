@@ -622,10 +622,16 @@ describe('ThemeManager — createScope', () => {
 describe('ThemeValidator', () => {
   const validator = new ThemeValidator();
 
-  it('passes all built-in themes without errors', () => {
+  it('passes all built-in themes without errors (format)', () => {
     expect(validator.validate(ClassicTheme).valid).toBe(true);
     expect(validator.validate(ModernTheme).valid).toBe(true);
     expect(validator.validate(DarkTheme).valid).toBe(true);
+  });
+
+  it('passes all built-in themes without errors (complete)', () => {
+    expect(validator.validateComplete(ClassicTheme).valid).toBe(true);
+    expect(validator.validateComplete(ModernTheme).valid).toBe(true);
+    expect(validator.validateComplete(DarkTheme).valid).toBe(true);
   });
 
   it('reports invalid color values', () => {
@@ -705,6 +711,23 @@ describe('ThemeValidator', () => {
     const result = validator.validate(child);
     expect(result.valid).toBe(false);
     expect(result.errors[0].varName).toBe('--ext-color-base');
+  });
+
+  it('validateComplete reports missing required tokens', () => {
+    const t = new Theme({ name: 'minimal', tokens: { color: { primary: '#ff0000' } } });
+    const result = validator.validateComplete(t);
+    expect(result.valid).toBe(false);
+    const missing = result.errors.filter((e) => e.message === 'Required token is missing');
+    expect(missing.length).toBeGreaterThan(0);
+    expect(missing.some((e) => e.varName === '--ext-color-background')).toBe(true);
+    expect(missing.some((e) => e.varName === '--ext-color-border')).toBe(true);
+  });
+
+  it('validateComplete: format errors appear before required-token errors', () => {
+    const t = new Theme({ name: 'bad', tokens: { color: { primary: 42 } } });
+    const result = validator.validateComplete(t);
+    expect(result.errors[0].varName).toBe('--ext-color-primary');
+    expect(result.errors[0].message).not.toBe('Required token is missing');
   });
 });
 
