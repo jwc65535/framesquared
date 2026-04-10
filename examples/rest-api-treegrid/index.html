@@ -106,6 +106,31 @@
     }
     .ra.del:hover { background: color-mix(in srgb, var(--ext-color-error, #f44336) 18%, transparent); }
 
+    /* ── Setup instructions ───────────────────────────────────────────────── */
+    .setup-card {
+      background: #fffde7; border: 1px solid #f9a825;
+      border-radius: 8px; padding: 16px 20px; margin-bottom: 14px;
+    }
+    .setup-title {
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: #e65100; margin-bottom: 10px;
+    }
+    .setup-steps { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .setup-steps li {
+      display: flex; align-items: baseline; gap: 8px;
+      font-size: 13px; color: #424242; line-height: 1.4;
+    }
+    .step-num {
+      font-size: 10px; font-weight: 700; width: 18px; height: 18px; flex-shrink: 0;
+      border-radius: 50%; background: #f9a825; color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .setup-steps a { color: #1565c0; }
+    .setup-steps code {
+      font-family: 'Fira Code', ui-monospace, monospace; font-size: 12px;
+      background: rgba(0,0,0,0.06); border-radius: 3px; padding: 1px 4px;
+    }
+
     /* ── Status bar ───────────────────────────────────────────────────────── */
     .status-bar {
       display: flex; align-items: center; gap: 8px; margin-top: 6px;
@@ -243,6 +268,34 @@
 
       <!-- ── Main column ───────────────────────────────────────────────────── -->
       <div>
+        <!-- Setup instructions -->
+        <div class="setup-card">
+          <div class="setup-title">Getting started — API key required</div>
+          <ol class="setup-steps">
+            <li>
+              <span class="step-num">1</span>
+              Visit <a href="https://restful-api.dev" target="_blank" rel="noopener">restful-api.dev</a>
+              and click <strong>Get API key</strong> to register a free account.
+            </li>
+            <li>
+              <span class="step-num">2</span>
+              Copy your key from the dashboard — it looks like
+              <code>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code>.
+            </li>
+            <li>
+              <span class="step-num">3</span>
+              Paste it into the <strong>API Key</strong> field below, then press
+              <strong>Enter</strong> or click <strong>Refresh</strong>.
+            </li>
+            <li>
+              <span class="step-num">4</span>
+              Type a <strong>Collection</strong> name (e.g. <code>devices</code>) and click
+              <strong>Seed sample data</strong> to populate it, or <strong>Add — POST</strong>
+              to create your own objects.
+            </li>
+          </ol>
+        </div>
+
         <!-- API key bar -->
         <div class="top-bar" style="margin-bottom:6px">
           <span class="bar-label">API Key</span>
