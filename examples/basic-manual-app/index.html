@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared Hello World</title>
+  <style>
+    body { padding: 32px; background: #f0f2f5; }
+  </style>
+</head>
+<body>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "@framesquared/ui":        "../../packages/ui/dist/index.js",
+      "@framesquared/component": "../../packages/component/dist/index.js",
+      "@framesquared/core":      "../../packages/core/dist/index.js",
+      "@framesquared/theme":     "../../packages/theme/dist/index.js",
+      "@framesquared/layout":    "../../packages/layout/dist/index.js"
+    }
+  }
+  </script>
+
+  <script type="module">
+    import { Panel, Button, Controller } from '@framesquared/ui';
+    import { ThemeManager, ModernTheme } from '@framesquared/theme';
+    import { HBox } from '@framesquared/layout';
+
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    class GreetingController extends Controller {
+      init() {
+        const callButton = document.getElementById('call-handler');
+        if (callButton) {
+          callButton.addEventListener('click', () => this.handleCall());
+        }
+      }
+
+      handleCall() {
+        alert('Handler method called from controller!');
+      }
+    }
+
+    const panel = new Panel({
+      title: 'Hello World',
+      bodyPadding: 16,
+      width: 320,
+      layout: {
+        type: HBox,
+        spacing: 8,
+      },
+      items: [
+        new Button({
+          text: 'Click Me',
+          handler: () => alert('Button clicked!'),
+        }),
+        new Button({
+          id: 'call-handler',
+          text: "Call Handler"
+        })
+      ],
+    });
+
+    panel.render(document.body);
+
+    const controller = new GreetingController();
+    controller.init();
+  </script>
+
+</body>
+</html>
