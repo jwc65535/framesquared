@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – REST API Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--ext-color-background, #f0f2f5);
+      min-height: 100vh;
+      color: var(--ext-color-text-primary, #212121);
+    }
+
+    /* ── Page header — fixed example branding ─────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #1a237e 0%, #283593 60%, #5c6bc0 100%);
+      padding: 32px 40px 24px;
+      color: #fff;
+    }
+    .page-header-inner { max-width: 1240px; margin: 0 auto; }
+    .page-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px; padding: 4px 10px; margin-bottom: 14px; backdrop-filter: blur(4px);
+    }
+    .page-title { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .page-subtitle { font-size: 15px; opacity: 0.85; font-weight: 400; max-width: 660px; line-height: 1.5; }
+    .page-subtitle code {
+      background: rgba(255,255,255,0.18); border-radius: 4px; padding: 1px 5px;
+      font-size: 13px; font-family: 'Fira Code', ui-monospace, monospace;
+    }
+    .endpoint-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.05em;
+      padding: 3px 9px; border-radius: 12px;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);
+      font-family: 'Fira Code', ui-monospace, monospace;
+    }
+
+    /* ── Page body ────────────────────────────────────────────────────────── */
+    .page-body { max-width: 1240px; margin: 0 auto; padding: 28px 40px 48px; }
+
+    /* ── Layout ───────────────────────────────────────────────────────────── */
+    .layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; }
+
+    /* ── Top bar ──────────────────────────────────────────────────────────── */
+    .top-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .bar-label {
+      font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--ext-color-text-secondary, #757575); white-space: nowrap;
+    }
+    .bar-input {
+      font-family: 'Fira Code', ui-monospace, monospace; font-size: 13px; padding: 6px 10px;
+      background: var(--ext-color-surface, #f5f5f5); color: var(--ext-color-text-primary, #212121);
+      border: 1px solid var(--ext-color-border, #e0e0e0); border-radius: 4px; outline: none; width: 160px;
+      transition: border-color var(--ext-transition-fast, 0.15s);
+    }
+    .bar-input:focus { border-color: var(--ext-color-primary, #1976d2); }
+    .bar-sep { width: 1px; height: 24px; background: var(--ext-color-border, #e0e0e0); margin: 0 4px; }
+    .id-group { display: flex; align-items: center; gap: 6px; }
+    .id-input {
+      font-family: 'Fira Code', ui-monospace, monospace; font-size: 12px; padding: 5px 8px; width: 140px;
+      background: var(--ext-color-surface, #f5f5f5); color: var(--ext-color-text-primary, #212121);
+      border: 1px solid var(--ext-color-border, #e0e0e0); border-radius: 4px; outline: none;
+      transition: border-color var(--ext-transition-fast, 0.15s);
+    }
+    .id-input:focus { border-color: var(--ext-color-primary, #1976d2); }
+    .id-input::placeholder { color: var(--ext-color-text-secondary, #9e9e9e); }
+
+    /* ── Grid wrapper ─────────────────────────────────────────────────────── */
+    .grid-wrap {
+      border-radius: 8px; overflow: hidden;
+      box-shadow: var(--ext-shadow-md, 0 2px 4px rgba(0,0,0,0.14));
+    }
+    .grid-wrap .x-panel { border-radius: 0; box-shadow: none; border: none; }
+
+    /* ── Inline row action buttons ────────────────────────────────────────── */
+    .ra {
+      display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;
+      cursor: pointer; border: 1px solid transparent; margin-right: 3px;
+      transition: background var(--ext-transition-fast, 0.15s), color var(--ext-transition-fast, 0.15s);
+      color: var(--ext-color-primary, #1976d2);
+      background: color-mix(in srgb, var(--ext-color-primary, #1976d2) 8%, transparent);
+      border-color: color-mix(in srgb, var(--ext-color-primary, #1976d2) 30%, transparent);
+    }
+    .ra:hover {
+      background: color-mix(in srgb, var(--ext-color-primary, #1976d2) 18%, transparent);
+    }
+    .ra.patch {
+      color: #e65100;
+      background: color-mix(in srgb, #ff9800 8%, transparent);
+      border-color: color-mix(in srgb, #ff9800 35%, transparent);
+    }
+    .ra.patch:hover { background: color-mix(in srgb, #ff9800 18%, transparent); }
+    .ra.del {
+      color: var(--ext-color-error, #c62828);
+      background: color-mix(in srgb, var(--ext-color-error, #f44336) 8%, transparent);
+      border-color: color-mix(in srgb, var(--ext-color-error, #f44336) 30%, transparent);
+    }
+    .ra.del:hover { background: color-mix(in srgb, var(--ext-color-error, #f44336) 18%, transparent); }
+
+    /* ── Status bar ───────────────────────────────────────────────────────── */
+    .status-bar {
+      display: flex; align-items: center; gap: 8px; margin-top: 6px;
+      font-size: 11px; color: var(--ext-color-text-secondary, #9e9e9e); min-height: 18px;
+      font-family: 'Fira Code', ui-monospace, monospace;
+    }
+    .sdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: #9e9e9e; }
+    .sdot.ok      { background: var(--ext-color-success, #4caf50); }
+    .sdot.err     { background: var(--ext-color-error, #f44336); }
+    .sdot.loading { background: var(--ext-color-warning, #ff9800); animation: blink 0.8s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+    /* ── Inline form ──────────────────────────────────────────────────────── */
+    .form-wrap {
+      margin-bottom: 10px; padding: 14px 16px;
+      background: var(--ext-color-surface, #f5f5f5);
+      border: 1px solid var(--ext-color-border, #e0e0e0); border-radius: 8px;
+    }
+    .form-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 13px; font-weight: 600; }
+    .mbadge {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.08em; padding: 2px 7px; border-radius: 4px;
+      font-family: 'Fira Code', monospace; text-transform: uppercase; color: #fff;
+    }
+    .mbadge.POST  { background: var(--ext-color-success, #4caf50); }
+    .mbadge.PUT   { background: #e65100; }
+    .mbadge.PATCH { background: #f57c00; }
+    .form-ep { font-family: 'Fira Code', ui-monospace, monospace; font-size: 11px; color: var(--ext-color-text-secondary, #757575); }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .form-grid.single { grid-template-columns: 1fr; }
+    .form-field { display: flex; flex-direction: column; gap: 3px; }
+    .form-lbl {
+      font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+      color: var(--ext-color-text-secondary, #757575);
+    }
+    .form-inp {
+      font-family: inherit; font-size: 13px; padding: 6px 9px;
+      background: var(--ext-color-background, #fff); color: var(--ext-color-text-primary, #212121);
+      border: 1px solid var(--ext-color-border, #e0e0e0); border-radius: 4px; outline: none;
+      transition: border-color var(--ext-transition-fast, 0.15s), box-shadow var(--ext-transition-fast, 0.15s);
+    }
+    .form-inp:focus {
+      border-color: var(--ext-color-primary, #1976d2);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--ext-color-primary, #1976d2) 20%, transparent);
+    }
+    .form-note { font-size: 11px; color: var(--ext-color-text-secondary, #9e9e9e); margin-top: 8px; font-style: italic; }
+    .form-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+    /* ── Empty state ──────────────────────────────────────────────────────── */
+    .empty-state {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 40px 24px; gap: 10px; color: var(--ext-color-text-secondary, #9e9e9e);
+    }
+    .empty-icon { font-size: 32px; opacity: 0.5; }
+    .empty-text { font-size: 14px; font-weight: 500; }
+    .empty-hint { font-size: 12px; text-align: center; }
+
+    /* ── Sidebar ──────────────────────────────────────────────────────────── */
+    .side { display: flex; flex-direction: column; gap: 16px; }
+
+    /* ── Collections list ─────────────────────────────────────────────────── */
+    .col-list { display: flex; flex-direction: column; gap: 2px; }
+    .col-item {
+      display: flex; align-items: center; gap: 8px; padding: 7px 10px;
+      border-radius: 6px; cursor: pointer; font-size: 13px; color: var(--ext-color-text-primary, #212121);
+      transition: background var(--ext-transition-fast, 0.15s);
+    }
+    .col-item:hover { background: color-mix(in srgb, var(--ext-color-primary, #1976d2) 8%, transparent); }
+    .col-item.active { background: color-mix(in srgb, var(--ext-color-primary, #1976d2) 14%, transparent); font-weight: 600; }
+    .col-name { flex: 1; }
+    .col-count {
+      font-size: 11px; padding: 1px 6px; border-radius: 10px;
+      background: var(--ext-color-border, rgba(0,0,0,0.06));
+      color: var(--ext-color-text-secondary, #757575);
+    }
+    .col-empty { font-size: 12px; color: var(--ext-color-text-secondary, #9e9e9e); padding: 8px 10px; font-style: italic; }
+
+    /* ── Request log ──────────────────────────────────────────────────────── */
+    .log-list { display: flex; flex-direction: column; gap: 3px; max-height: 240px; overflow-y: auto; }
+    .log-row {
+      display: grid; grid-template-columns: 46px 1fr 38px 44px;
+      align-items: center; gap: 6px; font-size: 10px; padding: 4px 6px;
+      border-radius: 4px; background: var(--ext-color-surface, #f5f5f5);
+      font-family: 'Fira Code', ui-monospace, monospace;
+    }
+    .log-m { font-weight: 700; font-size: 9px; letter-spacing: 0.06em; }
+    .log-m.GET    { color: var(--ext-color-primary, #1976d2); }
+    .log-m.POST   { color: var(--ext-color-success, #2e7d32); }
+    .log-m.PUT    { color: #e65100; }
+    .log-m.PATCH  { color: #f57c00; }
+    .log-m.DELETE { color: var(--ext-color-error, #c62828); }
+    .log-path { color: var(--ext-color-text-primary, #424242); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; }
+    .log-status { font-weight: 600; text-align: right; }
+    .log-status.ok  { color: var(--ext-color-success, #2e7d32); }
+    .log-status.err { color: var(--ext-color-error, #c62828); }
+    .log-ms { color: var(--ext-color-text-secondary, #9e9e9e); text-align: right; }
+    .log-empty { font-size: 12px; color: var(--ext-color-text-secondary, #9e9e9e); padding: 8px; font-style: italic; }
+
+    /* ── JSON viewer ──────────────────────────────────────────────────────── */
+    .json-pre {
+      font-family: 'Fira Code', ui-monospace, monospace; font-size: 11px; line-height: 1.65;
+      white-space: pre; overflow: auto; max-height: 280px;
+    }
+    .jk { color: var(--ext-color-primary, #1976d2); }
+    .js { color: var(--ext-color-success, #2e7d32); }
+    .jn { color: #e65100; }
+    .jb { color: #6a1b9a; }
+    .json-none { font-size: 12px; color: var(--ext-color-text-secondary, #9e9e9e); font-style: italic; padding: 4px; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">🌐 framesquared</div>
+      <h1 class="page-title">REST API Explorer</h1>
+      <p class="page-subtitle">
+        Full CRUD against <code>api.restful-api.dev/collections</code> using your private
+        <code>x-api-key</code>. Use the <strong>Actions</strong> column in each row to
+        Edit (PUT), Rename (PATCH), or Delete. Click <strong>Add</strong> to create.
+      </p>
+      <div class="endpoint-pills">
+        <span class="pill"><span style="color:#90caf9">GET</span> /collections</span>
+        <span class="pill"><span style="color:#90caf9">GET</span> /collections/{col}/objects</span>
+        <span class="pill"><span style="color:#90caf9">GET</span> /collections/{col}/objects/{id}</span>
+        <span class="pill"><span style="color:#a5d6a7">POST</span> /…/objects</span>
+        <span class="pill"><span style="color:#ffcc80">PUT</span> /…/{id}</span>
+        <span class="pill"><span style="color:#ffcc80">PATCH</span> /…/{id}</span>
+        <span class="pill"><span style="color:#ef9a9a">DELETE</span> /…/{id}</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="layout">
+
+      <!-- ── Main column ───────────────────────────────────────────────────── -->
+      <div>
+        <!-- API key bar -->
+        <div class="top-bar" style="margin-bottom:6px">
+          <span class="bar-label">API Key</span>
+          <input id="key-input" class="bar-input" style="width:280px;font-size:12px"
+            value="" spellcheck="false" />
+        </div>
+
+        <!-- Collection bar: collection name + Refresh + Seed + Add + GET-by-ID -->
+        <div class="top-bar">
+          <span class="bar-label">Collection</span>
+          <input id="col-input" class="bar-input" value="devices" spellcheck="false" />
+          <div id="btn-refresh"></div>
+          <div id="btn-seed"></div>
+          <div class="bar-sep"></div>
+          <div id="btn-add"></div>
+          <div class="bar-sep"></div>
+          <div class="id-group">
+            <input id="id-input" class="id-input" placeholder="object ID…" spellcheck="false" />
+            <div id="btn-get-id"></div>
+          </div>
+        </div>
+
+        <!-- Inline form — shown when Add / Edit / Rename is triggered -->
+        <div id="form-area"></div>
+
+        <!-- Grid -->
+        <div id="grid-area" class="grid-wrap"></div>
+
+        <div class="status-bar">
+          <div id="s-dot" class="sdot"></div>
+          <span id="s-text">Initialising…</span>
+        </div>
+      </div>
+
+      <!-- ── Sidebar ───────────────────────────────────────────────────────── -->
+      <div class="side">
+        <div id="panel-collections"></div>
+        <div id="panel-log"></div>
+        <div id="panel-json"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "@framesquared/ui":        "../../packages/ui/dist/index.js",
+      "@framesquared/component": "https://esm.sh/@framesquared/component@0.5.1",
+      "@framesquared/core":      "https://esm.sh/@framesquared/core@0.5.1",
+      "@framesquared/theme":     "../../packages/theme/dist/index.js"
+    }
+  }
+  </script>
+
+  <script type="module">
+    import { TreeGrid, TreeGridColumn, Column, Button, Panel } from '@framesquared/ui';
+    import { ThemeManager, ModernTheme } from '@framesquared/theme';
+
+    // ── Theme ─────────────────────────────────────────────────────────────────
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── API config ────────────────────────────────────────────────────────────
+    const BASE = 'https://api.restful-api.dev';
+    const getApiKey = () => document.getElementById('key-input').value.trim();
+
+    // ── State ─────────────────────────────────────────────────────────────────
+    let currentCol = 'devices';
+    let objects    = [];          // full API objects array, kept in sync
+    let formMode   = null;        // 'add' | 'put' | 'patch' | null
+    let formTarget = null;        // raw API object being edited, null for 'add'
+    let grid       = null;
+    let log        = [];
+
+    // ── Utilities ─────────────────────────────────────────────────────────────
+    function esc(s) {
+      return String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+    }
+
+    function setStatus(state, msg) {
+      document.getElementById('s-dot').className = `sdot ${state}`;
+      document.getElementById('s-text').textContent = msg;
+    }
+
+    // ── API layer (one function per endpoint) ─────────────────────────────────
+    async function request(method, path, body) {
+      const url   = `${BASE}${path}`;
+      const start = Date.now();
+      setStatus('loading', `${method} ${path}`);
+      try {
+        const opts = {
+          method,
+          headers: { 'x-api-key': getApiKey(), 'Content-Type': 'application/json' },
+        };
+        if (body != null) opts.body = JSON.stringify(body);
+        const res     = await fetch(url, opts);
+        const elapsed = Date.now() - start;
+        let data = null;
+        try { data = await res.json(); } catch {}
+        addLog(method, path, res.status, elapsed);
+        setStatus(res.ok ? 'ok' : 'err',
+          `${method} ${path} → ${res.status}` + (!res.ok && data?.error ? ` — ${data.error}` : ''));
+        return { ok: res.ok, status: res.status, data };
+      } catch (err) {
+        addLog(method, path, 0, Date.now() - start);
+        setStatus('err', `Network error: ${err.message}`);
+        throw err;
+      }
+    }
+
+    const api = {
+      /** GET /collections */
+      getCollections:  ()           => request('GET',    `/collections`),
+      /** GET /collections/{col}/objects */
+      listObjects:     (col)        => request('GET',    `/collections/${col}/objects`),
+      /** GET /collections/{col}/objects/{id} */
+      getObject:       (col, id)    => request('GET',    `/collections/${col}/objects/${id}`),
+      /** POST /collections/{col}/objects */
+      createObject:    (col, body)  => request('POST',   `/collections/${col}/objects`, body),
+      /** PUT /collections/{col}/objects/{id} — full replacement */
+      putObject:       (col, id, b) => request('PUT',    `/collections/${col}/objects/${id}`, b),
+      /** PATCH /collections/{col}/objects/{id} — partial update */
+      patchObject:     (col, id, b) => request('PATCH',  `/collections/${col}/objects/${id}`, b),
+      /** DELETE /collections/{col}/objects/{id} */
+      deleteObject:    (col, id)    => request('DELETE', `/collections/${col}/objects/${id}`),
+    };
+
+    // ── Request log ───────────────────────────────────────────────────────────
+    function addLog(method, path, status, ms) {
+      log.unshift({ method, path, status, ms });
+      if (log.length > 60) log.length = 60;
+      renderLog();
+    }
+
+    function renderLog() {
+      const body = pLog.getBodyEl();
+      if (!body) return;
+      if (!log.length) { body.innerHTML = '<div class="log-empty">No requests yet</div>'; return; }
+      body.innerHTML = `<div class="log-list">${
+        log.map(({ method, path, status, ms }) => {
+          const ok = status >= 200 && status < 300;
+          const sc = status === 0 ? 'err' : (ok ? 'ok' : 'err');
+          return `<div class="log-row">
+            <span class="log-m ${method}">${method}</span>
+            <span class="log-path" title="${esc(path)}">${esc(path)}</span>
+            <span class="log-status ${sc}">${status || 'ERR'}</span>
+            <span class="log-ms">${ms}ms</span>
+          </div>`;
+        }).join('')
+      }</div>`;
+    }
+
+    // ── JSON viewer ───────────────────────────────────────────────────────────
+    function colorJson(obj) {
+      return JSON.stringify(obj, null, 2)
+        .replace(/(".*?")(\s*:)/g,  `<span class="jk">$1</span>$2`)
+        .replace(/:\s*(".*?")/g,    (m, s) => m.replace(s, `<span class="js">${s}</span>`))
+        .replace(/:\s*(-?\d+\.?\d*)/g, (m, n) => m.replace(n, `<span class="jn">${n}</span>`))
+        .replace(/:\s*(true|false|null)/g, (m, b) => m.replace(b, `<span class="jb">${b}</span>`));
+    }
+
+    function showJson(obj) {
+      const body = pJson.getBodyEl();
+      if (!body) return;
+      body.innerHTML = obj
+        ? `<pre class="json-pre">${colorJson(obj)}</pre>`
+        : `<div class="json-none">Click a row or use "GET by ID" to view the full object</div>`;
+    }
+
+    // ── Collections sidebar ───────────────────────────────────────────────────
+    function renderCollections(cols) {
+      const body = pCollections.getBodyEl();
+      if (!body) return;
+      if (!cols.length) {
+        body.innerHTML = '<div class="col-empty">No collections yet — create objects to make one.</div>';
+        return;
+      }
+      body.innerHTML = `<div class="col-list">${
+        cols.map(c => {
+          const name  = typeof c === 'string' ? c : (c.name ?? c.collectionName ?? String(c));
+          const count = c.count ?? c.objectCount ?? '';
+          const active = name === currentCol ? ' active' : '';
+          return `<div class="col-item${active}" data-col="${esc(name)}">
+            <span class="col-name">${esc(name)}</span>
+            ${count !== '' ? `<span class="col-count">${count}</span>` : ''}
+          </div>`;
+        }).join('')
+      }</div>`;
+      body.querySelectorAll('.col-item').forEach(el =>
+        el.addEventListener('click', () => {
+          const name = el.dataset.col;
+          if (name !== currentCol) {
+            document.getElementById('col-input').value = name;
+            currentCol = name;
+            loadObjects();
+          }
+        })
+      );
+    }
+
+    // ── Grid ──────────────────────────────────────────────────────────────────
+    function buildRows(items) {
+      return items.map(obj => ({
+        text:      obj.name,
+        _id:       obj.id,
+        price:     obj.data?.price    ?? obj.data?.Price    ?? null,
+        year:      obj.data?.year     ?? obj.data?.Year     ?? null,
+        category:  obj.data?.category ?? obj.data?.Category ?? obj.data?.type ?? null,
+        color:     obj.data?.color    ?? obj.data?.Color    ?? null,
+        createdAt: obj.createdAt ?? null,
+        leaf:      true,
+      }));
+    }
+
+    function buildGrid(items) {
+      if (grid) { try { grid.destroy(); } catch {} grid = null; }
+      document.getElementById('grid-area').innerHTML = '';
+
+      const dash = `<span style="opacity:0.3">—</span>`;
+      const mono = v => `<span style="font-family:'Fira Code',monospace;font-size:11px">${esc(v)}</span>`;
+
+      grid = new TreeGrid({
+        title:       `GET /collections/${currentCol}/objects`,
+        store:       buildRows(items),
+        rootVisible: false,
+        useArrows:   false,
+        height:      460,
+        columns: [
+          new TreeGridColumn({ text: 'Name',     dataIndex: 'text',     flex: 1, minWidth: 160 }),
+          new Column({ text: 'Category', dataIndex: 'category', width: 100, renderer: v => v ?? dash }),
+          new Column({ text: 'Price',    dataIndex: 'price',    width: 85,
+            renderer: v => v != null ? `$${Number(v).toLocaleString()}` : dash }),
+          new Column({ text: 'Year',     dataIndex: 'year',     width: 55, renderer: v => v ?? dash }),
+          new Column({ text: 'Color',    dataIndex: 'color',    width: 105, renderer: v => v ?? dash }),
+          new Column({ text: 'Created',  dataIndex: 'createdAt', width: 115,
+            renderer: v => v
+              ? new Date(v).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' })
+              : dash }),
+          new Column({ text: 'ID', dataIndex: '_id', width: 95, renderer: v => mono(v) }),
+          // ── Actions column — Edit (PUT) | Rename (PATCH) | Delete ───────────
+          new Column({
+            text: 'Actions', dataIndex: '_id', width: 200,
+            renderer: id => id
+              ? `<span class="ra"       data-action="put"    data-id="${esc(id)}">Edit</span>`
+              + `<span class="ra patch" data-action="patch"  data-id="${esc(id)}">Rename</span>`
+              + `<span class="ra del"   data-action="delete" data-id="${esc(id)}">Delete</span>`
+              : '',
+          }),
+        ],
+      });
+
+      // Row click → populate ID input and JSON panel (for GET-by-ID convenience)
+      grid.on('itemclick', (_view, node) => {
+        const id  = node.get?.('_id') ?? node._id ?? '';
+        const raw = objects.find(o => o.id === id);
+        if (id) document.getElementById('id-input').value = id;
+        if (raw) showJson(raw);
+      });
+
+      grid.render(document.getElementById('grid-area'));
+
+      if (items.length === 0) {
+        // Inject empty state into the rendered panel body
+        const bodyEl = document.getElementById('grid-area').querySelector('.x-panel-body');
+        if (bodyEl) {
+          bodyEl.innerHTML = `<div class="empty-state">
+            <div class="empty-icon">📦</div>
+            <div class="empty-text">Collection "${esc(currentCol)}" is empty</div>
+            <div class="empty-hint">
+              Click <strong>Add — POST</strong> to create an object,<br>
+              or <strong>Seed sample data</strong> to populate it with Apple devices.
+            </div>
+          </div>`;
+        }
+      }
+    }
+
+    // ── Action button delegation (Edit / Rename / Delete in each row) ─────────
+    document.getElementById('grid-area').addEventListener('click', async e => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
+
+      const action = btn.dataset.action;
+      const id     = btn.dataset.id;
+      const raw    = objects.find(o => o.id === id);
+      if (!raw) return;
+
+      if (action === 'put') {
+        formTarget = raw;
+        openForm('put');
+      } else if (action === 'patch') {
+        formTarget = raw;
+        openForm('patch');
+      } else if (action === 'delete') {
+        if (!confirm(`Delete "${raw.name}"?\n\nID: ${raw.id}`)) return;
+        const r = await api.deleteObject(currentCol, raw.id);
+        if (r.ok) {
+          clearForm();
+          showJson(null);
+          await loadObjects();
+        }
+      }
+    });
+
+    // ── Inline form ───────────────────────────────────────────────────────────
+    function clearForm() {
+      formMode   = null;
+      formTarget = null;
+      document.getElementById('form-area').innerHTML = '';
+    }
+
+    function openForm(mode) {
+      formMode = mode;
+      const obj  = formTarget ?? {};
+      const data = obj.data ?? {};
+
+      const METHOD   = mode === 'add' ? 'POST' : mode === 'put' ? 'PUT' : 'PATCH';
+      const endpoint = mode === 'add'
+        ? `/collections/${currentCol}/objects`
+        : `/collections/${currentCol}/objects/${obj.id}`;
+
+      const area = document.getElementById('form-area');
+      area.innerHTML = `
+        <div class="form-wrap">
+          <div class="form-head">
+            <span class="mbadge ${METHOD}">${METHOD}</span>
+            <span class="form-ep">${esc(endpoint)}</span>
+          </div>
+          ${mode === 'patch' ? `
+            <div class="form-grid single">
+              <div class="form-field">
+                <label class="form-lbl">Name *</label>
+                <input class="form-inp" id="f-name" value="${esc(obj.name ?? '')}" />
+              </div>
+            </div>
+            <p class="form-note">
+              PATCH sends only <code>{ "name": "…" }</code> — all other fields are preserved server-side.
+            </p>
+          ` : `
+            <div class="form-grid">
+              <div class="form-field">
+                <label class="form-lbl">Name *</label>
+                <input class="form-inp" id="f-name" value="${esc(obj.name ?? '')}" />
+              </div>
+              <div class="form-field">
+                <label class="form-lbl">Category</label>
+                <input class="form-inp" id="f-category" value="${esc(data.category ?? '')}" />
+              </div>
+              <div class="form-field">
+                <label class="form-lbl">Price ($)</label>
+                <input class="form-inp" id="f-price" type="number" step="0.01" value="${data.price ?? ''}" />
+              </div>
+              <div class="form-field">
+                <label class="form-lbl">Year</label>
+                <input class="form-inp" id="f-year" type="number" value="${data.year ?? ''}" />
+              </div>
+              <div class="form-field">
+                <label class="form-lbl">Color</label>
+                <input class="form-inp" id="f-color" value="${esc(data.color ?? '')}" />
+              </div>
+            </div>
+            ${mode === 'put' ? `<p class="form-note">PUT replaces the entire object — all fields are overwritten.</p>` : ''}
+          `}
+          <div class="form-actions" id="form-actions"></div>
+        </div>`;
+
+      const saveLabel = mode === 'add' ? 'POST — Create' : mode === 'put' ? 'PUT — Replace' : 'PATCH — Rename';
+      new Button({ text: saveLabel,  handler: submitForm   }).render(document.getElementById('form-actions'));
+      new Button({ text: 'Cancel', ui: 'default', handler: clearForm }).render(document.getElementById('form-actions'));
+
+      document.getElementById('f-name')?.focus();
+    }
+
+    function collectData() {
+      const price    = parseFloat(document.getElementById('f-price')?.value);
+      const year     = parseInt(document.getElementById('f-year')?.value, 10);
+      const category = document.getElementById('f-category')?.value.trim();
+      const color    = document.getElementById('f-color')?.value.trim();
+      const d = {};
+      if (category)      d.category = category;
+      if (!isNaN(price)) d.price    = price;
+      if (!isNaN(year))  d.year     = year;
+      if (color)         d.color    = color;
+      return Object.keys(d).length ? d : undefined;
+    }
+
+    async function submitForm() {
+      const name = document.getElementById('f-name')?.value.trim();
+      if (!name) { alert('Name is required'); return; }
+
+      let r;
+      if (formMode === 'add') {
+        r = await api.createObject(currentCol, { name, data: collectData() });
+      } else if (formMode === 'put') {
+        r = await api.putObject(currentCol, formTarget.id, { name, data: collectData() });
+      } else if (formMode === 'patch') {
+        r = await api.patchObject(currentCol, formTarget.id, { name });
+      }
+
+      if (r?.ok) {
+        clearForm();
+        showJson(r.data);
+        await loadObjects();
+      }
+    }
+
+    // ── Seed data ─────────────────────────────────────────────────────────────
+    const SEEDS = [
+      { name: 'iPhone 15 Pro',        data: { category: 'Smartphone', price: 999,  year: 2023, color: 'Natural Titanium' } },
+      { name: 'MacBook Pro 16"',       data: { category: 'Laptop',     price: 2499, year: 2023, color: 'Space Black'      } },
+      { name: 'iPad Pro 12.9"',        data: { category: 'Tablet',     price: 1099, year: 2022, color: 'Space Gray'       } },
+      { name: 'Apple Watch Ultra 2',   data: { category: 'Wearable',   price: 799,  year: 2023, color: 'Natural Titanium' } },
+      { name: 'AirPods Pro (2nd Gen)', data: { category: 'Audio',      price: 249,  year: 2022, color: 'White'            } },
+    ];
+
+    async function seedData() {
+      btnDisable(btnSeed, true);
+      for (const item of SEEDS) await api.createObject(currentCol, item);
+      btnDisable(btnSeed, false);
+      await loadObjects();
+    }
+
+    // ── Load helpers ──────────────────────────────────────────────────────────
+    async function loadCollections() {
+      const r = await api.getCollections();
+      if (r.ok) renderCollections(Array.isArray(r.data) ? r.data : []);
+    }
+
+    async function loadObjects() {
+      currentCol = document.getElementById('col-input').value.trim() || 'devices';
+      document.getElementById('col-input').value = currentCol;
+      clearForm();
+      showJson(null);
+
+      const r = await api.listObjects(currentCol);
+      objects  = r.ok && Array.isArray(r.data) ? r.data : [];
+      buildGrid(objects);
+      loadCollections(); // refresh sidebar counts after each mutation
+    }
+
+    // ── Panels ────────────────────────────────────────────────────────────────
+    const pCollections = new Panel({ title: 'GET /collections', bodyPadding: '8px 10px' });
+    pCollections.render(document.getElementById('panel-collections'));
+
+    const pLog = new Panel({ title: 'Request Log', bodyPadding: '8px' });
+    pLog.render(document.getElementById('panel-log'));
+
+    const pJson = new Panel({ title: 'Object JSON — GET /…/{id}', bodyPadding: '10px 12px' });
+    pJson.render(document.getElementById('panel-json'));
+
+    renderLog();
+    showJson(null);
+
+    // ── Toolbar buttons ───────────────────────────────────────────────────────
+    function btnDisable(btn, yes) {
+      if (!btn.el) return;
+      btn.el.disabled = yes;
+      btn.el.classList.toggle('x-btn-disabled', yes);
+    }
+
+    const btnRefresh = new Button({ text: 'Refresh', ui: 'default', handler: () => loadObjects() });
+    const btnSeed    = new Button({ text: 'Seed sample data', ui: 'default', handler: () => seedData() });
+    const btnAdd     = new Button({ text: 'Add — POST', handler: () => { formTarget = null; openForm('add'); } });
+    const btnGetId   = new Button({
+      text: 'GET by ID', ui: 'default',
+      handler: async () => {
+        const id = document.getElementById('id-input').value.trim();
+        if (!id) { alert('Enter an object ID first'); return; }
+        const r = await api.getObject(currentCol, id);
+        if (r.ok) showJson(r.data);
+      },
+    });
+
+    btnRefresh.render(document.getElementById('btn-refresh'));
+    btnSeed.render(document.getElementById('btn-seed'));
+    btnAdd.render(document.getElementById('btn-add'));
+    btnGetId.render(document.getElementById('btn-get-id'));
+
+    // API key — reload on Enter or on blur if changed
+    const keyInput = document.getElementById('key-input');
+    let currentKey = keyInput.value.trim();
+    keyInput.addEventListener('keydown', e => { if (e.key === 'Enter') { currentKey = keyInput.value.trim(); loadCollections(); loadObjects(); } });
+    keyInput.addEventListener('blur', () => {
+      const k = keyInput.value.trim();
+      if (k && k !== currentKey) { currentKey = k; loadCollections(); loadObjects(); }
+    });
+
+    // Collection name — reload on Enter or on blur if changed
+    const colInput = document.getElementById('col-input');
+    colInput.addEventListener('keydown', e => { if (e.key === 'Enter') loadObjects(); });
+    colInput.addEventListener('blur',    () => { if (colInput.value.trim() !== currentCol) loadObjects(); });
+
+    // ── Bootstrap ─────────────────────────────────────────────────────────────
+    await loadCollections();
+    await loadObjects();
+  </script>
+</body>
+</html>
