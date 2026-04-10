@@ -39,7 +39,7 @@
       }
 
       handleCall() {
-        alert('Handler method called from controller!');
+        console.log('Handler method called from controller!');
       }
     }
 
@@ -49,12 +49,18 @@
       width: 320,
       layout: {
         type: 'hbox',
-        gap: 8,
+        gap: 8
       },
       items: [
-        new Button({
-          text: 'Click Me',
-          handler: () => alert('Button clicked!'),
+        new Panel({
+          title: 'Subpanel',
+          bodyPadding: 16,
+          items: [
+            new Button({
+              text: 'Click Me',
+              handler: () => alert('Button clicked!'),
+            })
+          ]
         }),
         new Button({
           id: 'call-handler',
