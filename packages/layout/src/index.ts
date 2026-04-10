@@ -12,8 +12,8 @@ export { LayoutRunner } from './LayoutRunner.js';
 // Box layouts
 export { BoxLayout } from './box/BoxLayout.js';
 export type { BoxLayoutConfig, BoxAlign, BoxPack, BoxOverflow } from './box/BoxLayout.js';
-export { HBoxLayout } from './box/HBoxLayout.js';
-export { VBoxLayout } from './box/VBoxLayout.js';
+export { HBoxLayout, HBoxLayout as HBox } from './box/HBoxLayout.js';
+export { VBoxLayout, VBoxLayout as VBox } from './box/VBoxLayout.js';
 
 // Additional layouts
 export { FitLayout } from './FitLayout.js';
