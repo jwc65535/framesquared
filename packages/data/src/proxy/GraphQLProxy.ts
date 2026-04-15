@@ -7,7 +7,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Operation } from '../Operation.js';
+import type { Model } from '../Model.js';
 import { ResultSet } from '../ResultSet.js';
 import { Proxy } from './Proxy.js';
 import type { ProxyConfig } from './Proxy.js';
@@ -36,31 +36,29 @@ export class GraphQLProxy extends Proxy {
     this.headers = config.headers ?? {};
   }
 
-  async read(operation: Operation): Promise<ResultSet> {
-    return this.doRequest(this.query, operation.params);
+  async read(_records: Model[] = [], options: { params?: Record<string, unknown> } = {}): Promise<ResultSet> {
+    return this.doRequest(this.query, options.params ?? {});
   }
 
-  async create(operation: Operation): Promise<ResultSet> {
-    const variables: Record<string, unknown> = { ...operation.params };
-    if (operation.records.length > 0) {
-      variables.input = operation.records[0].getData();
-    }
+  async create(records: Model[]): Promise<ResultSet> {
+    const variables: Record<string, unknown> = {};
+    if (records.length > 0) variables.input = records[0].getData();
     return this.doRequest(this.mutation, variables);
   }
 
-  async update(operation: Operation): Promise<ResultSet> {
-    const variables: Record<string, unknown> = { ...operation.params };
-    if (operation.records.length > 0) {
-      variables.input = operation.records[0].getData();
-    }
+  async update(records: Model[]): Promise<ResultSet> {
+    const variables: Record<string, unknown> = {};
+    if (records.length > 0) variables.input = records[0].getData();
     return this.doRequest(this.mutation, variables);
   }
 
-  async destroy(operation: Operation): Promise<ResultSet> {
-    const variables: Record<string, unknown> = { ...operation.params };
-    if (operation.records.length > 0) {
-      variables.id = operation.records[0].getId();
-    }
+  async patch(records: Model[]): Promise<ResultSet> {
+    return this.update(records);
+  }
+
+  async destroy(records: Model[]): Promise<ResultSet> {
+    const variables: Record<string, unknown> = {};
+    if (records.length > 0) variables.id = records[0].getId();
     return this.doRequest(this.mutation, variables);
   }
 
@@ -77,27 +75,17 @@ export class GraphQLProxy extends Proxy {
 
       const data = await response.json();
 
-      // Check for GraphQL errors
       if (data.errors && data.errors.length > 0) {
-        return new ResultSet({
-          records: [],
-          success: false,
-          message: data.errors[0].message,
-        });
+        return new ResultSet({ records: [], success: false, message: data.errors[0].message });
       }
 
-      // Extract records from rootProperty path
-      const raw = this.extractByPath(data, this.rootProperty);
+      const raw   = this.extractByPath(data, this.rootProperty);
       const items = Array.isArray(raw) ? raw : raw ? [raw] : [];
       const records = items.map((item: any) => this.model.create(item));
 
       return new ResultSet({ records, success: true });
     } catch (err: any) {
-      return new ResultSet({
-        records: [],
-        success: false,
-        message: err?.message ?? 'GraphQL request failed',
-      });
+      return new ResultSet({ records: [], success: false, message: err?.message ?? 'GraphQL request failed' });
     }
   }
 

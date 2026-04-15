@@ -5,7 +5,8 @@
  * CRUD operations as JSON messages.  Auto-reconnects on disconnect.
  */
 
-import type { Operation } from '../Operation.js';
+import { Operation } from '../Operation.js';
+import type { Model } from '../Model.js';
 import { ResultSet } from '../ResultSet.js';
 import { Proxy } from './Proxy.js';
 import type { ProxyConfig } from './Proxy.js';
@@ -88,23 +89,28 @@ export class WebSocketProxy extends Proxy {
   // Proxy interface (returns empty ResultSets — real data comes via events)
   // -----------------------------------------------------------------------
 
-  async read(operation: Operation): Promise<ResultSet> {
-    this.send(operation);
+  async read(records: Model[] = [], options: { params?: Record<string, unknown> } = {}): Promise<ResultSet> {
+    this.send(new Operation({ action: 'read', records, params: options.params }));
     return new ResultSet({ records: [], success: true });
   }
 
-  async create(operation: Operation): Promise<ResultSet> {
-    this.send(operation);
-    return new ResultSet({ records: operation.records, success: true });
+  async create(records: Model[]): Promise<ResultSet> {
+    this.send(new Operation({ action: 'create', records }));
+    return new ResultSet({ records, success: true });
   }
 
-  async update(operation: Operation): Promise<ResultSet> {
-    this.send(operation);
-    return new ResultSet({ records: operation.records, success: true });
+  async update(records: Model[]): Promise<ResultSet> {
+    this.send(new Operation({ action: 'update', records }));
+    return new ResultSet({ records, success: true });
   }
 
-  async destroy(operation: Operation): Promise<ResultSet> {
-    this.send(operation);
+  async patch(records: Model[]): Promise<ResultSet> {
+    this.send(new Operation({ action: 'patch', records }));
+    return new ResultSet({ records, success: true });
+  }
+
+  async destroy(records: Model[]): Promise<ResultSet> {
+    this.send(new Operation({ action: 'destroy', records }));
     return new ResultSet({ records: [], success: true });
   }
 

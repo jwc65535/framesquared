@@ -14,7 +14,7 @@ export interface BatchOptions {
 
 export interface Batch {
   success: boolean;
-  operations: Operation[];
+  results: ResultSet[];
 }
 
 export interface ProxyConfig {
@@ -29,40 +29,43 @@ export abstract class Proxy {
     this.model = config.model;
   }
 
-  abstract read(operation: Operation, signal?: AbortSignal): Promise<ResultSet>;
-  abstract create(operation: Operation): Promise<ResultSet>;
-  abstract update(operation: Operation): Promise<ResultSet>;
-  abstract destroy(operation: Operation): Promise<ResultSet>;
+  abstract read(
+    records?: Model[],
+    options?: { params?: Record<string, unknown>; start?: number; limit?: number; page?: number },
+    signal?: AbortSignal,
+  ): Promise<ResultSet>;
+
+  abstract create(records: Model[]): Promise<ResultSet>;
+  abstract update(records: Model[]): Promise<ResultSet>;
+  abstract patch(records: Model[]): Promise<ResultSet>;
+  abstract destroy(records: Model[]): Promise<ResultSet>;
 
   async batch(options: BatchOptions): Promise<Batch> {
-    const { Operation: OpClass } = await import('../Operation.js');
-    const operations: Operation[] = [];
+    const results: ResultSet[] = [];
     let allSuccess = true;
 
-    if (options.create && options.create.length > 0) {
-      const op = new OpClass({ action: 'create', records: options.create });
-      const rs = await this.create(op);
-      op.setResult(rs);
-      operations.push(op);
+    if (options.create?.length) {
+      const rs = await this.create(options.create);
+      results.push(rs);
       if (!rs.success) allSuccess = false;
     }
 
-    if (options.update && options.update.length > 0) {
-      const op = new OpClass({ action: 'update', records: options.update });
-      const rs = await this.update(op);
-      op.setResult(rs);
-      operations.push(op);
+    if (options.update?.length) {
+      const rs = await this.update(options.update);
+      results.push(rs);
       if (!rs.success) allSuccess = false;
     }
 
-    if (options.destroy && options.destroy.length > 0) {
-      const op = new OpClass({ action: 'destroy', records: options.destroy });
-      const rs = await this.destroy(op);
-      op.setResult(rs);
-      operations.push(op);
+    if (options.destroy?.length) {
+      const rs = await this.destroy(options.destroy);
+      results.push(rs);
       if (!rs.success) allSuccess = false;
     }
 
-    return { success: allSuccess, operations };
+    return { success: allSuccess, results };
   }
 }
+
+// Re-export Operation so callers that still need it (e.g. advanced store integration)
+// can import from a single place.
+export type { Operation };

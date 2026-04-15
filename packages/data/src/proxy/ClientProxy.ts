@@ -6,7 +6,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Operation } from '../Operation.js';
+import type { Model } from '../Model.js';
 import { ResultSet } from '../ResultSet.js';
 import { Proxy } from './Proxy.js';
 import type { ProxyConfig } from './Proxy.js';
@@ -19,6 +19,15 @@ export interface MemoryProxyConfig extends ProxyConfig {
   data?: Record<string, unknown>[];
 }
 
+export interface MemoryReadOptions {
+  params?: Record<string, unknown>;
+  filters?: any[];
+  sorters?: any[];
+  start?: number;
+  limit?: number;
+  page?: number;
+}
+
 export class MemoryProxy extends Proxy {
   private store: Record<string, unknown>[];
 
@@ -27,41 +36,32 @@ export class MemoryProxy extends Proxy {
     this.store = config.data ? [...config.data] : [];
   }
 
-  async read(operation: Operation): Promise<ResultSet> {
+  async read(_records: Model[] = [], options: MemoryReadOptions = {}): Promise<ResultSet> {
     let data = [...this.store];
 
     // Local filtering
-    if (operation.filters && operation.filters.length > 0) {
+    if (options.filters && options.filters.length > 0) {
       data = data.filter((raw) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return operation.filters!.every((f: any) => {
+        return options.filters!.every((f: any) => {
           const fieldVal = raw[f.property];
           const op = f.operator ?? '=';
           switch (op) {
-            case '=':
-              return fieldVal === f.value;
-            case '!=':
-              return fieldVal !== f.value;
-            case '<':
-              return (fieldVal as number) < f.value;
-            case '<=':
-              return (fieldVal as number) <= f.value;
-            case '>':
-              return (fieldVal as number) > f.value;
-            case '>=':
-              return (fieldVal as number) >= f.value;
-            default:
-              return true;
+            case '=':  return fieldVal === f.value;
+            case '!=': return fieldVal !== f.value;
+            case '<':  return (fieldVal as number) < f.value;
+            case '<=': return (fieldVal as number) <= f.value;
+            case '>':  return (fieldVal as number) > f.value;
+            case '>=': return (fieldVal as number) >= f.value;
+            default:   return true;
           }
         });
       });
     }
 
     // Local sorting
-    if (operation.sorters && operation.sorters.length > 0) {
+    if (options.sorters && options.sorters.length > 0) {
       data.sort((a, b) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        for (const sorter of operation.sorters!) {
+        for (const sorter of options.sorters!) {
           const va = a[sorter.property] as string | number;
           const vb = b[sorter.property] as string | number;
           const dir = sorter.direction === 'DESC' ? -1 : 1;
@@ -75,9 +75,9 @@ export class MemoryProxy extends Proxy {
     const total = data.length;
 
     // Local paging
-    if (operation.start !== undefined || operation.limit !== undefined) {
-      const start = operation.start ?? 0;
-      const limit = operation.limit ?? data.length;
+    if (options.start !== undefined || options.limit !== undefined) {
+      const start = options.start ?? 0;
+      const limit = options.limit ?? data.length;
       data = data.slice(start, start + limit);
     }
 
@@ -85,35 +85,35 @@ export class MemoryProxy extends Proxy {
     return new ResultSet({ records, total, success: true });
   }
 
-  async create(operation: Operation): Promise<ResultSet> {
-    for (const record of operation.records) {
+  async create(records: Model[]): Promise<ResultSet> {
+    for (const record of records) {
       this.store.push(record.getData());
     }
-    return new ResultSet({ records: operation.records, success: true });
+    return new ResultSet({ records, success: true });
   }
 
-  async update(operation: Operation): Promise<ResultSet> {
-    for (const record of operation.records) {
-      const id = record.getId();
-      const idProp = (this.model as any).idProperty ?? 'id';
+  async update(records: Model[]): Promise<ResultSet> {
+    const idProp = (this.model as any).idProperty ?? 'id';
+    for (const record of records) {
+      const id  = record.getId();
       const idx = this.store.findIndex((r) => r[idProp] === id);
-      if (idx !== -1) {
-        this.store[idx] = record.getData();
-      }
+      if (idx !== -1) this.store[idx] = record.getData();
     }
-    return new ResultSet({ records: operation.records, success: true });
+    return new ResultSet({ records, success: true });
   }
 
-  async destroy(operation: Operation): Promise<ResultSet> {
-    for (const record of operation.records) {
-      const id = record.getId();
-      const idProp = (this.model as any).idProperty ?? 'id';
+  async patch(records: Model[]): Promise<ResultSet> {
+    return this.update(records);
+  }
+
+  async destroy(records: Model[]): Promise<ResultSet> {
+    const idProp = (this.model as any).idProperty ?? 'id';
+    for (const record of records) {
+      const id  = record.getId();
       const idx = this.store.findIndex((r) => r[idProp] === id);
-      if (idx !== -1) {
-        this.store.splice(idx, 1);
-      }
+      if (idx !== -1) this.store.splice(idx, 1);
     }
-    return new ResultSet({ records: operation.records, success: true });
+    return new ResultSet({ records, success: true });
   }
 }
 
@@ -148,44 +148,46 @@ abstract class WebStorageProxy extends Proxy {
     this.getStorage().setItem(this.storageId, JSON.stringify(data));
   }
 
-  async read(_operation: Operation): Promise<ResultSet> {
-    const data = this.loadAll();
+  async read(): Promise<ResultSet> {
+    const data    = this.loadAll();
     const records = data.map((raw) => this.model.create(raw));
     return new ResultSet({ records, success: true });
   }
 
-  async create(operation: Operation): Promise<ResultSet> {
+  async create(records: Model[]): Promise<ResultSet> {
     const data = this.loadAll();
-    for (const record of operation.records) {
+    for (const record of records) {
       data.push(record.getData({ serialize: true }));
     }
     this.saveAll(data);
-    return new ResultSet({ records: operation.records, success: true });
+    return new ResultSet({ records, success: true });
   }
 
-  async update(operation: Operation): Promise<ResultSet> {
-    const data = this.loadAll();
+  async update(records: Model[]): Promise<ResultSet> {
+    const data   = this.loadAll();
     const idProp = (this.model as any).idProperty ?? 'id';
-    for (const record of operation.records) {
-      const id = record.getId();
+    for (const record of records) {
+      const id  = record.getId();
       const idx = data.findIndex((r) => r[idProp] === id);
-      if (idx !== -1) {
-        data[idx] = record.getData({ serialize: true });
-      }
+      if (idx !== -1) data[idx] = record.getData({ serialize: true });
     }
     this.saveAll(data);
-    return new ResultSet({ records: operation.records, success: true });
+    return new ResultSet({ records, success: true });
   }
 
-  async destroy(operation: Operation): Promise<ResultSet> {
-    let data = this.loadAll();
+  async patch(records: Model[]): Promise<ResultSet> {
+    return this.update(records);
+  }
+
+  async destroy(records: Model[]): Promise<ResultSet> {
+    let data     = this.loadAll();
     const idProp = (this.model as any).idProperty ?? 'id';
-    for (const record of operation.records) {
+    for (const record of records) {
       const id = record.getId();
-      data = data.filter((r) => r[idProp] !== id);
+      data     = data.filter((r) => r[idProp] !== id);
     }
     this.saveAll(data);
-    return new ResultSet({ records: operation.records, success: true });
+    return new ResultSet({ records, success: true });
   }
 }
 

@@ -78,6 +78,7 @@ export class JsonReader {
       total: total ?? records.length,
       success,
       message,
+      rawData: rawRecords,
     });
   }
 }

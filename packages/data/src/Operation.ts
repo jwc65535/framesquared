@@ -7,7 +7,7 @@
 import type { Model } from './Model.js';
 import type { ResultSet } from './ResultSet.js';
 
-export type OperationAction = 'create' | 'read' | 'update' | 'destroy';
+export type OperationAction = 'create' | 'read' | 'update' | 'patch' | 'destroy';
 
 export interface OperationConfig {
   action: OperationAction;

@@ -9,6 +9,7 @@ export interface ResultSetConfig {
   total?: number;
   success: boolean;
   message?: string;
+  rawData?: unknown[];
 }
 
 export class ResultSet {
@@ -16,11 +17,14 @@ export class ResultSet {
   readonly total: number;
   readonly success: boolean;
   readonly message: string | undefined;
+  /** Raw response records before model creation, populated by readers. */
+  readonly rawData: unknown[];
 
   constructor(config: ResultSetConfig) {
     this.records = config.records;
     this.total = config.total ?? config.records.length;
     this.success = config.success;
     this.message = config.message;
+    this.rawData = config.rawData ?? [];
   }
 }
