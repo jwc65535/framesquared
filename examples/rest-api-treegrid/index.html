@@ -76,8 +76,13 @@
 
     /* ── Grid wrapper ─────────────────────────────────────────────────────── */
     .grid-wrap {
+      position: relative;
       border-radius: 8px; overflow: hidden;
       box-shadow: var(--ext-shadow-md, 0 2px 4px rgba(0,0,0,0.14));
+    }
+    #empty-overlay {
+      display: none; position: absolute; top: 36px; left: 0; right: 0; bottom: 0;
+      background: var(--ext-color-surface, #fff); z-index: 10;
     }
     .grid-wrap .x-panel { border-radius: 0; box-shadow: none; border: none; }
 
@@ -300,7 +305,7 @@
         <div class="top-bar" style="margin-bottom:6px">
           <span class="bar-label">API Key</span>
           <input id="key-input" class="bar-input" style="width:280px;font-size:12px"
-            value="" spellcheck="false" />
+            value="" spellcheck="false" autofocus />
         </div>
 
         <!-- Collection bar: collection name + Refresh + Seed + Add + GET-by-ID -->
@@ -344,8 +349,9 @@
   {
     "imports": {
       "@framesquared/ui":        "../../packages/ui/dist/index.js",
-      "@framesquared/component": "https://esm.sh/@framesquared/component@0.5.1",
-      "@framesquared/core":      "https://esm.sh/@framesquared/core@0.5.1",
+      "@framesquared/data":      "../../packages/data/dist/index.js",
+      "@framesquared/component": "../../packages/component/dist/index.js",
+      "@framesquared/core":      "../../packages/core/dist/index.js",
       "@framesquared/theme":     "../../packages/theme/dist/index.js"
     }
   }
@@ -353,6 +359,11 @@
 
   <script type="module">
     import { TreeGrid, TreeGridColumn, Column, Button, Panel } from '@framesquared/ui';
+    import {
+      Model, TreeModel, TreeStore, Store,
+      RestProxy, AjaxProxy,
+      JsonReader, JsonWriter,
+    } from '@framesquared/data';
     import { ThemeManager, ModernTheme } from '@framesquared/theme';
 
     // ── Theme ─────────────────────────────────────────────────────────────────
@@ -363,11 +374,141 @@
     const BASE = 'https://api.restful-api.dev';
     const getApiKey = () => document.getElementById('key-input').value.trim();
 
+    // ── ObjectModel ───────────────────────────────────────────────────────────
+    // Extends TreeModel; 'text' (TreeGrid display field) maps from API 'name'.
+    // Nested data.* fields extracted via dot-path mapping.
+    class ObjectModel extends TreeModel {
+      static fields = [
+        { name: 'id' },
+        { name: 'text',     mapping: 'name',           defaultValue: ''   },
+        { name: 'name',                                defaultValue: ''   },
+        { name: 'leaf',     type: 'boolean',            defaultValue: true },
+        { name: 'price',    type: 'float',  mapping: 'data.price',    defaultValue: null, allowNull: true },
+        { name: 'year',     type: 'int',    mapping: 'data.year',     defaultValue: null, allowNull: true },
+        { name: 'category', type: 'string', mapping: 'data.category', defaultValue: null, allowNull: true },
+        { name: 'color',    type: 'string', mapping: 'data.color',    defaultValue: null, allowNull: true },
+        { name: 'createdAt',                           defaultValue: null },
+      ];
+    }
+
+    // ── CollectionModel ───────────────────────────────────────────────────────
+    // Represents a single entry from GET /collections; keyed by name.
+    class CollectionModel extends Model {
+      static idProperty = 'name';
+      static fields = [
+        { name: 'name',        type: 'string', defaultValue: '' },
+        { name: 'count',       type: 'int',    defaultValue: null, allowNull: true },
+        { name: 'objectCount', type: 'int',    defaultValue: null, allowNull: true },
+      ];
+    }
+
+    // ── ApiReader ─────────────────────────────────────────────────────────────
+    // Normalises single-object responses (GET /…/{id}) to an array so the
+    // standard read path handles both list and single-record responses.
+    // rawData is populated by JsonReader and carried on the ResultSet automatically.
+    class ApiReader extends JsonReader {
+      read(data) {
+        const normalized = Array.isArray(data) ? data
+          : (data && typeof data === 'object' && 'id' in data ? [data] : []);
+        return super.read(normalized);
+      }
+    }
+
+    // ── ApiWriter ─────────────────────────────────────────────────────────────
+    // Produces the API body format: { name, data: { category, price, year, color } }.
+    // Because PATCH records are created with only id+name, the data block is
+    // omitted automatically when those fields are null.
+    class ApiWriter extends JsonWriter {
+      write(records) {
+        if (!records.length) return {};
+        const rec   = records[0];
+        const name  = rec.get('name') || rec.get('text') || '';
+        const d     = {};
+        const cat   = rec.get('category'); if (cat   != null && cat   !== '') d.category = cat;
+        const price = rec.get('price');    if (price  != null)                 d.price    = price;
+        const year  = rec.get('year');     if (year   != null)                 d.year     = year;
+        const color = rec.get('color');    if (color  != null && color !== '') d.color    = color;
+        const body  = { name };
+        if (Object.keys(d).length) body.data = d;
+        return body;
+      }
+    }
+
+    // ── CollectionReader ──────────────────────────────────────────────────────
+    // Normalises the /collections response, which may be string[] or object[].
+    class CollectionReader extends JsonReader {
+      read(data) {
+        const normalized = Array.isArray(data)
+          ? data.map(c => typeof c === 'string' ? { name: c } : c)
+          : [];
+        return super.read(normalized);
+      }
+    }
+
+    // ── Shared hook factory ───────────────────────────────────────────────────
+    function makeHooks() {
+      return {
+        beforeRequest({ method, url }) {
+          setStatus('loading', `${method} ${url.replace(BASE, '')}`);
+        },
+        afterRequest({ method, url, status, elapsed, success, data, error }) {
+          const path   = url.replace(BASE, '');
+          const suffix = !success && data?.error ? ` — ${data.error}` : '';
+          addLog(method, path, status, elapsed);
+          setStatus(
+            success ? 'ok' : 'err',
+            error
+              ? `Network error: ${error.message}`
+              : `${method} ${path} → ${status}${suffix}`,
+          );
+        },
+      };
+    }
+
+    // ── RestApiProxy ──────────────────────────────────────────────────────────
+    // Extends RestProxy (auto-appends /{id} via buildUrl) with ApiReader/ApiWriter
+    // and dynamic x-api-key injection. No doRequest override needed.
+    class RestApiProxy extends RestProxy {
+      constructor(col) {
+        super({
+          url:      `${BASE}/collections/${col}/objects`,
+          model:    ObjectModel,
+          headers:  () => ({ 'x-api-key': getApiKey() }),
+          appendId: true,
+          ...makeHooks(),
+        });
+        this.reader = new ApiReader({ model: ObjectModel });
+        this.writer = new ApiWriter({});
+      }
+    }
+
+    // ── CollectionsProxy ──────────────────────────────────────────────────────
+    // Extends AjaxProxy for GET /collections with CollectionReader and dynamic
+    // x-api-key injection. No doRequest override needed.
+    class CollectionsProxy extends AjaxProxy {
+      constructor() {
+        super({
+          url:    `${BASE}/collections`,
+          model:  CollectionModel,
+          headers: () => ({ 'x-api-key': getApiKey() }),
+          ...makeHooks(),
+        });
+        this.reader = new CollectionReader({ model: CollectionModel });
+      }
+    }
+
+    // ── Module-level stores ───────────────────────────────────────────────────
+    // objectStore is stable for the lifetime of the page. Data is refreshed via
+    // setRoot(), which fires 'rootchange' and triggers the TreeGrid to auto-refresh.
+    const objectStore = new TreeStore({ model: ObjectModel, root: { id: '__root__', text: 'Root' } });
+    const colStore    = new Store({ model: CollectionModel });
+    const colProxy    = new CollectionsProxy();
+    let   objProxy    = null; // rebuilt in loadObjects() when currentCol changes
+
     // ── State ─────────────────────────────────────────────────────────────────
     let currentCol = 'devices';
-    let objects    = [];          // full API objects array, kept in sync
-    let formMode   = null;        // 'add' | 'put' | 'patch' | null
-    let formTarget = null;        // raw API object being edited, null for 'add'
+    let formMode   = null;  // 'add' | 'put' | 'patch' | null
+    let formTarget = null;  // ObjectModel/NodeInterface being edited, null for 'add'
     let grid       = null;
     let log        = [];
 
@@ -381,48 +522,21 @@
       document.getElementById('s-text').textContent = msg;
     }
 
-    // ── API layer (one function per endpoint) ─────────────────────────────────
-    async function request(method, path, body) {
-      const url   = `${BASE}${path}`;
-      const start = Date.now();
-      setStatus('loading', `${method} ${path}`);
-      try {
-        const opts = {
-          method,
-          headers: { 'x-api-key': getApiKey(), 'Content-Type': 'application/json' },
-        };
-        if (body != null) opts.body = JSON.stringify(body);
-        const res     = await fetch(url, opts);
-        const elapsed = Date.now() - start;
-        let data = null;
-        try { data = await res.json(); } catch {}
-        addLog(method, path, res.status, elapsed);
-        setStatus(res.ok ? 'ok' : 'err',
-          `${method} ${path} → ${res.status}` + (!res.ok && data?.error ? ` — ${data.error}` : ''));
-        return { ok: res.ok, status: res.status, data };
-      } catch (err) {
-        addLog(method, path, 0, Date.now() - start);
-        setStatus('err', `Network error: ${err.message}`);
-        throw err;
-      }
+    // ── Reconstruct API-shaped JSON from a record ─────────────────────────────
+    function recToJson(rec) {
+      if (!rec) return null;
+      return {
+        id:        rec.get('id'),
+        name:      rec.get('name'),
+        createdAt: rec.get('createdAt'),
+        data:      rec.get('data') ?? {
+          price:    rec.get('price'),
+          year:     rec.get('year'),
+          category: rec.get('category'),
+          color:    rec.get('color'),
+        },
+      };
     }
-
-    const api = {
-      /** GET /collections */
-      getCollections:  ()           => request('GET',    `/collections`),
-      /** GET /collections/{col}/objects */
-      listObjects:     (col)        => request('GET',    `/collections/${col}/objects`),
-      /** GET /collections/{col}/objects/{id} */
-      getObject:       (col, id)    => request('GET',    `/collections/${col}/objects/${id}`),
-      /** POST /collections/{col}/objects */
-      createObject:    (col, body)  => request('POST',   `/collections/${col}/objects`, body),
-      /** PUT /collections/{col}/objects/{id} — full replacement */
-      putObject:       (col, id, b) => request('PUT',    `/collections/${col}/objects/${id}`, b),
-      /** PATCH /collections/{col}/objects/{id} — partial update */
-      patchObject:     (col, id, b) => request('PATCH',  `/collections/${col}/objects/${id}`, b),
-      /** DELETE /collections/{col}/objects/{id} */
-      deleteObject:    (col, id)    => request('DELETE', `/collections/${col}/objects/${id}`),
-    };
 
     // ── Request log ───────────────────────────────────────────────────────────
     function addLog(method, path, status, ms) {
@@ -467,17 +581,19 @@
     }
 
     // ── Collections sidebar ───────────────────────────────────────────────────
-    function renderCollections(cols) {
+    // Reads from colStore (Store of CollectionModel) rather than a passed argument.
+    function renderCollections() {
       const body = pCollections.getBodyEl();
       if (!body) return;
+      const cols = colStore.getRange();
       if (!cols.length) {
         body.innerHTML = '<div class="col-empty">No collections yet — create objects to make one.</div>';
         return;
       }
       body.innerHTML = `<div class="col-list">${
-        cols.map(c => {
-          const name  = typeof c === 'string' ? c : (c.name ?? c.collectionName ?? String(c));
-          const count = c.count ?? c.objectCount ?? '';
+        cols.map(rec => {
+          const name  = rec.get('name');
+          const count = rec.get('count') ?? rec.get('objectCount') ?? '';
           const active = name === currentCol ? ' active' : '';
           return `<div class="col-item${active}" data-col="${esc(name)}">
             <span class="col-name">${esc(name)}</span>
@@ -498,29 +614,15 @@
     }
 
     // ── Grid ──────────────────────────────────────────────────────────────────
-    function buildRows(items) {
-      return items.map(obj => ({
-        text:      obj.name,
-        _id:       obj.id,
-        price:     obj.data?.price    ?? obj.data?.Price    ?? null,
-        year:      obj.data?.year     ?? obj.data?.Year     ?? null,
-        category:  obj.data?.category ?? obj.data?.Category ?? obj.data?.type ?? null,
-        color:     obj.data?.color    ?? obj.data?.Color    ?? null,
-        createdAt: obj.createdAt ?? null,
-        leaf:      true,
-      }));
-    }
-
-    function buildGrid(items) {
-      if (grid) { try { grid.destroy(); } catch {} grid = null; }
-      document.getElementById('grid-area').innerHTML = '';
-
+    // Created once and wired to the stable objectStore. The TreeGrid listens to
+    // 'rootchange' on the store and calls view.refresh() automatically.
+    function initGrid() {
       const dash = `<span style="opacity:0.3">—</span>`;
       const mono = v => `<span style="font-family:'Fira Code',monospace;font-size:11px">${esc(v)}</span>`;
 
       grid = new TreeGrid({
         title:       `GET /collections/${currentCol}/objects`,
-        store:       buildRows(items),
+        store:       objectStore,
         rootVisible: false,
         useArrows:   false,
         height:      460,
@@ -535,10 +637,10 @@
             renderer: v => v
               ? new Date(v).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' })
               : dash }),
-          new Column({ text: 'ID', dataIndex: '_id', width: 95, renderer: v => mono(v) }),
+          new Column({ text: 'ID', dataIndex: 'id', width: 95, renderer: v => mono(v) }),
           // ── Actions column — Edit (PUT) | Rename (PATCH) | Delete ───────────
           new Column({
-            text: 'Actions', dataIndex: '_id', width: 200,
+            text: 'Actions', dataIndex: 'id', width: 200,
             renderer: id => id
               ? `<span class="ra"       data-action="put"    data-id="${esc(id)}">Edit</span>`
               + `<span class="ra patch" data-action="patch"  data-id="${esc(id)}">Rename</span>`
@@ -548,29 +650,39 @@
         ],
       });
 
-      // Row click → populate ID input and JSON panel (for GET-by-ID convenience)
+      // Row click → populate ID input and JSON panel.
+      // Uses TreeStore.getNodeById() for O(1) lookup — no parallel array needed.
       grid.on('itemclick', (_view, node) => {
-        const id  = node.get?.('_id') ?? node._id ?? '';
-        const raw = objects.find(o => o.id === id);
-        if (id) document.getElementById('id-input').value = id;
-        if (raw) showJson(raw);
+        const id  = node.getId?.() ?? '';
+        const rec = id ? objectStore.getNodeById(id) : null;
+        if (id)  document.getElementById('id-input').value = id;
+        if (rec) showJson(recToJson(rec));
       });
 
       grid.render(document.getElementById('grid-area'));
 
-      if (items.length === 0) {
-        // Inject empty state into the rendered panel body
-        const bodyEl = document.getElementById('grid-area').querySelector('.x-panel-body');
-        if (bodyEl) {
-          bodyEl.innerHTML = `<div class="empty-state">
-            <div class="empty-icon">📦</div>
-            <div class="empty-text">Collection "${esc(currentCol)}" is empty</div>
-            <div class="empty-hint">
-              Click <strong>Add — POST</strong> to create an object,<br>
-              or <strong>Seed sample data</strong> to populate it with Apple devices.
-            </div>
-          </div>`;
-        }
+      // Append overlay AFTER grid renders so it sits above the grid's DOM.
+      const overlay = document.createElement('div');
+      overlay.id = 'empty-overlay';
+      overlay.className = 'empty-state';
+      overlay.innerHTML =
+        `<div class="empty-icon">📦</div>`
+        + `<div id="empty-text" class="empty-text"></div>`
+        + `<div class="empty-hint">Click <strong>Add — POST</strong> to create an object,<br>`
+        + `or <strong>Seed sample data</strong> to populate it with Apple devices.</div>`;
+      document.getElementById('grid-area').appendChild(overlay);
+    }
+
+    // ── Empty state helper ────────────────────────────────────────────────────
+    function maybeShowEmptyState() {
+      const overlay = document.getElementById('empty-overlay');
+      if (!overlay) return;
+      const isEmpty = !grid || grid.getRootNode().childNodes.length === 0;
+      if (isEmpty) {
+        document.getElementById('empty-text').textContent = `Collection "${currentCol}" is empty`;
+        overlay.style.display = 'flex';
+      } else {
+        overlay.style.display = 'none';
       }
     }
 
@@ -581,19 +693,20 @@
 
       const action = btn.dataset.action;
       const id     = btn.dataset.id;
-      const raw    = objects.find(o => o.id === id);
-      if (!raw) return;
+      // TreeStore.getNodeById() — O(1) map lookup; eliminates a parallel objectRecords array.
+      const rec    = objectStore.getNodeById(id);
+      if (!rec) return;
 
       if (action === 'put') {
-        formTarget = raw;
+        formTarget = rec;
         openForm('put');
       } else if (action === 'patch') {
-        formTarget = raw;
+        formTarget = rec;
         openForm('patch');
       } else if (action === 'delete') {
-        if (!confirm(`Delete "${raw.name}"?\n\nID: ${raw.id}`)) return;
-        const r = await api.deleteObject(currentCol, raw.id);
-        if (r.ok) {
+        if (!confirm(`Delete "${rec.get('name')}"?\n\nID: ${rec.get('id')}`)) return;
+        const rs = await objProxy.destroy([rec]);
+        if (rs.success) {
           clearForm();
           showJson(null);
           await loadObjects();
@@ -610,13 +723,17 @@
 
     function openForm(mode) {
       formMode = mode;
-      const obj  = formTarget ?? {};
-      const data = obj.data ?? {};
+      const rec      = formTarget;
+      const recName  = rec?.get('name')     ?? '';
+      const recCat   = rec?.get('category') ?? '';
+      const recPrice = rec?.get('price')    ?? '';
+      const recYear  = rec?.get('year')     ?? '';
+      const recColor = rec?.get('color')    ?? '';
 
       const METHOD   = mode === 'add' ? 'POST' : mode === 'put' ? 'PUT' : 'PATCH';
       const endpoint = mode === 'add'
         ? `/collections/${currentCol}/objects`
-        : `/collections/${currentCol}/objects/${obj.id}`;
+        : `/collections/${currentCol}/objects/${rec?.getId() ?? ''}`;
 
       const area = document.getElementById('form-area');
       area.innerHTML = `
@@ -629,7 +746,7 @@
             <div class="form-grid single">
               <div class="form-field">
                 <label class="form-lbl">Name *</label>
-                <input class="form-inp" id="f-name" value="${esc(obj.name ?? '')}" />
+                <input class="form-inp" id="f-name" value="${esc(recName)}" />
               </div>
             </div>
             <p class="form-note">
@@ -639,23 +756,23 @@
             <div class="form-grid">
               <div class="form-field">
                 <label class="form-lbl">Name *</label>
-                <input class="form-inp" id="f-name" value="${esc(obj.name ?? '')}" />
+                <input class="form-inp" id="f-name" value="${esc(recName)}" />
               </div>
               <div class="form-field">
                 <label class="form-lbl">Category</label>
-                <input class="form-inp" id="f-category" value="${esc(data.category ?? '')}" />
+                <input class="form-inp" id="f-category" value="${esc(recCat)}" />
               </div>
               <div class="form-field">
                 <label class="form-lbl">Price ($)</label>
-                <input class="form-inp" id="f-price" type="number" step="0.01" value="${data.price ?? ''}" />
+                <input class="form-inp" id="f-price" type="number" step="0.01" value="${recPrice ?? ''}" />
               </div>
               <div class="form-field">
                 <label class="form-lbl">Year</label>
-                <input class="form-inp" id="f-year" type="number" value="${data.year ?? ''}" />
+                <input class="form-inp" id="f-year" type="number" value="${recYear ?? ''}" />
               </div>
               <div class="form-field">
                 <label class="form-lbl">Color</label>
-                <input class="form-inp" id="f-color" value="${esc(data.color ?? '')}" />
+                <input class="form-inp" id="f-color" value="${esc(recColor)}" />
               </div>
             </div>
             ${mode === 'put' ? `<p class="form-note">PUT replaces the entire object — all fields are overwritten.</p>` : ''}
@@ -687,18 +804,22 @@
       const name = document.getElementById('f-name')?.value.trim();
       if (!name) { alert('Name is required'); return; }
 
-      let r;
+      let rs;
       if (formMode === 'add') {
-        r = await api.createObject(currentCol, { name, data: collectData() });
+        const newRec = ObjectModel.create({ name, data: collectData() });
+        rs = await objProxy.create([newRec]);
       } else if (formMode === 'put') {
-        r = await api.putObject(currentCol, formTarget.id, { name, data: collectData() });
+        const d       = collectData();
+        const tempRec = ObjectModel.create({ id: formTarget.getId(), name, ...(d ? { data: d } : {}) });
+        rs = await objProxy.update([tempRec]);
       } else if (formMode === 'patch') {
-        r = await api.patchObject(currentCol, formTarget.id, { name });
+        const tempRec = ObjectModel.create({ id: formTarget.getId(), name });
+        rs = await objProxy.patch([tempRec]);
       }
 
-      if (r?.ok) {
+      if (rs?.success) {
         clearForm();
-        showJson(r.data);
+        showJson(rs.records?.[0] ? recToJson(rs.records[0]) : null);
         await loadObjects();
       }
     }
@@ -714,15 +835,22 @@
 
     async function seedData() {
       btnDisable(btnSeed, true);
-      for (const item of SEEDS) await api.createObject(currentCol, item);
+      for (const item of SEEDS) {
+        const rec = ObjectModel.create(item);
+        await objProxy.create([rec]);
+      }
       btnDisable(btnSeed, false);
       await loadObjects();
     }
 
     // ── Load helpers ──────────────────────────────────────────────────────────
     async function loadCollections() {
-      const r = await api.getCollections();
-      if (r.ok) renderCollections(Array.isArray(r.data) ? r.data : []);
+      const rs = await colProxy.read();
+      if (rs.success) {
+        colStore.removeAll(true);
+        if (rs.records.length) colStore.add(...rs.records);
+        renderCollections();
+      }
     }
 
     async function loadObjects() {
@@ -730,10 +858,26 @@
       document.getElementById('col-input').value = currentCol;
       clearForm();
       showJson(null);
+      const overlay = document.getElementById('empty-overlay');
+      if (overlay) overlay.style.display = 'none';
 
-      const r = await api.listObjects(currentCol);
-      objects  = r.ok && Array.isArray(r.data) ? r.data : [];
-      buildGrid(objects);
+      // Rebuild the proxy for the new collection URL.
+      objProxy = new RestApiProxy(currentCol);
+      const rs = await objProxy.read();
+
+      // Use grid.setRootNode() instead of objectStore.setRoot() directly.
+      // setRootNode() updates the store AND calls view.refresh() explicitly,
+      // so the grid always re-renders even if the rootchange event is missed.
+      const rawItems = rs.rawData ?? [];
+      if (grid) {
+        grid.setRootNode({
+          id: '__root__', text: 'Root', expanded: true, leaf: false,
+          children: rawItems,
+        });
+        grid.setTitle(`GET /collections/${currentCol}/objects`);
+      }
+      maybeShowEmptyState();
+
       loadCollections(); // refresh sidebar counts after each mutation
     }
 
@@ -765,8 +909,10 @@
       handler: async () => {
         const id = document.getElementById('id-input').value.trim();
         if (!id) { alert('Enter an object ID first'); return; }
-        const r = await api.getObject(currentCol, id);
-        if (r.ok) showJson(r.data);
+        // Pass a record with the target ID so RestProxy.buildUrl() appends /{id}.
+        const tempRec = ObjectModel.create({ id });
+        const rs = await objProxy.read([tempRec]);
+        if (rs.success && rs.records.length > 0) showJson(recToJson(rs.records[0]));
       },
     });
 
@@ -778,10 +924,16 @@
     // API key — reload on Enter or on blur if changed
     const keyInput = document.getElementById('key-input');
     let currentKey = keyInput.value.trim();
-    keyInput.addEventListener('keydown', e => { if (e.key === 'Enter') { currentKey = keyInput.value.trim(); loadCollections(); loadObjects(); } });
+    keyInput.addEventListener('keydown', e => {
+      console.log(keyInput.value);
+          if (e.key === 'Enter') {
+          e.preventDefault(); currentKey = keyInput.value.trim(); loadObjects();
+        }
+      }
+    );
     keyInput.addEventListener('blur', () => {
       const k = keyInput.value.trim();
-      if (k && k !== currentKey) { currentKey = k; loadCollections(); loadObjects(); }
+      if (k && k !== currentKey) { currentKey = k; loadObjects(); }
     });
 
     // Collection name — reload on Enter or on blur if changed
@@ -790,8 +942,14 @@
     colInput.addEventListener('blur',    () => { if (colInput.value.trim() !== currentCol) loadObjects(); });
 
     // ── Bootstrap ─────────────────────────────────────────────────────────────
-    await loadCollections();
-    await loadObjects();
+    initGrid();
+    if (getApiKey()) {
+      await loadCollections();
+      await loadObjects();
+    } else {
+      maybeShowEmptyState();
+      setStatus('ok', 'Enter your API key above to load data');
+    }
   </script>
 </body>
 </html>
