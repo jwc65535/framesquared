@@ -13,6 +13,20 @@ import (
 	_ "person-crud-api/docs" // <--- THIS IS CRITICAL (change to your module name)
 )
 
+//
+// go mod init person-crud-api
+// go get github.com/gin-gonic/gin
+// go get github.com/google/uuid
+// go get github.com/swaggo/gin-swagger
+// go get github.com/swaggo/files
+// go get github.com/swaggo/swag/cmd/swag
+// go get github.com/swaggo/gin-swagger
+// go get github.com/swaggo/files
+// go get github.com/swaggo/swag/cmd/swag
+// swag init
+// go run main.go
+
+
 // Person represents a person in the system
 type Person struct {
 	ID      uuid.UUID `json:"id" example:"550e8400-e29b-41d4-a716-446655440000"`
