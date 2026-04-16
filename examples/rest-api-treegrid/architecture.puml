@@ -1,0 +1,158 @@
+@startuml rest-api-treegrid
+
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+' ─── External base classes (from packages) ─────────────────────────────────
+
+package "@framesquared/data" {
+  class Model
+  class TreeModel
+  class TreeStore
+  class Store
+  class JsonReader
+  class JsonWriter
+  class RestProxy
+  class AjaxProxy
+
+  TreeModel --|> Model
+}
+
+package "@framesquared/ui" {
+  class TreeGrid
+  class TreeGridColumn
+  class Column
+}
+
+' ─── App-defined classes ────────────────────────────────────────────────────
+
+package "index.html (app)" {
+
+  class ObjectModel {
+    + {static} fields: id, text, name, leaf
+    + {static} fields: price, year, category, color, createdAt
+    --
+    text  ← mapping: "name"
+    price ← mapping: "data.price"
+    year  ← mapping: "data.year"
+    category ← mapping: "data.category"
+    color ← mapping: "data.color"
+  }
+
+  class CollectionModel {
+    + {static} idProperty = "name"
+    + {static} fields: name, count, objectCount
+  }
+
+  class ApiReader {
+    + read(data): ResultSet
+    -- normalises single-object\nresponses into arrays --
+  }
+
+  class ApiWriter {
+    + write(records): object
+    -- produces { name, data:{…} }\nomitting null fields --
+  }
+
+  class CollectionReader {
+    + read(data): ResultSet
+    -- normalises string[] or\nobject[] /collections response --
+  }
+
+  class RestApiProxy {
+    - url: BASE/collections/{col}/objects
+    - headers: () => x-api-key
+    - appendId: true
+    --
+    uses ApiReader + ApiWriter
+  }
+
+  class CollectionsProxy {
+    - url: BASE/collections
+    - headers: () => x-api-key
+    --
+    uses CollectionReader
+  }
+
+}
+
+' ─── Inheritance ────────────────────────────────────────────────────────────
+
+ObjectModel      --|> TreeModel
+CollectionModel  --|> Model
+ApiReader        --|> JsonReader
+ApiWriter        --|> JsonWriter
+CollectionReader --|> JsonReader
+RestApiProxy     --|> RestProxy
+CollectionsProxy --|> AjaxProxy
+
+' ─── Composition / use ──────────────────────────────────────────────────────
+
+RestApiProxy     "uses" ..> ObjectModel      : model
+RestApiProxy     "uses" ..> ApiReader        : reader
+RestApiProxy     "uses" ..> ApiWriter        : writer
+
+CollectionsProxy "uses" ..> CollectionModel  : model
+CollectionsProxy "uses" ..> CollectionReader : reader
+
+' ─── Module-level instances ─────────────────────────────────────────────────
+
+package "Runtime Instances" {
+  object objectStore {
+    type = TreeStore
+    model = ObjectModel
+    root = { id: "__root__" }
+  }
+
+  object colStore {
+    type = Store
+    model = CollectionModel
+  }
+
+  object grid {
+    type = TreeGrid
+    store = objectStore
+    rootVisible = false
+    columns: [TreeGridColumn, Column×7]
+  }
+
+  object colProxy {
+    type = CollectionsProxy
+  }
+
+  object objProxy {
+    type = RestApiProxy
+    col = currentCol (rebuilt on change)
+  }
+}
+
+objectStore ..> ObjectModel     : "model"
+colStore    ..> CollectionModel : "model"
+grid "store" --> objectStore
+grid "columns 0"   ..> TreeGridColumn : "Name / dataIndex=text"
+grid "columns 1-6" ..> Column         : "Category, Price, Year, Color, Created, ID, Actions"
+colProxy ..> CollectionsProxy
+objProxy ..> RestApiProxy
+
+' ─── Key functions (notes) ──────────────────────────────────────────────────
+
+note top of grid
+  **initGrid()** creates & renders once.
+  **loadObjects()** calls objProxy.read(),
+  passes rs.rawData as children to
+  grid.setRootNode() which rebuilds
+  the store tree with ObjectModel.
+  **loadCollections()** calls colProxy.read()
+  and populates colStore.
+end note
+
+note right of objectStore
+  grid._store **is** objectStore
+  (same instance — not a copy).
+  Fixed by adding @framesquared/data
+  to tsup externals so instanceof
+  check works across modules.
+end note
+
+@enduml

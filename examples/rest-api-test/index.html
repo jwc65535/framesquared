@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>framesquared – Person CRUD API Tester</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--ext-color-background, #f0f2f5);
+      min-height: 100vh;
+      color: var(--ext-color-text-primary, #212121);
+    }
+
+    /* ── Page header ──────────────────────────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 60%, #66bb6a 100%);
+      padding: 28px 40px 20px;
+      color: #fff;
+    }
+    .page-header-inner { max-width: 1300px; margin: 0 auto; }
+    .page-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px; padding: 4px 10px; margin-bottom: 10px;
+    }
+    .page-title { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
+    .page-subtitle {
+      font-size: 14px; opacity: 0.88; max-width: 680px; line-height: 1.5;
+    }
+    .page-subtitle code {
+      background: rgba(255,255,255,0.18); border-radius: 4px; padding: 1px 5px;
+      font-size: 12px; font-family: 'Fira Code', ui-monospace, monospace;
+    }
+    .endpoint-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.05em;
+      padding: 3px 9px; border-radius: 12px;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);
+      font-family: 'Fira Code', ui-monospace, monospace;
+    }
+
+    /* ── Page body ───────────────────────────────────────────────────────── */
+    .page-body { max-width: 1300px; margin: 0 auto; padding: 24px 40px 48px; }
+    .layout { display: grid; grid-template-columns: 1fr 300px; gap: 20px; align-items: start; }
+
+    /* ── Cards ────────────────────────────────────────────────────────────── */
+    .card {
+      background: var(--ext-color-surface, #fff);
+      border: 1px solid var(--ext-color-border, #e0e0e0);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      margin-bottom: 16px;
+    }
+    .card-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--ext-color-surface, #f8f9fa);
+      border-bottom: 1px solid var(--ext-color-border, #e0e0e0);
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--ext-color-text-secondary, #616161);
+    }
+    .card-head .card-actions { display: flex; gap: 6px; }
+    .card-body { padding: 14px; }
+
+    /* ── Toolbar ──────────────────────────────────────────────────────────── */
+    .toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .bar-sep { width: 1px; height: 24px; background: var(--ext-color-border, #e0e0e0); }
+
+    /* ── Grid table ───────────────────────────────────────────────────────── */
+    .grid-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th {
+      background: var(--ext-color-surface, #f5f5f5);
+      padding: 8px 10px; text-align: left;
+      border-bottom: 2px solid var(--ext-color-border, #ddd);
+      font-weight: 600; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--ext-color-text-secondary, #616161);
+      white-space: nowrap;
+    }
+    tbody td { padding: 8px 10px; border-bottom: 1px solid var(--ext-color-border, #f0f0f0); vertical-align: middle; }
+    tbody tr:hover td { background: color-mix(in srgb, var(--ext-color-primary, #1976d2) 4%, transparent); }
+    tbody tr.selected td { background: color-mix(in srgb, var(--ext-color-primary, #1976d2) 10%, transparent); }
+    .uuid { font-family: 'Fira Code', ui-monospace, monospace; font-size: 10px; color: var(--ext-color-text-secondary, #9e9e9e); }
+    .empty-row td { text-align: center; padding: 32px; color: var(--ext-color-text-secondary, #9e9e9e); font-style: italic; }
+
+    /* ── Row action buttons ───────────────────────────────────────────────── */
+    .ra {
+      display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600;
+      cursor: pointer; border: 1px solid transparent; margin-right: 3px;
+      transition: background 0.12s;
+      color: var(--ext-color-primary, #1976d2);
+      background: color-mix(in srgb, var(--ext-color-primary, #1976d2) 8%, transparent);
+      border-color: color-mix(in srgb, var(--ext-color-primary, #1976d2) 30%, transparent);
+    }
+    .ra:hover { background: color-mix(in srgb, var(--ext-color-primary, #1976d2) 18%, transparent); }
+    .ra.patch {
+      color: #e65100;
+      background: color-mix(in srgb, #ff9800 8%, transparent);
+      border-color: color-mix(in srgb, #ff9800 35%, transparent);
+    }
+    .ra.patch:hover { background: color-mix(in srgb, #ff9800 18%, transparent); }
+    .ra.del {
+      color: var(--ext-color-error, #c62828);
+      background: color-mix(in srgb, var(--ext-color-error, #f44336) 8%, transparent);
+      border-color: color-mix(in srgb, var(--ext-color-error, #f44336) 30%, transparent);
+    }
+    .ra.del:hover { background: color-mix(in srgb, var(--ext-color-error, #f44336) 18%, transparent); }
+
+    /* ── Inline form ──────────────────────────────────────────────────────── */
+    .form-wrap {
+      padding: 14px 16px;
+      background: var(--ext-color-surface, #fafafa);
+      border: 1px solid var(--ext-color-border, #e0e0e0);
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+    .form-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 13px; font-weight: 600; }
+    .mbadge {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.08em; padding: 2px 7px; border-radius: 4px;
+      font-family: 'Fira Code', monospace; text-transform: uppercase; color: #fff;
+    }
+    .mbadge.GET    { background: var(--ext-color-primary, #1976d2); }
+    .mbadge.POST   { background: var(--ext-color-success, #388e3c); }
+    .mbadge.PUT    { background: #e65100; }
+    .mbadge.PATCH  { background: #f57c00; }
+    .mbadge.DELETE { background: var(--ext-color-error, #c62828); }
+    .form-ep { font-family: 'Fira Code', ui-monospace, monospace; font-size: 11px; color: var(--ext-color-text-secondary, #757575); }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .form-grid.two { grid-template-columns: 1fr 1fr; }
+    .form-grid.single { grid-template-columns: 1fr; }
+    .form-field { display: flex; flex-direction: column; gap: 3px; }
+    .form-lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ext-color-text-secondary, #757575); }
+    .form-inp {
+      font-family: inherit; font-size: 13px; padding: 6px 9px;
+      background: #fff; color: var(--ext-color-text-primary, #212121);
+      border: 1px solid var(--ext-color-border, #e0e0e0); border-radius: 4px; outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-inp:focus {
+      border-color: var(--ext-color-primary, #1976d2);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--ext-color-primary, #1976d2) 20%, transparent);
+    }
+    .form-inp.mono { font-family: 'Fira Code', ui-monospace, monospace; font-size: 12px; }
+    .form-note { font-size: 11px; color: var(--ext-color-text-secondary, #9e9e9e); margin-top: 8px; font-style: italic; }
+    .form-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+    /* ── Status bar ───────────────────────────────────────────────────────── */
+    .status-bar {
+      display: flex; align-items: center; gap: 8px; margin-top: 8px;
+      font-size: 11px; color: var(--ext-color-text-secondary, #9e9e9e); min-height: 18px;
+      font-family: 'Fira Code', ui-monospace, monospace;
+    }
+    .sdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: #9e9e9e; }
+    .sdot.ok      { background: var(--ext-color-success, #4caf50); }
+    .sdot.err     { background: var(--ext-color-error, #f44336); }
+    .sdot.loading { background: var(--ext-color-warning, #ff9800); animation: blink 0.8s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+    /* ── Request log ──────────────────────────────────────────────────────── */
+    .log-list { display: flex; flex-direction: column; gap: 3px; max-height: 220px; overflow-y: auto; }
+    .log-row {
+      display: grid; grid-template-columns: 48px 1fr 38px 44px;
+      align-items: center; gap: 4px; font-size: 10px; padding: 4px 6px;
+      border-radius: 4px; background: var(--ext-color-surface, #f5f5f5);
+      font-family: 'Fira Code', ui-monospace, monospace;
+    }
+    .log-m { font-weight: 700; font-size: 9px; letter-spacing: 0.06em; }
+    .log-m.GET    { color: var(--ext-color-primary, #1976d2); }
+    .log-m.POST   { color: var(--ext-color-success, #2e7d32); }
+    .log-m.PUT    { color: #e65100; }
+    .log-m.PATCH  { color: #f57c00; }
+    .log-m.DELETE { color: var(--ext-color-error, #c62828); }
+    .log-path { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; color: var(--ext-color-text-primary, #424242); }
+    .log-status { font-weight: 600; text-align: right; }
+    .log-status.ok  { color: var(--ext-color-success, #2e7d32); }
+    .log-status.err { color: var(--ext-color-error, #c62828); }
+    .log-ms { color: var(--ext-color-text-secondary, #9e9e9e); text-align: right; }
+    .log-empty { font-size: 12px; color: var(--ext-color-text-secondary, #9e9e9e); padding: 8px; font-style: italic; }
+
+    /* ── JSON viewer ──────────────────────────────────────────────────────── */
+    .json-pre {
+      font-family: 'Fira Code', ui-monospace, monospace; font-size: 11px; line-height: 1.65;
+      white-space: pre; overflow: auto; max-height: 260px;
+    }
+    .jk { color: var(--ext-color-primary, #1976d2); }
+    .js { color: var(--ext-color-success, #2e7d32); }
+    .jn { color: #e65100; }
+    .jb { color: #6a1b9a; }
+    .json-none { font-size: 12px; color: var(--ext-color-text-secondary, #9e9e9e); font-style: italic; padding: 4px; }
+
+    /* ── Store stats ──────────────────────────────────────────────────────── */
+    .stat-row { display: flex; flex-direction: column; gap: 6px; }
+    .stat-item { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+    .stat-label { color: var(--ext-color-text-secondary, #757575); }
+    .stat-val { font-weight: 700; font-family: 'Fira Code', monospace; color: var(--ext-color-text-primary, #212121); }
+
+    /* ── Health ───────────────────────────────────────────────────────────── */
+    .health-result {
+      margin-top: 10px; padding: 8px 10px; border-radius: 6px;
+      font-family: 'Fira Code', monospace; font-size: 11px; line-height: 1.5;
+      background: var(--ext-color-surface, #f5f5f5);
+      border: 1px solid var(--ext-color-border, #e0e0e0);
+      display: none;
+    }
+    .health-result.visible { display: block; }
+    .health-result.ok  { border-color: var(--ext-color-success, #4caf50); background: color-mix(in srgb, #4caf50 8%, transparent); }
+    .health-result.err { border-color: var(--ext-color-error, #f44336); background: color-mix(in srgb, #f44336 8%, transparent); }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-badge">🧪 framesquared</div>
+      <h1 class="page-title">Person CRUD API Tester</h1>
+      <p class="page-subtitle">
+        Full CRUD test suite against <code>localhost:8080</code> using
+        <strong>Model</strong>, <strong>Store</strong>, and <strong>RestProxy</strong>.
+        All operations (GET / POST / PUT / PATCH / DELETE) are exercised via the framework's
+        data layer — no raw <code>fetch()</code> calls.
+      </p>
+      <div class="endpoint-pills">
+        <span class="pill"><span style="color:#90caf9">GET</span> /api/v1/persons</span>
+        <span class="pill"><span style="color:#90caf9">GET</span> /api/v1/persons/{id}</span>
+        <span class="pill"><span style="color:#a5d6a7">POST</span> /api/v1/persons</span>
+        <span class="pill"><span style="color:#ffcc80">PUT</span> /api/v1/persons/{id}</span>
+        <span class="pill"><span style="color:#ffcc80">PATCH</span> /api/v1/persons/{id}</span>
+        <span class="pill"><span style="color:#ef9a9a">DELETE</span> /api/v1/persons/{id}</span>
+        <span class="pill"><span style="color:#90caf9">GET</span> /health</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="layout">
+
+      <!-- ── Main column ───────────────────────────────────────────────────── -->
+      <div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <div id="btn-load"></div>
+          <div class="bar-sep"></div>
+          <div id="btn-add"></div>
+          <div class="bar-sep"></div>
+          <div id="btn-sort-name"></div>
+          <div id="btn-sort-city"></div>
+          <div class="bar-sep"></div>
+          <div id="btn-filter-city"></div>
+          <div id="btn-clear-filter"></div>
+          <input id="filter-city-input" class="form-inp" style="width:130px;font-size:12px;padding:5px 8px"
+            placeholder="city to filter…" />
+        </div>
+
+        <!-- Inline form for POST / PUT / PATCH / GET-by-ID -->
+        <div id="form-area"></div>
+
+        <!-- Grid -->
+        <div class="card">
+          <div class="card-head">
+            <span>Persons — Store (<span id="store-count">0</span> records)</span>
+            <span style="font-weight:400;text-transform:none;letter-spacing:0">
+              <span id="modified-badge"></span>
+            </span>
+          </div>
+          <div class="card-body" style="padding:0">
+            <div class="grid-wrap">
+              <table id="persons-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>ZIP</th>
+                    <th>Phone</th>
+                    <th>ID</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="persons-tbody">
+                  <tr class="empty-row"><td colspan="7">Click <strong>Load — GET all</strong> to fetch data from the server</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="status-bar">
+          <div id="s-dot" class="sdot"></div>
+          <span id="s-text">Ready — start the Go server then click Load</span>
+        </div>
+
+      </div>
+
+      <!-- ── Sidebar ───────────────────────────────────────────────────────── -->
+      <div>
+
+        <!-- Store stats -->
+        <div class="card">
+          <div class="card-head">Store State</div>
+          <div class="card-body">
+            <div class="stat-row" id="store-stats">
+              <div class="stat-item"><span class="stat-label">Total records</span><span class="stat-val" id="stat-total">—</span></div>
+              <div class="stat-item"><span class="stat-label">Filtered (visible)</span><span class="stat-val" id="stat-filtered">—</span></div>
+              <div class="stat-item"><span class="stat-label">Modified</span><span class="stat-val" id="stat-modified">—</span></div>
+              <div class="stat-item"><span class="stat-label">New (phantom)</span><span class="stat-val" id="stat-phantom">—</span></div>
+              <div class="stat-item"><span class="stat-label">Removed (pending)</span><span class="stat-val" id="stat-removed">—</span></div>
+              <div class="stat-item"><span class="stat-label">Grouped by</span><span class="stat-val" id="stat-grouped">—</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Health check -->
+        <div class="card">
+          <div class="card-head">Server Health</div>
+          <div class="card-body">
+            <div id="btn-health"></div>
+            <div id="health-result" class="health-result"></div>
+          </div>
+        </div>
+
+        <!-- Request log -->
+        <div class="card">
+          <div class="card-head">
+            Request Log
+            <div class="card-actions"><div id="btn-clear-log"></div></div>
+          </div>
+          <div class="card-body" style="padding:8px">
+            <div id="log-list" class="log-list">
+              <div class="log-empty">No requests yet</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- JSON viewer -->
+        <div class="card">
+          <div class="card-head">Last Response</div>
+          <div class="card-body" style="padding:10px 12px">
+            <div id="json-view" class="json-none">Click a row or run an operation to see the response</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "@framesquared/ui":        "../../packages/ui/dist/index.js",
+      "@framesquared/data":      "../../packages/data/dist/index.js",
+      "@framesquared/component": "../../packages/component/dist/index.js",
+      "@framesquared/core":      "../../packages/core/dist/index.js",
+      "@framesquared/theme":     "../../packages/theme/dist/index.js"
+    }
+  }
+  </script>
+
+  <script type="module">
+    import { Button, Panel } from '@framesquared/ui';
+    import {
+      Model, Store,
+      RestProxy, AjaxProxy,
+      JsonReader, JsonWriter,
+    } from '@framesquared/data';
+    import { ThemeManager, ModernTheme } from '@framesquared/theme';
+
+    // ── Theme ─────────────────────────────────────────────────────────────────
+    ThemeManager.register(ModernTheme);
+    ThemeManager.setTheme('modern');
+
+    // ── PersonModel ───────────────────────────────────────────────────────────
+    // Mirrors the Go struct exactly. The server uses UUID strings for `id`.
+    class PersonModel extends Model {
+      static idProperty = 'id';
+      static fields = [
+        { name: 'id',      type: 'string', defaultValue: '' },
+        { name: 'name',    type: 'string', defaultValue: '' },
+        { name: 'address', type: 'string', defaultValue: '' },
+        { name: 'city',    type: 'string', defaultValue: '' },
+        { name: 'zip',     type: 'string', defaultValue: '' },
+        { name: 'phone',   type: 'string', defaultValue: '' },
+      ];
+    }
+
+    // ── PersonReader ──────────────────────────────────────────────────────────
+    // The Go server returns a plain array for GET-all and a single object for
+    // GET-by-id / POST / PUT / PATCH.  Normalise single-object responses so the
+    // standard read path always sees an array.
+    class PersonReader extends JsonReader {
+      read(data) {
+        const normalised = Array.isArray(data) ? data
+          : (data && typeof data === 'object' && 'id' in data ? [data] : []);
+        return super.read(normalised);
+      }
+    }
+
+    // ── PersonWriter ──────────────────────────────────────────────────────────
+    // Serialises a PersonModel to the flat JSON body the server expects.
+    // PATCH sends only the supplied changed fields (passed via patchFields).
+    class PersonWriter extends JsonWriter {
+      constructor(patchFields) {
+        super({});
+        this._patchFields = patchFields ?? null;
+      }
+      write(records) {
+        if (!records.length) return {};
+        const rec = records[0];
+        if (this._patchFields) {
+          // Partial body — only the keys listed in patchFields
+          const body = {};
+          for (const key of this._patchFields) {
+            const val = rec.get(key);
+            if (val !== undefined && val !== null && val !== '') body[key] = val;
+          }
+          return body;
+        }
+        // Full body for POST / PUT
+        return {
+          name:    rec.get('name')    || '',
+          address: rec.get('address') || '',
+          city:    rec.get('city')    || '',
+          zip:     rec.get('zip')     || '',
+          phone:   rec.get('phone')   || '',
+        };
+      }
+    }
+
+    // ── PersonProxy ───────────────────────────────────────────────────────────
+    // Extends RestProxy so the id is appended automatically for single-record
+    // operations (GET-by-id, PUT, PATCH, DELETE).  Swaps in our custom
+    // PersonReader/PersonWriter and wires up request/response hooks for the log.
+    class PersonProxy extends RestProxy {
+      constructor(options = {}) {
+        super({
+          url:      'http://localhost:8080/api/v1/persons',
+          model:    PersonModel,
+          appendId: true,
+          beforeRequest({ method, url }) {
+            setStatus('loading', `${method} ${url.replace('http://localhost:8080', '')}`);
+          },
+          afterRequest({ method, url, status, elapsed, success, error }) {
+            const path = url.replace('http://localhost:8080', '');
+            addLog(method, path, status, elapsed);
+            setStatus(
+              success ? 'ok' : 'err',
+              error
+                ? `Network error: ${error.message}`
+                : `${method} ${path} → ${status}  (${elapsed}ms)`,
+            );
+          },
+          ...options,
+        });
+        this.reader = new PersonReader({ model: PersonModel });
+        this.writer = new PersonWriter(options.patchFields ?? null);
+      }
+    }
+
+    // ── Store ─────────────────────────────────────────────────────────────────
+    // Client-side store — loaded from the server on demand.
+    const store = new Store({ model: PersonModel });
+    const proxy = new PersonProxy();
+
+    // Keep store-state panel up to date whenever data changes.
+    store.on('datachanged', () => updateStoreStats());
+    store.on('add',          () => updateStoreStats());
+    store.on('remove',       () => updateStoreStats());
+    store.on('sort',         () => { renderGrid(); updateStoreStats(); });
+    store.on('filter',       () => { renderGrid(); updateStoreStats(); });
+
+    // ── Utilities ─────────────────────────────────────────────────────────────
+    function esc(s) {
+      return String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+    }
+
+    function setStatus(state, msg) {
+      document.getElementById('s-dot').className = `sdot ${state}`;
+      document.getElementById('s-text').textContent = msg;
+    }
+
+    // ── JSON viewer ───────────────────────────────────────────────────────────
+    function colorJson(obj) {
+      return JSON.stringify(obj, null, 2)
+        .replace(/(".*?")(\s*:)/g,  `<span class="jk">$1</span>$2`)
+        .replace(/:\s*(".*?")/g,    (m, s) => m.replace(s, `<span class="js">${s}</span>`))
+        .replace(/:\s*(-?\d+\.?\d*)/g, (m, n) => m.replace(n, `<span class="jn">${n}</span>`))
+        .replace(/:\s*(true|false|null)/g, (m, b) => m.replace(b, `<span class="jb">${b}</span>`));
+    }
+
+    function showJson(obj) {
+      const el = document.getElementById('json-view');
+      if (obj) {
+        el.className = 'json-pre';
+        el.innerHTML = colorJson(obj);
+      } else {
+        el.className = 'json-none';
+        el.textContent = 'Click a row or run an operation to see the response';
+      }
+    }
+
+    function recToObj(rec) {
+      if (!rec) return null;
+      return { id: rec.get('id'), name: rec.get('name'), address: rec.get('address'), city: rec.get('city'), zip: rec.get('zip'), phone: rec.get('phone') };
+    }
+
+    // ── Request log ───────────────────────────────────────────────────────────
+    let logEntries = [];
+
+    function addLog(method, path, status, ms) {
+      logEntries.unshift({ method, path, status, ms });
+      if (logEntries.length > 80) logEntries.length = 80;
+      renderLog();
+    }
+
+    function renderLog() {
+      const el = document.getElementById('log-list');
+      if (!logEntries.length) {
+        el.innerHTML = '<div class="log-empty">No requests yet</div>';
+        return;
+      }
+      el.innerHTML = logEntries.map(({ method, path, status, ms }) => {
+        const ok = status >= 200 && status < 300;
+        const sc = status === 0 ? 'err' : (ok ? 'ok' : 'err');
+        return `<div class="log-row">
+          <span class="log-m ${method}">${method}</span>
+          <span class="log-path" title="${esc(path)}">${esc(path)}</span>
+          <span class="log-status ${sc}">${status || 'ERR'}</span>
+          <span class="log-ms">${ms}ms</span>
+        </div>`;
+      }).join('');
+    }
+
+    // ── Store stats ───────────────────────────────────────────────────────────
+    function updateStoreStats() {
+      const total    = store.getTotalCount();
+      const filtered = store.getCount();
+      const modified = store.getModifiedRecords().length;
+      const phantom  = store.getNewRecords().length;
+      const removed  = store.getRemovedRecords().length;
+      const grouped  = store.isGrouped() ? 'city' : 'none';
+
+      document.getElementById('stat-total').textContent    = total;
+      document.getElementById('stat-filtered').textContent = filtered;
+      document.getElementById('stat-modified').textContent = modified;
+      document.getElementById('stat-phantom').textContent  = phantom;
+      document.getElementById('stat-removed').textContent  = removed;
+      document.getElementById('stat-grouped').textContent  = grouped;
+      document.getElementById('store-count').textContent   = filtered;
+
+      const badge = document.getElementById('modified-badge');
+      badge.textContent = modified > 0 ? `⚠ ${modified} uncommitted` : '';
+      badge.style.color = modified > 0 ? '#e65100' : '';
+    }
+
+    // ── Grid renderer ─────────────────────────────────────────────────────────
+    function renderGrid() {
+      const tbody = document.getElementById('persons-tbody');
+      const count = store.getCount();
+      if (count === 0) {
+        tbody.innerHTML = '<tr class="empty-row"><td colspan="7">No records in store</td></tr>';
+        document.getElementById('store-count').textContent = 0;
+        return;
+      }
+
+      const rows = [];
+      store.each((rec) => {
+        const id       = esc(rec.get('id'));
+        const name     = esc(rec.get('name'));
+        const address  = esc(rec.get('address'));
+        const city     = esc(rec.get('city'));
+        const zip      = esc(rec.get('zip'));
+        const phone    = esc(rec.get('phone'));
+        const modified = rec.isModified() ? ' style="background:color-mix(in srgb,#ff9800 6%,transparent)"' : '';
+        rows.push(`
+          <tr data-id="${id}"${modified}>
+            <td>${name}</td>
+            <td>${address}</td>
+            <td>${city}</td>
+            <td>${zip}</td>
+            <td>${phone}</td>
+            <td class="uuid" title="${id}">${id.slice(0, 8)}…</td>
+            <td>
+              <span class="ra"       data-action="put"    data-id="${id}">Edit</span>
+              <span class="ra patch" data-action="patch"  data-id="${id}">Patch</span>
+              <span class="ra"       data-action="get-id" data-id="${id}">GET</span>
+              <span class="ra del"   data-action="delete" data-id="${id}">Delete</span>
+            </td>
+          </tr>`);
+      });
+      tbody.innerHTML = rows.join('');
+      document.getElementById('store-count').textContent = count;
+    }
+
+    // ── Form helpers ──────────────────────────────────────────────────────────
+    let formMode   = null; // 'add' | 'put' | 'patch' | null
+    let formTarget = null; // PersonModel being edited, null for 'add'
+
+    function clearForm() {
+      formMode   = null;
+      formTarget = null;
+      document.getElementById('form-area').innerHTML = '';
+    }
+
+    function openForm(mode, rec) {
+      formMode   = mode;
+      formTarget = rec ?? null;
+
+      const METHOD   = mode === 'add' ? 'POST' : mode === 'put' ? 'PUT' : 'PATCH';
+      const endpoint = mode === 'add'
+        ? '/api/v1/persons'
+        : `/api/v1/persons/${rec?.get('id') ?? ''}`;
+
+      const v = (field) => esc(rec?.get(field) ?? '');
+
+      const area = document.getElementById('form-area');
+
+      if (mode === 'patch') {
+        area.innerHTML = `
+          <div class="form-wrap">
+            <div class="form-head">
+              <span class="mbadge ${METHOD}">${METHOD}</span>
+              <span class="form-ep">${esc(endpoint)}</span>
+            </div>
+            <div class="form-grid" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr">
+              <div class="form-field"><label class="form-lbl">Name</label><input class="form-inp" id="f-name"    value="${v('name')}"    placeholder="leave blank to skip" /></div>
+              <div class="form-field"><label class="form-lbl">Address</label><input class="form-inp" id="f-address" value="${v('address')}" placeholder="leave blank to skip" /></div>
+              <div class="form-field"><label class="form-lbl">City</label><input class="form-inp" id="f-city"    value="${v('city')}"    placeholder="leave blank to skip" /></div>
+              <div class="form-field"><label class="form-lbl">ZIP</label><input class="form-inp" id="f-zip"     value="${v('zip')}"     placeholder="leave blank to skip" /></div>
+              <div class="form-field"><label class="form-lbl">Phone</label><input class="form-inp" id="f-phone"   value="${v('phone')}"   placeholder="leave blank to skip" /></div>
+            </div>
+            <p class="form-note">PATCH — only non-empty fields are sent. The server merges them into the existing record.</p>
+            <div class="form-actions" id="form-actions"></div>
+          </div>`;
+      } else {
+        area.innerHTML = `
+          <div class="form-wrap">
+            <div class="form-head">
+              <span class="mbadge ${METHOD}">${METHOD}</span>
+              <span class="form-ep">${esc(endpoint)}</span>
+            </div>
+            <div class="form-grid" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr">
+              <div class="form-field"><label class="form-lbl">Name *</label><input class="form-inp" id="f-name"    value="${v('name')}"    /></div>
+              <div class="form-field"><label class="form-lbl">Address *</label><input class="form-inp" id="f-address" value="${v('address')}" /></div>
+              <div class="form-field"><label class="form-lbl">City *</label><input class="form-inp" id="f-city"    value="${v('city')}"    /></div>
+              <div class="form-field"><label class="form-lbl">ZIP *</label><input class="form-inp" id="f-zip"     value="${v('zip')}"     /></div>
+              <div class="form-field"><label class="form-lbl">Phone *</label><input class="form-inp" id="f-phone"   value="${v('phone')}"   /></div>
+            </div>
+            ${mode === 'put' ? `<p class="form-note">PUT — replaces the entire record. All fields are required.</p>` : ''}
+            <div class="form-actions" id="form-actions"></div>
+          </div>`;
+      }
+
+      const saveLabel = mode === 'add' ? 'POST — Create' : mode === 'put' ? 'PUT — Replace' : 'PATCH — Update';
+      new Button({ text: saveLabel, handler: submitForm }).render(document.getElementById('form-actions'));
+      new Button({ text: 'Cancel', ui: 'default', handler: clearForm }).render(document.getElementById('form-actions'));
+
+      document.getElementById('f-name')?.focus();
+    }
+
+    async function submitForm() {
+      const name    = document.getElementById('f-name')?.value.trim()    ?? '';
+      const address = document.getElementById('f-address')?.value.trim() ?? '';
+      const city    = document.getElementById('f-city')?.value.trim()    ?? '';
+      const zip     = document.getElementById('f-zip')?.value.trim()     ?? '';
+      const phone   = document.getElementById('f-phone')?.value.trim()   ?? '';
+
+      if (formMode !== 'patch' && (!name || !address || !city || !zip || !phone)) {
+        alert('All fields are required for POST/PUT.');
+        return;
+      }
+
+      let rs;
+
+      if (formMode === 'add') {
+        // Build a phantom record and POST it via the proxy
+        const newRec = PersonModel.create({ name, address, city, zip, phone });
+        rs = await proxy.create([newRec]);
+        if (rs.success && rs.records.length) {
+          // Add the server-assigned record (with real UUID) to the store
+          store.add(rs.records[0]);
+        }
+      } else if (formMode === 'put') {
+        // Build a record with the existing id and updated fields, then PUT
+        const updRec = PersonModel.create({ id: formTarget.get('id'), name, address, city, zip, phone });
+        rs = await proxy.update([updRec]);
+        if (rs.success && rs.records.length) {
+          // Update the store: remove old, add server-echoed record
+          store.remove(formTarget);
+          store.add(rs.records[0]);
+        }
+      } else if (formMode === 'patch') {
+        // Collect only the non-empty fields and PATCH them
+        const fields = {};
+        if (name)    fields.name    = name;
+        if (address) fields.address = address;
+        if (city)    fields.city    = city;
+        if (zip)     fields.zip     = zip;
+        if (phone)   fields.phone   = phone;
+
+        if (!Object.keys(fields).length) {
+          alert('Enter at least one field to patch.');
+          return;
+        }
+
+        // Create a temporary record carrying the id plus the changed fields
+        const tempRec = PersonModel.create({ id: formTarget.get('id'), ...fields });
+        // Use a one-shot proxy with a custom writer that only sends the changed keys
+        const patchProxy = new PersonProxy({ patchFields: Object.keys(fields) });
+        rs = await patchProxy.patch([tempRec]);
+        if (rs.success && rs.records.length) {
+          store.remove(formTarget);
+          store.add(rs.records[0]);
+        }
+      }
+
+      if (rs?.success) {
+        clearForm();
+        if (rs.records?.length) showJson(recToObj(rs.records[0]));
+        renderGrid();
+        updateStoreStats();
+      }
+    }
+
+    // ── Row action delegation ─────────────────────────────────────────────────
+    document.getElementById('persons-tbody').addEventListener('click', async (e) => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) {
+        // Row click → show JSON
+        const row = e.target.closest('tr[data-id]');
+        if (row) {
+          document.querySelectorAll('#persons-tbody tr').forEach(r => r.classList.remove('selected'));
+          row.classList.add('selected');
+          const rec = store.getById(row.dataset.id);
+          if (rec) showJson(recToObj(rec));
+        }
+        return;
+      }
+
+      const action = btn.dataset.action;
+      const id     = btn.dataset.id;
+      const rec    = store.getById(id);
+
+      if (action === 'put') {
+        formTarget = rec;
+        openForm('put', rec);
+      } else if (action === 'patch') {
+        formTarget = rec;
+        openForm('patch', rec);
+      } else if (action === 'get-id') {
+        // GET /api/v1/persons/:id — exercises the single-record read path
+        const tempRec = PersonModel.create({ id });
+        const rs = await proxy.read([tempRec]);
+        if (rs.success && rs.records.length) {
+          showJson(recToObj(rs.records[0]));
+          setStatus('ok', `GET /api/v1/persons/${id.slice(0,8)}… → 200`);
+        }
+      } else if (action === 'delete') {
+        const name = rec?.get('name') ?? id;
+        if (!confirm(`Delete "${name}"?\n\nID: ${id}`)) return;
+        const delRec = PersonModel.create({ id });
+        const rs = await proxy.destroy([delRec]);
+        if (rs.success) {
+          if (rec) store.remove(rec);
+          clearForm();
+          showJson(null);
+          renderGrid();
+          updateStoreStats();
+        }
+      }
+    });
+
+    // ── Load all (GET /api/v1/persons) ────────────────────────────────────────
+    async function loadAll() {
+      const rs = await proxy.read();
+      if (rs.success) {
+        store.removeAll(true);
+        if (rs.records.length) store.add(...rs.records);
+        store.commitChanges(); // mark loaded records as clean
+        renderGrid();
+        updateStoreStats();
+        showJson(rs.records.map(recToObj));
+      }
+    }
+
+    // ── Health check (GET /health) ────────────────────────────────────────────
+    async function checkHealth() {
+      const el = document.getElementById('health-result');
+      el.className = 'health-result visible';
+      el.textContent = 'Checking…';
+      setStatus('loading', 'GET /health');
+      const t0 = Date.now();
+      try {
+        const resp = await fetch('http://localhost:8080/health');
+        const data = await resp.json();
+        const ms   = Date.now() - t0;
+        addLog('GET', '/health', resp.status, ms);
+        el.className = `health-result visible ${resp.ok ? 'ok' : 'err'}`;
+        el.textContent = JSON.stringify(data, null, 2);
+        setStatus(resp.ok ? 'ok' : 'err', `GET /health → ${resp.status} (${ms}ms)`);
+        showJson(data);
+      } catch (err) {
+        const ms = Date.now() - t0;
+        addLog('GET', '/health', 0, ms);
+        el.className = 'health-result visible err';
+        el.textContent = `Error: ${err.message}`;
+        setStatus('err', `GET /health failed — ${err.message}`);
+      }
+    }
+
+    // ── Sorting ───────────────────────────────────────────────────────────────
+    // store.sort() fires 'sort' which calls renderGrid() via listener above
+    function sortBy(field) {
+      const current = store.getSorters()[0];
+      const dir = current?.property === field && current?.direction === 'ASC' ? 'DESC' : 'ASC';
+      store.sort(field, dir);
+    }
+
+    // ── Filtering ─────────────────────────────────────────────────────────────
+    function filterByCity() {
+      const val = document.getElementById('filter-city-input').value.trim();
+      if (!val) { store.clearFilter(); return; }
+      store.filter('city', val);
+    }
+
+    // ── Wire up buttons ───────────────────────────────────────────────────────
+    new Button({ text: 'Load — GET all',   handler: loadAll                            }).render(document.getElementById('btn-load'));
+    new Button({ text: 'Add — POST',       handler: () => openForm('add', null)        }).render(document.getElementById('btn-add'));
+    new Button({ text: 'Sort: Name',  ui: 'default', handler: () => sortBy('name')    }).render(document.getElementById('btn-sort-name'));
+    new Button({ text: 'Sort: City',  ui: 'default', handler: () => sortBy('city')    }).render(document.getElementById('btn-sort-city'));
+    new Button({ text: 'Filter City', ui: 'default', handler: filterByCity            }).render(document.getElementById('btn-filter-city'));
+    new Button({ text: 'Clear Filter',ui: 'default', handler: () => { store.clearFilter(); document.getElementById('filter-city-input').value = ''; } }).render(document.getElementById('btn-clear-filter'));
+    new Button({ text: 'GET /health', ui: 'default', handler: checkHealth             }).render(document.getElementById('btn-health'));
+    new Button({ text: 'Clear', ui: 'default', handler: () => { logEntries = []; renderLog(); } }).render(document.getElementById('btn-clear-log'));
+
+    // ── Initial state ─────────────────────────────────────────────────────────
+    updateStoreStats();
+    renderLog();
+
+  </script>
+</body>
+</html>
