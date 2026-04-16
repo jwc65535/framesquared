@@ -10,6 +10,7 @@ export type { ComponentConfig } from './Component.js';
 export { Controller } from './Controller.js';
 export type { ControllerConfig, EventMap } from './Controller.js';
 export { Template } from './Template.js';
+export type { TemplateInterface } from './TemplateInterface.js';
 export { Container } from './Container.js';
 export type { ContainerConfig } from './Container.js';
 export { ComponentQuery, matchesCQ } from './ComponentQuery.js';

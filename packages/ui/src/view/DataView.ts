@@ -8,7 +8,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Component } from '@framesquared/component';
+import { Component, XTemplate } from '@framesquared/component';
 import type { ComponentConfig } from '@framesquared/component';
 
 // ---------------------------------------------------------------------------
@@ -17,7 +17,7 @@ import type { ComponentConfig } from '@framesquared/component';
 
 export interface DataViewConfig extends ComponentConfig {
   store?: any;
-  itemTpl?: (record: any, index: number) => string;
+  itemTpl?: XTemplate | string | ((record: any, index: number) => string);
   itemSelector?: string;
   itemCls?: string;
   selectedItemCls?: string;
@@ -36,7 +36,7 @@ export class DataView extends Component {
   static override $className = 'Ext.view.DataView';
 
   declare _store: any;
-  declare private _itemTpl: (record: any, index: number) => string;
+  declare private _itemTpl: XTemplate | string | ((record: any, index: number) => string);
   declare private _itemSelector: string;
   declare private _itemCls: string;
   declare private _selectedItemCls: string;
@@ -56,7 +56,7 @@ export class DataView extends Component {
     super.initialize();
     const cfg = this._config as DataViewConfig;
     this._store = cfg.store ?? null;
-    this._itemTpl = cfg.itemTpl ?? (() => '');
+    this._itemTpl = cfg.itemTpl ?? new XTemplate('');
     this._itemSelector = cfg.itemSelector ?? '.x-dataview-item';
     this._itemCls = cfg.itemCls ?? '';
     this._selectedItemCls = cfg.selectedItemCls ?? 'x-item-selected';
@@ -107,7 +107,7 @@ export class DataView extends Component {
     }
 
     for (let i = 0; i < records.length; i++) {
-      const html = this._itemTpl(records[i], i);
+      const html = this._renderItemTpl(records[i], i);
       // Parse the HTML into elements
       const temp = document.createElement('div');
       temp.innerHTML = html;
@@ -120,6 +120,14 @@ export class DataView extends Component {
       this.attachItemEvents(el, records[i], i);
       this._contentEl.appendChild(el);
     }
+  }
+
+  private _renderItemTpl(record: any, index: number): string {
+    const tpl = this._itemTpl;
+    const data = record.getData?.() ?? record;
+    if (typeof tpl === 'function') return tpl(record, index);
+    if (tpl instanceof XTemplate) return tpl.apply(data);
+    return new XTemplate(tpl).apply(data);
   }
 
   private attachItemEvents(el: HTMLElement, record: any, index: number): void {

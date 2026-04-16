@@ -351,6 +351,90 @@ describe('DOM integration', () => {
     tpl.append(el, { name: 'Test' });
     expect(el.innerHTML).toBe('<span>Test</span>');
   });
+
+  it('append() preserves existing children', () => {
+    const el = document.createElement('div');
+    el.innerHTML = '<span>existing</span>';
+    const tpl = new XTemplate('<b>{name}</b>');
+    tpl.append(el, { name: 'new' });
+    expect(el.children.length).toBe(2);
+    expect(el.children[0].textContent).toBe('existing');
+    expect(el.children[1].textContent).toBe('new');
+  });
+
+  it('append() called multiple times accumulates content', () => {
+    const el = document.createElement('div');
+    const tpl = new XTemplate('<li>{name}</li>');
+    tpl.append(el, { name: 'A' });
+    tpl.append(el, { name: 'B' });
+    tpl.append(el, { name: 'C' });
+    expect(el.children.length).toBe(3);
+    expect(el.children[0].textContent).toBe('A');
+    expect(el.children[1].textContent).toBe('B');
+    expect(el.children[2].textContent).toBe('C');
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Bare field names in expressions
+// ═══════════════════════════════════════════════════════════════════════════
+
+describe('Bare field names in {[...]} expressions', () => {
+  it('{[price * qty]} resolves bare names without values. prefix', () => {
+    const tpl = new XTemplate('Total: {[price * qty]}');
+    expect(tpl.apply({ price: 10, qty: 3 })).toBe('Total: 30');
+  });
+
+  it('{[first + " " + last]} string concat with bare names', () => {
+    const tpl = new XTemplate('{[first + " " + last]}');
+    expect(tpl.apply({ first: 'John', last: 'Doe' })).toBe('John Doe');
+  });
+
+  it('{[score >= 50 ? "PASS" : "FAIL"]} ternary with bare name', () => {
+    const tpl = new XTemplate('{[score >= 50 ? "PASS" : "FAIL"]}');
+    expect(tpl.apply({ score: 75 })).toBe('PASS');
+    expect(tpl.apply({ score: 30 })).toBe('FAIL');
+  });
+
+  it('values.field and bare field resolve identically', () => {
+    const tpl1 = new XTemplate('{[values.x * values.y]}');
+    const tpl2 = new XTemplate('{[x * y]}');
+    const data = { x: 4, y: 5 };
+    expect(tpl1.apply(data)).toBe(tpl2.apply(data));
+  });
+
+  it('bare field names work inside <tpl for> loop scope', () => {
+    const tpl = new XTemplate('<tpl for="items">{[name.toUpperCase()]} </tpl>');
+    expect(tpl.apply({ items: [{ name: 'alice' }, { name: 'bob' }] })).toBe('ALICE BOB ');
+  });
+
+  it('{[xindex - 1]} zero-based index via bare xindex in loop', () => {
+    const tpl = new XTemplate('<tpl for="items">{[xindex - 1]} </tpl>');
+    expect(tpl.apply({ items: ['a', 'b', 'c'] })).toBe('0 1 2 ');
+  });
+
+  it('{#} and {[xindex]} agree on 1-based value', () => {
+    const tpl = new XTemplate('<tpl for="items">{#}={[xindex]} </tpl>');
+    expect(tpl.apply({ items: ['a', 'b'] })).toBe('1=1 2=2 ');
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// number formatter
+// ═══════════════════════════════════════════════════════════════════════════
+
+describe('number formatter', () => {
+  it('{field:number} converts to numeric string', () => {
+    const tpl = new XTemplate('{val:number}');
+    expect(tpl.apply({ val: 42 })).toBe('42');
+    expect(tpl.apply({ val: '007' })).toBe('7');
+    expect(tpl.apply({ val: 3.14 })).toBe('3.14');
+  });
+
+  it('{field:number} with non-numeric value returns NaN string', () => {
+    const tpl = new XTemplate('{val:number}');
+    expect(tpl.apply({ val: 'abc' })).toBe('NaN');
+  });
 });
 
 // ═══════════════════════════════════════════════════════════════════════════

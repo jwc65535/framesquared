@@ -8,6 +8,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { NodeInterface } from '@framesquared/data';
+import type { XTemplate } from '@framesquared/component';
 
 // ---------------------------------------------------------------------------
 // Elbow types for tree connector lines
@@ -95,6 +96,7 @@ export interface TreeGridColumnConfig extends Omit<ColumnConfig, 'dataIndex'> {
   showIcons?: boolean;
   showExpanders?: boolean;
   innerRenderer?: (value: unknown, record: NodeInterface) => string;
+  innerTpl?: XTemplate;
 }
 
 // ---------------------------------------------------------------------------
@@ -114,6 +116,7 @@ export class TreeGridColumn extends Column {
   showIcons: boolean;
   showExpanders: boolean;
   innerRenderer: ((value: unknown, record: NodeInterface) => string) | undefined;
+  innerTpl: XTemplate | undefined;
 
   constructor(config: TreeGridColumnConfig = {}) {
     super({ ...config, dataIndex: config.dataIndex ?? config.displayProperty ?? 'text' });
@@ -127,6 +130,7 @@ export class TreeGridColumn extends Column {
     this.showIcons = config.showIcons ?? true;
     this.showExpanders = config.showExpanders ?? true;
     this.innerRenderer = config.innerRenderer;
+    this.innerTpl = config.innerTpl;
   }
 
   /**
@@ -244,6 +248,9 @@ export class TreeGridColumn extends Column {
     let textContent: string;
     if (this.innerRenderer) {
       textContent = this.innerRenderer(rawValue, record);
+    } else if (this.innerTpl) {
+      const data = (record as any).getData?.() ?? (record as any);
+      textContent = this.innerTpl.apply(data);
     } else {
       textContent = rawValue != null ? String(rawValue) : '';
     }

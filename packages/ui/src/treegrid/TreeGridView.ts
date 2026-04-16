@@ -123,6 +123,12 @@ export class TreeGridView {
 
   refresh(): void {
     if (!this.tbodyEl) return;
+    // Destroy any live widget instances before clearing the DOM
+    for (const col of this.columns) {
+      if ('destroyWidgets' in col && typeof (col as any).destroyWidgets === 'function') {
+        (col as any).destroyWidgets();
+      }
+    }
     this.tbodyEl.innerHTML = '';
     this._rowCache.clear();
 
@@ -179,6 +185,10 @@ export class TreeGridView {
         inner.innerHTML = col.renderCell(node, this.checkable, this.lines);
       } else {
         inner.innerHTML = col.renderValue(node);
+        // WidgetColumn: mount the component after the cell inner is in the DOM
+        if ('mountToCell' in col && typeof (col as any).mountToCell === 'function') {
+          (col as any).mountToCell(inner, node);
+        }
       }
 
       td.appendChild(inner);

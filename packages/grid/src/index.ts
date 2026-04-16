@@ -22,6 +22,10 @@ export {
   createColumn,
 } from './grid/column/Column.js';
 export type { ColumnConfig, ActionConfig } from './grid/column/Column.js';
+export { TemplateColumn } from './grid/column/TemplateColumn.js';
+export type { TemplateColumnConfig } from './grid/column/TemplateColumn.js';
+export { WidgetColumn } from './grid/column/WidgetColumn.js';
+export type { WidgetColumnConfig } from './grid/column/WidgetColumn.js';
 
 // Features
 export { Grouping } from './grid/feature/Grouping.js';

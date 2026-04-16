@@ -7,19 +7,21 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { XTemplate } from '@framesquared/component';
+
 export interface RowExpanderConfig {
-  rowBodyTpl: (record: any) => string;
+  rowBodyTpl: XTemplate | string | ((record: any) => string);
   singleExpand?: boolean;
 }
 
 export class RowExpander {
   private grid: any = null;
-  private rowBodyTpl: (record: any) => string;
+  private _rowBodyTpl: XTemplate | string | ((record: any) => string);
   private singleExpand: boolean;
   private expandedRows = new Set<number>();
 
   constructor(config: RowExpanderConfig) {
-    this.rowBodyTpl = config.rowBodyTpl;
+    this._rowBodyTpl = config.rowBodyTpl;
     this.singleExpand = config.singleExpand ?? false;
   }
 
@@ -75,9 +77,17 @@ export class RowExpander {
     bodyRow.setAttribute('data-expand-row', String(rowIndex));
     const td = document.createElement('td');
     td.colSpan = colSpan;
-    td.innerHTML = this.rowBodyTpl(record);
+    td.innerHTML = this._renderTpl(record);
     bodyRow.appendChild(td);
     row.after(bodyRow);
+  }
+
+  private _renderTpl(record: any): string {
+    const tpl = this._rowBodyTpl;
+    const data = record.getData?.() ?? record.data ?? record;
+    if (typeof tpl === 'function') return tpl(record);
+    if (tpl instanceof XTemplate) return tpl.apply(data);
+    return new XTemplate(tpl).apply(data);
   }
 
   private collapseRow(rowIndex: number, _row: HTMLElement): void {

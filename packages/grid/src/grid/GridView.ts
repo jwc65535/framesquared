@@ -65,6 +65,12 @@ export class GridView {
 
   private renderRows(): void {
     if (!this.tbodyEl) return;
+    // Destroy any live widget instances before clearing the DOM
+    for (const col of this.columns) {
+      if ('destroyWidgets' in col && typeof (col as any).destroyWidgets === 'function') {
+        (col as any).destroyWidgets();
+      }
+    }
     this.tbodyEl.innerHTML = '';
 
     const records = this.store.getRange();
@@ -106,6 +112,11 @@ export class GridView {
       const value = col.getCellValue(record);
       const html = col.renderCellHtml(value, {}, record, rowIndex, colIdx);
       td.innerHTML = html;
+
+      // WidgetColumn: mount the component after the cell is in the DOM
+      if ('mountToCell' in col && typeof (col as any).mountToCell === 'function') {
+        (col as any).mountToCell(td, record, rowIndex);
+      }
 
       // Action column click delegation
       if (col instanceof ActionColumn) {

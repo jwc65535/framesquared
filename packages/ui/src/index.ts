@@ -5,7 +5,7 @@
 
 import './styles.js';
 
-export { Controller } from '@framesquared/component';
+export { Controller, XTemplate } from '@framesquared/component';
 export type { ControllerConfig, EventMap } from '@framesquared/component';
 
 export { Panel } from './panel/Panel.js';
@@ -89,6 +89,10 @@ export { TreeGridView } from './treegrid/TreeGridView.js';
 export type { TreeGridViewConfig } from './treegrid/TreeGridView.js';
 export { TreeGridColumn, Column } from './treegrid/TreeGridColumn.js';
 export type { TreeGridColumnConfig, ColumnConfig, ElbowType } from './treegrid/TreeGridColumn.js';
+export { TemplateColumn } from './treegrid/TemplateColumn.js';
+export type { TemplateColumnConfig } from './treegrid/TemplateColumn.js';
+export { WidgetColumn } from './treegrid/WidgetColumn.js';
+export type { WidgetColumnConfig } from './treegrid/WidgetColumn.js';
 export { TreeGridSelectionModel } from './treegrid/TreeGridSelectionModel.js';
 export type { TreeGridSelectionModelConfig } from './treegrid/TreeGridSelectionModel.js';
 export { TreeGridDragDrop } from './treegrid/TreeGridDragDrop.js';

@@ -512,9 +512,12 @@ function evalExpr(
   memberFns: Record<string, (...args: unknown[]) => unknown>,
 ): string {
   try {
-    // Create a scope with `values`, `xindex`, `xcount`, and `this` bound to memberFns
-    const fn = new Function('values', 'xindex', 'xcount', `"use strict"; return (${code});`);
-    const result = fn.call(memberFns, data, xindex, xcount);
+    // Unpack data keys as local variables (same as evalCondition) so both
+    // {[field > 0 ? 'yes' : 'no']} and {[values.field > 0 ? 'yes' : 'no']} work.
+    const keys = Object.keys(data ?? {});
+    const vals = keys.map((k) => data[k]);
+    const fn = new Function('values', 'xindex', 'xcount', ...keys, `"use strict"; return (${code});`);
+    const result = fn.call(memberFns, data, xindex, xcount, ...vals);
     return result === undefined || result === null ? '' : String(result);
   } catch {
     return '';
@@ -641,6 +644,6 @@ export class XTemplate {
    * Applies data and appends the resulting HTML to an element.
    */
   append(el: Element, data: any): void {
-    el.innerHTML += this.apply(data);
+    el.insertAdjacentHTML('beforeend', this.apply(data));
   }
 }

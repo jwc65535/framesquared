@@ -8,6 +8,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { NodeInterface } from '@framesquared/data';
+import { Component, XTemplate } from '@framesquared/component';
 import type { TreeGrid } from './TreeGrid.js';
 
 // ---------------------------------------------------------------------------
@@ -15,7 +16,8 @@ import type { TreeGrid } from './TreeGrid.js';
 // ---------------------------------------------------------------------------
 
 export interface TreeGridRowExpanderConfig {
-  rowBodyTpl?: string | ((node: NodeInterface) => string);
+  rowBodyTpl?: XTemplate | string | ((node: NodeInterface) => string);
+  rowBodyComponent?: typeof Component;
   expandOnDblClick?: boolean;
   singleRowExpand?: boolean;
   bodyIndent?: boolean;
@@ -27,7 +29,14 @@ export interface TreeGridRowExpanderConfig {
 
 export class TreeGridRowExpander {
   private treeGrid: TreeGrid | null = null;
-  private config: Required<TreeGridRowExpanderConfig>;
+  private config: {
+    rowBodyTpl: XTemplate | string | ((node: NodeInterface) => string);
+    rowBodyComponent: typeof Component | undefined;
+    expandOnDblClick: boolean;
+    singleRowExpand: boolean;
+    bodyIndent: boolean;
+  };
+  private bodyComponentMap = new Map<string | number, Component>();
   private expandedRows = new Set<string | number>();
   private bodyRowMap = new Map<string | number, HTMLElement>();
 
@@ -36,7 +45,8 @@ export class TreeGridRowExpander {
 
   constructor(config: TreeGridRowExpanderConfig = {}) {
     this.config = {
-      rowBodyTpl: config.rowBodyTpl ?? '',
+      rowBodyTpl: config.rowBodyTpl ?? new XTemplate(''),
+      rowBodyComponent: config.rowBodyComponent,
       expandOnDblClick: config.expandOnDblClick ?? false,
       singleRowExpand: config.singleRowExpand ?? false,
       bodyIndent: config.bodyIndent ?? true,
@@ -61,6 +71,8 @@ export class TreeGridRowExpander {
       viewEl.removeEventListener('click', this._onClick);
       viewEl.removeEventListener('dblclick', this._onDblClick);
     }
+    this.bodyComponentMap.forEach((cmp) => cmp.destroy());
+    this.bodyComponentMap.clear();
     this.bodyRowMap.forEach((el) => el.remove());
     this.bodyRowMap.clear();
     this.expandedRows.clear();
@@ -134,13 +146,19 @@ export class TreeGridRowExpander {
       td.style.paddingLeft = `${indent + tg.getTreeColumn().indentSize}px`;
     }
 
-    const tpl = this.config.rowBodyTpl;
-    const content = tpl
-      ? typeof tpl === 'function'
-        ? tpl(record)
-        : this._renderTpl(tpl, record)
-      : '';
-    td.innerHTML = content;
+    if (this.config.rowBodyComponent) {
+      const ComponentClass = this.config.rowBodyComponent;
+      const cmp = new ComponentClass({ renderTo: td });
+      const id = (record as any).getId?.();
+      if (id != null) this.bodyComponentMap.set(id, cmp);
+    } else {
+      const tpl = this.config.rowBodyTpl;
+      const content =
+        typeof tpl === 'function'
+          ? tpl(record)
+          : this._renderTpl(tpl, record);
+      td.innerHTML = content;
+    }
 
     bodyRow.appendChild(td);
 
@@ -152,16 +170,20 @@ export class TreeGridRowExpander {
   }
 
   private _collapseById(id: string | number): void {
+    this.bodyComponentMap.get(id)?.destroy();
+    this.bodyComponentMap.delete(id);
     const bodyRow = this.bodyRowMap.get(id);
     bodyRow?.remove();
     this.bodyRowMap.delete(id);
     this.expandedRows.delete(id);
   }
 
-  private _renderTpl(tpl: string, record: NodeInterface): string {
-    return tpl.replace(/\{(\w+)\}/g, (_match, field) => {
-      return String((record as any).get?.(field) ?? '');
-    });
+  private _renderTpl(tpl: XTemplate | string, record: NodeInterface): string {
+    const data = (record as any).getData?.() ?? (record as any);
+    if (tpl instanceof XTemplate) {
+      return tpl.apply(data);
+    }
+    return new XTemplate(tpl).apply(data);
   }
 
   // -------------------------------------------------------------------------
