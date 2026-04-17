@@ -2,7 +2,10 @@
  * @framesquared/component – Template
  *
  * A simple template engine that supports `{token}` replacement.
- * Used by Component to render content from data.
+ *
+ * @deprecated Use `XTemplate` instead. `Component.tpl` now requires `XTemplate`,
+ * which is a strict superset of this syntax and adds conditionals, loops, format
+ * functions, and inline expressions.
  *
  * ```ts
  * const tpl = new Template('<div>{name} is {age} years old</div>');

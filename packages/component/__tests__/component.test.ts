@@ -2,6 +2,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Component } from '../src/Component.js';
 import { Template } from '../src/Template.js';
+import { XTemplate } from '../src/template/XTemplate.js';
 
 // ---------------------------------------------------------------------------
 // ResizeObserver mock (jsdom doesn't have it)
@@ -414,7 +415,7 @@ describe('Size & Position', () => {
 
 describe('Template rendering', () => {
   it('renders tpl with data', () => {
-    const tpl = new Template('<div class="user">{name} - {age}</div>');
+    const tpl = new XTemplate('<div class="user">{name} - {age}</div>');
     const c = renderTo({ tpl, data: { name: 'Alice', age: 30 } });
     expect(c.el!.innerHTML).toContain('Alice');
     expect(c.el!.innerHTML).toContain('30');
@@ -427,7 +428,7 @@ describe('Template rendering', () => {
   });
 
   it('update with object re-renders tpl', () => {
-    const tpl = new Template('Hello {name}');
+    const tpl = new XTemplate('Hello {name}');
     const c = renderTo({ tpl, data: { name: 'Alice' } });
     c.update({ name: 'Bob' });
     expect(c.el!.innerHTML).toContain('Bob');
@@ -440,7 +441,7 @@ describe('Template rendering', () => {
   });
 
   it('setData re-renders tpl with new data', () => {
-    const tpl = new Template('Count: {count}');
+    const tpl = new XTemplate('Count: {count}');
     const c = renderTo({ tpl, data: { count: 1 } });
     c.setData({ count: 42 });
     expect(c.el!.innerHTML).toContain('42');

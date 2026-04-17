@@ -9,7 +9,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Base, Observable, generateId } from '@framesquared/core';
-import type { Template } from './Template.js';
+import { XTemplate } from './template/XTemplate.js';
 
 // ---------------------------------------------------------------------------
 // Observable bootstrap
@@ -49,7 +49,7 @@ export interface ComponentConfig {
   hidden?: boolean;
   disabled?: boolean;
   html?: string;
-  tpl?: Template;
+  tpl?: XTemplate;
   data?: Record<string, unknown>;
   renderTo?: Element | string;
   floating?: boolean;
@@ -100,7 +100,7 @@ export class Component extends Base {
   // -- Internal state --
   private _hidden = false;
   private _disabled = false;
-  private _tpl: Template | null = null;
+  private _tpl: XTemplate | null = null;
   private _data: Record<string, unknown> | null = null;
   private _resizeObserver: ResizeObserver | null = null;
   private _lastWidth = 0;
@@ -133,6 +133,13 @@ export class Component extends Base {
     // Store template & data
     this._tpl = config.tpl ?? null;
     this._data = config.data ?? null;
+
+    // Normalize html shorthand into XTemplate so all rendering goes through one path
+    if (!this._tpl && config.html !== undefined) {
+      this._tpl = new XTemplate(config.html);
+      this._data = this._data ?? {};
+    }
+
     this._hidden = config.hidden ?? false;
     this._disabled = config.disabled ?? false;
 
@@ -264,11 +271,9 @@ export class Component extends Base {
     if (cfg.margin !== undefined) el.style.margin = toCssValue(cfg.margin);
     if (cfg.padding !== undefined) el.style.padding = toCssValue(cfg.padding);
 
-    // Content
-    if (this._tpl && this._data) {
+    // Content — all rendering goes through XTemplate
+    if (this._tpl && this._data !== null) {
       el.innerHTML = this._tpl.apply(this._data);
-    } else if (cfg.html !== undefined) {
-      el.innerHTML = cfg.html;
     }
 
     // Hidden
@@ -487,8 +492,10 @@ export class Component extends Base {
   }
 
   setHtml(html: string): void {
+    this._tpl = new XTemplate(html);
+    this._data = this._data ?? {};
     if (this.el) {
-      this.el.innerHTML = html;
+      this.el.innerHTML = this._tpl.apply(this._data);
     }
   }
 
