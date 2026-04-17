@@ -7,53 +7,6 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 16px; background: var(--ext-color-background, #f5f5f5); color: var(--ext-color-text-primary, #212121); }
-    .x-component { border: 1px solid var(--ext-component-panel-borderColor, #ddd); background: var(--ext-color-surface, #fff); margin: 8px 0; }
-    .x-panel { border-radius: 4px; overflow: hidden; }
-    .x-panel-header { background: var(--ext-color-primary, #1976d2); color: #fff; padding: 8px 12px; font-weight: 600; display: flex; align-items: center; }
-    .x-panel-body { padding: 12px; }
-    .x-btn { display: inline-block; padding: 6px 16px; background: var(--ext-color-primary, #1976d2); color: #fff; border: none; border-radius: 4px; cursor: pointer; margin: 4px; font-size: 14px; }
-    .x-btn:hover { filter: brightness(0.9); }
-    .x-btn-pressed, .x-btn-pressed:hover { background: #0d47a1; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); }
-    .x-btn-primary { background: #1976d2; }
-    .x-btn-primary:hover { background: #1565c0; }
-    .x-btn-success { background: #388e3c; }
-    .x-btn-success:hover { background: #2e7d32; }
-    .x-btn-danger { background: #d32f2f; }
-    .x-btn-danger:hover { background: #b71c1c; }
-    .x-btn-disabled { opacity: 0.5; cursor: not-allowed; }
-    .x-field { margin: 8px 0; display: flex; align-items: center; }
-    .x-field-label { display: inline-block; width: 120px; font-weight: 500; flex-shrink: 0; }
-    .x-field-body { display: flex; align-items: center; }
-    .x-field input { padding: 6px 8px; border: 1px solid #ccc; border-radius: 3px 0 0 3px; border-right: none; font-size: 14px; width: 220px; outline: none; }
-    .x-field-trigger { display: flex; align-items: center; justify-content: center; width: 24px; height: 30px; border: 1px solid #ccc; border-radius: 0 3px 3px 0; background: #f5f5f5; cursor: pointer; font-size: 12px; color: #555; user-select: none; }
-    .x-field-trigger:hover { background: #e0e0e0; }
-    .x-trigger-expand::after { content: '▾'; }
-    .x-trigger-spinner-up::after { content: '+'; }
-    .x-trigger-spinner-down::after { content: '−'; }
-    .x-boundlist { background: #fff; border: 1px solid #ccc; border-top: none; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-    .x-boundlist-item { padding: 6px 10px; cursor: pointer; font-size: 14px; color: #212121; }
-    .x-boundlist-item:hover, .x-boundlist-item-over { background: #e3f2fd; }
-    .x-slider-track { position: relative; height: 4px; background: #ccc; border-radius: 2px; width: 220px; margin: 12px 0; }
-    .x-slider-thumb { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 16px; height: 16px; background: #1976d2; border-radius: 50%; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-    table { width: 100%; border-collapse: collapse; }
-    th { background: #f5f5f5; text-align: left; padding: 8px; border-bottom: 2px solid #ddd; font-weight: 600; }
-    td { padding: 8px; border-bottom: 1px solid #eee; }
-    tr:hover td { background: #f0f7ff; }
-    .x-grid-row-selected td { background: #bbdefb; }
-    .x-tabbar { background: #fff; border-bottom: 2px solid #e0e0e0; }
-    .x-tabbar-strip { padding: 0 8px; }
-    .x-tab { padding: 10px 20px; font-size: 14px; font-weight: 500; color: #757575; border-bottom: 3px solid transparent; margin-bottom: -2px; border-radius: 4px 4px 0 0; transition: color 0.15s, background 0.15s, border-color 0.15s; user-select: none; }
-    .x-tab:hover { color: #1976d2; background: #f0f7ff; }
-    .x-tab-active { color: #1976d2 !important; border-bottom-color: #1976d2 !important; font-weight: 600; }
-    .x-tab-text { pointer-events: none; }
-    .x-tabpanel-body { background: #fff; border: 1px solid #e0e0e0; border-top: none; border-radius: 0 0 4px 4px; padding: 16px; min-height: 200px; }
-    .x-menu { background: #fff; border: 1px solid #ccc; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 160px; padding: 4px 0; z-index: 1000; }
-    .x-menu-item { display: flex; align-items: center; padding: 7px 16px; cursor: pointer; font-size: 14px; color: #212121; user-select: none; }
-    .x-menu-item:hover { background: #f0f7ff; }
-    .x-menu-item-text { flex: 1; }
-    .x-menu-item-check { width: 16px; height: 16px; border: 2px solid #aaa; border-radius: 3px; margin-right: 8px; flex-shrink: 0; }
-    .x-menu-item-checked .x-menu-item-check { background: #1976d2; border-color: #1976d2; }
-    .x-menu-separator { height: 1px; background: #e0e0e0; margin: 4px 0; }
   </style>
 </head>
 <body>
