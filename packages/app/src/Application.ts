@@ -9,6 +9,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { ViewController } from './ViewController.js';
+import { ThemeManager } from '@framesquared/theme';
+import type { Theme } from '@framesquared/theme';
 
 // ---------------------------------------------------------------------------
 // Config
@@ -20,6 +22,12 @@ export interface ApplicationConfig {
   controllers?: string[];
   stores?: string[];
   mainView?: string;
+  /**
+   * Theme to activate before launch.  Pass a Theme instance to register and
+   * activate it in one step, or a string to activate an already-registered
+   * theme by name.
+   */
+  theme?: Theme | string;
   launch?: () => void;
 }
 
@@ -35,7 +43,7 @@ let instance: Application | null = null;
 
 export class Application {
   private _name: string;
-  private _launchFn: (() => void) | null;
+  private _theme: Theme | string | null;
   private _controllers = new Map<string, ViewController>();
   private _stores = new Map<string, any>();
 
@@ -49,7 +57,10 @@ export class Application {
 
   constructor(config: ApplicationConfig) {
     this._name = config.name;
-    this._launchFn = config.launch ?? null;
+    this._theme = config.theme ?? null;
+    if (config.launch) {
+      this.launch = config.launch;
+    }
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     instance = this;
   }
@@ -58,10 +69,22 @@ export class Application {
   // Lifecycle
   // -----------------------------------------------------------------------
 
+  /** Called after theme activation and before onLaunch. Override in subclasses or supply via config. */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  launch(): void {}
+
   start(): void {
+    if (this._theme) {
+      if (typeof this._theme === 'string') {
+        ThemeManager.setTheme(this._theme);
+      } else {
+        ThemeManager.register(this._theme);
+        ThemeManager.setTheme(this._theme.getName());
+      }
+    }
     this.onInit();
     this.onBeforeLaunch();
-    this._launchFn?.();
+    this.launch();
     this.onLaunch();
   }
 

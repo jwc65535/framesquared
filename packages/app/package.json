@@ -21,7 +21,8 @@
     "typecheck": "tsc --noEmit --project tsconfig.build.json"
   },
   "dependencies": {
-    "@framesquared/core": "workspace:*"
+    "@framesquared/core": "workspace:*",
+    "@framesquared/theme": "workspace:*"
   },
   "license": "MIT",
   "publishConfig": {
