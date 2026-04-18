@@ -61,9 +61,10 @@ export class Accordion extends Container {
       this._headerEls.push(header);
       section.appendChild(header);
 
-      // Body wrapper
+      // Body wrapper — hidden by default; expand() will show the active one
       const bodyWrap = document.createElement('div');
       bodyWrap.classList.add('x-accordion-body');
+      bodyWrap.style.display = 'none';
       if (item.el) {
         bodyWrap.appendChild(item.el);
       }
@@ -111,6 +112,7 @@ export class Accordion extends Container {
   }
 
   private doExpand(index: number): void {
+    if (this._expandedSet.has(index)) return;
     this._expandedSet.add(index);
     const section = this.getSection(index);
     if (section) {
@@ -134,6 +136,7 @@ export class Accordion extends Container {
 
   private getSection(index: number): HTMLElement | null {
     const body = this.getBodyEl();
+    if (!body) return null;
     const sections = body.querySelectorAll('.x-accordion-section');
     return (sections[index] as HTMLElement) ?? null;
   }
