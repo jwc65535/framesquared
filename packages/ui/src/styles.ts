@@ -594,6 +594,74 @@ const STYLES = `
   font-size: 12px;
   font-weight: bold;
 }
+
+/* ── Accordion ───────────────────────────────────────────────────────────── */
+.x-accordion {
+  border-radius: var(--ext-component-accordion-borderRadius, 8px);
+  box-shadow: var(--ext-shadow-sm, 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08));
+  overflow: hidden;
+  font-family: var(--ext-typography-fontFamily-sans, system-ui, sans-serif);
+  font-size: var(--ext-typography-fontSize-sm, 14px);
+}
+
+.x-accordion-section {
+  border-bottom: 1px solid var(--ext-component-accordion-headerBorderColor, #e0e0e0);
+}
+
+.x-accordion-section:last-child {
+  border-bottom: none;
+}
+
+.x-accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--x-sp-sm, 12px) var(--x-sp-md, 16px);
+  background: var(--ext-component-accordion-headerBg, #f8f9fa);
+  color: var(--ext-component-accordion-headerColor, #212121);
+  font-weight: var(--ext-component-accordion-headerFontWeight, 600);
+  cursor: pointer;
+  user-select: none;
+  border-left: 3px solid transparent;
+  transition:
+    background var(--ext-component-accordion-transition, 200ms ease),
+    color      var(--ext-component-accordion-transition, 200ms ease),
+    border-color var(--ext-component-accordion-transition, 200ms ease);
+}
+
+.x-accordion-header::after {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform var(--ext-component-accordion-transition, 200ms ease);
+  opacity: 0.55;
+  flex-shrink: 0;
+  margin-left: var(--x-sp-sm, 8px);
+}
+
+.x-accordion-header:hover {
+  background: var(--ext-component-accordion-headerBgHover, #e9ecef);
+}
+
+.x-accordion-section.x-accordion-expanded > .x-accordion-header {
+  background: var(--ext-component-accordion-headerBgActive, #e8f0fe);
+  color: var(--ext-component-accordion-headerColorActive, #1976d2);
+  border-left-color: var(--ext-component-accordion-activeBorderColor, #1976d2);
+}
+
+.x-accordion-section.x-accordion-expanded > .x-accordion-header::after {
+  transform: rotate(-135deg) translateY(-2px);
+  opacity: 1;
+}
+
+.x-accordion-body {
+  background: var(--ext-component-accordion-bodyBg, #ffffff);
+  padding: var(--x-sp-md, 16px);
+}
 `;
 
 if (typeof document !== 'undefined' && !document.querySelector('[data-x-ui-styles]')) {

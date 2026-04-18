@@ -24,6 +24,16 @@ export const DarkTheme = new Theme({
     },
     component: {
       panel: { borderColor: '#333333' },
+      accordion: {
+        headerBg: '#2a2a2a',
+        headerBgHover: '#333333',
+        headerBgActive: '#1a2a3a',
+        headerColor: '#e0e0e0',
+        headerColorActive: '#90caf9',
+        headerBorderColor: '#3d3d3d',
+        activeBorderColor: '#90caf9',
+        bodyBg: '#1e1e1e',
+      },
     },
   },
 });
