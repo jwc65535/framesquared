@@ -102,6 +102,11 @@ export class BorderLayout extends Layout {
   override renderItems(items: Component[], target: Element): void {
     this.configureContainer(target as HTMLElement);
     super.renderItems(items, target);
-    this.applyItemStyles(items, target);
+    // Rebuild the grid template from ALL owner items so that incremental
+    // calls from Container.add() (which pass a single-item array) see the
+    // full region set rather than just the most-recently-added child.
+    const allItems: Component[] =
+      (this.owner as any)?.getItems?.() ?? items;
+    this.applyItemStyles(allItems, target);
   }
 }

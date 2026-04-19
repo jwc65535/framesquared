@@ -249,6 +249,7 @@ export class Container extends Component {
     if (!this._layout) {
       const config = this._config as ContainerConfig;
       this._layout = resolveLayout(config.layout);
+      this._layout.setOwner(this);
     }
     return this._layout;
   }

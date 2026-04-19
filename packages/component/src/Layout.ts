@@ -32,9 +32,14 @@ export function registerLayout(type: string, Cls: new (config: any) => any): voi
 
 export class Layout {
   readonly type: string;
+  owner: any = null;
 
   constructor(config: LayoutConfig = {}) {
     this.type = config.type ?? 'auto';
+  }
+
+  setOwner(owner: any): void {
+    this.owner = owner;
   }
 
   /**
