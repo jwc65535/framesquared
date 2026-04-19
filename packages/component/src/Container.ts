@@ -78,6 +78,11 @@ export class Container extends Component {
     if (config.items && config.items.length > 0) {
       this.add(...config.items);
     }
+
+    // Give the layout a chance to apply per-item styles (e.g. flex-grow for
+    // BoxLayout) now that every child has an el. renderItems() skips children
+    // that are already rendered, so this is a no-op for non-box layouts.
+    this.getLayout().renderItems(this.getItems(), this._bodyEl);
   }
 
   protected override onDestroy(): void {
@@ -119,9 +124,10 @@ export class Container extends Component {
       this._items.push(child);
       child.ownerCt = this;
 
-      // Render child into body
+      // Render child into body, then let the layout apply per-item styles
       if (this.rendered && this._bodyEl) {
         child.render(this._bodyEl);
+        this.getLayout().renderItems([child], this._bodyEl);
       }
 
       child.onAdded(this, index);

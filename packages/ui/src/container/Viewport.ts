@@ -36,6 +36,13 @@ export class Viewport extends Container {
     el.style.overflow = 'hidden';
     el.style.position = 'relative';
 
+    // The Container body must fill the full viewport so that flex children
+    // with flex:1 (e.g. a scrollable content panel) have a definite height
+    // to grow into. Without this the VBox has no height to distribute.
+    const body = this.getBodyEl();
+    body.style.width = '100%';
+    body.style.height = '100%';
+
     document.body.style.margin = '0';
     document.body.style.padding = '0';
     document.body.style.overflow = 'hidden';

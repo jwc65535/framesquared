@@ -44,6 +44,14 @@ export class Layout {
   configureContainer(_el: HTMLElement): void {}
 
   /**
+   * Render child components into a target element and apply any
+   * layout-specific per-item styles (e.g. flex-grow for BoxLayout).
+   * No-op in the base class; overridden by @framesquared/layout layouts.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  renderItems(_items: any[], _target: Element): void {}
+
+  /**
    * Performs layout on the owner container.
    * Override in subclasses.
    */
