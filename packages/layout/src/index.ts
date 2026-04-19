@@ -14,6 +14,7 @@ import { ColumnLayout } from './ColumnLayout.js';
 import { TableLayout } from './TableLayout.js';
 import { AbsoluteLayout } from './AbsoluteLayout.js';
 import { AccordionLayout } from './AccordionLayout.js';
+import { CenterLayout } from './CenterLayout.js';
 
 registerLayout('hbox',     HBoxLayout);
 registerLayout('vbox',     VBoxLayout);
@@ -25,6 +26,7 @@ registerLayout('column',   ColumnLayout);
 registerLayout('table',    TableLayout);
 registerLayout('absolute', AbsoluteLayout);
 registerLayout('accordion',AccordionLayout);
+registerLayout('center',   CenterLayout);
 
 export { Layout } from './Layout.js';
 export type { SizePolicy, LayoutConfig } from './Layout.js';
@@ -51,6 +53,8 @@ export type { TableLayoutConfig } from './TableLayout.js';
 export { AbsoluteLayout } from './AbsoluteLayout.js';
 export { AccordionLayout } from './AccordionLayout.js';
 export type { AccordionLayoutConfig } from './AccordionLayout.js';
+export { CenterLayout } from './CenterLayout.js';
+export type { CenterLayoutConfig } from './CenterLayout.js';
 
 // Responsive
 export { ResponsivePlugin } from './ResponsivePlugin.js';

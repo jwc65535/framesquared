@@ -272,6 +272,13 @@ export class Container extends Component {
     }
   }
 
+  doLayoutWithSize(containerWidth: number, containerHeight: number): void {
+    const layout = this.getLayout() as any;
+    if (typeof layout.applyItemStyles === 'function') {
+      layout.applyItemStyles(this.getItems(), this.getBodyEl(), containerWidth, containerHeight);
+    }
+  }
+
   // -----------------------------------------------------------------------
   // Component Query
   // -----------------------------------------------------------------------

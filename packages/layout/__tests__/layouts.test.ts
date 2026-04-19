@@ -10,6 +10,7 @@ import { ColumnLayout } from '../src/ColumnLayout.js';
 import { TableLayout } from '../src/TableLayout.js';
 import { AbsoluteLayout } from '../src/AbsoluteLayout.js';
 import { AccordionLayout } from '../src/AccordionLayout.js';
+import { CenterLayout } from '../src/CenterLayout.js';
 
 // ResizeObserver mock
 class MockRO {
@@ -496,6 +497,78 @@ describe('AccordionLayout', () => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
+// CenterLayout
+// ═══════════════════════════════════════════════════════════════════════════
+
+describe('CenterLayout', () => {
+  it('has type "center"', () => {
+    expect(new CenterLayout().type).toBe('center');
+  });
+
+  it('configureContainer sets position:relative and overflow:hidden', () => {
+    const { ct } = withLayout(CenterLayout, {}, [cmp({ width: 400, height: 300 })]);
+    expect(ct.getBodyEl().style.position).toBe('relative');
+    expect(ct.getBodyEl().style.overflow).toBe('hidden');
+  });
+
+  it('centred child has position:absolute', () => {
+    const child = cmp({ width: 400, height: 300 });
+    const { ct, layout } = withLayout(CenterLayout, {}, [child]);
+    layout.applyItemStyles(ct.getItems(), ct.getBodyEl(), 1000, 600);
+    expect(child.el!.style.position).toBe('absolute');
+  });
+
+  it('centres a 400×300 child in a 1000×600 container', () => {
+    const child = cmp({ width: 400, height: 300 });
+    const { ct, layout } = withLayout(CenterLayout, {}, [child]);
+    layout.applyItemStyles(ct.getItems(), ct.getBodyEl(), 1000, 600);
+    expect(child.el!.style.left).toBe('300px');   // (1000 - 400) / 2
+    expect(child.el!.style.top ).toBe('150px');   // (600  - 300) / 2
+  });
+
+  it('re-centres correctly when container width changes', () => {
+    const child = cmp({ width: 400, height: 300 });
+    const { ct, layout } = withLayout(CenterLayout, {}, [child]);
+    layout.applyItemStyles(ct.getItems(), ct.getBodyEl(), 800, 600);
+    expect(child.el!.style.left).toBe('200px');   // (800 - 400) / 2
+    layout.applyItemStyles(ct.getItems(), ct.getBodyEl(), 1200, 600);
+    expect(child.el!.style.left).toBe('400px');   // (1200 - 400) / 2
+  });
+
+  it('re-centres correctly when container height changes', () => {
+    const child = cmp({ width: 400, height: 300 });
+    const { ct, layout } = withLayout(CenterLayout, {}, [child]);
+    layout.applyItemStyles(ct.getItems(), ct.getBodyEl(), 1000, 400);
+    expect(child.el!.style.top).toBe('50px');    // (400 - 300) / 2
+    layout.applyItemStyles(ct.getItems(), ct.getBodyEl(), 1000, 900);
+    expect(child.el!.style.top).toBe('300px');   // (900 - 300) / 2
+  });
+
+  it('left=0 top=0 when child exactly fills the container', () => {
+    const child = cmp({ width: 500, height: 400 });
+    const { ct, layout } = withLayout(CenterLayout, {}, [child]);
+    layout.applyItemStyles(ct.getItems(), ct.getBodyEl(), 500, 400);
+    expect(child.el!.style.left).toBe('0px');
+    expect(child.el!.style.top ).toBe('0px');
+  });
+
+  it('applies child width and height from config', () => {
+    const child = cmp({ width: 400, height: 300 });
+    const { ct, layout } = withLayout(CenterLayout, {}, [child]);
+    layout.applyItemStyles(ct.getItems(), ct.getBodyEl(), 1000, 600);
+    expect(child.el!.style.width ).toBe('400px');
+    expect(child.el!.style.height).toBe('300px');
+  });
+
+  it('does nothing when there are no items', () => {
+    const { ct, layout } = withLayout(CenterLayout, {}, []);
+    expect(() =>
+      layout.applyItemStyles([], ct.getBodyEl(), 1000, 600)
+    ).not.toThrow();
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
 // renderItems integration coverage
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -582,5 +655,24 @@ describe('renderItems integration', () => {
     layout.renderItems(items, ct.getBodyEl());
     expect(ct.getBodyEl().style.flexDirection).toBe('column');
     expect(layout.isExpanded(items[0])).toBe(true);
+  });
+
+  it('CenterLayout.renderItems sets position:relative on container', () => {
+    const centerLayout = new CenterLayout();
+    const target = document.createElement('div');
+    document.body.appendChild(target);
+    centerLayout.renderItems([cmp({ width: 400, height: 300 })], target);
+    expect(target.style.position).toBe('relative');
+  });
+
+  it('CenterLayout.applyItemStyles centres child with explicit size', () => {
+    const centerLayout = new CenterLayout();
+    const target = document.createElement('div');
+    document.body.appendChild(target);
+    const items = [cmp({ width: 400, height: 300 })];
+    centerLayout.renderItems(items, target);
+    centerLayout.applyItemStyles(items, target, 1000, 600);
+    expect(items[0].el!.style.left).toBe('300px');   // (1000-400)/2
+    expect(items[0].el!.style.top ).toBe('150px');   // (600-300)/2
   });
 });
