@@ -19,6 +19,14 @@ export class AutoLayout extends Layout {
   }
 
   /**
+   * Auto layout applies no container CSS — children flow in normal block order.
+   * This is called by Container.afterRender() on every layout instance.
+   */
+  configureContainer(_el: HTMLElement): void {
+    // Intentional no-op: AutoLayout defers entirely to CSS normal flow.
+  }
+
+  /**
    * Auto layout: no calculation needed — items use natural CSS flow.
    */
   override calculate(_context: LayoutContext): void {

@@ -15,6 +15,7 @@ import { TableLayout } from './TableLayout.js';
 import { AbsoluteLayout } from './AbsoluteLayout.js';
 import { AccordionLayout } from './AccordionLayout.js';
 import { CenterLayout } from './CenterLayout.js';
+import { AutoLayout } from './AutoLayout.js';
 
 registerLayout('hbox',     HBoxLayout);
 registerLayout('vbox',     VBoxLayout);
@@ -27,6 +28,7 @@ registerLayout('table',    TableLayout);
 registerLayout('absolute', AbsoluteLayout);
 registerLayout('accordion',AccordionLayout);
 registerLayout('center',   CenterLayout);
+registerLayout('auto',     AutoLayout);
 
 export { Layout } from './Layout.js';
 export type { SizePolicy, LayoutConfig } from './Layout.js';

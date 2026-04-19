@@ -11,6 +11,7 @@ import { TableLayout } from '../src/TableLayout.js';
 import { AbsoluteLayout } from '../src/AbsoluteLayout.js';
 import { AccordionLayout } from '../src/AccordionLayout.js';
 import { CenterLayout } from '../src/CenterLayout.js';
+import { AutoLayout } from '../src/AutoLayout.js';
 
 // ResizeObserver mock
 class MockRO {
@@ -493,6 +494,87 @@ describe('AccordionLayout', () => {
     expect(layout.isExpanded(item)).toBe(false);
     layout.toggle(item);
     expect(layout.isExpanded(item)).toBe(true);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AutoLayout
+// ═══════════════════════════════════════════════════════════════════════════
+
+describe('AutoLayout', () => {
+  it('has type "auto"', () => {
+    expect(new AutoLayout().type).toBe('auto');
+  });
+
+  it('configureContainer is a no-op — does not touch the element', () => {
+    const el = document.createElement('div');
+    const layout = new AutoLayout();
+    layout.configureContainer(el);
+    // CSS flow: no display, position, or flex properties should be set
+    expect(el.style.display).toBe('');
+    expect(el.style.position).toBe('');
+    expect(el.style.flexDirection).toBe('');
+  });
+
+  it('getItemSizePolicy returns natural for width and height', () => {
+    const layout = new AutoLayout();
+    const item = cmp({ width: 200 });
+    const policy = layout.getItemSizePolicy(item);
+    expect(policy.width).toBe('natural');
+    expect(policy.height).toBe('natural');
+  });
+
+  it('renders all children into the container body', () => {
+    const { ct } = withLayout(AutoLayout, {}, [
+      cmp({ width: 200 }),
+      cmp({ width: 300 }),
+      cmp({ width: 400 }),
+    ]);
+    expect(ct.getItems().length).toBe(3);
+    for (const item of ct.getItems()) {
+      expect(item.rendered).toBe(true);
+    }
+  });
+
+  it('child width config is applied to the element style', () => {
+    const { ct } = withLayout(AutoLayout, {}, [cmp({ width: 250 })]);
+    expect(ct.getItems()[0].el!.style.width).toBe('250px');
+  });
+
+  it('child height config is applied to the element style', () => {
+    const { ct } = withLayout(AutoLayout, {}, [cmp({ height: 120 })]);
+    expect(ct.getItems()[0].el!.style.height).toBe('120px');
+  });
+
+  it('child margin config is applied to the element style', () => {
+    const { ct } = withLayout(AutoLayout, {}, [cmp({ margin: 8 })]);
+    expect(ct.getItems()[0].el!.style.margin).toBe('8px');
+  });
+
+  it('child padding config is applied to the element style', () => {
+    const { ct } = withLayout(AutoLayout, {}, [cmp({ padding: '4px 8px' })]);
+    expect(ct.getItems()[0].el!.style.padding).toBe('4px 8px');
+  });
+
+  it('child percentage width is passed through as a CSS string', () => {
+    const { ct } = withLayout(AutoLayout, {}, [cmp({ width: '100%' })]);
+    expect(ct.getItems()[0].el!.style.width).toBe('100%');
+  });
+
+  it('children are rendered in insertion order', () => {
+    const a = cmp({ width: 100 });
+    const b = cmp({ width: 200 });
+    const c = cmp({ width: 300 });
+    const { ct } = withLayout(AutoLayout, {}, [a, b, c]);
+    expect(ct.getAt(0)).toBe(a);
+    expect(ct.getAt(1)).toBe(b);
+    expect(ct.getAt(2)).toBe(c);
+  });
+
+  it('"auto" string alias resolves to AutoLayout after import of @framesquared/layout', async () => {
+    await import('../src/index.js');
+    const ct = new Container({ renderTo: document.body, layout: 'auto' });
+    expect(ct.getLayout()).toBeInstanceOf(AutoLayout);
   });
 });
 
