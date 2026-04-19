@@ -68,7 +68,12 @@ export class CardLayout extends Layout {
   override renderItems(items: Component[], target: Element): void {
     this.configureContainer(target as HTMLElement);
     super.renderItems(items, target);
-    this.applyItemStyles(items, target);
+    // Container.add() calls renderItems([singleChild]) once per child, so the
+    // passed array is always length 1.  applyItemStyles needs the full list to
+    // identify index 0 (visible) vs. index 1+ (hidden).  Resolve from owner —
+    // the same fix applied to FitLayout and ColumnLayout.
+    const allItems: Component[] = (this.owner as any)?.getItems?.() ?? items;
+    this.applyItemStyles(allItems, target);
   }
 
   // -- Navigation --

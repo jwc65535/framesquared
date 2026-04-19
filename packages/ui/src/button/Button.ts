@@ -296,6 +296,24 @@ export class Button extends Component {
   // Public API
   // -----------------------------------------------------------------------
 
+  override enable(): void {
+    super.enable();
+    if (this.el?.tagName === 'BUTTON') {
+      (this.el as HTMLButtonElement).disabled = false;
+      this.el.classList.remove('x-btn-disabled');
+      this.el.removeAttribute('aria-disabled');
+    }
+  }
+
+  override disable(): void {
+    super.disable();
+    if (this.el?.tagName === 'BUTTON') {
+      (this.el as HTMLButtonElement).disabled = true;
+      this.el.classList.add('x-btn-disabled');
+      this.el.setAttribute('aria-disabled', 'true');
+    }
+  }
+
   toggle(state?: boolean): void {
     const newState = state ?? !this._pressed;
     if (newState === this._pressed) return;

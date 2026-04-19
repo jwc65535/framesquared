@@ -182,6 +182,23 @@ describe('CardLayout', () => {
     expect(ct.getItems()[0].el!.style.width).toBe('100%');
     expect(ct.getItems()[0].el!.style.height).toBe('100%');
   });
+
+  it('only first card is visible when items added one-at-a-time via Container.add()', async () => {
+    // withLayout calls applyItemStyles(allItems) manually at the end, masking
+    // the partial-array bug.  This test exercises the real production path:
+    // Container.add() → renderItems([singleChild]) for each child.
+    await import('../src/index.js'); // ensure 'card' alias is registered
+    const ct = new Container({ renderTo: document.body, layout: 'card' });
+    const card1 = cmp({ html: 'A' });
+    const card2 = cmp({ html: 'B' });
+    const card3 = cmp({ html: 'C' });
+    ct.add(card1);
+    ct.add(card2);
+    ct.add(card3);
+    expect(card1.el!.style.display).not.toBe('none');
+    expect(card2.el!.style.display).toBe('none');
+    expect(card3.el!.style.display).toBe('none');
+  });
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -669,10 +686,15 @@ describe('renderItems integration', () => {
     const ct = new Container({ renderTo: document.body });
     const layout = new CardLayout();
     layout.setOwner(ct);
-    const items = [cmp({ html: 'A' }), cmp({ html: 'B' })];
-    layout.renderItems(items, ct.getBodyEl());
-    expect(items[0].el!.style.display).not.toBe('none');
-    expect(items[1].el!.style.display).toBe('none');
+    const item1 = cmp({ html: 'A' });
+    const item2 = cmp({ html: 'B' });
+    // Add to container so owner.getItems() returns them, then call renderItems
+    item1.render(ct.getBodyEl());
+    item2.render(ct.getBodyEl());
+    (ct as any)._items = [item1, item2];
+    layout.applyItemStyles(ct.getItems(), ct.getBodyEl());
+    expect(item1.el!.style.display).not.toBe('none');
+    expect(item2.el!.style.display).toBe('none');
   });
 
   it('CardLayout.un removes listener', () => {
