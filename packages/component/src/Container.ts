@@ -258,6 +258,20 @@ export class Container extends Component {
     this.getLayout().doLayout(this);
   }
 
+  /**
+   * Re-run the layout with an explicit container width in pixels.
+   *
+   * Intended for unit tests running under jsdom, where clientWidth is always
+   * 0 even when style.width is set.  Production code should call doLayout()
+   * instead so the layout reads the live clientWidth from the DOM.
+   */
+  doLayoutWithWidth(containerWidth: number): void {
+    const layout = this.getLayout() as any;
+    if (typeof layout.applyItemStyles === 'function') {
+      layout.applyItemStyles(this.getItems(), this.getBodyEl(), containerWidth);
+    }
+  }
+
   // -----------------------------------------------------------------------
   // Component Query
   // -----------------------------------------------------------------------

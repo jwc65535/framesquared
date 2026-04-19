@@ -288,14 +288,16 @@ describe('ColumnLayout', () => {
     expect(new ColumnLayout().type).toBe('column');
   });
 
-  it('columnWidth as fraction sets percentage width', () => {
-    const { ct } = withLayout(ColumnLayout, {}, [
+  it('columnWidth distributes remaining space as pixel widths', () => {
+    const { ct, layout } = withLayout(ColumnLayout, {}, [
       cmp({ columnWidth: 0.5 }),
       cmp({ columnWidth: 0.5 }),
     ]);
+    // Re-apply with a known container width; jsdom clientWidth is always 0.
+    (layout as any).applyItemStyles(ct.getItems(), ct.getBodyEl(), 1000);
     const items = ct.getItems();
-    expect(items[0].el!.style.width).toBe('50%');
-    expect(items[1].el!.style.width).toBe('50%');
+    expect(items[0].el!.style.width).toBe('500px');
+    expect(items[1].el!.style.width).toBe('500px');
   });
 
   it('fixed width columns keep their width', () => {
@@ -550,7 +552,9 @@ describe('renderItems integration', () => {
     document.body.appendChild(target);
     const items = [cmp({ columnWidth: 0.5 })];
     layout.renderItems(items, target);
-    expect(items[0].el!.style.width).toBe('50%');
+    // Re-apply with a known container width; jsdom clientWidth is always 0.
+    layout.applyItemStyles(items, target, 1000);
+    expect(items[0].el!.style.width).toBe('500px');
   });
 
   it('TableLayout.renderItems sets grid', () => {
