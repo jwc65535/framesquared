@@ -38,6 +38,11 @@ export class FitLayout extends Layout {
   override renderItems(items: Component[], target: Element): void {
     this.configureContainer(target as HTMLElement);
     super.renderItems(items, target);
-    this.applyItemStyles(items, target);
+    // Container.add() calls renderItems([singleChild]) once per child, so
+    // `items` is always a one-element array. Always use the full owner list so
+    // applyItemStyles can correctly distinguish index-0 (visible) from index-1+
+    // (hidden) — identical fix to ColumnLayout's partial-list bug.
+    const allItems: Component[] = (this.owner as any)?.getItems?.() ?? items;
+    this.applyItemStyles(allItems, target);
   }
 }
