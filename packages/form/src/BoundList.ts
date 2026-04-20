@@ -70,7 +70,9 @@ export class BoundList extends Component {
       item.setAttribute('data-index', String(i));
       item.textContent = rec.get
         ? rec.get(this._displayField)
-        : String(rec.data?.[this._displayField] ?? rec[this._displayField] ?? '');
+        : typeof rec === 'string' || typeof rec === 'number'
+          ? String(rec)
+          : String(rec.data?.[this._displayField] ?? rec[this._displayField] ?? '');
 
       item.addEventListener('click', () => {
         this.fire('itemclick', this, rec, item, i);

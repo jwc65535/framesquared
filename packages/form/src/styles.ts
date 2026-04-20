@@ -108,11 +108,30 @@ textarea.x-field-input {
 }
 .x-field-trigger:hover { color: var(--ext-color-primary, #1976d2); }
 
-.x-trigger-clear::before  { content: '✕'; font-size: 11px; }
-.x-trigger-search::before { content: '🔍'; font-size: 12px; }
-.x-trigger-date::before   { content: '📅'; font-size: 12px; }
+.x-trigger-clear::before        { content: '✕'; font-size: 11px; }
+.x-trigger-search::before       { content: '🔍'; font-size: 12px; }
+.x-trigger-date::before         { content: '📅'; font-size: 12px; }
+.x-trigger-expand::before       { content: '▾'; font-size: 13px; font-weight: 700; }
+.x-trigger-clock::before        { content: '⏱'; font-size: 13px; }
 .x-trigger-spinner-up::before   { content: '▲'; font-size: 8px; }
 .x-trigger-spinner-down::before { content: '▼'; font-size: 8px; }
+
+/* ── Spinner: stack up/down triggers vertically ──────────────────────────── */
+.x-trigger-spinner-up {
+  bottom: 50%;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+.x-trigger-spinner-down {
+  top: 50%;
+}
+
+/* ── Padding to prevent typed text hiding behind triggers ────────────────── */
+.x-numberfield .x-field-input,
+.x-combobox    .x-field-input,
+.x-datefield   .x-field-input,
+.x-timefield   .x-field-input {
+  padding-right: 42px;
+}
 
 /* ── Invalid state ───────────────────────────────────────────────────────── */
 .x-field-invalid .x-field-input {
@@ -368,13 +387,35 @@ textarea.x-field-input {
   border-radius: var(--x-r-md, 4px);
   background: var(--ext-color-surface, #f5f5f5);
 }
+.x-filefield-btn {
+  padding: 6px 14px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ext-color-primary, #1976d2);
+  background: color-mix(in srgb, var(--ext-color-primary, #1976d2) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ext-color-primary, #1976d2) 40%, transparent);
+  border-radius: var(--x-r-md, 4px);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+}
+.x-filefield-btn:hover {
+  background: color-mix(in srgb, var(--ext-color-primary, #1976d2) 18%, transparent);
+  border-color: var(--ext-color-primary, #1976d2);
+}
 `;
 
-if (typeof document !== 'undefined' && !document.querySelector('[data-x-form-styles]')) {
-  const el = document.createElement('style');
-  el.setAttribute('data-x-form-styles', '');
-  el.textContent = STYLES;
-  document.head.appendChild(el);
+if (typeof document !== 'undefined') {
+  const existing = document.querySelector<HTMLStyleElement>('[data-x-form-styles]');
+  if (existing) {
+    existing.textContent = STYLES;
+  } else {
+    const el = document.createElement('style');
+    el.setAttribute('data-x-form-styles', '');
+    el.textContent = STYLES;
+    document.head.appendChild(el);
+  }
 }
 
 export {};

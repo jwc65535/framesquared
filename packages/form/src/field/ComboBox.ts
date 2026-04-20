@@ -167,10 +167,13 @@ export class ComboBox extends TextField {
       this.updateMultiDisplay();
     } else {
       this._selection = [record];
+      const isPrimitive = typeof record === 'string' || typeof record === 'number';
       const display = record.get
         ? record.get(this._displayField)
-        : (record[this._displayField] ?? '');
-      const value = record.get ? record.get(this._valueField) : (record[this._valueField] ?? '');
+        : isPrimitive ? String(record) : (record[this._displayField] ?? '');
+      const value = record.get
+        ? record.get(this._valueField)
+        : isPrimitive ? String(record) : (record[this._valueField] ?? '');
       this.getInputEl().value = display;
       this._selectedValue = value;
       this._value = value;
@@ -194,11 +197,17 @@ export class ComboBox extends TextField {
 
   private updateMultiDisplay(): void {
     const display = this._selection
-      .map((r) => (r.get ? r.get(this._displayField) : (r[this._displayField] ?? '')))
+      .map((r) =>
+        r.get ? r.get(this._displayField)
+        : typeof r === 'string' || typeof r === 'number' ? String(r)
+        : (r[this._displayField] ?? ''),
+      )
       .join(this._delimiter);
     this.getInputEl().value = display;
     this._value = this._selection.map((r) =>
-      r.get ? r.get(this._valueField) : (r[this._valueField] ?? null),
+      r.get ? r.get(this._valueField)
+      : typeof r === 'string' || typeof r === 'number' ? String(r)
+      : (r[this._valueField] ?? null),
     );
   }
 

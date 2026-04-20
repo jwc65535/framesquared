@@ -17,11 +17,13 @@ export { HiddenField } from './field/Hidden.js';
 export { VTypes } from './field/VTypes.js';
 export type { VTypeEntry } from './field/VTypes.js';
 
-// Numeric and Date fields
+// Numeric and Date/Time fields
 export { NumberField } from './field/Number.js';
 export type { NumberFieldConfig } from './field/Number.js';
 export { DateField } from './field/Date.js';
 export type { DateFieldConfig } from './field/Date.js';
+export { TimeField, parseTimeToMinutes } from './field/Time.js';
+export type { TimeFieldConfig, TimeFormat } from './field/Time.js';
 
 // Pickers
 export { DatePicker } from './picker/DatePicker.js';
