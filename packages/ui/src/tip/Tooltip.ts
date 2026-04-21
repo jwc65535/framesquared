@@ -197,7 +197,11 @@ export class Tooltip extends Component {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.remove('x-tip-hidden');
     this._visible = true;
-    this.positionAtMouse();
+    if (this._anchor && this._targetEl && !this._trackMouse) {
+      this.positionNearTarget();
+    } else {
+      this.positionAtMouse();
+    }
 
     this.fire('show', this);
 
@@ -287,6 +291,25 @@ export class Tooltip extends Component {
   }
 
   // -----------------------------------------------------------------------
+  // Public API — content update
+  // -----------------------------------------------------------------------
+
+  /**
+   * Update the tooltip's HTML content (and optionally its title) at runtime.
+   * If the tooltip is currently visible the content re-renders immediately;
+   * otherwise the new value is stored and applied on the next show.
+   */
+  update(html: string, title?: string): void {
+    this._tipHtml = html;
+    if (title !== undefined) {
+      this._tipTitle = title;
+    }
+    if (this._visible && this.el) {
+      this.updateContent();
+    }
+  }
+
+  // -----------------------------------------------------------------------
   // Positioning
   // -----------------------------------------------------------------------
 
@@ -295,6 +318,53 @@ export class Tooltip extends Component {
     const [offX, offY] = this._mouseOffset;
     this.el.style.left = `${this._lastMouseX + offX}px`;
     this.el.style.top = `${this._lastMouseY + offY}px`;
+  }
+
+  /**
+   * Position the tooltip geometrically relative to its target element.
+   * Called instead of positionAtMouse() when anchor + target are both set
+   * and trackMouse is false.
+   *
+   * The tooltip is placed GAP pixels outside the requested edge of the target
+   * and centred along the perpendicular axis.  Falls back to positionAtMouse()
+   * when no target rect is available.
+   */
+  private positionNearTarget(): void {
+    if (!this.el || !this._targetEl) {
+      this.positionAtMouse();
+      return;
+    }
+
+    const GAP = 8;
+    const tgt = this._targetEl.getBoundingClientRect();
+    const tip = this.el.getBoundingClientRect();
+    let left = 0;
+    let top = 0;
+
+    switch (this._anchor) {
+      case 'bottom':
+        left = tgt.left + (tgt.width  - tip.width)  / 2;
+        top  = tgt.bottom + GAP;
+        break;
+      case 'top':
+        left = tgt.left + (tgt.width  - tip.width)  / 2;
+        top  = tgt.top   - tip.height - GAP;
+        break;
+      case 'right':
+        left = tgt.right  + GAP;
+        top  = tgt.top    + (tgt.height - tip.height) / 2;
+        break;
+      case 'left':
+        left = tgt.left  - tip.width - GAP;
+        top  = tgt.top   + (tgt.height - tip.height) / 2;
+        break;
+      default:
+        this.positionAtMouse();
+        return;
+    }
+
+    this.el.style.left = `${left}px`;
+    this.el.style.top  = `${top}px`;
   }
 
   // -----------------------------------------------------------------------

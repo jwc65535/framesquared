@@ -619,6 +619,124 @@ const STYLES = `
   font-weight: bold;
 }
 
+/* ── Tooltip ─────────────────────────────────────────────────────────────── */
+.x-tooltip {
+  position: fixed;
+  z-index: 99999;
+  background: rgba(22, 22, 28, 0.96);
+  color: rgba(240, 240, 248, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    0 2px 6px  rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  font-family: var(--ext-typography-fontFamily-sans, Inter, -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: 13px;
+  line-height: 1.55;
+  max-width: 300px;
+  pointer-events: none;
+  backdrop-filter: blur(8px) saturate(180%);
+  -webkit-backdrop-filter: blur(8px) saturate(180%);
+  overflow: visible;
+  animation: x-tip-in 0.14s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes x-tip-in {
+  from { opacity: 0; transform: scale(0.94) translateY(3px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.x-tip-hidden { display: none !important; }
+
+.x-tip-header {
+  padding: 9px 13px 7px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ext-color-primary, #64b5f6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 7px 7px 0 0;
+}
+
+.x-tip-body {
+  padding: 9px 13px;
+}
+
+.x-tip-header + .x-tip-body {
+  padding-top: 7px;
+}
+
+.x-tip-close {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 13px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: color 0.12s, background 0.12s;
+}
+
+.x-tip-close:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ── Anchor arrows ────────────────────────────────────────────────────────── */
+.x-tip-anchor-right::before,
+.x-tip-anchor-left::before,
+.x-tip-anchor-top::before,
+.x-tip-anchor-bottom::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 7px solid transparent;
+  pointer-events: none;
+}
+
+.x-tip-anchor-right::before {
+  left: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-right-color: rgba(22, 22, 28, 0.96);
+  border-left-width: 0;
+}
+
+.x-tip-anchor-left::before {
+  right: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left-color: rgba(22, 22, 28, 0.96);
+  border-right-width: 0;
+}
+
+.x-tip-anchor-bottom::before {
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-bottom-color: rgba(22, 22, 28, 0.96);
+  border-top-width: 0;
+}
+
+.x-tip-anchor-top::before {
+  bottom: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-top-color: rgba(22, 22, 28, 0.96);
+  border-bottom-width: 0;
+}
+
 /* ── Accordion ───────────────────────────────────────────────────────────── */
 .x-accordion {
   border-radius: var(--ext-component-accordion-borderRadius, 8px);
