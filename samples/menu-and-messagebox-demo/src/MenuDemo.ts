@@ -50,15 +50,27 @@ export function createMenuDemo(host: Element): MenuDemoRefs {
   // ── New Document drop-down ─────────────────────────────────────────────────
   const newSpreadsheetItem = new MenuItem({
     text: 'New Spreadsheet',
-    handler: () => { lastCreatedType.value = 'spreadsheet'; },
+    handler: () => {
+      lastCreatedType.value = 'spreadsheet';
+      MenuManager.getInstance().closeAll();
+      MessageBox.alert('New Spreadsheet', 'A new spreadsheet has been created.');
+    },
   });
   const newPresentationItem = new MenuItem({
     text: 'New Presentation',
-    handler: () => { lastCreatedType.value = 'presentation'; },
+    handler: () => {
+      lastCreatedType.value = 'presentation';
+      MenuManager.getInstance().closeAll();
+      MessageBox.alert('New Presentation', 'A new presentation has been created.');
+    },
   });
   const newFolderItem = new MenuItem({
     text: 'New Folder',
-    handler: () => { lastCreatedType.value = 'folder'; },
+    handler: () => {
+      lastCreatedType.value = 'folder';
+      MenuManager.getInstance().closeAll();
+      MessageBox.alert('New Folder', 'A new folder has been created.');
+    },
   });
 
   const newMenu = new Menu({
@@ -70,6 +82,7 @@ export function createMenuDemo(host: Element): MenuDemoRefs {
     handler: () => {
       newDocCallCount.value++;
       lastCreatedType.value = 'document';
+      MessageBox.alert('New Document', 'A new document has been created.');
     },
     arrowHandler: (btn) => {
       newMenu.showBy(btn);
@@ -87,12 +100,18 @@ export function createMenuDemo(host: Element): MenuDemoRefs {
 
   const saveItem = new MenuItem({
     text: 'Save',
-    handler: () => { MenuManager.getInstance().closeAll(); },
+    handler: () => {
+      MenuManager.getInstance().closeAll();
+      MessageBox.alert('Save', 'File saved successfully.');
+    },
   });
 
   const saveAsItem = new MenuItem({
     text: 'Save As…',
-    handler: () => { MenuManager.getInstance().closeAll(); },
+    handler: () => {
+      MenuManager.getInstance().closeAll();
+      MessageBox.prompt('Save As', 'Enter a filename:');
+    },
   });
 
   const deleteItem = new MenuItem({
