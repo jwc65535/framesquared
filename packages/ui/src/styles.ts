@@ -874,6 +874,62 @@ const STYLES = `
   background: var(--ext-component-accordion-bodyBg, #ffffff);
   padding: var(--x-sp-md, 16px);
 }
+
+/* ── Carousel ────────────────────────────────────────────────────────────── */
+.x-carousel {
+  position: relative;
+  overflow: hidden;
+  min-height: 0; /* allow flex containers to shrink this below content size */
+}
+
+.x-carousel .x-container-body {
+  /* Stretch to fill the carousel el unconditionally — avoids the fragile
+     height:100% chain that breaks when the parent has no explicit height. */
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  padding: 0;
+  gap: 0;
+}
+
+.x-carousel-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  will-change: transform;
+  /* width and transform are set by JS based on item count */
+}
+
+.x-carousel-indicators {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--x-sp-xs, 6px);
+  padding: var(--x-sp-sm, 8px) 0;
+  pointer-events: none;
+}
+
+.x-carousel-pip {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background 200ms ease, transform 200ms ease;
+}
+
+.x-carousel-pip.x-carousel-pip-active {
+  background: var(--ext-color-primary, #1976d2);
+  transform: scale(1.35);
+}
 `;
 
 if (typeof document !== 'undefined' && !document.querySelector('[data-x-ui-styles]')) {

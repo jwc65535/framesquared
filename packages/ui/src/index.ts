@@ -70,6 +70,10 @@ export type { TabBarConfig } from './tab/TabBar.js';
 export { Tab } from './tab/Tab.js';
 export type { TabConfig } from './tab/Tab.js';
 
+// Carousel
+export { Carousel } from './carousel/Carousel.js';
+export type { CarouselConfig } from './carousel/Carousel.js';
+
 // Containers
 export { Viewport } from './container/Viewport.js';
 export type { ViewportConfig } from './container/Viewport.js';
