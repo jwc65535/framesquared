@@ -71,7 +71,6 @@ export class Tab extends Component {
     if (this._closable) {
       this._closeEl = document.createElement('span');
       this._closeEl.classList.add('x-tab-close');
-      this._closeEl.textContent = '×';
       this._closeEl.addEventListener('click', (e) => {
         e.stopPropagation();
         this.fire('close', this);

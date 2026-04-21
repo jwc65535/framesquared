@@ -318,6 +318,24 @@ const STYLES = `
   padding-bottom: 10px;
 }
 
+/* ── Bottom-positioned tab bar ───────────────────────────────────────────── */
+.x-tabbar-bottom {
+  border-bottom: none;
+  border-top: 2px solid var(--ext-color-primary, #1976d2);
+  align-items: flex-start;
+}
+.x-tabbar-bottom .x-tab {
+  border-radius: 0 0 var(--x-r-md, 4px) var(--x-r-md, 4px);
+  border-top: none;
+  border-bottom: 1px solid transparent;
+}
+.x-tabbar-bottom .x-tab.x-tab-active {
+  margin-bottom: 0;
+  padding-bottom: 8px;
+  margin-top: -2px;
+  padding-top: 10px;
+}
+
 .x-tab-close {
   display: flex;
   align-items: center;
