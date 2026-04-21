@@ -237,6 +237,12 @@ const STYLES = `
   flex-shrink: 0;
 }
 
+/* Bottom-docked toolbar flips its border to the top */
+.x-docked-bottom.x-toolbar {
+  border-bottom: none;
+  border-top: 1px solid var(--ext-color-border, rgba(0,0,0,0.1));
+}
+
 .x-toolbar-fill {
   flex: 1;
 }
