@@ -147,6 +147,7 @@ export class MessageBox {
       closeAction: 'destroy',
       cls: 'x-msgbox',
       html: bodyHtml,
+      width: 420,
     };
 
     const win = new Window(winConfig);

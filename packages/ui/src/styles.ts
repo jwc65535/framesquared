@@ -384,6 +384,76 @@ const STYLES = `
   z-index: calc(var(--ext-zIndex-modal, 1000) - 1);
 }
 
+/* ── MessageBox ──────────────────────────────────────────────────────────── */
+.x-msgbox .x-panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--x-sp-md, 16px);
+  padding: var(--x-sp-md, 16px);
+}
+
+.x-msgbox-text {
+  font-size: 14px;
+  color: var(--ext-color-text-primary, #212121);
+  line-height: 1.5;
+}
+
+.x-msgbox-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--x-sp-sm, 8px);
+}
+
+.x-msgbox-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 20px;
+  background: var(--ext-color-primary, #1976d2);
+  color: var(--ext-color-text-onPrimary, #ffffff);
+  border: 1px solid transparent;
+  border-radius: var(--x-r-md, 4px);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--ext-transition-fast, 0.15s);
+}
+
+.x-msgbox-btn:hover {
+  background: color-mix(in srgb, var(--ext-color-primary, #1976d2) 85%, black);
+}
+
+.x-msgbox-btn[data-btn="cancel"],
+.x-msgbox-btn[data-btn="no"] {
+  background: var(--ext-color-surface, #f5f5f5);
+  color: var(--ext-color-text-primary, #212121);
+  border-color: var(--ext-color-border, rgba(0,0,0,0.2));
+}
+
+.x-msgbox-btn[data-btn="cancel"]:hover,
+.x-msgbox-btn[data-btn="no"]:hover {
+  background: color-mix(in srgb, var(--ext-color-surface, #f5f5f5) 90%, black);
+}
+
+.x-msgbox-input {
+  width: 100%;
+  padding: 7px var(--x-sp-sm, 8px);
+  font-family: inherit;
+  font-size: 14px;
+  border: 1px solid var(--ext-color-border, rgba(0,0,0,0.2));
+  border-radius: var(--x-r-md, 4px);
+  background: var(--ext-color-background, #fff);
+  color: var(--ext-color-text-primary, #212121);
+  box-sizing: border-box;
+}
+
+.x-msgbox-input:focus {
+  outline: none;
+  border-color: var(--ext-color-primary, #1976d2);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ext-color-primary, #1976d2) 20%, transparent);
+}
+
 /* ── Menu ────────────────────────────────────────────────────────────────── */
 .x-menu {
   display: flex;

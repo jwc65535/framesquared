@@ -100,6 +100,15 @@ export class Panel extends Container {
     // Skip Container's afterRender — we build our own DOM structure
     // Call Component's afterRender instead
     const cfg = this._config as PanelConfig;
+    const cfgAny = cfg as Record<string, unknown>;
+
+    // applyConfigs() sets cfg.html on el.innerHTML directly, but for Panel
+    // the html content belongs inside the panel body. Save and clear it now;
+    // we'll apply it to _panelBodyEl below.
+    const pendingHtml = cfgAny['html'] !== undefined ? this.el!.innerHTML : undefined;
+    if (pendingHtml !== undefined) {
+      this.el!.innerHTML = '';
+    }
 
     // Root element classes
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -127,6 +136,11 @@ export class Panel extends Container {
 
     // Point Container's body to our panel-body
     (this as any)._bodyEl = this._panelBodyEl;
+
+    // Apply html content to the panel body (saved before header/body were built)
+    if (pendingHtml !== undefined) {
+      this._panelBodyEl.innerHTML = pendingHtml;
+    }
 
     // Apply layout CSS (e.g. display:flex for hbox/vbox)
     this.getLayout().configureContainer(this._panelBodyEl);

@@ -111,13 +111,13 @@ export class Window extends Panel {
       this.setupDrag();
     }
 
-    // Modal
+    // Register with ZIndexManager first so el.style.zIndex is set before showMask reads it
+    ZIndexManager.getInstance().register(this);
+
+    // Modal mask — must come after ZIndexManager so the mask z-index is window z-index minus 1
     if (this._modal) {
       this.showMask();
     }
-
-    // Register with ZIndexManager
-    ZIndexManager.getInstance().register(this);
 
     // Maximized config
     if (cfg.maximized) {
@@ -151,6 +151,10 @@ export class Window extends Panel {
     super.show();
     if (this._modal && !this._maskEl) {
       this.showMask();
+    }
+    const cfg = this._config as WindowConfig;
+    if (cfg.x === undefined && cfg.y === undefined) {
+      this.center();
     }
   }
 
