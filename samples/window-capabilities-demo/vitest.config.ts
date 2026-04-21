@@ -1,0 +1,23 @@
+import { defineConfig } from 'vitest/config';
+import path from 'node:path';
+
+const pkgRoot = path.resolve(__dirname, '../../packages');
+
+export default defineConfig({
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    include: ['test/**/*.spec.ts'],
+  },
+  resolve: {
+    alias: {
+      '@framesquared/core':      path.resolve(pkgRoot, 'core/src/index.ts'),
+      '@framesquared/component': path.resolve(pkgRoot, 'component/src/index.ts'),
+      '@framesquared/layout':    path.resolve(pkgRoot, 'layout/src/index.ts'),
+      '@framesquared/theme':     path.resolve(pkgRoot, 'theme/src/index.ts'),
+      '@framesquared/ui':        path.resolve(pkgRoot, 'ui/src/index.ts'),
+      '@framesquared/app':       path.resolve(pkgRoot, 'app/src/index.ts'),
+      '@framesquared/dd':        path.resolve(pkgRoot, 'dd/src/index.ts'),
+    },
+  },
+});
