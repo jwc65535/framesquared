@@ -16,6 +16,7 @@ import type { ComponentConfig } from '@framesquared/component';
 export interface BreadcrumbNode {
   id: string;
   text: string;
+  iconCls?: string;
   leaf: boolean;
   children: BreadcrumbNode[];
   parent: BreadcrumbNode | null;
@@ -66,6 +67,10 @@ export class Breadcrumb extends Component {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.classList.add('x-breadcrumb');
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.el!.setAttribute('role', 'navigation');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.el!.setAttribute('aria-label', 'Breadcrumb navigation');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.style.display = 'flex';
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.el!.style.alignItems = 'center';
@@ -112,6 +117,22 @@ export class Breadcrumb extends Component {
         e.stopPropagation();
         this.navigateTo(node);
       });
+
+      // Icon (rendered before text when showIcons is enabled)
+      const showIcons = (this._config as BreadcrumbConfig).showIcons ?? false;
+      if (showIcons && node.iconCls) {
+        const icon = document.createElement('span');
+        icon.classList.add('x-breadcrumb-icon');
+        for (const cls of node.iconCls.split(/\s+/).filter(Boolean)) {
+          icon.classList.add(cls);
+        }
+        icon.style.display = 'inline-block';
+        icon.style.width = '16px';
+        icon.style.height = '16px';
+        icon.style.marginRight = '4px';
+        icon.style.verticalAlign = 'middle';
+        item.appendChild(icon);
+      }
 
       // Text
       const text = document.createElement('span');
