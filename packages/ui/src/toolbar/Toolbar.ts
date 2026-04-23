@@ -10,6 +10,7 @@
 
 import { Component, Container } from '@framesquared/component';
 import type { ContainerConfig } from '@framesquared/component';
+import { ClassManager } from '@framesquared/core';
 
 // ---------------------------------------------------------------------------
 // Config
@@ -67,7 +68,17 @@ function resolveToolbarItem(item: any): Component {
   if (item === ' ') return new ToolbarSpacer();
   if (typeof item === 'string') return new ToolbarTextItem({ text: item });
 
-  // Config object — return as-is (Container.add will resolve)
+  // Config object with xtype: resolve via ClassManager so callers can use
+  // { xtype: 'tbseparator' } and other registered toolbar widget types.
+  if (item && typeof item === 'object' && item.xtype) {
+    const Ctor = ClassManager.getByAlias(`widget.${item.xtype}`);
+    if (Ctor) {
+      const { xtype: _x, ...rest } = item;
+      return new (Ctor as any)(rest);
+    }
+  }
+
+  // Unknown config object — pass through; Container will attempt resolution.
   return item;
 }
 
@@ -122,3 +133,14 @@ export class ToolbarTextItem extends Component {
     this.el!.classList.add('x-toolbar-text');
   }
 }
+
+// ---------------------------------------------------------------------------
+// xtype / ClassManager registration
+// ---------------------------------------------------------------------------
+
+ClassManager.register('Ext.toolbar.Toolbar', Toolbar as any);
+ClassManager.registerAlias('widget.toolbar',      Toolbar as any);
+ClassManager.registerAlias('widget.tbseparator',  ToolbarSeparator as any);
+ClassManager.registerAlias('widget.tbfill',       ToolbarFill as any);
+ClassManager.registerAlias('widget.tbspacer',     ToolbarSpacer as any);
+ClassManager.registerAlias('widget.tbtext',       ToolbarTextItem as any);

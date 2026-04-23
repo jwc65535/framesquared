@@ -4,6 +4,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Component } from '@framesquared/component';
 import { Panel } from '../src/panel/Panel.js';
+import { Ext } from '@framesquared/core';
+import '../src/toolbar/Toolbar.js'; // trigger ClassManager registrations
 
 // ResizeObserver mock
 class MockRO {
@@ -563,5 +565,85 @@ describe('Additional Panel coverage', () => {
     // iconEl won't exist if iconCls is empty at build time
     // but setIconCls should handle gracefully
     expect(() => p.setIconCls('fa-new')).not.toThrow();
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// tbar / bbar / lbar / rbar shorthands
+// ═══════════════════════════════════════════════════════════════════════════
+
+describe('tbar / bbar shorthand toolbars', () => {
+  it('tbar creates a toolbar docked to top', () => {
+    const p = panel({ title: 'T', tbar: ['File', 'Edit'] });
+    const docked = p.getDockedItems();
+    expect(docked.length).toBe(1);
+    expect(docked[0].el!.classList.contains('x-toolbar')).toBe(true);
+    expect(docked[0].el!.classList.contains('x-docked-top')).toBe(true);
+  });
+
+  it('tbar renders its string items as text spans', () => {
+    const p = panel({ title: 'T', tbar: ['File', 'Edit'] });
+    const body = p.getDockedItems()[0].el!;
+    expect(body.textContent).toContain('File');
+    expect(body.textContent).toContain('Edit');
+  });
+
+  it('bbar creates a toolbar docked to bottom', () => {
+    const p = panel({ title: 'T', bbar: ['OK', 'Cancel'] });
+    const docked = p.getDockedItems();
+    expect(docked.length).toBe(1);
+    expect(docked[0].el!.classList.contains('x-docked-bottom')).toBe(true);
+  });
+
+  it('tbar tbseparator xtype creates a separator element', () => {
+    const p = panel({ title: 'T', tbar: ['A', { xtype: 'tbseparator' }, 'B'] });
+    const toolbar = p.getDockedItems()[0].el!;
+    const sep = toolbar.querySelector('.x-toolbar-separator');
+    expect(sep).not.toBeNull();
+  });
+
+  it('tbar fill (->) via -> string creates fill element', () => {
+    const p = panel({ title: 'T', tbar: ['Left', '->', 'Right'] });
+    const toolbar = p.getDockedItems()[0].el!;
+    const fill = toolbar.querySelector('.x-toolbar-fill');
+    expect(fill).not.toBeNull();
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Ext.create / Ext.getBody
+// ═══════════════════════════════════════════════════════════════════════════
+
+describe('Ext.create and Ext.getBody', () => {
+  it('Ext.getBody returns document.body', () => {
+    expect(Ext.getBody()).toBe(document.body);
+  });
+
+  it('Ext.create("Ext.panel.Panel") creates a Panel', () => {
+    const p = Ext.create<Panel>('Ext.panel.Panel', {
+      title: 'Created',
+      renderTo: document.body,
+    });
+    expect(p).toBeInstanceOf(Panel);
+    expect(p.getTitle()).toBe('Created');
+    p.destroy();
+  });
+
+  it('Ext.create with tbar creates a docked toolbar', () => {
+    const p = Ext.create<Panel>('Ext.panel.Panel', {
+      title: 'TB',
+      width: 300,
+      height: 200,
+      tbar: ['Item 1', { xtype: 'tbseparator' }, 'Item 2'],
+      renderTo: Ext.getBody(),
+    });
+    expect(p.getDockedItems().length).toBe(1);
+    const toolbar = p.getDockedItems()[0].el!;
+    expect(toolbar.querySelector('.x-toolbar-separator')).not.toBeNull();
+    p.destroy();
+  });
+
+  it('Ext.create throws for unknown class name', () => {
+    expect(() => Ext.create('NoSuch.Class')).toThrow('Ext.create: no class registered');
   });
 });

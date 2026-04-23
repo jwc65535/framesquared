@@ -16,6 +16,8 @@
 import type { Component } from '@framesquared/component';
 import { Container } from '@framesquared/component';
 import type { ContainerConfig } from '@framesquared/component';
+import { ClassManager } from '@framesquared/core';
+import { Toolbar } from '../toolbar/Toolbar.js';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -47,6 +49,10 @@ export interface PanelConfig extends ContainerConfig {
   frame?: boolean;
   border?: boolean;
   dockedItems?: Component[];
+  tbar?: unknown[];
+  bbar?: unknown[];
+  lbar?: unknown[];
+  rbar?: unknown[];
 }
 
 // ---------------------------------------------------------------------------
@@ -175,6 +181,12 @@ export class Panel extends Container {
     if (items && (items as any[]).length > 0) {
       this.add(...(items as any[]));
     }
+
+    // -- tbar / bbar / lbar / rbar shorthands --
+    if (cfg.tbar) this.addDocked(new Toolbar({ dock: 'top'    as any, items: cfg.tbar } as any));
+    if (cfg.bbar) this.addDocked(new Toolbar({ dock: 'bottom' as any, items: cfg.bbar } as any));
+    if (cfg.lbar) this.addDocked(new Toolbar({ dock: 'left'   as any, vertical: true, items: cfg.lbar } as any));
+    if (cfg.rbar) this.addDocked(new Toolbar({ dock: 'right'  as any, vertical: true, items: cfg.rbar } as any));
 
     // -- Docked items from config --
     if (cfg.dockedItems) {
@@ -486,3 +498,10 @@ export class Panel extends Container {
     return [...this._dockedItems];
   }
 }
+
+// ---------------------------------------------------------------------------
+// xtype / ClassManager registration
+// ---------------------------------------------------------------------------
+
+ClassManager.register('Ext.panel.Panel', Panel as any);
+ClassManager.registerAlias('widget.panel', Panel as any);

@@ -166,3 +166,6 @@ export { arSA } from './locale/bundles/ar-SA.js';
 
 // Security / Sanitization
 export { Sanitizer } from './util/Sanitizer.js';
+
+// ExtJS-compatible global namespace
+export { Ext } from './Ext.js';
