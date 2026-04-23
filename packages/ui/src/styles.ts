@@ -536,10 +536,11 @@ const STYLES = `
 }
 .x-menu-item-arrow::before { content: '›'; font-size: 16px; }
 
-.x-menu-item-separator {
-  height: 1px;
-  background: var(--ext-color-border, rgba(0,0,0,0.1));
-  margin: var(--x-sp-xs, 4px) 0;
+.x-menu-item-separator, .x-menu-separator {
+  height: 0;
+  border-top: 1px solid var(--ext-color-border, rgba(0, 0, 0, 0.18));
+  margin: 6px 0;
+  pointer-events: none;
 }
 
 .x-menu-check-item .x-menu-item-check {

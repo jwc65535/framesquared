@@ -17,10 +17,11 @@ export class MenuSeparator extends Component {
     const el = this.el!;
     el.classList.add('x-menu-separator');
     el.setAttribute('role', 'separator');
-    el.style.height = '1px';
-    el.style.margin = '5px 0';
-    el.style.backgroundColor = 'rgba(0, 0, 0, 0.15)';
-    el.style.overflow = 'hidden';
+    // border-top is more reliable than height+backgroundColor in a flex column.
+    // Inline styles act as a fallback when the stylesheet has not loaded.
+    el.style.height = '0';
+    el.style.margin = '6px 0';
+    el.style.borderTop = '1px solid rgba(0, 0, 0, 0.18)';
     el.style.pointerEvents = 'none';
   }
 }
