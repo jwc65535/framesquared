@@ -537,8 +537,11 @@ const STYLES = `
 .x-menu-item-arrow::before { content: '›'; font-size: 16px; }
 
 .x-menu-item-separator, .x-menu-separator {
+  display: block;
   height: 0;
-  border-top: 1px solid var(--ext-color-border, rgba(0, 0, 0, 0.18));
+  /* Fixed colour — --ext-color-border resolves to #e0e0e0 in ModernTheme
+     (near-white on white), which makes the separator invisible. */
+  border-top: 1px solid rgba(0, 0, 0, 0.40);
   margin: 6px 0;
   pointer-events: none;
 }

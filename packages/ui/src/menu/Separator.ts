@@ -17,11 +17,12 @@ export class MenuSeparator extends Component {
     const el = this.el!;
     el.classList.add('x-menu-separator');
     el.setAttribute('role', 'separator');
-    // border-top is more reliable than height+backgroundColor in a flex column.
-    // Inline styles act as a fallback when the stylesheet has not loaded.
+    el.style.display = 'block';
     el.style.height = '0';
     el.style.margin = '6px 0';
-    el.style.borderTop = '1px solid rgba(0, 0, 0, 0.18)';
+    // Use a fixed colour rather than --ext-color-border, which resolves to
+    // #e0e0e0 in ModernTheme — nearly white-on-white and invisible.
+    el.style.borderTop = '1px solid rgba(0, 0, 0, 0.40)';
     el.style.pointerEvents = 'none';
   }
 }
