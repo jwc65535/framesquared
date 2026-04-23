@@ -85,14 +85,20 @@ export class Resizable {
       handle.style.cursor = HANDLE_CURSORS[dir] ?? 'default';
       this.positionHandle(handle, dir);
 
-      // Capture baseBg AFTER positionHandle has set the background.
       // Hover brightens the handle so it is clearly discoverable.
-      const baseBg = handle.style.background;
+      // SE uses a text glyph (transparent bg), so tint its color instead.
+      const baseBg    = handle.style.background;
+      const baseColor = handle.style.color;
       handle.addEventListener('mouseenter', () => {
-        handle.style.background = 'rgba(0, 0, 0, 0.55)';
+        if (dir === 'se') {
+          handle.style.color = 'rgba(0, 0, 0, 0.85)';
+        } else {
+          handle.style.background = 'rgba(0, 0, 0, 0.55)';
+        }
       });
       handle.addEventListener('mouseleave', () => {
         handle.style.background = baseBg;
+        handle.style.color = baseColor;
       });
 
       handle.addEventListener('pointerdown', (e) => this.onHandleDown(e, dir));
@@ -108,9 +114,18 @@ export class Resizable {
     handle.style.height = size;
 
     if (dir === 'se') {
-      // Classic bottom-right triangle — universally recognised resize indicator.
-      handle.style.background = 'rgba(0, 0, 0, 0.45)';
-      handle.style.clipPath = 'polygon(100% 0, 100% 100%, 0 100%)';
+      // Resize grip: three diagonal dots, universally recognised.
+      handle.style.width = '20px';
+      handle.style.height = '20px';
+      handle.style.background = 'transparent';
+      handle.style.display = 'flex';
+      handle.style.alignItems = 'flex-end';
+      handle.style.justifyContent = 'flex-end';
+      handle.style.fontSize = '18px';
+      handle.style.lineHeight = '1';
+      handle.style.color = 'rgba(0, 0, 0, 0.55)';
+      handle.style.userSelect = 'none';
+      handle.textContent = '⠿';
     } else if (isCorner) {
       handle.style.background = 'rgba(0, 0, 0, 0.35)';
     } else {

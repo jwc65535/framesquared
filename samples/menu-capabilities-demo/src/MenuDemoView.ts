@@ -221,10 +221,20 @@ export function createMenuDemoView(host: Element): MenuDemoViewRefs {
   // Rendered into the content panel body with explicit dimensions so that
   // Resizable (wired by Controller) can read startW/startH from el.style.
   const resizablePanel = new Panel({
-    renderTo: contentPanel.getBodyEl(),
-    title:    'Resizable Panel — drag the SE corner or edges',
-    width:    300,
-    height:   150,
+    renderTo:  contentPanel.getBodyEl(),
+    title:     'Resizable Panel',
+    width:     300,
+    height:    160,
+    bodyStyle: { background: '#f0f4ff', padding: '12px' },
+    html: `
+      <div style="color:#444;font-size:13px;line-height:1.6;">
+        <strong>Drag to resize:</strong>
+        <ul style="margin:6px 0 0 16px;padding:0;">
+          <li>Right edge — drag left/right</li>
+          <li>Bottom edge — drag up/down</li>
+          <li>Corner grip ↘ — drag freely</li>
+        </ul>
+      </div>`,
   });
 
   const resizeCount = { value: 0 };
