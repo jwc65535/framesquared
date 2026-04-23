@@ -13,6 +13,7 @@ export default defineConfig({
       '@framesquared/ui':        path.resolve(pkgRoot, 'ui/src/index.ts'),
       '@framesquared/form':      path.resolve(pkgRoot, 'form/src/index.ts'),
       '@framesquared/app':       path.resolve(pkgRoot, 'app/src/index.ts'),
+      '@framesquared/dd':        path.resolve(pkgRoot, 'dd/src/index.ts'),
     },
   },
 });

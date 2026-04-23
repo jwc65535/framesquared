@@ -14,6 +14,7 @@
 
 import { Controller } from '@framesquared/ui';
 import { MenuManager } from '@framesquared/ui';
+import { Resizable } from '@framesquared/dd';
 import type { MenuDemoViewRefs } from './MenuDemoView.js';
 
 export class MenuDemoController extends Controller {
@@ -63,6 +64,28 @@ export class MenuDemoController extends Controller {
     });
     r.showPreviewItem.on('checkchange', (_item: unknown, checked: boolean) => {
       this.onTogglePanel('Preview', checked);
+    });
+
+    // Resizable panel — handle wiring is a business-logic concern because the
+    // callbacks update shared state (resizeCount, lastResizeW/H, statusDisplay).
+    new Resizable({
+      el:        r.resizablePanel.el!,
+      handles:   's e se',
+      minWidth:  150,
+      maxWidth:  600,
+      minHeight: 80,
+      maxHeight: 400,
+      onResizeStart: () => {
+        r.statusDisplay.setText('Resizing…');
+      },
+      onResize: (w, h) => {
+        r.resizeCount.value++;
+        r.lastResizeW.value = w;
+        r.lastResizeH.value = h;
+      },
+      onResizeEnd: () => {
+        r.statusDisplay.setText(`Resized to ${r.lastResizeW.value}×${r.lastResizeH.value}`);
+      },
     });
   }
 

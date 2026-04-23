@@ -12,6 +12,7 @@
  *   - Dynamic enable/disable via Component.enable() / disable()
  *   - Context menu triggered by right-click on a content area
  *   - Toolbar embedding of menu trigger buttons
+ *   - Resizable panel via Resizable from @framesquared/dd (handles wired by Controller)
  *
  * The View is intentionally handler-free: all business logic belongs to
  * MenuDemoController so that the view can be tested in isolation.
@@ -73,6 +74,12 @@ export interface MenuDemoViewRefs {
 
   // ── Content area ─────────────────────────────────────────────────────────
   contentPanel: Panel;
+
+  // ── Resizable panel ───────────────────────────────────────────────────────
+  resizablePanel: Panel;
+  resizeCount:    { value: number };
+  lastResizeW:    { value: number };
+  lastResizeH:    { value: number };
 }
 
 // ---------------------------------------------------------------------------
@@ -210,6 +217,20 @@ export function createMenuDemoView(host: Element): MenuDemoViewRefs {
     contextMenu.showAt(me.clientX, me.clientY);
   });
 
+  // ── Resizable panel ───────────────────────────────────────────────────────
+  // Rendered into the content panel body with explicit dimensions so that
+  // Resizable (wired by Controller) can read startW/startH from el.style.
+  const resizablePanel = new Panel({
+    renderTo: contentPanel.getBodyEl(),
+    title:    'Resizable Panel — drag the SE corner or edges',
+    width:    300,
+    height:   150,
+  });
+
+  const resizeCount = { value: 0 };
+  const lastResizeW = { value: 300 };
+  const lastResizeH = { value: 150 };
+
   return {
     editBtn, viewBtn, statusDisplay,
     editMenu, newItem, saveItem, undoItem, redoItem, copyItem, pasteItem,
@@ -218,6 +239,7 @@ export function createMenuDemoView(host: Element): MenuDemoViewRefs {
     showSidebarItem, showPreviewItem,
     contextMenu, ctxCopyItem, ctxCutItem, ctxPasteItem, ctxSelectAllItem, ctxPropertiesItem,
     contentPanel,
+    resizablePanel, resizeCount, lastResizeW, lastResizeH,
   };
 }
 

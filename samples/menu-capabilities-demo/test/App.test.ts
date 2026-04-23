@@ -479,3 +479,94 @@ describe('Keyboard interaction', () => {
     expect(refs.contextMenu.isVisible()).toBe(false);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Resizable panel — §2 "Ext.panel.Resizer / Resizable"
+// ---------------------------------------------------------------------------
+
+// jsdom 24 does not ship PointerEvent — polyfill it once for this suite.
+if (typeof PointerEvent === 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {
+    readonly pointerId: number;
+    constructor(type: string, init?: PointerEventInit) {
+      super(type, init as MouseEventInit);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.pointerId = (init as any)?.pointerId ?? 0;
+    }
+  };
+}
+
+function firePointer(target: EventTarget, type: string, opts: PointerEventInit = {}): void {
+  target.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, ...opts }));
+}
+
+describe('Resizable panel', () => {
+  it('resizablePanel is rendered inside the content panel body', () => {
+    expect(refs.resizablePanel.el).toBeTruthy();
+    expect(refs.contentPanel.getBodyEl().contains(refs.resizablePanel.el!)).toBe(true);
+  });
+
+  it('SE resize handle is present', () => {
+    expect(refs.resizablePanel.el!.querySelector('.x-resizable-handle-se')).toBeTruthy();
+  });
+
+  it('E resize handle is present', () => {
+    expect(refs.resizablePanel.el!.querySelector('.x-resizable-handle-e')).toBeTruthy();
+  });
+
+  it('S resize handle is present', () => {
+    expect(refs.resizablePanel.el!.querySelector('.x-resizable-handle-s')).toBeTruthy();
+  });
+
+  it('SE handle has nwse-resize cursor', () => {
+    const handle = refs.resizablePanel.el!.querySelector('.x-resizable-handle-se') as HTMLElement;
+    expect(handle.style.cursor).toBe('nwse-resize');
+  });
+
+  it('E handle has ew-resize cursor', () => {
+    const handle = refs.resizablePanel.el!.querySelector('.x-resizable-handle-e') as HTMLElement;
+    expect(handle.style.cursor).toBe('ew-resize');
+  });
+
+  it('dragging SE handle increments resizeCount', () => {
+    const handle = refs.resizablePanel.el!.querySelector('.x-resizable-handle-se')!;
+    firePointer(handle,    'pointerdown', { clientX: 0,  clientY: 0  });
+    firePointer(document,  'pointermove', { clientX: 50, clientY: 30 });
+    firePointer(document,  'pointerup'                                );
+    expect(refs.resizeCount.value).toBe(1);
+  });
+
+  it('dragging SE handle updates lastResizeW and lastResizeH', () => {
+    const handle = refs.resizablePanel.el!.querySelector('.x-resizable-handle-se')!;
+    firePointer(handle,   'pointerdown', { clientX: 0,  clientY: 0  });
+    firePointer(document, 'pointermove', { clientX: 50, clientY: 30 });
+    firePointer(document, 'pointerup'                                );
+    expect(refs.lastResizeW.value).toBeGreaterThan(300);
+    expect(refs.lastResizeH.value).toBeGreaterThan(150);
+  });
+
+  it('status shows "Resized to…" after drag ends', () => {
+    const handle = refs.resizablePanel.el!.querySelector('.x-resizable-handle-se')!;
+    firePointer(handle,   'pointerdown', { clientX: 0,  clientY: 0  });
+    firePointer(document, 'pointermove', { clientX: 50, clientY: 30 });
+    firePointer(document, 'pointerup'                                );
+    expect(refs.statusDisplay.el!.textContent).toContain('Resized to');
+  });
+
+  it('resizablePanel width is clamped at maxWidth (600)', () => {
+    const handle = refs.resizablePanel.el!.querySelector('.x-resizable-handle-se')!;
+    firePointer(handle,   'pointerdown', { clientX: 0,   clientY: 0 });
+    firePointer(document, 'pointermove', { clientX: 9999, clientY: 0 });
+    firePointer(document, 'pointerup'                                );
+    expect(refs.lastResizeW.value).toBeLessThanOrEqual(600);
+  });
+
+  it('resizablePanel height is clamped at minHeight (80)', () => {
+    const handle = refs.resizablePanel.el!.querySelector('.x-resizable-handle-se')!;
+    firePointer(handle,   'pointerdown', { clientX: 0, clientY: 0     });
+    firePointer(document, 'pointermove', { clientX: 0, clientY: -9999 });
+    firePointer(document, 'pointerup'                                  );
+    expect(refs.lastResizeH.value).toBeGreaterThanOrEqual(80);
+  });
+});
