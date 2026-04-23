@@ -70,9 +70,12 @@ export class Resizable {
   // -----------------------------------------------------------------------
 
   private createHandles(): void {
-    // Ensure el is positioned
+    // Ensure el is positioned and not overflow:hidden — panels use
+    // overflow:hidden + border-radius which clips absolute children at the
+    // corners, making edge/corner handles invisible.
     const pos = getComputedStyle(this.el).position;
     if (pos === 'static' || pos === '') this.el.style.position = 'relative';
+    this.el.style.overflow = 'visible';
 
     for (const dir of this.handles) {
       const handle = document.createElement('div');
@@ -82,10 +85,11 @@ export class Resizable {
       handle.style.cursor = HANDLE_CURSORS[dir] ?? 'default';
       this.positionHandle(handle, dir);
 
-      // Hover — brighten handle on mouse-over so it is clearly discoverable.
-      const baseBg = handle.style.background || handle.style.backgroundColor;
+      // Capture baseBg AFTER positionHandle has set the background.
+      // Hover brightens the handle so it is clearly discoverable.
+      const baseBg = handle.style.background;
       handle.addEventListener('mouseenter', () => {
-        handle.style.background = 'rgba(0, 0, 0, 0.30)';
+        handle.style.background = 'rgba(0, 0, 0, 0.55)';
       });
       handle.addEventListener('mouseleave', () => {
         handle.style.background = baseBg;
@@ -99,25 +103,19 @@ export class Resizable {
 
   private positionHandle(handle: HTMLElement, dir: string): void {
     const isCorner = ['ne', 'nw', 'se', 'sw'].includes(dir);
-    const size = isCorner ? '16px' : '8px';
+    const size = isCorner ? '16px' : '10px';
     handle.style.width = size;
     handle.style.height = size;
 
-    // Corner handles get a diagonal grip-stripe pattern; edge handles get a
-    // subtle flat strip so they are visible but don't compete with content.
     if (dir === 'se') {
-      handle.style.background = [
-        'repeating-linear-gradient(',
-        '  -45deg,',
-        '  transparent 0px, transparent 3px,',
-        '  rgba(0,0,0,0.28) 3px, rgba(0,0,0,0.28) 4px',
-        ')',
-      ].join('');
-      handle.style.borderRadius = '0 0 3px 0';
+      // Classic bottom-right triangle — universally recognised resize indicator.
+      handle.style.background = 'rgba(0, 0, 0, 0.45)';
+      handle.style.clipPath = 'polygon(100% 0, 100% 100%, 0 100%)';
     } else if (isCorner) {
-      handle.style.background = 'rgba(0, 0, 0, 0.18)';
+      handle.style.background = 'rgba(0, 0, 0, 0.35)';
     } else {
-      handle.style.background = 'rgba(0, 0, 0, 0.10)';
+      // Edge strips: visible but not distracting.
+      handle.style.background = 'rgba(0, 0, 0, 0.25)';
     }
 
     switch (dir) {
