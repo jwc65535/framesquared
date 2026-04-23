@@ -12,7 +12,8 @@
  *   - Dynamic enable/disable via Component.enable() / disable()
  *   - Context menu triggered by right-click on a content area
  *   - Toolbar embedding of menu trigger buttons
- *   - Resizable panel via Resizable from @framesquared/dd (handles wired by Controller)
+ *   - Ext.panel.Resizer  applied to a Panel  (handles wired by Controller)
+ *   - Ext.resizer.Resizer applied to a Menu  (wired by Controller on first show)
  *
  * The View is intentionally handler-free: all business logic belongs to
  * MenuDemoController so that the view can be tested in isolation.
@@ -29,12 +30,17 @@ import {
   CheckItem,
   Toolbar,
   Panel,
-  Viewport,
 } from '@framesquared/ui';
 
 // ---------------------------------------------------------------------------
-// Public interface
+// Public types
 // ---------------------------------------------------------------------------
+
+/**
+ * Boxed mutable number: allows Controller resize callbacks to write back
+ * to a shared reference that tests can also read without polling the DOM.
+ */
+export type MutableNumber = { value: number };
 
 export interface MenuDemoViewRefs {
   // ── Toolbar ───────────────────────────────────────────────────────────────
@@ -75,11 +81,11 @@ export interface MenuDemoViewRefs {
   // ── Content area ─────────────────────────────────────────────────────────
   contentPanel: Panel;
 
-  // ── Resizable panel ───────────────────────────────────────────────────────
+  // ── Resizable panel — state written by Controller resize callbacks ────────
   resizablePanel: Panel;
-  resizeCount:    { value: number };
-  lastResizeW:    { value: number };
-  lastResizeH:    { value: number };
+  resizeCount:    MutableNumber;
+  lastResizeW:    MutableNumber;
+  lastResizeH:    MutableNumber;
 }
 
 // ---------------------------------------------------------------------------
@@ -104,6 +110,8 @@ export function createMenuDemoView(host: Element): MenuDemoViewRefs {
 
   // undoItem starts disabled; Controller enables it and updates its text after Save.
   const undoItem = new MenuItem({ text: 'Undo', disabled: true });
+  // redoItem is always disabled in this demo — shown as an example of a
+  // permanently-disabled item.
   const redoItem = new MenuItem({ text: 'Redo', disabled: true });
 
   const copyItem  = new MenuItem({ text: 'Copy'  });
@@ -218,8 +226,7 @@ export function createMenuDemoView(host: Element): MenuDemoViewRefs {
   });
 
   // ── Resizable panel ───────────────────────────────────────────────────────
-  // Rendered into the content panel body with explicit dimensions so that
-  // Resizable (wired by Controller) can read startW/startH from el.style.
+  // Rendered with explicit dimensions so Controller's Resizer can read them.
   const resizablePanel = new Panel({
     renderTo:  contentPanel.getBodyEl(),
     title:     'Resizable Panel',
@@ -237,9 +244,9 @@ export function createMenuDemoView(host: Element): MenuDemoViewRefs {
       </div>`,
   });
 
-  const resizeCount = { value: 0 };
-  const lastResizeW = { value: 300 };
-  const lastResizeH = { value: 150 };
+  const resizeCount: MutableNumber = { value: 0   };
+  const lastResizeW: MutableNumber = { value: 300 };
+  const lastResizeH: MutableNumber = { value: 150 };
 
   return {
     editBtn, viewBtn, statusDisplay,
@@ -251,14 +258,4 @@ export function createMenuDemoView(host: Element): MenuDemoViewRefs {
     contentPanel,
     resizablePanel, resizeCount, lastResizeW, lastResizeH,
   };
-}
-
-// ---------------------------------------------------------------------------
-// Viewport entry point — used by src/App.ts
-// ---------------------------------------------------------------------------
-
-export function createViewport(): Viewport {
-  const vp = new Viewport({ layout: { type: 'vbox', align: 'stretch' } });
-  createMenuDemoView(vp.getBodyEl());
-  return vp;
 }

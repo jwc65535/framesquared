@@ -9,11 +9,29 @@
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
 import '@framesquared/layout';
 import { Application } from '@framesquared/app';
 import { createMenuDemoView, type MenuDemoViewRefs } from '../src/MenuDemoView.js';
 import { MenuDemoController } from '../src/MenuDemoController.js';
+
+// ---------------------------------------------------------------------------
+// jsdom polyfill — PointerEvent is absent from jsdom 24
+// ---------------------------------------------------------------------------
+
+beforeAll(() => {
+  if (typeof PointerEvent === 'undefined') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {
+      readonly pointerId: number;
+      constructor(type: string, init?: PointerEventInit) {
+        super(type, init as MouseEventInit);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.pointerId = (init as any)?.pointerId ?? 0;
+      }
+    };
+  }
+});
 
 // ---------------------------------------------------------------------------
 // Setup / teardown
@@ -35,6 +53,29 @@ afterEach(() => {
   document.body.innerHTML = '';
   Application.clearInstance();
 });
+
+// ---------------------------------------------------------------------------
+// Test helpers
+// ---------------------------------------------------------------------------
+
+function showEditMenu(): void {
+  refs.editBtn.el!.click();
+}
+
+function showContextMenu(clientX = 50, clientY = 50): void {
+  refs.contentPanel.getBodyEl().dispatchEvent(
+    new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX, clientY }),
+  );
+}
+
+function showFontSizeMenu(): void {
+  refs.viewBtn.el!.click();
+  refs.fontSizeItem.el!.click();
+}
+
+function firePointer(target: EventTarget, type: string, opts: PointerEventInit = {}): void {
+  target.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, ...opts }));
+}
 
 // ---------------------------------------------------------------------------
 // Application lifecycle
@@ -98,12 +139,12 @@ describe('Standard menu items', () => {
   });
 
   it('clicking Edit button shows the Edit menu', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     expect(refs.editMenu.isVisible()).toBe(true);
   });
 
   it('Edit menu items all have elements after the menu is shown', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     expect(refs.newItem.el).toBeTruthy();
     expect(refs.saveItem.el).toBeTruthy();
     expect(refs.undoItem.el).toBeTruthy();
@@ -112,17 +153,17 @@ describe('Standard menu items', () => {
   });
 
   it('saveItem has an icon element', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     expect(refs.saveItem.el!.querySelector('.x-menu-item-icon')).toBeTruthy();
   });
 
   it('newItem has an icon element', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     expect(refs.newItem.el!.querySelector('.x-menu-item-icon')).toBeTruthy();
   });
 
   it('clicking New fires the handler and updates status', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     refs.newItem.el!.click();
     expect(refs.statusDisplay.el!.textContent).toContain('New note created');
   });
@@ -134,31 +175,31 @@ describe('Standard menu items', () => {
 
 describe('Separators and MenuHeaders', () => {
   it('Edit menu contains separators', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     const seps = refs.editMenu.el!.querySelectorAll('.x-menu-separator');
     expect(seps.length).toBeGreaterThanOrEqual(2);
   });
 
   it('separators have role="separator"', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     const sep = refs.editMenu.el!.querySelector('[role="separator"]');
     expect(sep).toBeTruthy();
   });
 
   it('Edit menu contains section headers', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     const headers = refs.editMenu.el!.querySelectorAll('.x-menu-header');
     expect(headers.length).toBeGreaterThanOrEqual(3); // Document, History, Clipboard
   });
 
   it('headers have role="presentation"', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     const header = refs.editMenu.el!.querySelector('.x-menu-header');
     expect(header?.getAttribute('role')).toBe('presentation');
   });
 
-  it('first header text is "DOCUMENT" (uppercased by CSS)', () => {
-    refs.editBtn.el!.click();
+  it('first header text is "Document"', () => {
+    showEditMenu();
     const headerText = refs.editMenu.el!.querySelector('.x-menu-header-text');
     expect(headerText?.textContent).toBe('Document');
   });
@@ -194,27 +235,27 @@ describe('Dynamic interaction — disable / enable', () => {
   });
 
   it('clicking Copy enables pasteItem', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     refs.copyItem.el!.click();
     expect(refs.pasteItem.isDisabled()).toBe(false);
   });
 
   it('clicking Copy enables ctxPasteItem (shared clipboard state)', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     refs.copyItem.el!.click();
     expect(refs.ctxPasteItem.isDisabled()).toBe(false);
   });
 
   it('pasteItem click when enabled fires handler and updates status', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     refs.copyItem.el!.click();
-    refs.editBtn.el!.click();
+    showEditMenu();
     refs.pasteItem.el!.click();
     expect(refs.statusDisplay.el!.textContent).toContain('Pasted');
   });
 
   it('clicking disabled undoItem does nothing', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     refs.undoItem.el!.click();
     // Status stays at "Ready" — disabled item click is a no-op
     expect(refs.statusDisplay.el!.textContent).toContain('Ready');
@@ -223,37 +264,37 @@ describe('Dynamic interaction — disable / enable', () => {
 
 describe('Dynamic interaction — setText()', () => {
   it('undoItem text starts as "Undo"', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     expect(refs.undoItem.el!.textContent).toContain('Undo');
   });
 
   it('after Save, undoItem is enabled', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     refs.saveItem.el!.click();
     expect(refs.undoItem.isDisabled()).toBe(false);
   });
 
   it('after Save, undoItem text changes to "Undo: Save"', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     refs.saveItem.el!.click();
-    refs.editBtn.el!.click();
+    showEditMenu();
     expect(refs.undoItem.el!.textContent).toContain('Undo: Save');
   });
 
   it('after Undo, undoItem text resets to "Undo"', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     refs.saveItem.el!.click();
-    refs.editBtn.el!.click();
+    showEditMenu();
     refs.undoItem.el!.click();
-    refs.editBtn.el!.click();
+    showEditMenu();
     expect(refs.undoItem.el!.textContent).toContain('Undo');
     expect(refs.undoItem.el!.textContent).not.toContain('Undo: Save');
   });
 
   it('after Undo, undoItem is disabled again', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     refs.saveItem.el!.click();
-    refs.editBtn.el!.click();
+    showEditMenu();
     refs.undoItem.el!.click();
     expect(refs.undoItem.isDisabled()).toBe(true);
   });
@@ -347,8 +388,7 @@ describe('Nested sub-menus', () => {
   });
 
   it('sub-menu contains all four size options', () => {
-    refs.viewBtn.el!.click();
-    refs.fontSizeItem.el!.click();
+    showFontSizeMenu();
     expect(refs.fontSizeSmall.el).toBeTruthy();
     expect(refs.fontSizeMedium.el).toBeTruthy();
     expect(refs.fontSizeLarge.el).toBeTruthy();
@@ -356,8 +396,7 @@ describe('Nested sub-menus', () => {
   });
 
   it('clicking a sub-menu item fires its handler and updates status', () => {
-    refs.viewBtn.el!.click();
-    refs.fontSizeItem.el!.click();
+    showFontSizeMenu();
     refs.fontSizeLarge.el!.click();
     expect(refs.statusDisplay.el!.textContent).toContain('Font: Large');
   });
@@ -371,8 +410,7 @@ describe('Nested sub-menus', () => {
     ] as const;
 
     for (const [item, expected] of sizes) {
-      refs.viewBtn.el!.click();
-      refs.fontSizeItem.el!.click();
+      showFontSizeMenu();
       item.el!.click();
       expect(refs.statusDisplay.el!.textContent).toContain(expected);
     }
@@ -389,17 +427,12 @@ describe('Context menu', () => {
   });
 
   it('right-click on content panel body shows context menu', () => {
-    const event = new MouseEvent('contextmenu', {
-      bubbles: true, cancelable: true, clientX: 50, clientY: 50,
-    });
-    refs.contentPanel.getBodyEl().dispatchEvent(event);
+    showContextMenu(50, 50);
     expect(refs.contextMenu.isVisible()).toBe(true);
   });
 
   it('context menu items are rendered after show', () => {
-    refs.contentPanel.getBodyEl().dispatchEvent(
-      new MouseEvent('contextmenu', { bubbles: true }),
-    );
+    showContextMenu();
     expect(refs.ctxCopyItem.el).toBeTruthy();
     expect(refs.ctxCutItem.el).toBeTruthy();
     expect(refs.ctxPasteItem.el).toBeTruthy();
@@ -412,41 +445,31 @@ describe('Context menu', () => {
   });
 
   it('ctxCutItem enables ctxPasteItem (shared clipboard state)', () => {
-    refs.contentPanel.getBodyEl().dispatchEvent(
-      new MouseEvent('contextmenu', { bubbles: true }),
-    );
+    showContextMenu();
     refs.ctxCutItem.el!.click();
     expect(refs.ctxPasteItem.isDisabled()).toBe(false);
   });
 
   it('ctxCutItem updates status', () => {
-    refs.contentPanel.getBodyEl().dispatchEvent(
-      new MouseEvent('contextmenu', { bubbles: true }),
-    );
+    showContextMenu();
     refs.ctxCutItem.el!.click();
     expect(refs.statusDisplay.el!.textContent).toContain('Cut to clipboard');
   });
 
   it('ctxSelectAllItem updates status', () => {
-    refs.contentPanel.getBodyEl().dispatchEvent(
-      new MouseEvent('contextmenu', { bubbles: true }),
-    );
+    showContextMenu();
     refs.ctxSelectAllItem.el!.click();
     expect(refs.statusDisplay.el!.textContent).toContain('All selected');
   });
 
   it('ctxPropertiesItem updates status', () => {
-    refs.contentPanel.getBodyEl().dispatchEvent(
-      new MouseEvent('contextmenu', { bubbles: true }),
-    );
+    showContextMenu();
     refs.ctxPropertiesItem.el!.click();
     expect(refs.statusDisplay.el!.textContent).toContain('Note Properties');
   });
 
   it('context menu has a separator', () => {
-    refs.contentPanel.getBodyEl().dispatchEvent(
-      new MouseEvent('contextmenu', { bubbles: true }),
-    );
+    showContextMenu();
     expect(refs.contextMenu.el!.querySelectorAll('.x-menu-separator').length)
       .toBeGreaterThanOrEqual(1);
   });
@@ -458,7 +481,7 @@ describe('Context menu', () => {
 
 describe('Keyboard interaction', () => {
   it('Escape key closes the Edit menu', () => {
-    refs.editBtn.el!.click();
+    showEditMenu();
     expect(refs.editMenu.isVisible()).toBe(true);
 
     refs.editMenu.el!.dispatchEvent(
@@ -468,9 +491,7 @@ describe('Keyboard interaction', () => {
   });
 
   it('Escape key closes the context menu', () => {
-    refs.contentPanel.getBodyEl().dispatchEvent(
-      new MouseEvent('contextmenu', { bubbles: true }),
-    );
+    showContextMenu();
     expect(refs.contextMenu.isVisible()).toBe(true);
 
     refs.contextMenu.el!.dispatchEvent(
@@ -481,25 +502,8 @@ describe('Keyboard interaction', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Resizable panel — §2 "Ext.panel.Resizer / Resizable"
+// Ext.panel.Resizer on resizable panel
 // ---------------------------------------------------------------------------
-
-// jsdom 24 does not ship PointerEvent — polyfill it once for this suite.
-if (typeof PointerEvent === 'undefined') {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (globalThis as any).PointerEvent = class PointerEvent extends MouseEvent {
-    readonly pointerId: number;
-    constructor(type: string, init?: PointerEventInit) {
-      super(type, init as MouseEventInit);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.pointerId = (init as any)?.pointerId ?? 0;
-    }
-  };
-}
-
-function firePointer(target: EventTarget, type: string, opts: PointerEventInit = {}): void {
-  target.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, ...opts }));
-}
 
 describe('Resizable panel', () => {
   it('resizablePanel is rendered inside the content panel body', () => {
@@ -556,30 +560,26 @@ describe('Resizable panel', () => {
 
   it('resizablePanel width is clamped at maxWidth (600)', () => {
     const handle = refs.resizablePanel.el!.querySelector('.x-resizable-handle-se')!;
-    firePointer(handle,   'pointerdown', { clientX: 0,   clientY: 0 });
+    firePointer(handle,   'pointerdown', { clientX: 0,    clientY: 0 });
     firePointer(document, 'pointermove', { clientX: 9999, clientY: 0 });
-    firePointer(document, 'pointerup'                                );
+    firePointer(document, 'pointerup'                                 );
     expect(refs.lastResizeW.value).toBeLessThanOrEqual(600);
   });
 
   it('resizablePanel height is clamped at minHeight (80)', () => {
     const handle = refs.resizablePanel.el!.querySelector('.x-resizable-handle-se')!;
-    firePointer(handle,   'pointerdown', { clientX: 0, clientY: 0     });
-    firePointer(document, 'pointermove', { clientX: 0, clientY: -9999 });
-    firePointer(document, 'pointerup'                                  );
+    firePointer(handle,   'pointerdown', { clientX: 0, clientY: 0      });
+    firePointer(document, 'pointermove', { clientX: 0, clientY: -9999  });
+    firePointer(document, 'pointerup'                                   );
     expect(refs.lastResizeH.value).toBeGreaterThanOrEqual(80);
   });
 });
 
 // ---------------------------------------------------------------------------
-// Ext.resizer.Resizer applied to Edit menu — §3
+// Ext.resizer.Resizer on Edit menu
 // ---------------------------------------------------------------------------
 
 describe('Ext.resizer.Resizer on Edit menu', () => {
-  function showEditMenu(): void {
-    refs.editBtn.el!.click();
-  }
-
   it('SE resize handle appears on editMenu after first show', () => {
     showEditMenu();
     expect(refs.editMenu.el!.querySelector('.x-resizable-handle-se')).toBeTruthy();
@@ -605,7 +605,7 @@ describe('Ext.resizer.Resizer on Edit menu', () => {
     const wBefore = parseInt(el.style.width);
     const hBefore = parseInt(el.style.height);
     const handle = el.querySelector('.x-resizable-handle-se')!;
-    firePointer(handle,   'pointerdown', { clientX: wBefore, clientY: hBefore });
+    firePointer(handle,   'pointerdown', { clientX: wBefore,      clientY: hBefore      });
     firePointer(document, 'pointermove', { clientX: wBefore + 60, clientY: hBefore + 40 });
     firePointer(document, 'pointerup');
     expect(parseInt(el.style.width)).toBeGreaterThan(wBefore);
@@ -618,7 +618,7 @@ describe('Ext.resizer.Resizer on Edit menu', () => {
     const w = parseInt(el.style.width);
     const h = parseInt(el.style.height);
     const handle = el.querySelector('.x-resizable-handle-se')!;
-    firePointer(handle,   'pointerdown', { clientX: w, clientY: h });
+    firePointer(handle,   'pointerdown', { clientX: w,      clientY: h      });
     firePointer(document, 'pointermove', { clientX: w + 30, clientY: h + 20 });
     expect(refs.statusDisplay.el!.textContent).toMatch(/Menu:/);
     firePointer(document, 'pointerup');
