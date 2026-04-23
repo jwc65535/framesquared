@@ -181,6 +181,12 @@ export class Button extends Component {
     // Tooltip
     if (cfg.tooltip) el.setAttribute('title', cfg.tooltip);
 
+    // QuickTip data attributes
+    if (cfg.qtip !== undefined)          el.setAttribute('data-qtip',          String(cfg.qtip));
+    if (cfg.qtitle !== undefined)        el.setAttribute('data-qtitle',        String(cfg.qtitle));
+    if (cfg.qwidth !== undefined)        el.setAttribute('data-qwidth',        String(cfg.qwidth));
+    if (cfg.qdismissdelay !== undefined) el.setAttribute('data-qdismissdelay', String(cfg.qdismissdelay));
+
     // Pressed
     if (this._pressed) el.classList.add('x-btn-pressed');
 

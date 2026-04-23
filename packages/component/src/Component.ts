@@ -54,6 +54,11 @@ export interface ComponentConfig {
   renderTo?: Element | string;
   floating?: boolean;
 
+  qtip?: string;
+  qtitle?: string;
+  qwidth?: number | string;
+  qdismissdelay?: number;
+
   listeners?: Record<string, (...args: any[]) => void>;
   reference?: string;
   [key: string]: unknown;
@@ -287,6 +292,12 @@ export class Component extends Base {
       el.style.position = 'absolute';
       el.classList.add('x-floating');
     }
+
+    // QuickTip data attributes
+    if (cfg.qtip !== undefined)         el.setAttribute('data-qtip',         String(cfg.qtip));
+    if (cfg.qtitle !== undefined)       el.setAttribute('data-qtitle',       String(cfg.qtitle));
+    if (cfg.qwidth !== undefined)       el.setAttribute('data-qwidth',       String(cfg.qwidth));
+    if (cfg.qdismissdelay !== undefined) el.setAttribute('data-qdismissdelay', String(cfg.qdismissdelay));
   }
 
   // -----------------------------------------------------------------------

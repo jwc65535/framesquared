@@ -64,9 +64,10 @@ function onMouseOut(e: MouseEvent): void {
 }
 
 function showQuickTip(target: HTMLElement, _e: MouseEvent): void {
-  const text = target.getAttribute('data-qtip') ?? '';
+  const text  = target.getAttribute('data-qtip') ?? '';
   const title = target.getAttribute('data-qtitle') ?? '';
   const width = target.getAttribute('data-qwidth') ?? '';
+  const dismissDelayAttr = target.getAttribute('data-qdismissdelay') ?? '';
 
   // If tipElement was removed from DOM (e.g. between tests), recreate
   if (tipElement && !document.body.contains(tipElement)) {
@@ -107,6 +108,18 @@ function showQuickTip(target: HTMLElement, _e: MouseEvent): void {
   tipElement.style.top = `${rect.bottom + 5}px`;
   tipElement.style.display = '';
   tipElement.classList.remove('x-tip-hidden');
+
+  // Auto-dismiss after qdismissdelay
+  if (dismissDelayAttr) {
+    const delay = parseInt(dismissDelayAttr, 10);
+    if (delay > 0) {
+      clearHide();
+      hideTimer = setTimeout(() => {
+        hideTimer = null;
+        hideQuickTip();
+      }, delay);
+    }
+  }
 }
 
 function hideQuickTip(): void {
@@ -135,6 +148,14 @@ function clearHide(): void {
 // QuickTip public API
 // ---------------------------------------------------------------------------
 
+export interface QuickTipRegisterConfig {
+  target: Element;
+  text: string;
+  title?: string;
+  width?: number;
+  dismissDelay?: number;
+}
+
 export class QuickTip {
   static init(): void {
     if (!initialized) {
@@ -158,5 +179,20 @@ export class QuickTip {
 
   static isEnabled(): boolean {
     return enabled;
+  }
+
+  static register(config: QuickTipRegisterConfig): void {
+    const { target, text, title, width, dismissDelay } = config;
+    target.setAttribute('data-qtip', text);
+    if (title !== undefined)        target.setAttribute('data-qtitle', title);
+    if (width !== undefined)        target.setAttribute('data-qwidth', String(width));
+    if (dismissDelay !== undefined) target.setAttribute('data-qdismissdelay', String(dismissDelay));
+  }
+
+  static unregister(target: Element): void {
+    target.removeAttribute('data-qtip');
+    target.removeAttribute('data-qtitle');
+    target.removeAttribute('data-qwidth');
+    target.removeAttribute('data-qdismissdelay');
   }
 }

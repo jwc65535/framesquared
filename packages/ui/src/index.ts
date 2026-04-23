@@ -56,7 +56,8 @@ export { MenuManager } from './menu/MenuManager.js';
 // Tooltip
 export { Tooltip } from './tip/Tooltip.js';
 export type { TooltipConfig } from './tip/Tooltip.js';
-export { QuickTip } from './tip/QuickTip.js';
+export { QuickTip, QuickTip as QuickTipManager } from './tip/QuickTip.js';
+export type { QuickTipRegisterConfig } from './tip/QuickTip.js';
 
 // Data Views
 export { DataView } from './view/DataView.js';
