@@ -972,6 +972,50 @@ const STYLES = `
   background: var(--ext-color-primary, #1976d2);
   transform: scale(1.35);
 }
+
+/* ── DataView ─────────────────────────────────────────────────────────────── */
+.x-dataview {
+  overflow: auto;
+}
+
+.x-dataview-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.x-dataview-item {
+  padding: var(--x-sp-sm, 8px) var(--x-sp-md, 16px);
+  border-bottom: 1px solid var(--ext-color-border, rgba(0,0,0,0.08));
+  cursor: pointer;
+  transition: background var(--ext-transition-fast, 0.15s), color var(--ext-transition-fast, 0.15s);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ext-color-text-primary, #212121);
+  user-select: none;
+}
+
+.x-dataview-item:last-child {
+  border-bottom: none;
+}
+
+.x-item-over,
+.x-dataview-item:hover {
+  background: color-mix(in srgb, var(--ext-color-primary, #1976d2) 8%, transparent);
+}
+
+.x-item-selected {
+  background: color-mix(in srgb, var(--ext-color-primary, #1976d2) 14%, transparent);
+  color: var(--ext-color-primary, #1976d2);
+  font-weight: 500;
+}
+
+.x-dataview-empty {
+  padding: var(--x-sp-lg, 24px);
+  text-align: center;
+  color: var(--ext-color-text-secondary, #757575);
+  font-style: italic;
+  font-size: 14px;
+}
 `;
 
 if (typeof document !== 'undefined' && !document.querySelector('[data-x-ui-styles]')) {
