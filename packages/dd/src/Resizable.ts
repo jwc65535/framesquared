@@ -85,20 +85,17 @@ export class Resizable {
       handle.style.cursor = HANDLE_CURSORS[dir] ?? 'default';
       this.positionHandle(handle, dir);
 
-      // Hover brightens the handle so it is clearly discoverable.
-      // SE uses a text glyph (transparent bg), so tint its color instead.
-      const baseBg    = handle.style.background;
-      const baseColor = handle.style.color;
+      // Hover feedback: SE corner darkens, edge strips intensify.
+      const baseBg = handle.style.background;
       handle.addEventListener('mouseenter', () => {
         if (dir === 'se') {
-          handle.style.color = 'rgba(0, 0, 0, 0.85)';
+          handle.style.background = '#1565c0';
         } else {
-          handle.style.background = 'rgba(0, 0, 0, 0.55)';
+          handle.style.background = 'rgba(25, 118, 210, 0.38)';
         }
       });
       handle.addEventListener('mouseleave', () => {
         handle.style.background = baseBg;
-        handle.style.color = baseColor;
       });
 
       handle.addEventListener('pointerdown', (e) => this.onHandleDown(e, dir));
@@ -108,69 +105,69 @@ export class Resizable {
   }
 
   private positionHandle(handle: HTMLElement, dir: string): void {
-    const isCorner = ['ne', 'nw', 'se', 'sw'].includes(dir);
-    const size = isCorner ? '16px' : '10px';
-    handle.style.width = size;
-    handle.style.height = size;
-
     if (dir === 'se') {
-      // Resize grip: three diagonal dots, universally recognised.
-      handle.style.width = '20px';
-      handle.style.height = '20px';
-      handle.style.background = 'transparent';
+      // Bold, primary-coloured corner grip — unmistakably interactive.
+      handle.style.width = '28px';
+      handle.style.height = '28px';
+      handle.style.background = '#1976d2';
+      handle.style.borderRadius = '4px 0 0 0';
       handle.style.display = 'flex';
-      handle.style.alignItems = 'flex-end';
-      handle.style.justifyContent = 'flex-end';
-      handle.style.fontSize = '18px';
-      handle.style.lineHeight = '1';
-      handle.style.color = 'rgba(0, 0, 0, 0.55)';
+      handle.style.alignItems = 'center';
+      handle.style.justifyContent = 'center';
+      handle.style.fontSize = '16px';
+      handle.style.color = '#fff';
       handle.style.userSelect = 'none';
-      handle.textContent = '⠿';
-    } else if (isCorner) {
-      handle.style.background = 'rgba(0, 0, 0, 0.35)';
-    } else {
-      // Edge strips: visible but not distracting.
-      handle.style.background = 'rgba(0, 0, 0, 0.25)';
-    }
-
-    switch (dir) {
-      case 'se':
-        handle.style.right = '0';
-        handle.style.bottom = '0';
-        break;
-      case 'sw':
-        handle.style.left = '0';
-        handle.style.bottom = '0';
-        break;
-      case 'ne':
-        handle.style.right = '0';
-        handle.style.top = '0';
-        break;
-      case 'nw':
-        handle.style.left = '0';
-        handle.style.top = '0';
-        break;
-      case 'e':
-        handle.style.right = '0';
-        handle.style.top = '50%';
-        handle.style.height = '100%';
-        handle.style.top = '0';
-        break;
-      case 'w':
-        handle.style.left = '0';
-        handle.style.top = '0';
-        handle.style.height = '100%';
-        break;
-      case 's':
-        handle.style.bottom = '0';
-        handle.style.left = '0';
-        handle.style.width = '100%';
-        break;
-      case 'n':
-        handle.style.top = '0';
-        handle.style.left = '0';
-        handle.style.width = '100%';
-        break;
+      handle.textContent = '↘';
+      handle.style.right = '0';
+      handle.style.bottom = '0';
+    } else if (dir === 'sw') {
+      handle.style.width = '14px';
+      handle.style.height = '14px';
+      handle.style.background = 'rgba(0, 0, 0, 0.30)';
+      handle.style.left = '0';
+      handle.style.bottom = '0';
+    } else if (dir === 'ne') {
+      handle.style.width = '14px';
+      handle.style.height = '14px';
+      handle.style.background = 'rgba(0, 0, 0, 0.30)';
+      handle.style.right = '0';
+      handle.style.top = '0';
+    } else if (dir === 'nw') {
+      handle.style.width = '14px';
+      handle.style.height = '14px';
+      handle.style.background = 'rgba(0, 0, 0, 0.30)';
+      handle.style.left = '0';
+      handle.style.top = '0';
+    } else if (dir === 'e') {
+      // Blue edge strip with a visible left-border accent.
+      handle.style.width = '6px';
+      handle.style.height = '100%';
+      handle.style.background = 'rgba(25, 118, 210, 0.18)';
+      handle.style.borderLeft = '3px solid rgba(25, 118, 210, 0.55)';
+      handle.style.right = '0';
+      handle.style.top = '0';
+    } else if (dir === 'w') {
+      handle.style.width = '6px';
+      handle.style.height = '100%';
+      handle.style.background = 'rgba(25, 118, 210, 0.18)';
+      handle.style.borderRight = '3px solid rgba(25, 118, 210, 0.55)';
+      handle.style.left = '0';
+      handle.style.top = '0';
+    } else if (dir === 's') {
+      // Blue bottom strip with a visible top-border accent.
+      handle.style.width = '100%';
+      handle.style.height = '6px';
+      handle.style.background = 'rgba(25, 118, 210, 0.18)';
+      handle.style.borderTop = '3px solid rgba(25, 118, 210, 0.55)';
+      handle.style.bottom = '0';
+      handle.style.left = '0';
+    } else if (dir === 'n') {
+      handle.style.width = '100%';
+      handle.style.height = '6px';
+      handle.style.background = 'rgba(25, 118, 210, 0.18)';
+      handle.style.borderBottom = '3px solid rgba(25, 118, 210, 0.55)';
+      handle.style.top = '0';
+      handle.style.left = '0';
     }
   }
 

@@ -227,12 +227,12 @@ export function createMenuDemoView(host: Element): MenuDemoViewRefs {
     height:    160,
     bodyStyle: { background: '#f0f4ff', padding: '12px' },
     html: `
-      <div style="color:#444;font-size:13px;line-height:1.6;">
-        <strong>Drag to resize:</strong>
+      <div style="color:#444;font-size:13px;line-height:1.7;">
+        <strong>Try resizing this panel:</strong>
         <ul style="margin:6px 0 0 16px;padding:0;">
-          <li>Right edge — drag left/right</li>
-          <li>Bottom edge — drag up/down</li>
-          <li>Corner grip ↘ — drag freely</li>
+          <li>Blue <strong>↘</strong> corner (bottom-right) — drag freely</li>
+          <li>Blue strip on right edge — drag left/right</li>
+          <li>Blue strip on bottom edge — drag up/down</li>
         </ul>
       </div>`,
   });
