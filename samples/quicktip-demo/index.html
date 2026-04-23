@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuickTip Demo — framesquared</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      /* ── Page chrome ──────────────────────────────────────────────────────── */
+
+      *, *::before, *::after { box-sizing: border-box; }
+
+      .x-viewport {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(145deg, #e8f0fe 0%, #f0e8fe 50%, #e8f5ff 100%);
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+      }
+
+      .x-viewport > .x-container-body {
+        height: auto !important;
+        min-height: 100%;
+        padding: 52px 24px !important;
+        box-sizing: border-box;
+        align-items: center !important;
+      }
+
+      /* ── Demo root panel ──────────────────────────────────────────────────── */
+
+      .qtip-demo {
+        width: 100%;
+        max-width: 640px;
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        border-radius: 0 !important;
+      }
+
+      .qtip-demo > .x-panel-header {
+        background: transparent !important;
+        padding: 0 0 8px 0 !important;
+        border-bottom: none !important;
+      }
+
+      .qtip-demo > .x-panel-header .x-panel-header-text {
+        font-size: 28px !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.025em !important;
+        color: #1a237e !important;
+      }
+
+      .qtip-demo > .x-panel-body {
+        background: transparent !important;
+        padding: 0 !important;
+        gap: 20px !important;
+      }
+
+      /* ── Section cards ────────────────────────────────────────────────────── */
+
+      .qtip-section {
+        border-radius: 16px !important;
+        border: 1px solid rgba(25, 118, 210, 0.1) !important;
+        box-shadow:
+          0 2px 4px rgba(0, 0, 0, 0.04),
+          0 8px 28px rgba(25, 118, 210, 0.10) !important;
+        background: #ffffff !important;
+        overflow: hidden !important;
+      }
+
+      .qtip-section > .x-panel-header {
+        background: linear-gradient(120deg, #1565c0 0%, #1e88e5 100%) !important;
+        padding: 15px 24px !important;
+      }
+
+      .qtip-section > .x-panel-header .x-panel-header-text {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.1em !important;
+        text-transform: uppercase !important;
+      }
+
+      .qtip-section > .x-panel-body {
+        padding: 0 !important;
+        gap: 0 !important;
+        background: #ffffff !important;
+      }
+
+      /* ── Group rows ───────────────────────────────────────────────────────── */
+
+      .qtip-group {
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        border-bottom: 1px solid #f0f4f8 !important;
+      }
+
+      .qtip-group:last-child {
+        border-bottom: none !important;
+      }
+
+      .qtip-group > .x-panel-header {
+        background: transparent !important;
+        padding: 13px 24px 4px !important;
+      }
+
+      .qtip-group > .x-panel-header .x-panel-header-text {
+        font-size: 10px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.13em !important;
+        color: #b0bec5 !important;
+      }
+
+      .qtip-group > .x-panel-body {
+        padding: 10px 24px 18px !important;
+        gap: 10px !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+      }
+
+      /* ── Status badge ─────────────────────────────────────────────────────── */
+
+      .qtip-status {
+        font-size: 12px !important;
+        padding: 5px 14px !important;
+        border-radius: 100px !important;
+        font-weight: 600 !important;
+        cursor: default !important;
+        pointer-events: none !important;
+        border: 1.5px solid transparent !important;
+        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important;
+        background: #e8f5e9 !important;
+        color: #2e7d32 !important;
+        border-color: #a5d6a7 !important;
+        box-shadow: none !important;
+      }
+
+      .qtip-status:hover {
+        background: #e8f5e9 !important;
+        box-shadow: none !important;
+      }
+
+      .qtip-status-off {
+        background: #fce4ec !important;
+        color: #c62828 !important;
+        border-color: #ef9a9a !important;
+      }
+
+      .qtip-status-off:hover {
+        background: #fce4ec !important;
+      }
+
+      /* ── Tooltip overrides (polish) ───────────────────────────────────────── */
+
+      .x-tooltip {
+        font-family: 'Inter', -apple-system, sans-serif !important;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module" src="./src/app.ts"></script>
+  </body>
+</html>
