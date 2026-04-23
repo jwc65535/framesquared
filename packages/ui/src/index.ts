@@ -49,6 +49,8 @@ export type { MenuItemConfig } from './menu/MenuItem.js';
 export { CheckItem } from './menu/CheckItem.js';
 export type { CheckItemConfig } from './menu/CheckItem.js';
 export { MenuSeparator } from './menu/Separator.js';
+export { MenuHeader } from './menu/MenuHeader.js';
+export type { MenuHeaderConfig } from './menu/MenuHeader.js';
 export { MenuManager } from './menu/MenuManager.js';
 
 // Tooltip

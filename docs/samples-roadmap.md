@@ -54,11 +54,9 @@ Samples follow the naming convention `samples/{category}-{component}-demo/`.
 
 | Component | Sample | Notes |
 |-----------|--------|-------|
-| Toolbar | 🚧 `panel-carousel-demo` | Used as supporting actor; needs standalone |
+| Toolbar | ✅ `toolbar-capabilities` | 52 tests; SplitButton, CycleButton, SegmentedButton, menu, toggle groups |
 | Paging | ❌ | Paging toolbar for data-bound panels |
-| Breadcrumb | ❌ | |
-
-**Suggested next: `panel-toolbar-demo`** — covers Toolbar, Paging, overflow behavior, and button variants in context.
+| Breadcrumb | ✅ `breadcrumb-capabilities` | 43 tests; icons, dynamic navigation, selectionchange, context menu |
 
 ---
 
@@ -66,12 +64,10 @@ Samples follow the naming convention `samples/{category}-{component}-demo/`.
 
 | Component | Sample | Notes |
 |-----------|--------|-------|
-| Button | 🚧 various | Used throughout but never the focus of a demo |
-| CycleButton | ❌ | |
-| SegmentedButton | ❌ | |
-| SplitButton | ❌ | |
-
-**Suggested: `panel-button-demo`** — showcase all four button variants together.
+| Button | ✅ `button-showcase` | |
+| CycleButton | ✅ `toolbar-capabilities` | Covered within toolbar demo |
+| SegmentedButton | ✅ `toolbar-capabilities` | Covered within toolbar demo |
+| SplitButton | ✅ `toolbar-capabilities` | Covered within toolbar demo |
 
 ---
 
@@ -79,10 +75,11 @@ Samples follow the naming convention `samples/{category}-{component}-demo/`.
 
 | Component | Sample | Notes |
 |-----------|--------|-------|
-| Menu / MenuItem | ✅ `panel-menu-messagebox-demo` | |
-| CheckItem | 🚧 `panel-menu-messagebox-demo` | Shown briefly |
-| Separator | 🚧 `panel-menu-messagebox-demo` | Shown briefly |
-| MessageBox | 🚧 `panel-menu-messagebox-demo` | |
+| Menu / MenuItem | ✅ `menu-capabilities-demo` | 60 tests; standard, check, radio, nested, context, dynamic |
+| CheckItem | ✅ `menu-capabilities-demo` | Radio groups and independent toggles |
+| MenuHeader | ✅ `menu-capabilities-demo` | Section grouping with text transform |
+| Separator | ✅ `menu-capabilities-demo` | ARIA role="separator" |
+| MessageBox | 🚧 `panel-menu-messagebox-demo` | Consider standalone |
 | Tooltip | ✅ `panel-tooltip-demo` | Includes tests |
 | QuickTip | ❌ | Auto-tooltip from DOM `data-qtip` attributes |
 
@@ -156,13 +153,14 @@ but not granular. Per-field standalone demos could be added as the form system e
 
 ## Suggested Build Order
 
-1. **`panel-toolbar-demo`** — Toolbar + button variants; high reuse across other demos
-2. **`panel-button-demo`** — CycleButton, SegmentedButton, SplitButton
-3. **`layout-card-demo`** — Standalone CardLayout demo
-4. **`layout-responsive-demo`** — ResponsiveColumnLayout breakpoint behavior
-5. **`panel-dataview-demo`** — DataView + ListView
-6. **`panel-treeview-demo`** — TreeView + TreePanel
-7. **`panel-treegrid-demo`** — Core TreeGrid (no plugins)
-8. **TreeGrid plugin series** — one demo per major plugin (editing, filter, summary, etc.)
-9. **`panel-pickers-demo`** — DatePicker + ColorPicker standalone
-10. **`panel-quicktip-demo`** — QuickTip auto-tooltip system
+1. ~~**`toolbar-capabilities`**~~ ✅ — Toolbar + button variants
+2. ~~**`breadcrumb-capabilities`**~~ ✅ — Breadcrumb navigation
+3. ~~**`menu-capabilities-demo`**~~ ✅ — Full menu system (standard, check, radio, nested, context, dynamic)
+4. **`layout-card-demo`** — Standalone CardLayout demo
+5. **`layout-responsive-demo`** — ResponsiveColumnLayout breakpoint behavior
+6. **`panel-dataview-demo`** — DataView + ListView
+7. **`panel-treeview-demo`** — TreeView + TreePanel
+8. **`panel-treegrid-demo`** — Core TreeGrid (no plugins)
+9. **TreeGrid plugin series** — one demo per major plugin (editing, filter, summary, etc.)
+10. **`panel-pickers-demo`** — DatePicker + ColorPicker standalone
+11. **`panel-quicktip-demo`** — QuickTip auto-tooltip system

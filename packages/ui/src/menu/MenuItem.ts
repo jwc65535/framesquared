@@ -22,8 +22,15 @@ export interface MenuItemConfig extends ComponentConfig {
 export class MenuItem extends Component {
   static override $className = 'Ext.menu.MenuItem';
 
+  declare private _textEl: HTMLElement | null;
+
   constructor(config: MenuItemConfig = {}) {
     super({ xtype: 'menuitem', ...config });
+  }
+
+  protected override initialize(): void {
+    super.initialize();
+    this._textEl = null;
   }
 
   protected override afterRender(): void {
@@ -49,10 +56,11 @@ export class MenuItem extends Component {
       a.href = cfg.href;
       a.textContent = cfg.text ?? '';
       el.appendChild(a);
-    } else if (cfg.text) {
+    } else {
       const text = document.createElement('span');
       text.classList.add('x-menu-item-text');
-      text.textContent = cfg.text;
+      text.textContent = cfg.text ?? '';
+      this._textEl = text;
       el.appendChild(text);
     }
 
@@ -69,5 +77,10 @@ export class MenuItem extends Component {
       if (cfg.handler) cfg.handler(this, e);
       this.fire('click', this, e);
     });
+  }
+
+  setText(text: string): void {
+    (this._config as MenuItemConfig).text = text;
+    if (this._textEl) this._textEl.textContent = text;
   }
 }
