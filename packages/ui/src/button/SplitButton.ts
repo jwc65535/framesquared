@@ -58,6 +58,7 @@ export class SplitButton extends Button {
     // Split arrow (always present on SplitButton)
     this._splitArrowEl = document.createElement('span');
     this._splitArrowEl.classList.add('x-btn-split-arrow');
+    this._splitArrowEl.textContent = '▾';
     el.appendChild(this._splitArrowEl);
 
     el.classList.add('x-btn-split');

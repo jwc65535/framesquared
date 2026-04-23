@@ -203,7 +203,30 @@ const STYLES = `
 .x-btn-icon { pointer-events: none; font-size: 16px; }
 .x-btn-arrow { font-size: 10px; opacity: 0.7; margin-left: 2px; }
 .x-btn-arrow::before { content: '▾'; }
-.x-btn-split { border-left: 1px solid rgba(255,255,255,0.3); padding-left: 6px; }
+.x-btn.x-btn-split { padding-right: 0; }
+
+.x-btn-split-arrow {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  padding: 0 8px;
+  border-left: 1px solid rgba(255,255,255,0.3);
+  pointer-events: auto;
+}
+
+/* Tint the split-arrow zone on hover so it feels like a separate hit target */
+.x-btn-split-arrow:hover { background: rgba(0,0,0,0.15); }
+
+/* ── Named icons ─────────────────────────────────────────────────────────── */
+.x-icon-home::before     { content: '⌂'; }
+.x-icon-star::before     { content: '★'; }
+.x-icon-save::before     { content: '💾'; }
+.x-icon-add::before      { content: '+'; }
+.x-icon-delete::before   { content: '✕'; }
+.x-icon-search::before   { content: '🔍'; }
+.x-icon-settings::before { content: '⚙'; }
+.x-icon-refresh::before  { content: '↺'; }
+.x-icon-catalog::before  { content: '☰'; }
 
 /* ── SegmentedButton ─────────────────────────────────────────────────────── */
 .x-segmented-btn {
@@ -220,6 +243,20 @@ const STYLES = `
   border: none;
   border-right: 1px solid color-mix(in srgb, var(--ext-color-primary, #1976d2) 60%, transparent);
   flex: 1 0 auto;
+  background: transparent;
+  color: var(--ext-color-primary, #1976d2);
+  box-shadow: none;
+}
+
+.x-segmented-btn .x-btn:hover {
+  background: color-mix(in srgb, var(--ext-color-primary, #1976d2) 10%, transparent);
+  box-shadow: none;
+}
+
+.x-segmented-btn .x-btn.x-btn-pressed {
+  background: var(--ext-color-primary, #1976d2);
+  color: var(--ext-color-text-onPrimary, #ffffff);
+  box-shadow: none;
 }
 
 .x-segmented-btn .x-btn:last-child {
