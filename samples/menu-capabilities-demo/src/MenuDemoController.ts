@@ -14,7 +14,7 @@
 
 import { Controller } from '@framesquared/ui';
 import { MenuManager } from '@framesquared/ui';
-import { Resizable } from '@framesquared/dd';
+import { Resizer } from '@framesquared/dd';
 import type { MenuDemoViewRefs } from './MenuDemoView.js';
 
 export class MenuDemoController extends Controller {
@@ -68,9 +68,8 @@ export class MenuDemoController extends Controller {
 
     // Resizable panel — handle wiring is a business-logic concern because the
     // callbacks update shared state (resizeCount, lastResizeW/H, statusDisplay).
-    new Resizable({
-      el:        r.resizablePanel.el!,
-      handles:   's e se',
+    new Resizer({
+      target:    r.resizablePanel,
       minWidth:  150,
       maxWidth:  600,
       minHeight: 80,

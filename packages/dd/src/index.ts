@@ -16,3 +16,5 @@ export { Sortable } from './Sortable.js';
 export type { SortableConfig } from './Sortable.js';
 export { Resizable } from './Resizable.js';
 export type { ResizableConfig } from './Resizable.js';
+export { Resizer } from './Resizer.js';
+export type { ResizerConfig, HasEl } from './Resizer.js';

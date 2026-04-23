@@ -6,6 +6,7 @@ import { Droppable } from '../src/Droppable.js';
 import { DragProxy } from '../src/DragProxy.js';
 import { Sortable } from '../src/Sortable.js';
 import { Resizable } from '../src/Resizable.js';
+import { Resizer } from '../src/Resizer.js';
 
 // PointerEvent polyfill for jsdom
 beforeEach(() => {
@@ -588,5 +589,104 @@ describe('Resizable', () => {
     expect(el.querySelectorAll('.x-resizable-handle').length).toBe(2);
     r.destroy();
     expect(el.querySelectorAll('.x-resizable-handle').length).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Resizer (Ext.panel.Resizer)
+// ---------------------------------------------------------------------------
+
+describe('Resizer', () => {
+  function makeTarget(w = 200, h = 100): { el: HTMLElement } {
+    const el = document.createElement('div');
+    el.style.position = 'absolute';
+    el.style.width = `${w}px`;
+    el.style.height = `${h}px`;
+    el.style.left = '0px';
+    el.style.top = '0px';
+    document.body.appendChild(el);
+    return { el };
+  }
+
+  it('has correct $className', () => {
+    expect(Resizer.$className).toBe('Ext.panel.Resizer');
+  });
+
+  it('adds default handles (s, e, se) to target.el', () => {
+    const target = makeTarget();
+    const _r = new Resizer({ target });
+    expect(target.el.querySelector('.x-resizable-handle-se')).toBeTruthy();
+    expect(target.el.querySelector('.x-resizable-handle-e')).toBeTruthy();
+    expect(target.el.querySelector('.x-resizable-handle-s')).toBeTruthy();
+  });
+
+  it('accepts custom handles', () => {
+    const target = makeTarget();
+    const _r = new Resizer({ target, handles: 'se' });
+    expect(target.el.querySelector('.x-resizable-handle-se')).toBeTruthy();
+    expect(target.el.querySelector('.x-resizable-handle-e')).toBeNull();
+    expect(target.el.querySelector('.x-resizable-handle-s')).toBeNull();
+  });
+
+  it('throws when target.el is null', () => {
+    expect(() => new Resizer({ target: { el: null } })).toThrow(
+      'Ext.panel.Resizer: target has no rendered el'
+    );
+  });
+
+  it('resizes target via SE handle drag', () => {
+    const target = makeTarget();
+    const _r = new Resizer({ target });
+    const handle = target.el.querySelector('.x-resizable-handle-se') as HTMLElement;
+    fire(handle, 'pointerdown', { clientX: 200, clientY: 100 });
+    fire(document, 'pointermove', { clientX: 260, clientY: 140 });
+    expect(parseInt(target.el.style.width)).toBeGreaterThan(200);
+    expect(parseInt(target.el.style.height)).toBeGreaterThan(100);
+    fire(document, 'pointerup');
+  });
+
+  it('respects minWidth/minHeight constraints', () => {
+    const target = makeTarget();
+    const _r = new Resizer({ target, minWidth: 80, minHeight: 60 });
+    const handle = target.el.querySelector('.x-resizable-handle-se') as HTMLElement;
+    fire(handle, 'pointerdown', { clientX: 200, clientY: 100 });
+    fire(document, 'pointermove', { clientX: 0, clientY: 0 });
+    expect(parseInt(target.el.style.width)).toBeGreaterThanOrEqual(80);
+    expect(parseInt(target.el.style.height)).toBeGreaterThanOrEqual(60);
+    fire(document, 'pointerup');
+  });
+
+  it('respects maxWidth/maxHeight constraints', () => {
+    const target = makeTarget();
+    const _r = new Resizer({ target, maxWidth: 300, maxHeight: 200 });
+    const handle = target.el.querySelector('.x-resizable-handle-se') as HTMLElement;
+    fire(handle, 'pointerdown', { clientX: 200, clientY: 100 });
+    fire(document, 'pointermove', { clientX: 9999, clientY: 9999 });
+    expect(parseInt(target.el.style.width)).toBeLessThanOrEqual(300);
+    expect(parseInt(target.el.style.height)).toBeLessThanOrEqual(200);
+    fire(document, 'pointerup');
+  });
+
+  it('fires onResizeStart, onResize, onResizeEnd callbacks', () => {
+    const target = makeTarget();
+    const onStart = vi.fn();
+    const onResize = vi.fn();
+    const onEnd = vi.fn();
+    const _r = new Resizer({ target, onResizeStart: onStart, onResize, onResizeEnd: onEnd });
+    const handle = target.el.querySelector('.x-resizable-handle-se') as HTMLElement;
+    fire(handle, 'pointerdown', { clientX: 200, clientY: 100 });
+    expect(onStart).toHaveBeenCalledTimes(1);
+    fire(document, 'pointermove', { clientX: 250, clientY: 130 });
+    expect(onResize).toHaveBeenCalled();
+    fire(document, 'pointerup');
+    expect(onEnd).toHaveBeenCalledTimes(1);
+  });
+
+  it('destroy removes all handles', () => {
+    const target = makeTarget();
+    const r = new Resizer({ target });
+    expect(target.el.querySelectorAll('.x-resizable-handle').length).toBe(3);
+    r.destroy();
+    expect(target.el.querySelectorAll('.x-resizable-handle').length).toBe(0);
   });
 });
