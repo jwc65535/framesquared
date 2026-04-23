@@ -570,3 +570,69 @@ describe('Resizable panel', () => {
     expect(refs.lastResizeH.value).toBeGreaterThanOrEqual(80);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Ext.resizer.Resizer applied to Edit menu — §3
+// ---------------------------------------------------------------------------
+
+describe('Ext.resizer.Resizer on Edit menu', () => {
+  function showEditMenu(): void {
+    refs.editBtn.el!.click();
+  }
+
+  it('SE resize handle appears on editMenu after first show', () => {
+    showEditMenu();
+    expect(refs.editMenu.el!.querySelector('.x-resizable-handle-se')).toBeTruthy();
+  });
+
+  it('SE handle has nwse-resize cursor', () => {
+    showEditMenu();
+    const handle = refs.editMenu.el!.querySelector('.x-resizable-handle-se') as HTMLElement;
+    expect(handle.style.cursor).toBe('nwse-resize');
+  });
+
+  it('SE handle is not added again on subsequent shows', () => {
+    showEditMenu();
+    refs.editMenu.hide();
+    showEditMenu();
+    const handles = refs.editMenu.el!.querySelectorAll('.x-resizable-handle-se');
+    expect(handles.length).toBe(1);
+  });
+
+  it('dragging SE handle resizes the menu el', () => {
+    showEditMenu();
+    const el = refs.editMenu.el!;
+    const wBefore = parseInt(el.style.width);
+    const hBefore = parseInt(el.style.height);
+    const handle = el.querySelector('.x-resizable-handle-se')!;
+    firePointer(handle,   'pointerdown', { clientX: wBefore, clientY: hBefore });
+    firePointer(document, 'pointermove', { clientX: wBefore + 60, clientY: hBefore + 40 });
+    firePointer(document, 'pointerup');
+    expect(parseInt(el.style.width)).toBeGreaterThan(wBefore);
+    expect(parseInt(el.style.height)).toBeGreaterThan(hBefore);
+  });
+
+  it('onResize updates statusDisplay while dragging', () => {
+    showEditMenu();
+    const el = refs.editMenu.el!;
+    const w = parseInt(el.style.width);
+    const h = parseInt(el.style.height);
+    const handle = el.querySelector('.x-resizable-handle-se')!;
+    firePointer(handle,   'pointerdown', { clientX: w, clientY: h });
+    firePointer(document, 'pointermove', { clientX: w + 30, clientY: h + 20 });
+    expect(refs.statusDisplay.el!.textContent).toMatch(/Menu:/);
+    firePointer(document, 'pointerup');
+  });
+
+  it('minWidth constraint is respected', () => {
+    showEditMenu();
+    const el = refs.editMenu.el!;
+    const w = parseInt(el.style.width);
+    const h = parseInt(el.style.height);
+    const handle = el.querySelector('.x-resizable-handle-se')!;
+    firePointer(handle,   'pointerdown', { clientX: w, clientY: h });
+    firePointer(document, 'pointermove', { clientX: 0, clientY: h });
+    firePointer(document, 'pointerup');
+    expect(parseInt(el.style.width)).toBeGreaterThanOrEqual(140);
+  });
+});

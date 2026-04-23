@@ -33,6 +33,8 @@ const HANDLE_CURSORS: Record<string, string> = {
 };
 
 export class Resizable {
+  static $className = 'Ext.resizer.Resizer';
+
   private el: HTMLElement;
   private handles: HandleDir[];
   private minW: number;

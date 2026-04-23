@@ -14,7 +14,7 @@
 
 import { Controller } from '@framesquared/ui';
 import { MenuManager } from '@framesquared/ui';
-import { Resizer } from '@framesquared/dd';
+import { Resizable, Resizer } from '@framesquared/dd';
 import type { MenuDemoViewRefs } from './MenuDemoView.js';
 
 export class MenuDemoController extends Controller {
@@ -30,7 +30,29 @@ export class MenuDemoController extends Controller {
   private wireHandlers(): void {
     const r = this.refs;
 
-    // Edit menu
+    // Ext.resizer.Resizer applied to editMenu — applied once on first show so
+    // that the menu has a rendered el and natural dimensions to read from.
+    let editMenuResizer: Resizable | null = null;
+    r.editMenu.on('show', () => {
+      if (editMenuResizer) return;
+      const el = r.editMenu.el!;
+      // Read natural size; fall back gracefully if not yet laid out (e.g. jsdom).
+      const w = el.getBoundingClientRect().width  || el.offsetWidth  || 160;
+      const h = el.getBoundingClientRect().height || el.offsetHeight || 240;
+      el.style.width  = `${w}px`;
+      el.style.height = `${h}px`;
+      editMenuResizer = new Resizable({
+        el,
+        handles:   'se',
+        minWidth:  140,
+        maxWidth:  500,
+        minHeight: 100,
+        onResize:    (mw, mh) => r.statusDisplay.setText(`Menu: ${mw}×${mh}`),
+        onResizeEnd: ()       => r.statusDisplay.setText('Menu resized'),
+      });
+    });
+
+    // Edit menu items
     r.newItem.on('click',  () => this.onNew());
     r.saveItem.on('click', () => this.onSave());
     r.undoItem.on('click', () => this.onUndo());
