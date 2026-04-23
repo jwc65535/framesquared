@@ -14,9 +14,13 @@ export class MenuSeparator extends Component {
 
   protected override afterRender(): void {
     super.afterRender();
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.el!.classList.add('x-menu-separator');
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.el!.setAttribute('role', 'separator');
+    const el = this.el!;
+    el.classList.add('x-menu-separator');
+    el.setAttribute('role', 'separator');
+    el.style.height = '1px';
+    el.style.margin = '5px 0';
+    el.style.backgroundColor = 'rgba(0, 0, 0, 0.15)';
+    el.style.overflow = 'hidden';
+    el.style.pointerEvents = 'none';
   }
 }

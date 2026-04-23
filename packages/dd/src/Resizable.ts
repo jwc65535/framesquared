@@ -81,6 +81,16 @@ export class Resizable {
       handle.style.zIndex = '100';
       handle.style.cursor = HANDLE_CURSORS[dir] ?? 'default';
       this.positionHandle(handle, dir);
+
+      // Hover — brighten handle on mouse-over so it is clearly discoverable.
+      const baseBg = handle.style.background || handle.style.backgroundColor;
+      handle.addEventListener('mouseenter', () => {
+        handle.style.background = 'rgba(0, 0, 0, 0.30)';
+      });
+      handle.addEventListener('mouseleave', () => {
+        handle.style.background = baseBg;
+      });
+
       handle.addEventListener('pointerdown', (e) => this.onHandleDown(e, dir));
       this.el.appendChild(handle);
       this.handleEls.push(handle);
@@ -88,9 +98,27 @@ export class Resizable {
   }
 
   private positionHandle(handle: HTMLElement, dir: string): void {
-    const size = '8px';
+    const isCorner = ['ne', 'nw', 'se', 'sw'].includes(dir);
+    const size = isCorner ? '16px' : '8px';
     handle.style.width = size;
     handle.style.height = size;
+
+    // Corner handles get a diagonal grip-stripe pattern; edge handles get a
+    // subtle flat strip so they are visible but don't compete with content.
+    if (dir === 'se') {
+      handle.style.background = [
+        'repeating-linear-gradient(',
+        '  -45deg,',
+        '  transparent 0px, transparent 3px,',
+        '  rgba(0,0,0,0.28) 3px, rgba(0,0,0,0.28) 4px',
+        ')',
+      ].join('');
+      handle.style.borderRadius = '0 0 3px 0';
+    } else if (isCorner) {
+      handle.style.background = 'rgba(0, 0, 0, 0.18)';
+    } else {
+      handle.style.background = 'rgba(0, 0, 0, 0.10)';
+    }
 
     switch (dir) {
       case 'se':
