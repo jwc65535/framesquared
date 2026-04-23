@@ -220,6 +220,7 @@ const STYLES = `
 /* ── Named icons ─────────────────────────────────────────────────────────── */
 .x-icon-home::before     { content: '⌂'; }
 .x-icon-star::before     { content: '★'; }
+.x-icon-new::before      { content: '✚'; }
 .x-icon-save::before     { content: '💾'; }
 .x-icon-add::before      { content: '+'; }
 .x-icon-delete::before   { content: '✕'; }
