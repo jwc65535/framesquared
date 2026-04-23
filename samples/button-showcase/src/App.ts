@@ -1,4 +1,5 @@
 import '@framesquared/layout';
+import './showcase.css';
 import { Application } from '@framesquared/app';
 import { ModernTheme } from '@framesquared/theme';
 import { createViewport } from './ButtonShowcaseView.js';

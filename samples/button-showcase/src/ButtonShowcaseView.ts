@@ -74,35 +74,42 @@ export function createButtonShowcaseView(host: Element): ButtonShowcaseViewRefs 
 
   const buttonPanel = new Panel({
     title: 'Button',
+    cls: 'btn-showcase-section',
     layout: { type: 'vbox', align: 'stretch' },
     items: [
       new Panel({
         title: 'UI Variants',
+        cls: 'btn-showcase-group',
         layout: { type: 'hbox', align: 'middle' },
         items: [primaryBtn, dangerBtn],
       }),
       new Panel({
         title: 'Scale',
+        cls: 'btn-showcase-group',
         layout: { type: 'hbox', align: 'middle' },
         items: [smallBtn, largeBtn],
       }),
       new Panel({
         title: 'Icon',
+        cls: 'btn-showcase-group',
         layout: { type: 'hbox', align: 'middle' },
         items: [iconBtn],
       }),
       new Panel({
         title: 'Toggle',
+        cls: 'btn-showcase-group',
         layout: { type: 'hbox', align: 'middle' },
         items: [toggleBtn],
       }),
       new Panel({
         title: 'Radio Group',
+        cls: 'btn-showcase-group',
         layout: { type: 'hbox', align: 'middle' },
         items: [radioA, radioB, radioC],
       }),
       new Panel({
         title: 'Disabled',
+        cls: 'btn-showcase-group',
         layout: { type: 'hbox', align: 'middle' },
         items: [disabledBtn],
       }),
@@ -131,8 +138,16 @@ export function createButtonShowcaseView(host: Element): ButtonShowcaseViewRefs 
 
   const splitPanel = new Panel({
     title: 'SplitButton',
-    layout: { type: 'hbox', align: 'middle' },
-    items: [splitBtn],
+    cls: 'btn-showcase-section',
+    layout: { type: 'vbox', align: 'stretch' },
+    items: [
+      new Panel({
+        title: 'Default',
+        cls: 'btn-showcase-group',
+        layout: { type: 'hbox', align: 'middle' },
+        items: [splitBtn],
+      }),
+    ],
   });
 
   // ── § CycleButton ────────────────────────────────────────────────────────
@@ -171,8 +186,16 @@ export function createButtonShowcaseView(host: Element): ButtonShowcaseViewRefs 
 
   const cyclePanel = new Panel({
     title: 'CycleButton',
-    layout: { type: 'hbox', align: 'middle' },
-    items: [cycleBtn],
+    cls: 'btn-showcase-section',
+    layout: { type: 'vbox', align: 'stretch' },
+    items: [
+      new Panel({
+        title: 'Default',
+        cls: 'btn-showcase-group',
+        layout: { type: 'hbox', align: 'middle' },
+        items: [cycleBtn],
+      }),
+    ],
   });
 
   // ── § SegmentedButton ────────────────────────────────────────────────────
@@ -199,15 +222,18 @@ export function createButtonShowcaseView(host: Element): ButtonShowcaseViewRefs 
 
   const segPanel = new Panel({
     title: 'SegmentedButton',
+    cls: 'btn-showcase-section',
     layout: { type: 'vbox', align: 'stretch' },
     items: [
       new Panel({
         title: 'Single Select',
+        cls: 'btn-showcase-group',
         layout: { type: 'hbox', align: 'middle' },
         items: [singleSeg],
       }),
       new Panel({
         title: 'Multi Select',
+        cls: 'btn-showcase-group',
         layout: { type: 'hbox', align: 'middle' },
         items: [multiSeg],
       }),
@@ -218,7 +244,9 @@ export function createButtonShowcaseView(host: Element): ButtonShowcaseViewRefs 
 
   new Panel({
     renderTo: host,
-    header: false,
+    title: 'Button Components',
+    cls: 'btn-showcase',
+    border: false,
     layout: { type: 'vbox', align: 'stretch' },
     items: [buttonPanel, splitPanel, cyclePanel, segPanel],
   });
