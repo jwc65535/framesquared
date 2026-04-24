@@ -179,7 +179,9 @@ export class TreeGridRowExpander {
   }
 
   private _renderTpl(tpl: XTemplate | string, record: NodeInterface): string {
-    const data = (record as any).getData?.() ?? (record as any);
+    // Use $data directly so non-schema fields (e.g. bio) are included.
+    // getData() only returns declared schema fields.
+    const data = (record as any).$data ?? (record as any).getData?.() ?? record;
     if (tpl instanceof XTemplate) {
       return tpl.apply(data);
     }

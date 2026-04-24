@@ -506,7 +506,12 @@ export class TreeGrid extends Panel {
       }
     }
 
-    this._view?.refreshNode(node);
+    // Refresh the node, all descendants whose check state may have changed,
+    // and all ancestors whose aggregate state (indeterminate/checked) may have changed.
+    node.cascadeBy((n) => this._view?.refreshNode(n));
+    node.bubble((ancestor) => {
+      if (ancestor !== node && !ancestor.isRoot()) this._view?.refreshNode(ancestor);
+    });
 
     if (!suppressEvent) {
       this.fire('checkchange', node, checked);
@@ -594,6 +599,9 @@ export class TreeGrid extends Panel {
     const prev = this._selModel.getSelection();
     this._selModel.deselectAll(suppressEvent);
     for (const node of prev) this._view?.markSelected(node, false);
+    if (!suppressEvent && prev.length > 0) {
+      this.fire('selectionchange', this._selModel, this._selModel.getSelection());
+    }
   }
 
   selectAll(suppressEvent = false): void {
