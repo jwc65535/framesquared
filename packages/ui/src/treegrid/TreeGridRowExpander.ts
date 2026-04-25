@@ -10,6 +10,7 @@
 import type { NodeInterface } from '@framesquared/data';
 import { Component, XTemplate } from '@framesquared/component';
 import type { TreeGrid } from './TreeGrid.js';
+import { Column } from './TreeGridColumn.js';
 
 // ---------------------------------------------------------------------------
 // Config
@@ -63,6 +64,23 @@ export class TreeGridRowExpander {
     if (this.config.expandOnDblClick) {
       viewEl.addEventListener('dblclick', this._onDblClick);
     }
+    this._injectExpanderColumn(treeGrid);
+  }
+
+  private _injectExpanderColumn(treeGrid: TreeGrid): void {
+    const expanderCol = new Column({
+      dataIndex: '',
+      text: '',
+      width: 28,
+      renderer: (_v, record) => {
+        const id = (record as any).getId?.();
+        const expanded = id != null && this.expandedRows.has(id);
+        return `<button class="x-treegrid-row-expander-btn" title="${expanded ? 'Collapse' : 'Expand row'}">${expanded ? '&#9660;' : '&#9654;'}</button>`;
+      },
+    });
+    const cols = treeGrid.getColumns();
+    cols.unshift(expanderCol);
+    treeGrid.getView().setColumns(cols);
   }
 
   destroy(): void {
@@ -97,6 +115,7 @@ export class TreeGridRowExpander {
     if (this.expandedRows.has(id)) return;
     this.expandedRows.add(id);
     this._insertBodyRow(record);
+    this.treeGrid?.getView().refreshNode(record);
   }
 
   collapseRow(record: NodeInterface): void {
@@ -131,7 +150,7 @@ export class TreeGridRowExpander {
     const row = view.getNodeRow(record);
     if (!row) return;
 
-    const colCount = tg.getColumns().filter((c) => !c.hidden).length + 1; // +1 for expander col
+    const colCount = tg.getColumns().filter((c) => !c.hidden).length;
 
     const bodyRow = document.createElement('tr');
     bodyRow.className = 'x-treegrid-row-body';
@@ -176,6 +195,8 @@ export class TreeGridRowExpander {
     bodyRow?.remove();
     this.bodyRowMap.delete(id);
     this.expandedRows.delete(id);
+    const record = this.treeGrid?.getNodeById(String(id)) as NodeInterface | undefined;
+    if (record) this.treeGrid?.getView().refreshNode(record);
   }
 
   private _renderTpl(tpl: XTemplate | string, record: NodeInterface): string {

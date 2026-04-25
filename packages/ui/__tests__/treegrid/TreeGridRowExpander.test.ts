@@ -177,6 +177,62 @@ describe('TreeGridRowExpander — expand/collapse', () => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
+// Expander column
+// ═══════════════════════════════════════════════════════════════════════════
+
+describe('TreeGridRowExpander — expander column', () => {
+  it('init injects an expander button into every data row', () => {
+    const grid = makeGrid();
+    const plugin = new TreeGridRowExpander({ rowBodyTpl: '<div>{detail}</div>' });
+    plugin.init(grid);
+
+    const btns = document.querySelectorAll('.x-treegrid-row-expander-btn');
+    expect(btns.length).toBeGreaterThan(0);
+  });
+
+  it('expander button count matches data row count', () => {
+    const grid = makeGrid();
+    const plugin = new TreeGridRowExpander({ rowBodyTpl: '<div>{detail}</div>' });
+    plugin.init(grid);
+
+    const rows = document.querySelectorAll('tr.x-grid-row');
+    const btns = document.querySelectorAll('.x-treegrid-row-expander-btn');
+    expect(btns.length).toBe(rows.length);
+  });
+
+  it('clicking expander button expands the row', () => {
+    const grid = makeGrid();
+    const plugin = new TreeGridRowExpander({ rowBodyTpl: '<div>{detail}</div>' });
+    plugin.init(grid);
+
+    const nodeA = grid.getNodeById('a')!;
+    expect(plugin.isRowExpanded(nodeA)).toBe(false);
+
+    const btn = document.querySelector<HTMLButtonElement>('.x-treegrid-row-expander-btn')!;
+    btn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    expect(plugin.isRowExpanded(nodeA)).toBe(true);
+    expect(document.querySelector('.x-treegrid-row-body')).not.toBeNull();
+  });
+
+  it('clicking expander button again collapses the row', () => {
+    const grid = makeGrid();
+    const plugin = new TreeGridRowExpander({ rowBodyTpl: '<div>{detail}</div>' });
+    plugin.init(grid);
+
+    const nodeA = grid.getNodeById('a')!;
+    const btn = () => document.querySelector<HTMLButtonElement>('.x-treegrid-row-expander-btn')!;
+
+    btn().dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(plugin.isRowExpanded(nodeA)).toBe(true);
+
+    btn().dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(plugin.isRowExpanded(nodeA)).toBe(false);
+    expect(document.querySelector('.x-treegrid-row-body')).toBeNull();
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
 // bodyIndent
 // ═══════════════════════════════════════════════════════════════════════════
 
