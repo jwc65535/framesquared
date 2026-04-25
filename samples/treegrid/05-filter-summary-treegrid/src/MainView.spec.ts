@@ -99,6 +99,30 @@ describe('Filter row DOM', () => {
     const filterRow = refs.grid.el!.querySelector('.x-treegrid-filter-row')!;
     expect(filterRow.querySelectorAll('input.x-treegrid-filter-input').length).toBe(3);
   });
+
+  it('filter hides non-matching rows from the DOM', () => {
+    const allRows = () => refs.grid.el!.querySelectorAll('tr.x-grid-row').length;
+    const before = allRows();
+    refs.filterPlugin.addFilter({ dataIndex: 'type', value: 'PDF', operator: 'eq' });
+    expect(allRows()).toBeLessThan(before);
+  });
+
+  it('clearFilters restores all rows in the DOM', () => {
+    const allRows = () => refs.grid.el!.querySelectorAll('tr.x-grid-row').length;
+    const before = allRows();
+    refs.filterPlugin.addFilter({ dataIndex: 'type', value: 'PDF', operator: 'eq' });
+    refs.filterPlugin.clearFilters();
+    expect(allRows()).toBe(before);
+  });
+
+  it('clearFilters resets filter row inputs to empty', () => {
+    const input = refs.grid.el!.querySelector<HTMLInputElement>('.x-treegrid-filter-input')!;
+    input.value = 'pdf';
+    input.dispatchEvent(new Event('input'));
+    refs.filterPlugin.clearFilters();
+    const inputs = refs.grid.el!.querySelectorAll<HTMLInputElement>('.x-treegrid-filter-input');
+    inputs.forEach((i) => expect(i.value).toBe(''));
+  });
 });
 
 // ── 4. Summary plugin API ────────────────────────────────────────────────────
