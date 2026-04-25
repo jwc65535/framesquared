@@ -76,6 +76,9 @@ export class TreeGridFilterPlugin {
 
   clearFilters(): void {
     this.activeFilters = [];
+    this.filterRowEl?.querySelectorAll('input').forEach((input) => {
+      (input as HTMLInputElement).value = '';
+    });
     this._applyFilters();
   }
 

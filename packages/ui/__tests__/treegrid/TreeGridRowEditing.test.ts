@@ -192,6 +192,22 @@ describe('TreeGridRowEditing — edit lifecycle', () => {
     expect(document.querySelector('.x-treegrid-row-editor')).toBeNull();
   });
 
+  it('editor row has same number of cells as data row', () => {
+    const grid = makeGrid();
+    const plugin = new TreeGridRowEditing();
+    plugin.init(grid);
+
+    const nodeA = grid.getNodeById('a')!;
+    const dataRow = document.querySelector(`tr[data-record-id="a"]`)!;
+    const dataCellCount = dataRow.querySelectorAll('td').length;
+
+    plugin.startEdit(nodeA);
+
+    const editorRow = document.querySelector('.x-treegrid-row-editor')!;
+    const editorCellCount = editorRow.querySelectorAll('td').length;
+    expect(editorCellCount).toBe(dataCellCount);
+  });
+
   it('starting second edit cancels first', () => {
     const grid = makeGrid();
     const plugin = new TreeGridRowEditing();

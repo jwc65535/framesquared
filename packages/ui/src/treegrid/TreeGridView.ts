@@ -136,6 +136,7 @@ export class TreeGridView {
     const frag = document.createDocumentFragment();
     for (const node of flatData) {
       if (node.isRoot() && !this.rootVisible) continue;
+      if ((node as any)._filterHidden) continue;
       frag.appendChild(this._buildRow(node));
     }
     this.tbodyEl.appendChild(frag);

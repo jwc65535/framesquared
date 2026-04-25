@@ -77,6 +77,8 @@ export class TreeGridRowEditing {
     editorRow.className = 'x-treegrid-row-editor';
     this.fieldMap.clear();
 
+    let lastTd: HTMLTableCellElement | null = null;
+
     for (const col of columns) {
       if (col.hidden) continue;
       const td = document.createElement('td');
@@ -88,11 +90,12 @@ export class TreeGridRowEditing {
       td.appendChild(input);
       editorRow.appendChild(td);
       this.fieldMap.set(col.dataIndex, input);
+      lastTd = td;
     }
 
-    // Action buttons
-    const actionTd = document.createElement('td');
-    actionTd.className = 'x-row-editor-buttons';
+    // Action buttons go inside the last cell to keep column count consistent
+    const btnWrapper = document.createElement('span');
+    btnWrapper.className = 'x-row-editor-buttons';
 
     const saveBtn = document.createElement('button');
     saveBtn.textContent = this.config.saveBtnText;
@@ -104,9 +107,9 @@ export class TreeGridRowEditing {
     cancelBtn.className = 'x-row-editor-cancel';
     cancelBtn.addEventListener('click', () => this.cancelEdit());
 
-    actionTd.appendChild(saveBtn);
-    actionTd.appendChild(cancelBtn);
-    editorRow.appendChild(actionTd);
+    btnWrapper.appendChild(saveBtn);
+    btnWrapper.appendChild(cancelBtn);
+    (lastTd ?? editorRow).appendChild(btnWrapper);
 
     row.insertAdjacentElement('afterend', editorRow);
     this.editorRow = editorRow;
