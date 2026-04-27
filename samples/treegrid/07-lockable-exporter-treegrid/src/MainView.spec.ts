@@ -12,9 +12,9 @@
  *   6. Data                 — Product catalog store shape
  *   7. Application guard
  */
-import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import '@framesquared/layout';
-import { TreeGrid, TreeGridLockable, TreeGridExporter } from '@framesquared/ui';
+import { TreeGrid, TreeGridLockable, TreeGridColumn, TreeGridExporter } from '@framesquared/ui';
 import { createMainView, makeProductStore } from './MainView.js';
 import { MainViewModel } from './MainViewModel.js';
 import { MainViewController } from './MainViewController.js';
@@ -24,6 +24,9 @@ beforeAll(() => {
   if (!(globalThis as any).ResizeObserver) {
     (globalThis as any).ResizeObserver = class { observe(){}; unobserve(){}; disconnect(){} };
   }
+  // Stub TreeGridExporter.download so button-click tests don't trigger real
+  // browser downloads (URL.createObjectURL is not implemented in jsdom).
+  vi.spyOn(TreeGridExporter, 'download').mockImplementation(() => {});
 });
 
 let host: HTMLDivElement;
@@ -50,8 +53,49 @@ describe('TreeGridLockable', () => {
     expect(refs.grid.el!.querySelector('.x-treegrid-locked-panel')).toBeTruthy();
   });
 
+  it('normal panel rendered in DOM (.x-treegrid-normal-panel)', () => {
+    expect(refs.grid.el!.querySelector('.x-treegrid-normal-panel')).toBeTruthy();
+  });
+
   it('getLockedView() returns a non-null view', () => {
     expect(refs.lockable.getLockedView()).toBeTruthy();
+  });
+
+  it('getNormalView() returns a non-null view', () => {
+    expect(refs.lockable.getNormalView()).toBeTruthy();
+  });
+
+  it('locked view columns contain only the TreeGridColumn (Name)', () => {
+    const lockedCols = refs.lockable.getLockedView()!.getColumns();
+    expect(lockedCols.length).toBe(1);
+    expect(lockedCols[0]).toBeInstanceOf(TreeGridColumn);
+    expect(lockedCols[0].text).toBe('Name');
+  });
+
+  it('normal view columns contain all non-tree columns (8 columns)', () => {
+    const normalCols = refs.lockable.getNormalView()!.getColumns();
+    expect(normalCols.length).toBe(8);
+    expect(normalCols.every((c) => !(c instanceof TreeGridColumn))).toBe(true);
+  });
+
+  it('locked panel is sized to the Name column width (220px)', () => {
+    const panel = refs.grid.el!.querySelector('.x-treegrid-locked-panel') as HTMLElement;
+    expect(panel.style.width).toBe('220px');
+  });
+
+  it('locked panel renders Name values', () => {
+    const panel = refs.grid.el!.querySelector('.x-treegrid-locked-panel')!;
+    expect(panel.textContent).toContain('Laptop Pro');
+  });
+
+  it('normal panel renders Category values', () => {
+    const panel = refs.grid.el!.querySelector('.x-treegrid-normal-panel')!;
+    expect(panel.textContent).toContain('Laptop');
+  });
+
+  it('normal panel renders SKU values', () => {
+    const panel = refs.grid.el!.querySelector('.x-treegrid-normal-panel')!;
+    expect(panel.textContent).toContain('LP-2024');
   });
 });
 
@@ -168,6 +212,18 @@ describe('Product store', () => {
 
   it('laptop price is 1299', () => {
     expect(refs.grid.getNodeById('laptop')!.get('price')).toBe(1299);
+  });
+
+  it('laptop sku is "LP-2024"', () => {
+    expect(refs.grid.getNodeById('laptop')!.get('sku')).toBe('LP-2024');
+  });
+
+  it('phone brand is "ZenTech"', () => {
+    expect(refs.grid.getNodeById('phone')!.get('brand')).toBe('ZenTech');
+  });
+
+  it('charger country is "Japan"', () => {
+    expect(refs.grid.getNodeById('charger')!.get('country')).toBe('Japan');
   });
 
   it('charger is a leaf node', () => {
