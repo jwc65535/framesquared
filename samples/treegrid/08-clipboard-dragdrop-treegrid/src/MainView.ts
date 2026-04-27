@@ -1,5 +1,5 @@
 import '@framesquared/layout';
-import { TreeGrid, TreeGridClipboard, TreeGridDragDrop } from '@framesquared/ui';
+import { TreeGrid, TreeGridClipboard, TreeGridDragDrop, Button } from '@framesquared/ui';
 import { TreeStore, TreeModel } from '@framesquared/data';
 import { MainViewModel } from './MainViewModel.js';
 import { MainViewController } from './MainViewController.js';
@@ -35,6 +35,8 @@ export interface MainViewRefs {
   store:          TreeStore;
   clipboard:      TreeGridClipboard;
   dragDrop:       TreeGridDragDrop;
+  copyBtn:        Button;
+  pasteBtn:       Button;
   viewModel:      MainViewModel;
   viewController: MainViewController;
 }
@@ -42,16 +44,37 @@ export interface MainViewRefs {
 export function createMainView(host: Element): MainViewRefs {
   const store          = makeTaskStore();
   const viewModel      = new MainViewModel();
-  const clipboard      = new TreeGridClipboard({ copyHierarchy: false });
-  const dragDrop       = new TreeGridDragDrop({ enableDrag: true, enableDrop: true, sortOnDrop: true });
+  const clipboard      = new TreeGridClipboard({ copyHierarchy: true });
+  const dragDrop       = new TreeGridDragDrop({ enableDrag: true, enableDrop: true });
   const viewController = new MainViewController(viewModel);
 
-  const grid = new TreeGrid({
+  let grid!:    TreeGrid;
+  let copyBtn!: Button;
+  let pasteBtn!: Button;
+  const makeRefs = (): MainViewRefs =>
+    ({ grid, store, clipboard, dragDrop, copyBtn, pasteBtn, viewModel, viewController });
+
+  // Copy — copies the selected row(s) as TSV to the internal buffer + system clipboard.
+  // Select a row first, then click Copy (or press Ctrl+C while the grid is focused).
+  copyBtn = new Button({ text: 'Copy (Ctrl+C)', handler: () => {
+    viewController.copySelected(makeRefs());
+  }});
+
+  // Paste — inserts the last-copied rows as children of the currently selected node,
+  // or at the top level if nothing is selected.
+  // Equivalent to pressing Ctrl+V while the grid is focused.
+  pasteBtn = new Button({ text: 'Paste (Ctrl+V)', handler: () => {
+    const text = viewModel.getCopiedText();
+    if (text) viewController.pasteText(makeRefs(), text);
+  }});
+
+  grid = new TreeGrid({
     renderTo: host,
     title:    'Task Manager — Clipboard & Drag-Drop',
     height:   400,
     store,
     plugins:  [clipboard, dragDrop],
+    tbar:     [copyBtn, pasteBtn],
     columns: [
       { dataIndex: 'text',     text: 'Task',     flex: 1   },
       { dataIndex: 'status',   text: 'Status',   width: 130 },
@@ -59,6 +82,6 @@ export function createMainView(host: Element): MainViewRefs {
     ],
   } as any);
 
-  viewController.initView({ grid, store, clipboard, dragDrop, viewModel, viewController });
-  return { grid, store, clipboard, dragDrop, viewModel, viewController };
+  viewController.initView(makeRefs());
+  return makeRefs();
 }
