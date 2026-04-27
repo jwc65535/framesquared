@@ -566,6 +566,10 @@ export class TreeGridView {
   // Config updates
   // -------------------------------------------------------------------------
 
+  getColumns(): (TreeGridColumn | Column)[] {
+    return this.columns;
+  }
+
   setColumns(columns: (TreeGridColumn | Column)[]): void {
     this.columns = columns;
     this.refresh();

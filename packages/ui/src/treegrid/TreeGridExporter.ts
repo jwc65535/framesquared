@@ -33,11 +33,15 @@ export class TreeGridExporter {
   constructor(_options: Record<string, unknown> = {}) {}
 
   /**
-   * Exports the TreeGrid to CSV format.
+   * Exports the TreeGrid to RFC 4180-compliant CSV.
+   * Hierarchy is represented by leading spaces (2 per depth level) in the tree
+   * column.  Fields containing commas, double-quotes, or newlines are wrapped
+   * in double-quotes with internal quotes doubled.
    */
   static exportToCsv(treeGrid: TreeGrid, options: ExportOptions = {}): string {
-    const rows = TreeGridExporter._buildRows(treeGrid, options, '\t', true);
-    return rows.map((r) => r.join(',')).join('\n');
+    const opts: ExportOptions = { indentCharacter: '  ', ...options };
+    const rows = TreeGridExporter._buildRows(treeGrid, opts, '  ', true);
+    return rows.map((r) => r.map(_csvField).join(',')).join('\n');
   }
 
   /**
@@ -201,6 +205,14 @@ export class TreeGridExporter {
     });
     return all;
   }
+}
+
+/** RFC 4180: quote a field if it contains comma, double-quote, or newline. */
+function _csvField(value: string): string {
+  if (value.includes(',') || value.includes('"') || value.includes('\n') || value.includes('\r')) {
+    return '"' + value.replace(/"/g, '""') + '"';
+  }
+  return value;
 }
 
 function _escapeXml(str: string): string {
