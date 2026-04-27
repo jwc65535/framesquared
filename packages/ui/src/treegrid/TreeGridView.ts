@@ -460,6 +460,7 @@ export class TreeGridView {
           this.store.expandNode(record);
         }
         this.fireEvent('expanderclick', record, e);
+        this.fireEvent('itemclick', record, e);
         return;
       }
     }

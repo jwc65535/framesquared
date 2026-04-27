@@ -74,9 +74,10 @@ describe('TreeGridClipboard — construction', () => {
 describe('TreeGridClipboard — copy', () => {
   it('copyToClipboard returns TSV with headers', () => {
     const grid = makeGrid();
-    const plugin = new TreeGridClipboard();
+    const plugin = new TreeGridClipboard({ includeHeaders: true });
     plugin.init(grid);
 
+    grid.select(grid.getNodeById('a')!);
     const text = plugin.copyToClipboard();
     expect(text).toContain('Name');
     expect(text).toContain('Size');
@@ -96,7 +97,7 @@ describe('TreeGridClipboard — copy', () => {
 
   it('copyToClipboard with no selection has header only', () => {
     const grid = makeGrid();
-    const plugin = new TreeGridClipboard();
+    const plugin = new TreeGridClipboard({ includeHeaders: true });
     plugin.init(grid);
 
     const text = plugin.copyToClipboard();
@@ -129,14 +130,16 @@ describe('TreeGridClipboard — copy', () => {
     const plugin = new TreeGridClipboard({ copyHierarchy: true });
     plugin.init(grid);
 
-    const childNode = grid.getNodeById('child1')!;
-    grid.select(childNode);
+    // Select the parent: cascadeBy includes parent (relDepth=0) and child (relDepth=1).
+    const parentNode = grid.getNodeById('parent')!;
+    grid.select(parentNode);
     const text = plugin.copyToClipboard();
-    // depth 2 → 2 tabs or spaces prefix
     const lines = text.split('\n');
-    const dataLine = lines.find((l) => l.includes('Child'));
-    expect(dataLine).toBeDefined();
-    expect(dataLine!.startsWith('\t\t')).toBe(true);
+    const childLine = lines.find((l) => l.includes('Child'));
+    expect(childLine).toBeDefined();
+    // Child is one level deeper than the selected parent, so one leading tab.
+    expect(childLine!.startsWith('\t')).toBe(true);
+    expect(childLine!.startsWith('\t\t')).toBe(false);
   });
 
   it('multiple selected nodes produce multiple rows', () => {
@@ -150,6 +153,6 @@ describe('TreeGridClipboard — copy', () => {
 
     const text = plugin.copyToClipboard();
     const lines = text.split('\n').filter(Boolean);
-    expect(lines.length).toBe(3); // header + 2 nodes
+    expect(lines.length).toBe(2); // 2 selected nodes, no headers by default
   });
 });

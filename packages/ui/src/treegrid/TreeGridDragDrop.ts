@@ -69,6 +69,10 @@ export class TreeGridDragDrop {
   private _captureTarget: Element | null = null;
   private _pointerId: number | null = null;
 
+  // Source element/pointerId for deferred setPointerCapture (applied only when drag starts)
+  private _captureSource: Element | null = null;
+  private _capturePointerId: number | null = null;
+
   private _downX = 0;
   private _downY = 0;
   private readonly _threshold = 5;
@@ -132,24 +136,16 @@ export class TreeGridDragDrop {
     if (record.isRoot()) return;
     if ((record as any).get?.('allowDrag') === false) return;
 
-    // Prevent native text-selection and browser drag-image from interfering
-    e.preventDefault();
-
     this._downX = e.clientX;
     this._downY = e.clientY;
 
-    // Capture record now while we're certain which node the pointer is over
+    // Record the node now while we are certain which row the pointer hit.
+    // setPointerCapture and preventDefault are deferred to the moment drag
+    // actually begins (threshold exceeded in pointermove) so that a simple
+    // tap or click never interferes with the view's click → itemclick → select flow.
     this._pendingRecord = record;
-
-    // setPointerCapture ensures pointermove/pointerup reach us even if the
-    // pointer leaves the browser window before the user releases
-    try {
-      (e.target as Element).setPointerCapture(e.pointerId);
-      this._captureTarget = e.target as Element;
-      this._pointerId = e.pointerId;
-    } catch {
-      /* ignore — older browsers */
-    }
+    this._captureSource = e.target as Element;
+    this._capturePointerId = e.pointerId;
 
     document.addEventListener('pointermove', this._onPointerMove);
     document.addEventListener('pointerup', this._onPointerUp);
@@ -160,6 +156,17 @@ export class TreeGridDragDrop {
       const dx = Math.abs(e.clientX - this._downX);
       const dy = Math.abs(e.clientY - this._downY);
       if (dx < this._threshold && dy < this._threshold) return;
+
+      // A real drag is starting — lock pointer events to this element and
+      // prevent text-selection / scroll for the remainder of the gesture.
+      try {
+        this._captureSource?.setPointerCapture(this._capturePointerId!);
+        this._captureTarget = this._captureSource;
+        this._pointerId = this._capturePointerId;
+      } catch {
+        /* ignore — older browsers */
+      }
+      e.preventDefault();
 
       // Start drag — use the record captured at pointerdown, not a new hit-test
       // (the view may have scrolled since the press, making re-hit-test unreliable)
@@ -418,6 +425,8 @@ export class TreeGridDragDrop {
     this.dragging = false;
     this.dragData = null;
     this._pendingRecord = null;
+    this._captureSource = null;
+    this._capturePointerId = null;
 
     if (this._captureTarget !== null && this._pointerId !== null) {
       try {

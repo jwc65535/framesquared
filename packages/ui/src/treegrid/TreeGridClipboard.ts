@@ -30,6 +30,7 @@ export class TreeGridClipboard {
   private treeGrid: TreeGrid | null = null;
   private config: Required<TreeGridClipboardConfig>;
   private _onKeyDown: (e: KeyboardEvent) => void;
+  private _lastCopied = '';
 
   constructor(config: TreeGridClipboardConfig = {}) {
     this.config = {
@@ -63,13 +64,17 @@ export class TreeGridClipboard {
     if (!tg) return '';
     const columns = tg.getColumns();
     const selection = tg.getSelection();
-    if (selection.length === 0) return '';
 
     const rows: string[] = [];
 
-    // Header row
-    const headers = columns.filter((c) => !c.hidden).map((c) => c.text);
-    rows.push(headers.join('\t'));
+    if (this.config.includeHeaders) {
+      const headers = columns.filter((c) => !c.hidden).map((c) => c.text);
+      rows.push(headers.join('\t'));
+    }
+
+    // No selection: return header row only (if includeHeaders), otherwise empty.
+    // _lastCopied is not updated so Ctrl+V is not affected.
+    if (selection.length === 0) return rows.join('\n');
 
     // When an ancestor and a descendant are both selected, keep only the
     // ancestor — otherwise the descendant would appear twice (once from
@@ -109,7 +114,17 @@ export class TreeGridClipboard {
       rows.push(cells.join('\t'));
     }
 
-    return rows.join('\n');
+    const result = rows.join('\n');
+    this._lastCopied = result;
+    return result;
+  }
+
+  pasteLastCopied(): void {
+    if (this._lastCopied) this.pasteFromText(this._lastCopied);
+  }
+
+  getLastCopied(): string {
+    return this._lastCopied;
   }
 
   pasteFromText(text: string): void {
@@ -121,8 +136,29 @@ export class TreeGridClipboard {
 
     const visibleCols = tg.getColumns().filter((c) => !c.hidden);
     const selection = tg.getSelection();
-    const pasteRoot =
-      selection.length > 0 && this.config.pasteAsChildren ? selection[0] : tg.getRootNode();
+    let pasteRoot: any = tg.getRootNode();
+    // When pasting as sibling of a leaf, track the leaf so we can insert
+    // each top-level pasted node right after it (in order) rather than appending.
+    let siblingInsertAfter: any = null;
+    // When pasting into a branch, track the node that new top-level nodes should
+    // be inserted before so they appear directly under the selected branch row
+    // rather than at the bottom of its existing children.
+    let branchInsertBeforeRef: any = null;
+    if (selection.length > 0 && this.config.pasteAsChildren) {
+      const target = selection[0] as any;
+      // Paste INTO branches; paste as sibling for leaves (use the leaf's parent).
+      if (target.isLeaf?.() && !target.isRoot?.() && target.parentNode) {
+        pasteRoot = target.parentNode;
+        siblingInsertAfter = target;
+      } else {
+        pasteRoot = target;
+        // Insert at the top of the branch's existing children (not root — root
+        // has no visual row so "directly under" is not meaningful there).
+        if (!target.isRoot?.() && pasteRoot.childNodes.length > 0) {
+          branchInsertBeforeRef = pasteRoot.childNodes[0];
+        }
+      }
+    }
 
     // parentStack[d] is the node that should receive children at relative depth d.
     // Index 0 is always the paste target; each appended node registers itself
@@ -166,7 +202,23 @@ export class TreeGridClipboard {
       if (newNode && typeof newNode.isRoot !== 'function') {
         applyNodeInterface(newNode, (parent.depth ?? 0) + 1);
       }
-      tg.getStore().appendChild(parent, newNode);
+      if (depth === 0 && siblingInsertAfter !== null) {
+        // Leaf target: insert immediately after the selected leaf, chaining each
+        // subsequent top-level node after the previous one.
+        const nextSib = siblingInsertAfter.nextSibling;
+        if (nextSib) {
+          tg.getStore().insertBefore(newNode, nextSib);
+        } else {
+          tg.getStore().appendChild(parent, newNode);
+        }
+        siblingInsertAfter = newNode;
+      } else if (depth === 0 && branchInsertBeforeRef !== null) {
+        // Branch target: insert before the original first child so the pasted
+        // node appears directly under the selected branch row.
+        tg.getStore().insertBefore(newNode, branchInsertBeforeRef);
+      } else {
+        tg.getStore().appendChild(parent, newNode);
+      }
       pastedNodes.push(newNode);
 
       // This node becomes the parent candidate for the next deeper depth level.
@@ -184,6 +236,17 @@ export class TreeGridClipboard {
       }
     }
 
+    // Expand any collapsed paste targets so pasted content is immediately visible.
+    // Uses a Set to avoid expanding the same parent more than once.
+    const expandedParents = new Set<any>();
+    for (const node of pastedNodes) {
+      const p = (node as any).parentNode;
+      if (p && !(p.isExpanded?.()) && !(p.isRoot?.()) && !expandedParents.has(p)) {
+        tg.getStore().expandNode(p);
+        expandedParents.add(p);
+      }
+    }
+
     tg.getView().refresh();
   }
 
@@ -196,6 +259,10 @@ export class TreeGridClipboard {
       e.preventDefault();
       const text = this.copyToClipboard();
       navigator.clipboard?.writeText?.(text);
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+      e.preventDefault();
+      this.pasteLastCopied();
     }
   }
 }
