@@ -1,6 +1,7 @@
 import '@framesquared/layout';
-import { TreeGrid, WidgetColumn, Button } from '@framesquared/ui';
+import { TreeGrid, WidgetColumn, Button, Panel } from '@framesquared/ui';
 import { TreeStore, TreeModel } from '@framesquared/data';
+import type { NodeInterface } from '@framesquared/data';
 import { MainViewModel } from './MainViewModel.js';
 import { MainViewController } from './MainViewController.js';
 
@@ -34,6 +35,7 @@ export interface MainViewRefs {
   grid:           TreeGrid;
   store:          TreeStore;
   actionColumn:   WidgetColumn;
+  detailPanel:    Panel;
   viewModel:      MainViewModel;
   viewController: MainViewController;
 }
@@ -43,14 +45,23 @@ export function createMainView(host: Element): MainViewRefs {
   const viewModel      = new MainViewModel();
   const viewController = new MainViewController(viewModel);
 
+  let grid!:        TreeGrid;
+  let detailPanel!: Panel;
+  const makeRefs = (): MainViewRefs =>
+    ({ grid, store, actionColumn, detailPanel, viewModel, viewController });
+
   const actionColumn = new WidgetColumn({
-    dataIndex: 'id',
-    text:      'Action',
-    width:     100,
-    widget:    Button,
+    dataIndex:    'id',
+    text:         'Action',
+    width:        100,
+    widget:       Button,
+    widgetConfig: (record: NodeInterface) => ({
+      text:    'View',
+      handler: () => viewController.handleAction(makeRefs(), record),
+    }),
   });
 
-  const grid = new TreeGrid({
+  grid = new TreeGrid({
     renderTo: host,
     title:    'OrgChart — Widget Column',
     height:   400,
@@ -64,6 +75,13 @@ export function createMainView(host: Element): MainViewRefs {
     ],
   } as any);
 
-  viewController.initView({ grid, store, actionColumn, viewModel, viewController });
-  return { grid, store, actionColumn, viewModel, viewController };
+  detailPanel = new Panel({
+    renderTo:    host,
+    title:       'Employee Detail',
+    bodyPadding: 8,
+    html:        '<em>Click a View button to see employee details.</em>',
+  });
+
+  viewController.initView(makeRefs());
+  return makeRefs();
 }

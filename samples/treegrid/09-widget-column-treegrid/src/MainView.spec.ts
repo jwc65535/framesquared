@@ -4,16 +4,17 @@
  * 09-widget-column-treegrid — MainView.spec.ts
  *
  * Coverage:
- *   1. View structure    — WidgetColumn in columns, ViewModel, ViewController
+ *   1. View structure    — WidgetColumn in columns, detail panel, ViewModel, ViewController
  *   2. WidgetColumn API  — mountToCell renders .x-btn, destroyWidgets, isWidgetColumn flag
- *   3. ViewModel binding — clickedId, clickCount
- *   4. ViewController    — handleAction updates ViewModel, itemclick listener
- *   5. Data              — OrgChart store shape
- *   6. Application guard
+ *   3. Detail panel      — initial placeholder, updates on View click, name/role/salary content
+ *   4. ViewModel binding — clickedId, clickCount, selectedName/Role/Salary
+ *   5. ViewController    — handleAction updates ViewModel and detail panel, itemclick listener
+ *   6. Data              — OrgChart store shape
+ *   7. Application guard
  */
 import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
 import '@framesquared/layout';
-import { TreeGrid, WidgetColumn } from '@framesquared/ui';
+import { TreeGrid, WidgetColumn, Panel } from '@framesquared/ui';
 import { createMainView, makeOrgChartStore } from './MainView.js';
 import { MainViewModel } from './MainViewModel.js';
 import { MainViewController } from './MainViewController.js';
@@ -38,9 +39,11 @@ afterEach(() => { host.parentNode?.removeChild(host); });
 describe('View structure', () => {
   it('grid is TreeGrid',                     () => expect(refs.grid).toBeInstanceOf(TreeGrid));
   it('actionColumn is WidgetColumn',         () => expect(refs.actionColumn).toBeInstanceOf(WidgetColumn));
+  it('detailPanel is Panel',                 () => expect(refs.detailPanel).toBeInstanceOf(Panel));
   it('viewModel is MainViewModel',           () => expect(refs.viewModel).toBeInstanceOf(MainViewModel));
   it('viewController is MainViewController', () => expect(refs.viewController).toBeInstanceOf(MainViewController));
   it('grid renders inside host',             () => expect(host.contains(refs.grid.el)).toBe(true));
+  it('detailPanel renders inside host',      () => expect(host.contains(refs.detailPanel.el)).toBe(true));
   it('actionColumn is last column',          () => {
     const cols = refs.grid.getColumns();
     expect(cols[cols.length - 1]).toBe(refs.actionColumn);
@@ -64,6 +67,27 @@ describe('WidgetColumn API', () => {
     expect(buttons.length).toBeGreaterThanOrEqual(5);
   });
 
+  it('action buttons have "View" label text', () => {
+    const buttons = refs.grid.el!.querySelectorAll('.x-btn');
+    buttons.forEach((btn) => {
+      expect(btn.textContent).toContain('View');
+    });
+  });
+
+  it('clicking an action button increments clickCount', () => {
+    const aliceBtn = refs.grid.el!
+      .querySelector('[data-record-id="alice"] .x-btn') as HTMLElement;
+    aliceBtn?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(refs.viewModel.getClickCount()).toBeGreaterThan(0);
+  });
+
+  it('clicking an action button sets clickedId to that row\'s node id', () => {
+    const bobBtn = refs.grid.el!
+      .querySelector('[data-record-id="bob"] .x-btn') as HTMLElement;
+    bobBtn?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(refs.viewModel.getClickedId()).toBe('bob');
+  });
+
   it('destroyWidgets does not throw', () => {
     expect(() => refs.actionColumn.destroyWidgets()).not.toThrow();
   });
@@ -74,13 +98,67 @@ describe('WidgetColumn API', () => {
   });
 });
 
-// ── 3. ViewModel binding ─────────────────────────────────────────────────────
-describe('ViewModel binding', () => {
-  it('clickedId starts empty', () => expect(refs.viewModel.getClickedId()).toBe(''));
-  it('clickCount starts at 0', () => expect(refs.viewModel.getClickCount()).toBe(0));
+// ── 3. Detail panel ──────────────────────────────────────────────────────────
+describe('Detail panel', () => {
+  it('shows placeholder text before any click', () => {
+    expect(refs.detailPanel.el!.textContent).toContain('Click a View button');
+  });
+
+  it('shows employee name after View click', () => {
+    refs.viewController.handleAction(refs, refs.grid.getNodeById('alice')!);
+    expect(refs.detailPanel.el!.textContent).toContain('Alice');
+  });
+
+  it('shows employee role after View click', () => {
+    refs.viewController.handleAction(refs, refs.grid.getNodeById('alice')!);
+    expect(refs.detailPanel.el!.textContent).toContain('Lead Engineer');
+  });
+
+  it('shows formatted salary after View click', () => {
+    refs.viewController.handleAction(refs, refs.grid.getNodeById('alice')!);
+    expect(refs.detailPanel.el!.textContent).toContain('110,000');
+  });
+
+  it('updates when a different employee is clicked', () => {
+    refs.viewController.handleAction(refs, refs.grid.getNodeById('alice')!);
+    refs.viewController.handleAction(refs, refs.grid.getNodeById('dave')!);
+    expect(refs.detailPanel.el!.textContent).toContain('Dave');
+    expect(refs.detailPanel.el!.textContent).not.toContain('Alice');
+  });
+
+  it('clicking a View button updates the detail panel', () => {
+    const carolBtn = refs.grid.el!
+      .querySelector('[data-record-id="carol"] .x-btn') as HTMLElement;
+    carolBtn?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(refs.detailPanel.el!.textContent).toContain('Carol');
+  });
 });
 
-// ── 4. ViewController ────────────────────────────────────────────────────────
+// ── 4. ViewModel binding ─────────────────────────────────────────────────────
+describe('ViewModel binding', () => {
+  it('clickedId starts empty',       () => expect(refs.viewModel.getClickedId()).toBe(''));
+  it('clickCount starts at 0',       () => expect(refs.viewModel.getClickCount()).toBe(0));
+  it('selectedName starts empty',    () => expect(refs.viewModel.getSelectedName()).toBe(''));
+  it('selectedRole starts empty',    () => expect(refs.viewModel.getSelectedRole()).toBe(''));
+  it('selectedSalary starts at 0',   () => expect(refs.viewModel.getSelectedSalary()).toBe(0));
+
+  it('handleAction sets selectedName', () => {
+    refs.viewController.handleAction(refs, refs.grid.getNodeById('bob')!);
+    expect(refs.viewModel.getSelectedName()).toBe('Bob');
+  });
+
+  it('handleAction sets selectedRole', () => {
+    refs.viewController.handleAction(refs, refs.grid.getNodeById('bob')!);
+    expect(refs.viewModel.getSelectedRole()).toBe('Engineer');
+  });
+
+  it('handleAction sets selectedSalary', () => {
+    refs.viewController.handleAction(refs, refs.grid.getNodeById('bob')!);
+    expect(refs.viewModel.getSelectedSalary()).toBe(90000);
+  });
+});
+
+// ── 5. ViewController ────────────────────────────────────────────────────────
 describe('ViewController', () => {
   it('handleAction sets clickedId to node id', () => {
     const alice = refs.grid.getNodeById('alice')!;
@@ -119,7 +197,7 @@ describe('ViewController', () => {
   });
 });
 
-// ── 5. Data ──────────────────────────────────────────────────────────────────
+// ── 6. Data ──────────────────────────────────────────────────────────────────
 describe('OrgChart store', () => {
   it('makeOrgChartStore returns 2 top-level nodes', () => {
     const s = makeOrgChartStore();
@@ -139,7 +217,7 @@ describe('OrgChart store', () => {
   });
 });
 
-// ── 6. Application guard ─────────────────────────────────────────────────────
+// ── 7. Application guard ─────────────────────────────────────────────────────
 describe('Application guard', () => {
   it('module import does not throw', () => expect(true).toBe(true));
   it('createMainView is standalone', () => {
