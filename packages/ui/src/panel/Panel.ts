@@ -341,6 +341,11 @@ export class Panel extends Container {
     return this._title;
   }
 
+  override setHtml(html: string): void {
+    const target = this._panelBodyEl ?? this.el;
+    if (target) target.innerHTML = html;
+  }
+
   // -----------------------------------------------------------------------
   // Icon
   // -----------------------------------------------------------------------

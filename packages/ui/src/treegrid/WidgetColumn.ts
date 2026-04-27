@@ -31,6 +31,8 @@ import type { ColumnConfig } from './TreeGridColumn.js';
 
 export interface WidgetColumnConfig extends ColumnConfig {
   widget: typeof Component;
+  /** Static config merged into every widget instance, or a per-row factory. */
+  widgetConfig?: Record<string, unknown> | ((record: NodeInterface) => Record<string, unknown>);
 }
 
 // ---------------------------------------------------------------------------
@@ -40,11 +42,13 @@ export interface WidgetColumnConfig extends ColumnConfig {
 export class WidgetColumn extends Column {
   readonly isWidgetColumn: boolean = true;
   private _widget: typeof Component;
+  private _widgetConfig: WidgetColumnConfig['widgetConfig'];
   private _instances = new Map<string, Component>();
 
   constructor(config: WidgetColumnConfig) {
     super(config);
     this._widget = config.widget;
+    this._widgetConfig = config.widgetConfig;
   }
 
   /**
@@ -61,7 +65,10 @@ export class WidgetColumn extends Column {
   mountToCell(inner: HTMLElement, record: NodeInterface): void {
     const id = String((record as any).getId?.() ?? '');
     this._instances.get(id)?.destroy();
-    const cmp = new this._widget({ renderTo: inner });
+    const extra = typeof this._widgetConfig === 'function'
+      ? this._widgetConfig(record)
+      : (this._widgetConfig ?? {});
+    const cmp = new this._widget({ renderTo: inner, ...extra });
     if (id) this._instances.set(id, cmp);
   }
 
