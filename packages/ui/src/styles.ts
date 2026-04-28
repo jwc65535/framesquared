@@ -239,6 +239,11 @@ const STYLES = `
   gap: 0;
 }
 
+.x-segmented-btn .x-container-body {
+  flex-direction: row;
+  gap: 0;
+}
+
 .x-segmented-btn .x-btn {
   border-radius: 0;
   border: none;
@@ -636,6 +641,14 @@ const STYLES = `
 /* Tree cell gets no padding — indentation is handled inline by the column */
 .x-treegrid-node td.x-treegrid-cell .x-grid-cell-inner {
   padding: 0;
+}
+
+/* Widget cells: minimal padding, allow overflow so tooltips/ripples escape the cell */
+.x-treegrid-node .x-widget-cell-inner {
+  padding: 0 4px;
+  overflow: visible;
+  white-space: normal;
+  text-overflow: clip;
 }
 
 /* ── Tree cell inner (indent + expander + icon + text) ───────────────────── */

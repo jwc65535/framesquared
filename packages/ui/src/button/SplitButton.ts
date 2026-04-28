@@ -77,6 +77,17 @@ export class SplitButton extends Button {
         if (splitCfg.arrowHandler) {
           splitCfg.arrowHandler(this, e);
         }
+
+        // Show/hide attached menu if one is configured
+        const menu = (splitCfg as any).menu;
+        if (menu) {
+          if (menu.isVisible?.()) {
+            menu.hide?.();
+          } else {
+            menu.showBy?.(this);
+          }
+        }
+
         this.fire('arrowclick', this, e);
       });
     }

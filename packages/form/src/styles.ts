@@ -186,21 +186,48 @@ textarea.x-field-input {
 }
 
 /* ── Slider ──────────────────────────────────────────────────────────────── */
+
+/* Reset .x-field base styles that don't apply inside a slider */
 .x-slider {
-  display: flex;
+  margin-bottom: 0;
+  gap: 0;
   align-items: center;
-  padding: var(--x-sp-sm, 8px) 0;
+  padding: 7px 10px;
+  min-width: 80px;
+  box-sizing: border-box;
 }
 
+/* Field body becomes a flex row so the track can use flex: 1 */
+.x-slider .x-field-body {
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+}
+
+/* ── Track ──────────────────────────────────────────────────── */
 .x-slider-track {
   flex: 1;
-  height: 4px;
-  background: rgba(0,0,0,0.12);
-  border-radius: 2px;
+  height: 6px;
+  background: rgba(0,0,0,0.18);
+  border-radius: 3px;
   position: relative;
   cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.18);
 }
 
+/* ── Fill ───────────────────────────────────────────────────── */
+.x-slider-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--ext-color-primary, #1976d2);
+  pointer-events: none;
+  transition: width 0.06s ease-out;
+}
+
+/* ── Thumb ──────────────────────────────────────────────────── */
 .x-slider-thumb {
   position: absolute;
   top: 50%;
@@ -209,21 +236,95 @@ textarea.x-field-input {
   height: 16px;
   background: var(--ext-color-primary, #1976d2);
   border-radius: 50%;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  /* White ring gives definition without a CSS border */
+  box-shadow:
+    0 0 0 2px white,
+    0 1px 4px rgba(0,0,0,0.25);
   cursor: grab;
-  transition: box-shadow 0.15s;
-}
-.x-slider-thumb:hover {
-  box-shadow: 0 0 0 8px color-mix(in srgb, var(--ext-color-primary, #1976d2) 15%, transparent);
+  transition: width 0.12s ease, height 0.12s ease, box-shadow 0.15s ease;
+  z-index: 1;
 }
 
+.x-slider-thumb:hover {
+  width: 20px;
+  height: 20px;
+  box-shadow:
+    0 0 0 2px white,
+    0 1px 4px rgba(0,0,0,0.25),
+    0 0 0 6px color-mix(in srgb, var(--ext-color-primary, #1976d2) 22%, transparent);
+}
+
+.x-slider-thumb.x-slider-dragging {
+  cursor: grabbing;
+  width: 18px;
+  height: 18px;
+  box-shadow:
+    0 0 0 2px white,
+    0 2px 6px rgba(0,0,0,0.30),
+    0 0 0 9px color-mix(in srgb, var(--ext-color-primary, #1976d2) 20%, transparent);
+}
+
+/* ── Value label (tooltip above thumb) ─────────────────────── */
+.x-slider-value-label {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30,30,30,0.85);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(4px);
+}
+
+.x-slider-value-label::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: rgba(30,30,30,0.85);
+}
+
+.x-slider-thumb:hover .x-slider-value-label,
+.x-slider-thumb.x-slider-dragging .x-slider-value-label {
+  opacity: 1;
+}
+
+/* ── Vertical variant ───────────────────────────────────────── */
 .x-slider-vertical {
   flex-direction: column;
+  padding: 10px 7px;
 }
-.x-slider-vertical .x-slider-track {
-  width: 4px;
-  height: auto;
+
+.x-slider-vertical .x-field-body {
   flex: 1;
+  flex-direction: column;
+  align-items: center;
+}
+
+.x-slider-vertical .x-slider-track {
+  flex: 1;
+  width: 4px;
+  height: unset;
+  min-height: 60px;
+}
+
+.x-slider-vertical .x-slider-fill {
+  top: auto;
+  bottom: 0;
+  width: 100%;
+  height: 0;
+  transition: height 0.06s ease-out;
 }
 
 /* ── Tag field ───────────────────────────────────────────────────────────── */

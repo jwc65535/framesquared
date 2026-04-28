@@ -7,6 +7,8 @@
 
 import { SplitButton } from './SplitButton.js';
 import type { SplitButtonConfig } from './SplitButton.js';
+import { Menu } from '../menu/Menu.js';
+import { MenuItem } from '../menu/MenuItem.js';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -31,6 +33,7 @@ export class CycleButton extends SplitButton {
 
   declare _cycleItems: CycleItem[];
   declare private _activeIndex: number;
+  declare private _cycleMenu: Menu | null;
 
   constructor(config: CycleButtonConfig = {}) {
     const items = config.items ?? [];
@@ -53,6 +56,41 @@ export class CycleButton extends SplitButton {
     super.initialize();
     this._cycleItems = [];
     this._activeIndex = 0;
+    this._cycleMenu = null;
+  }
+
+  protected override afterRender(): void {
+    super.afterRender();
+    // Arrow click shows a menu of all cycle items so the user can jump directly
+    // to any state without clicking through the cycle one step at a time.
+    this.on('arrowclick', () => this._showCycleMenu());
+  }
+
+  protected override onDestroy(): void {
+    this._cycleMenu?.destroy();
+    this._cycleMenu = null;
+    super.onDestroy();
+  }
+
+  private _showCycleMenu(): void {
+    if (!this._cycleMenu) {
+      const items = this._cycleItems.map((item) =>
+        new MenuItem({
+          text:    item.text,
+          handler: () => {
+            this.setActiveItem(item);
+            this.fire('change', this, item);
+            this._cycleMenu?.hide();
+          },
+        }),
+      );
+      this._cycleMenu = new Menu({ items });
+    }
+    if (this._cycleMenu.isVisible()) {
+      this._cycleMenu.hide();
+    } else {
+      this._cycleMenu.showBy(this);
+    }
   }
 
   // Override click to cycle instead of normal button behavior

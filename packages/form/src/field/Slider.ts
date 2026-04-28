@@ -29,7 +29,9 @@ export class Slider extends Field {
   declare private _vertical: boolean;
   declare private _values: number[];
   declare private _trackEl: HTMLElement | null;
+  declare private _fillEl: HTMLElement | null;
   declare private _thumbEls: HTMLElement[];
+  declare private _valueLabelEls: HTMLElement[];
   declare private _dragIndex: number;
   declare private _dragCleanup: (() => void) | null;
 
@@ -48,7 +50,9 @@ export class Slider extends Field {
       ? cfg.values.map((v) => this.snap(this.clamp(v)))
       : [this.snap(this.clamp(Number(cfg.value ?? this._min)))];
     this._trackEl = null;
+    this._fillEl = null;
     this._thumbEls = [];
+    this._valueLabelEls = [];
     this._dragIndex = -1;
     this._dragCleanup = null;
   }
@@ -65,6 +69,11 @@ export class Slider extends Field {
     this._trackEl.classList.add('x-slider-track');
     (this._bodyWrapEl ?? el).appendChild(this._trackEl);
 
+    // Fill (progress bar behind the thumb)
+    this._fillEl = document.createElement('div');
+    this._fillEl.classList.add('x-slider-fill');
+    this._trackEl.appendChild(this._fillEl);
+
     // Thumbs
     for (let i = 0; i < this._values.length; i++) {
       const thumb = document.createElement('div');
@@ -74,8 +83,15 @@ export class Slider extends Field {
       thumb.setAttribute('aria-valuemin', String(this._min));
       thumb.setAttribute('aria-valuemax', String(this._max));
       thumb.setAttribute('aria-valuenow', String(this._values[i]));
+
+      const label = document.createElement('span');
+      label.classList.add('x-slider-value-label');
+      label.textContent = String(this._values[i]);
+      thumb.appendChild(label);
+
       this._trackEl.appendChild(thumb);
       this._thumbEls.push(thumb);
+      this._valueLabelEls.push(label);
       this.setupThumbDrag(thumb, i);
     }
 
@@ -145,8 +161,13 @@ export class Slider extends Field {
       const pct = ((this._values[i] - this._min) / (this._max - this._min)) * 100;
       if (this._vertical) {
         this._thumbEls[i].style.bottom = `${pct}%`;
+        if (this._fillEl) this._fillEl.style.height = `${pct}%`;
       } else {
         this._thumbEls[i].style.left = `${pct}%`;
+        if (this._fillEl) this._fillEl.style.width = `${pct}%`;
+      }
+      if (this._valueLabelEls[i]) {
+        this._valueLabelEls[i].textContent = String(this._values[i]);
       }
     }
   }
@@ -171,6 +192,7 @@ export class Slider extends Field {
     const onDown = (e: PointerEvent) => {
       e.preventDefault();
       this._dragIndex = index;
+      thumb.classList.add('x-slider-dragging');
       this.fire('dragstart', this, index);
 
       const onMove = (me: PointerEvent) => {
@@ -195,6 +217,7 @@ export class Slider extends Field {
       const onUp = () => {
         document.removeEventListener('pointermove', onMove);
         document.removeEventListener('pointerup', onUp);
+        thumb.classList.remove('x-slider-dragging');
         this.fire('dragend', this, this._values[this._dragIndex]);
         this.fire('changecomplete', this, this._values[this._dragIndex]);
         this._dragIndex = -1;

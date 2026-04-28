@@ -63,6 +63,7 @@ export class WidgetColumn extends Column {
    * Destroys any prior instance for this node, then renders a fresh one.
    */
   mountToCell(inner: HTMLElement, record: NodeInterface): void {
+    inner.classList.add('x-widget-cell-inner');
     const id = String((record as any).getId?.() ?? '');
     this._instances.get(id)?.destroy();
     const extra = typeof this._widgetConfig === 'function'
@@ -70,6 +71,13 @@ export class WidgetColumn extends Column {
       : (this._widgetConfig ?? {});
     const cmp = new this._widget({ renderTo: inner, ...extra });
     if (id) this._instances.set(id, cmp);
+  }
+
+  /**
+   * Returns the live widget instance for the given node id, or undefined.
+   */
+  getWidget(nodeId: string): Component | undefined {
+    return this._instances.get(nodeId);
   }
 
   /**
