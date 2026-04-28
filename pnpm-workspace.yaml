@@ -3,3 +3,5 @@ packages:
   - 'examples/*'
   - 'samples/*'
   - 'samples/treegrid/*'
+  - 'samples/panel/*'
+  - 'samples/layout/*'
