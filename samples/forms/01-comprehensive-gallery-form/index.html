@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comprehensive Form Gallery — framesquared</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: 'Inter', system-ui, sans-serif;
+        background: linear-gradient(145deg, #e8f5e9 0%, #e3f2fd 50%, #ede7f6 100%);
+        min-height: 100vh;
+        padding: 32px 16px;
+      }
+
+      #app {
+        max-width: 860px;
+        margin: 0 auto;
+      }
+
+      .x-panel {
+        box-shadow: 0 4px 24px rgba(26,35,126,0.10), 0 1px 4px rgba(0,0,0,0.06);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(26,35,126,0.09);
+        margin-bottom: 20px;
+      }
+
+      .x-panel-header {
+        background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        border-bottom: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="./src/app.ts"></script>
+  </body>
+</html>

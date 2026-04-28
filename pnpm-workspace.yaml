@@ -5,3 +5,4 @@ packages:
   - 'samples/treegrid/*'
   - 'samples/panel/*'
   - 'samples/layout/*'
+  - 'samples/forms/*'
