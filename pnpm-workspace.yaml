@@ -6,3 +6,4 @@ packages:
   - 'samples/panel/*'
   - 'samples/layout/*'
   - 'samples/forms/*'
+  - 'samples/architecture/*'
